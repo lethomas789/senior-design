@@ -5,7 +5,7 @@ UC Davis senior design project by:
 - Thomas Le
 - Alex Hong
 - Claudia Chen
-- Garland Yee. 
+- Garland Yee 
 
 Project mentors: 
 
