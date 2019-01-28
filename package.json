@@ -9,12 +9,14 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
     "cors": "^2.8.5",
     "express": "^4.16.4",
     "firebase": "^5.8.1",
     "firebase-admin": "^6.5.1",
     "nodemon": "^1.18.9",
-    "path": "^0.12.7"
+    "path": "^0.12.7",
+    "validator": "^10.11.0"
   }
 }
