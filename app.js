@@ -27,10 +27,12 @@ app.use(cors());
 //routes
 const router = express.Router();
 const users = require('./routes/users');
-const signup =require('./routes/signup');
+const signup = require('./routes/signup');
+const login = require('./routes/login');
 
 app.use('/api/users', users);
 app.use('/api/signup', signup);
+app.use('/api/login', login);
 
 // listen to requests on port
 // choose port based on environment
