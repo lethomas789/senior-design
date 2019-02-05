@@ -1,34 +1,22 @@
 import React, { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
-import Button from '@material-ui/core/Button';
+import Signup from './Signup';
+import Home from './Home';
 
+import {BrowserRouter as Router, Route} from 'react-router-dom';
 
 class App extends Component {
   render() {
     return (
-      <div>
-        HELLO
-        <Button variant="contained" color="primary">
-          HELLO WORLD
-        </Button>
-      </div>
+      <Router>
+        <div>
+          <Route exact path = "/" component = {Home} />
+          <Route path = "/Signup" component = {Signup} />
+        </div>
+      </Router>
     );
   }
 }
-
-class Signup extends Component {
-  render() {
-    return (
-      <div>
-        
-      </div>
-    );
-  }
-}
-
-
-
-
 
 export default App;
