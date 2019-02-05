@@ -1,6 +1,5 @@
 import React, { Component } from 'react'
 import TextField from '@material-ui/core/TextField';
-import ButtonAppBar from './ButtonAppBar';
 
 export default class Signup extends Component {
   constructor(props) {
@@ -18,7 +17,6 @@ export default class Signup extends Component {
   render() {
     return (
       <div>
-        <ButtonAppBar />
         <div id="row">
           <TextField
             label="Name"
