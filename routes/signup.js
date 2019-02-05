@@ -4,7 +4,9 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 const validator = require('validator');
-var bcrypt = require('bcrypt-nodejs');
+const bcrypt = require('bcrypt-nodejs');
+const jwt = require('jsonwebtoken');
+const jwtKey = require('../config/jwt.json');
 
 const saltRounds = 10;
 
@@ -72,10 +74,19 @@ router.post('/', (req,res) => {
                                 res.status(500).send("error hashing password");
                             }
 
+                            //store user into database
                             newUser.password = hash;
-                            // create new object in user collection
                             db.collection('users').doc(email).set(newUser);
-                            res.status(200).send("signup successful");
+
+                            //generate JWT
+                            var payload = {email: email};
+                            jwt.sign(payload, jwtKey.JWTSecret, {expiresIn: 3600}, (err, token) => {
+                                res.status(200).json({
+                                    success: true,
+                                    token: 'Bearer ' + token
+                                });
+                            });
+
                         })
                     });
                 } // end of else statement
