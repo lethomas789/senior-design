@@ -21,24 +21,29 @@ export default class Signup extends Component {
           <TextField
             label="Name"
             required="true"
+            onChange={(event, newValue) => this.setState({ firstName: newValue })}
           />
         </div>
         <div id="row">
           <TextField
             label="Last Name"
             required="true"
+            onChange={(event, newValue) => this.setState({ lastName: newValue })}
           />
         </div>
         <div id="row">
           <TextField
             label="email"
             required="true"
+            onChange={(event, newValue) => this.setState({ email: newValue })}
           />
         </div>
         <div id="row">
           <TextField
+            type="password"
             label="password"
             required="true"
+            onChange={(event, newValue) => this.setState({ password: newValue })}
           />
         </div>
       </div>
