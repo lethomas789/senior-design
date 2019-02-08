@@ -16,12 +16,18 @@ router.post('/', (req, res) =>{
 
     //if email is invalid
     if(validator.isEmail(userEmail) === false){
-        return res.send("Invalid email");
+        return res.json({
+            success:false,
+            message: "Invalid Email"
+        });
     }
 
     //if input fields were empty
     else if (userEmail.trim() === '' || userPassword.trim() === ''){
-        return res.send("Empty inputs");
+        return res.json({
+            success:false,
+            message: "Empty Inputs"
+        });
     }
 
     //check to see if email exists
@@ -37,7 +43,10 @@ router.post('/', (req, res) =>{
                             //compare passwords
                             bcrypt.compare(userPassword, doc.data().password, (err, validPassword)=> {
                                 if(err){
-                                    return res.status(500).send("error comparing passwords");
+                                    return res.json({
+                                        success: false,
+                                        message: "Server error comparing passwords"
+                                    });
                                 }
 
                                 //if passwords match, send JWT to authenticate login
@@ -48,6 +57,7 @@ router.post('/', (req, res) =>{
                                     jwt.sign(payload, jwtKey.JWTSecret, {expiresIn: 3600}, (err, token) => {
                                         return res.status(200).json({
                                             success: true,
+                                            message: "Login Successful!",
                                             token: 'Bearer ' + token
                                         });
                                     });
@@ -55,19 +65,28 @@ router.post('/', (req, res) =>{
 
                                 //if passwords don't match
                                 else{
-                                    return res.send("Incorrect Password");
+                                    return res.json({
+                                        success:false,
+                                        message: "Incorrect Password"
+                                    });
                                 }
                             })
                         }
 
                         else{
-                            return res.send("Invalid email");
+                            return res.json({
+                                success:false,
+                                message: "Invalid Email"
+                            });
                         }
                     })
                 }
 
                 else{
-                    return res.send("email does not exist, please make an account");
+                    return res.json({
+                        success:false,
+                        message: "Email does not exist, please make an account"
+                    });
                 }
             })
     }
