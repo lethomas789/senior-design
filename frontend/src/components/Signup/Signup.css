@@ -1,0 +1,15 @@
+#signupContainer{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#signupForms{
+    display:flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+#signupButton{
+    align-self: center;
+}

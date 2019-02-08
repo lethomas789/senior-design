@@ -1,0 +1,15 @@
+#loginContainer{
+    display:flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+#loginForms{
+    display:flex;
+    flex-direction: column;
+    align-self: center;
+}
+
+#loginButton{
+    align-self: center;
+}
