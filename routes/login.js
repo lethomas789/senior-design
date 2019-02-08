@@ -10,19 +10,18 @@ const jwtKey = require('../config/jwt.json');
 
 
 router.post('/', (req, res) =>{
-
     //extract email and password from request
-    var userEmail = req.body.email;
-    var userPassword = req.body.password;
+    var userEmail = req.body.params.email;
+    var userPassword = req.body.params.password;
 
     //if email is invalid
     if(validator.isEmail(userEmail) === false){
-        res.status(400).send("Invalid email");
+        return res.send("Invalid email");
     }
 
     //if input fields were empty
     else if (userEmail.trim() === '' || userPassword.trim() === ''){
-        res.status(400).send("Empty inputs");
+        return res.send("Empty inputs");
     }
 
     //check to see if email exists
@@ -38,7 +37,7 @@ router.post('/', (req, res) =>{
                             //compare passwords
                             bcrypt.compare(userPassword, doc.data().password, (err, validPassword)=> {
                                 if(err){
-                                    res.status(500).send("error comparing passwords");
+                                    return res.status(500).send("error comparing passwords");
                                 }
 
                                 //if passwords match, send JWT to authenticate login
@@ -47,7 +46,7 @@ router.post('/', (req, res) =>{
                                     const payload = {email: userEmail};
 
                                     jwt.sign(payload, jwtKey.JWTSecret, {expiresIn: 3600}, (err, token) => {
-                                        res.status(200).json({
+                                        return res.status(200).json({
                                             success: true,
                                             token: 'Bearer ' + token
                                         });
@@ -56,19 +55,19 @@ router.post('/', (req, res) =>{
 
                                 //if passwords don't match
                                 else{
-                                    res.status(400).send("Incorrect Password");
+                                    return res.send("Incorrect Password");
                                 }
                             })
                         }
 
                         else{
-                            res.status(400).send("Invalid email");
+                            return res.send("Invalid email");
                         }
                     })
                 }
 
                 else{
-                    res.status(400).send("email does not exist, please make an account");
+                    return res.send("email does not exist, please make an account");
                 }
             })
     }

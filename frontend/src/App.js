@@ -1,10 +1,10 @@
 import React, { Component } from 'react';
 import {BrowserRouter as Router, Route} from 'react-router-dom';
 import './App.css';
-import Signup from './components/Signup';
-import Home from './components/Home';
-import ButtonAppBar from './components/ButtonAppBar';
-
+import Signup from './components/Signup/Signup';
+import Home from './components/Home/Home';
+import Login from './components/Login/Login';
+import ButtonAppBar from './components/ButtonAppBar/ButtonAppBar';
 
 class App extends Component {
   render() {
@@ -13,7 +13,8 @@ class App extends Component {
         <div>
           <ButtonAppBar />
           <Route exact path = "/" component = {Home} />
-          <Route path = "/Signup" component = {Signup} />
+          <Route exact path = "/signup" component = {Signup} />
+          <Route exact path = "/login" component = {Login} />
         </div>
       </Router>
     );
