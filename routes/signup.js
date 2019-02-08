@@ -20,17 +20,26 @@ router.post('/', (req,res) => {
 
     // validation, checking empty inputs
     if(firstName.trim() === '' || lastName.trim() === '' || email.trim() === '' || password.trim() === ''){
-        res.send("One or more fields are empty");
+        return res.json({
+            success:false,
+            message: "One or more fields are empty!"
+        });
     }
 
     // checking invalid email
     else if(validator.isEmail(email) === false){
-        res.send("Invalid email");
+        return res.json({
+            success:false,
+            message: "Invalid Email"
+        });
     }
 
     // checking password length
     else if(validator.isLength(password, {min: 8, max: 20})=== false){
-        res.send("Password must be at least 8 characters");
+        return res.json({
+            success:false,
+            message: "Password must be at least 8 characters"
+        });
     }
 
     else{
@@ -43,7 +52,10 @@ router.post('/', (req,res) => {
             .then(snapshot => {
                 //if user already exists, return
                 if(snapshot.size > 0){
-                    return res.send("Email already in use!");
+                    return res.json({
+                        success:false,
+                        message: "Email is already in use!"
+                    });
                 }
 
                 // no matching results, create new user
@@ -62,7 +74,10 @@ router.post('/', (req,res) => {
                     bcrypt.genSalt(saltRounds, (err, salt) => {
                         bcrypt.hash(newUser.password, salt, null, (err, hash) => {
                             if(err){
-                                return res.status(500).send("error hashing password");
+                                return res.json({
+                                    success:false,
+                                    message: "Server error hashing password"
+                                });
                             }
 
                             //store user into database
@@ -74,6 +89,7 @@ router.post('/', (req,res) => {
                             jwt.sign(payload, jwtKey.JWTSecret, {expiresIn: 3600}, (err, token) => {
                                 return res.status(200).json({
                                     success: true,
+                                    message: "Signup Successful!",
                                     token: 'Bearer ' + token
                                 });
                             });
@@ -83,8 +99,11 @@ router.post('/', (req,res) => {
                 } // end of else statement
             })
             .catch(err => {
-                console.log(err);
-                res.status(500).send("Error with server");
+                console.error(err);
+                return res.json({
+                    success:false,
+                    message: "Error with server"
+                });
             })
     }
 })

@@ -27,12 +27,10 @@ export default class Login extends Component{
         })
         .then(res => {
             if(res.data.success === true){
-                console.log(res.data);
-                alert("Login Successful!");
+                alert(res.data.message);
             }
 
             else{
-                console.log(res.data);
                 alert(res.data);
             }
         })

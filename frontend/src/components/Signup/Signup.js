@@ -29,11 +29,11 @@ export default class Signup extends Component {
       }
     }).then(res => {
       if(res.data.success === true){
-        alert("Signup successful!");
+        alert(res.data.message);
       }
 
       else{
-        alert(res.data);
+        alert(res.data.message);
       }
     })
     .catch(err => {
