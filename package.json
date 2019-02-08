@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "backend": "nodemon app.js",
-    "frontend": "cd frontend/ && npm start",
+    "frontend": "cd frontend/ && npm run build",
     "start": "concurrently \"npm run backend\" \"npm run frontend\""
   },
   "author": "",
