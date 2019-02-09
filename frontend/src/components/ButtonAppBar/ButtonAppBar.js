@@ -10,30 +10,42 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import './ButtonAppBar.css';
 
-
-function ButtonAppBar(props) {
-
   //variables to store routes to redirect to with Link component
   const homeRoute = "/";
+  const aboutRoute = "/about";
   const signupRoute = "/signup";
   const loginRoute = "/login";
+  const shopRoute = "/shop";
 
-  return (
-    <div className= "root">
-      <AppBar position="static">
-        <Toolbar>
-          <IconButton className = "menuButton" color="inherit" aria-label="Menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
-            ECS193 ECommerce
-          </Typography>
-           <Button component = {Link} to = {signupRoute} color = "inherit"> Sign Up </Button> 
-           <Button component = {Link} to = {loginRoute}color="inherit">Login </Button> 
-        </Toolbar>
-      </AppBar>
-    </div>
-  );
-}
+
+export default class ButtonAppBar extends Component {
+    constructor(props){
+      super(props);
+      this.state = {
+        
+      }
+    }
+    render(){
+      return(
+        <div className= "root">
+          <AppBar position="static">
+            <Toolbar>
+              <IconButton className = "menuButton" color="inherit" aria-label="Menu">
+                <MenuIcon />
+              </IconButton>
+              <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
+                ECS193 ECommerce
+              </Typography>
+                <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
+                <Button component = {Link} to = {signupRoute} color = "inherit"> Sign Up </Button> 
+                <Button component = {Link} to = {loginRoute} color="inherit"> Login </Button> 
+                <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
+            </Toolbar>
+          </AppBar>
+      </div>
+      );
+    }
+  }
+
 
 export default ButtonAppBar;
