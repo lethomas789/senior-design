@@ -6,7 +6,7 @@ const db = admin.firestore();
 
 router.get('/', (req,res) => {
   // get user id
-  let user = req.body.email;
+  let user = req.body.user;
 
   // return error if empty request
   if (user === '') {
@@ -97,8 +97,6 @@ router.post('/addItems', (req, res) => {
 
       // will overwrite any existing document of pid there, make sure to contain
       // amt purchased
-      // for now, query price and do math here, could hold the data in frontend
-      // TODO
 
       // get product info from pid
       let productInfoRef = db.collection('products').doc(pid);
