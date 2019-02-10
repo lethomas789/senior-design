@@ -13,8 +13,8 @@ import './About.css';
 export default class Home extends Component {
   render() {
     return (
-      <div id = "homeContainer">
-        <h1 id = "homeHeader"> Welcome to ECS193 ECommerce! </h1>
+      <div id = "aboutContainer">
+        <h1 id = "aboutHeader"> About Us </h1>
       </div>
     )
   }
