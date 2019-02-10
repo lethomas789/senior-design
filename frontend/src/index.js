@@ -6,12 +6,14 @@ import * as serviceWorker from './serviceWorker';
 import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 import loginReducer from './store/loginReducer';
+import getProductsReducer from './store/getProductsReducer';
 
 
 //create store for redux state management
 //store stores state of application
 const rootReducer = combineReducers({
-  auth: loginReducer
+  auth: loginReducer,
+  getAllItems: getProductsReducer
 });
 
 const store = createStore(rootReducer);

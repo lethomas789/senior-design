@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
 import './Shop.css';
+import ShopView from '../ShopView/ShopView';
 
 export default class Shop extends Component{
     render(){
         return(
             <div>
-                <h1> Shop </h1>
+                <ShopView/>
             </div>
         );
     }
 }
+
+

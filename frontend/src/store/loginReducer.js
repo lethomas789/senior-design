@@ -1,5 +1,6 @@
 import actions from './actions';
 
+//initial state of login reducer
 const initialState = {
     login: false,
     text: "Login"
@@ -18,6 +19,7 @@ const reducer = (state = initialState, action) => {
                 login: true,
                 text: "Logout"
             }
+        //if user logs out, update state
         case actions.LOGGED_OUT:
             return{
                 ...state,

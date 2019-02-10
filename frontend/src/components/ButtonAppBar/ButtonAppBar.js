@@ -54,6 +54,9 @@ class ButtonAppBar extends Component {
     }
   }
 
+  //redux
+
+  //dispatch action to reducer
   const mapDispatchToProps = dispatch => {
     return{
         updateLogout: () => dispatch({
@@ -62,6 +65,7 @@ class ButtonAppBar extends Component {
     }
   }
 
+  //obtain state from store as props for component
   const mapStateToProps = state => {
     return{
         loginValue: state.auth.login,

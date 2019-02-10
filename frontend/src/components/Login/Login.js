@@ -29,7 +29,6 @@ class Login extends Component{
         })
         .then(res => {
             if(res.data.success === true){
-                console.log(res.data);
                 alert(res.data.message);
                 //dispatch update login action to update login state
                 this.props.updateLogin();
@@ -71,6 +70,7 @@ class Login extends Component{
     }
 }
 
+//redux, dispatch to update state
 const mapDispatchToProps = dispatch => {
     return{
         updateLogin: () => dispatch({
