@@ -1,10 +1,12 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import actions from '../../store/actions';
 import './Login.css';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
-export default class Login extends Component{
+class Login extends Component{
     constructor(props){
         super(props);
         //store user input
@@ -27,7 +29,10 @@ export default class Login extends Component{
         })
         .then(res => {
             if(res.data.success === true){
+                console.log(res.data);
                 alert(res.data.message);
+                //dispatch update login action to update login state
+                this.props.updateLogin();
             }
 
             else{
@@ -65,4 +70,14 @@ export default class Login extends Component{
         );
     }
 }
+
+const mapDispatchToProps = dispatch => {
+    return{
+        updateLogin: () => dispatch({
+            type: actions.LOGGED_IN
+        })
+    }
+}
+
+export default connect(null,mapDispatchToProps)(Login)
 

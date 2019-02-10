@@ -1,4 +1,6 @@
 import React, { Component } from 'react';
+import {connect} from 'react-redux';
+import actions from '../../store/actions';
 import {Route, Link, BrowserRouter as Router} from 'react-router-dom';
 import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
@@ -18,13 +20,18 @@ import './ButtonAppBar.css';
   const shopRoute = "/shop";
 
 
-export default class ButtonAppBar extends Component {
+class ButtonAppBar extends Component {
     constructor(props){
       super(props);
-      this.state = {
-        
+      this.logoutUser = this.logoutUser.bind(this);
+    }
+
+    logoutUser(){
+      if (this.props.loginText === "Logout"){
+        this.props.updateLogout();
       }
     }
+
     render(){
       return(
         <div className= "root">
@@ -38,7 +45,7 @@ export default class ButtonAppBar extends Component {
               </Typography>
                 <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
                 <Button component = {Link} to = {signupRoute} color = "inherit"> Sign Up </Button> 
-                <Button component = {Link} to = {loginRoute} color="inherit"> Login </Button> 
+                <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
                 <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
             </Toolbar>
           </AppBar>
@@ -47,5 +54,19 @@ export default class ButtonAppBar extends Component {
     }
   }
 
+  const mapDispatchToProps = dispatch => {
+    return{
+        updateLogout: () => dispatch({
+            type: actions.LOGGED_OUT
+        })
+    }
+  }
 
-export default ButtonAppBar;
+  const mapStateToProps = state => {
+    return{
+        loginValue: state.auth.login,
+        loginText: state.auth.text
+    }
+  }
+
+export default connect(mapStateToProps,mapDispatchToProps)(ButtonAppBar);
