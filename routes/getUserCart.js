@@ -30,8 +30,8 @@ router.get('/', (req,res) => {
       // get cart from user
       // cart id doc is user id
       let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
-      // TODO change above back, example currentyl just hard coded doc id b/c
-      // I'm too lazy to make a new one
+
+      // TODO, send back higher level cart info
 
       let cartItems = [];
 
