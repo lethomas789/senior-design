@@ -10,7 +10,7 @@ router.get('/', (req,res) => {
   // can do db.doc('collection/pathToDoc');
 
   // require certain response params
-  if (vendor.trim() === '') {
+  if (vendor ==- '') {
     return res.status(400).json({
       success: false,
       message: 'Invalid request params'

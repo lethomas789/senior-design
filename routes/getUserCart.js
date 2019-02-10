@@ -6,10 +6,10 @@ const db = admin.firestore();
 
 router.get('/', (req,res) => {
   // get user id
-  let user = req.body.user;
+  let user = req.body.email;
 
   // return error if empty request
-  if (user.trim() === '') {
+  if (user === '') {
     return res.status(400).json({
       success: false,
       message: 'Invalid request params'
@@ -29,12 +29,11 @@ router.get('/', (req,res) => {
 
       // get cart from user
       // cart id doc is user id
-      // let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
+      let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
       // TODO change above back, example currentyl just hard coded doc id b/c
       // I'm too lazy to make a new one
 
       let cartItems = [];
-      let cartRef = userRef.collection('/cart/example_uid/cartItems');
 
       cartRef.get()
         .then(snapshot => {
