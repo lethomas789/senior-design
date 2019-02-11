@@ -7,13 +7,14 @@ import {createStore, combineReducers} from 'redux';
 import {Provider} from 'react-redux';
 import loginReducer from './store/loginReducer';
 import getProductsReducer from './store/getProductsReducer';
-
+import cartReducer from './store/cartReducer';
 
 //create store for redux state management
 //store stores state of application
 const rootReducer = combineReducers({
   auth: loginReducer,
-  getAllItems: getProductsReducer
+  getAllItems: getProductsReducer,
+  cart: cartReducer
 });
 
 const store = createStore(rootReducer);

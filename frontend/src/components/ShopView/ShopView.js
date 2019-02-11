@@ -30,8 +30,7 @@ class ShopView extends Component {
 
   render() {
     const items = this.props.products.map(result => {
-      var keyValue = 0;
-      return <ShopItem key = {keyValue +=1} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
+      return <ShopItem key = {result.productName} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
     });
 
     return (
@@ -40,7 +39,7 @@ class ShopView extends Component {
           <h1> Shop </h1>
         </Grid>
 
-        <Grid container direction="row" justify="center" alignItems="center" justify-xs-space-evenly>
+        <Grid container = {true} direction="row" justify="center" alignItems="center" justify-xs-space-evenly>
           {items}
         </Grid>
       </div>

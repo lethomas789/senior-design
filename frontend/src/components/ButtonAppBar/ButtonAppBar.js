@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import './ButtonAppBar.css';
 import {connect} from 'react-redux';
 import actions from '../../store/actions';
 import {Route, Link, BrowserRouter as Router} from 'react-router-dom';
@@ -10,7 +11,7 @@ import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
-import './ButtonAppBar.css';
+import CartIcon from '@material-ui/icons/ShoppingCart';
 
   //variables to store routes to redirect to with Link component
   const homeRoute = "/";
@@ -18,6 +19,7 @@ import './ButtonAppBar.css';
   const signupRoute = "/signup";
   const loginRoute = "/login";
   const shopRoute = "/shop";
+  const cartRoute = "/cart";
 
 
 class ButtonAppBar extends Component {
@@ -43,10 +45,13 @@ class ButtonAppBar extends Component {
               <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
                 ECS193 ECommerce
               </Typography>
-                <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
-                <Button component = {Link} to = {signupRoute} color = "inherit"> Sign Up </Button> 
-                <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
-                <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
+                <div id = "navLink">
+                  <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
+                  <Button component = {Link} to = {signupRoute} color = "inherit"> Sign Up </Button> 
+                  <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
+                  <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
+                  <Button component = {Link} to = {cartRoute} color = "inherit"> <CartIcon/> </Button>
+                </div>
             </Toolbar>
           </AppBar>
       </div>

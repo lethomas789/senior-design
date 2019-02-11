@@ -1,6 +1,5 @@
 import React, { Component } from 'react';
-import './ShopItem.css';
-import { withStyles } from '@material-ui/core/styles';
+import './CartItem.css';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -9,8 +8,8 @@ import CardMedia from '@material-ui/core/CardMedia';
 import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 
-//component to display product info
-export default class ShopItem extends Component {
+//component to display cart objects
+export default class CartItem extends Component {
   render() {
     return (
       <div> 
@@ -22,22 +21,22 @@ export default class ShopItem extends Component {
                 {this.props.productName}
               </Typography>
               <Typography gutterBottom variant="h5" component="h2">
+                Amount: {this.props.amtPurchased}
+              </Typography>
+              <Typography gutterBottom variant="h5" component="h2">
                 Price: ${this.props.productPrice}
               </Typography>
               <Typography gutterBottom variant="h5" component="h2">
-                Stock: {this.props.stock}
-              </Typography>
-              <Typography component="p">
-                Info: {this.props.productInfo}
+                Total Price: ${this.props.totalPrice}
               </Typography>
             </CardContent>
           </CardActionArea>
           <CardActions>
             <Button size="small" color="primary">
-              Add To Cart
+              Remove Item
             </Button>
             <Button size="small" color="primary">
-              Learn More
+              Add Item
             </Button>
           </CardActions>
         </Card>

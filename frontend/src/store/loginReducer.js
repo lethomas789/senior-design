@@ -3,7 +3,8 @@ import actions from './actions';
 //initial state of login reducer
 const initialState = {
     login: false,
-    text: "Login"
+    text: "Login",
+    user: ''
 };
 
 const reducer = (state = initialState, action) => {
