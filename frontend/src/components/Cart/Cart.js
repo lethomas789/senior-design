@@ -17,16 +17,19 @@ class Cart extends Component {
     const apiURL = "http://localhost:4000/api/getUserCart";
     //const apiURL = "http://localhost:4000/api/getAllProducts";
 
-    axios.get(apiURL, {
-      params:{
-        user: this.props.user
-      }
-    }).then(res => {
-        this.props.updateItems(res.data.data);
-      })
-      .catch(err => {
-        alert(err);
-      })
+    //if user is logged in, get cart info
+    if (this.props.login === true){
+      axios.get(apiURL,{
+        params:{
+          user: this.props.user
+        }
+      }).then(res => {
+          this.props.updateItems(res.data.data);
+        })
+        .catch(err => {
+          alert(err);
+        })
+    }
   }
 
   render() {
@@ -40,7 +43,7 @@ class Cart extends Component {
           <h1> Current Cart: </h1>
         </Grid>
 
-        <Grid container = {true} direction="row" justify-xs-space-evenly>
+        <Grid container direction="column" justify-xs-space-evenly>
           {cart}
         </Grid>
       </div>
@@ -60,6 +63,7 @@ const mapDispatchToProps = dispatch => {
 }
 
 //obtain state from store as props for component
+//get cart items, login value, and user email
 const mapStateToProps = state => {
   return{
     items: state.cart.items,

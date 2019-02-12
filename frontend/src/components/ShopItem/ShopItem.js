@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import './ShopItem.css';
-import { withStyles } from '@material-ui/core/styles';
+import Grid from '@material-ui/core/Grid';
 import Card from '@material-ui/core/Card';
 import CardActionArea from '@material-ui/core/CardActionArea';
 import CardActions from '@material-ui/core/CardActions';
@@ -29,14 +29,14 @@ class ShopItem extends Component {
   //add item to user's cart
   addItem(){
     //check if user is logged in
-
     //only allow user to add to cart if logged in
-    if(this.props.user === false){
+    if(this.props.login === false){
       alert("Please login to add to cart");
     }
 
     else{
       //create cart item to add to cart
+      //TODO fix amtPurchased
       var itemObject = {
         pid: this.state.pid,
         productName: this.state.name,
@@ -68,45 +68,46 @@ class ShopItem extends Component {
 
   render() {
     return (
-      <div> 
-        <Card className= "card">
-          <CardActionArea>
-            <CardMedia className = "media"/>
-            <CardContent>
-              <Typography gutterBottom variant="h5" component="h2">
-                {this.props.productName}
-              </Typography>
-              <Typography gutterBottom variant="h5" component="h2">
-                Price: ${this.props.productPrice}
-              </Typography>
-              <Typography gutterBottom variant="h5" component="h2">
-                Stock: {this.props.stock}
-              </Typography>
-              <Typography component="p">
-                Info: {this.props.productInfo}
-              </Typography>
-            </CardContent>
-          </CardActionArea>
-          <CardActions>
-            <Button size="small" color="primary" onClick = {this.addItem}>
-              Add To Cart
-            </Button>
-            <Button size="small" color="primary">
-              Learn More
-            </Button>
-          </CardActions>
-        </Card>
-      </div>
+        <Grid item xs> 
+          <Card className= "card">
+            <CardActionArea>
+              <CardMedia className = "media"/>
+              <CardContent>
+                <Typography gutterBottom variant="h5" component="h2">
+                  {this.props.productName}
+                </Typography>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Price: ${this.props.productPrice}
+                </Typography>
+                <Typography gutterBottom variant="h5" component="h2">
+                  Stock: {this.props.stock}
+                </Typography>
+                <Typography component="p">
+                  Info: {this.props.productInfo}
+                </Typography>
+              </CardContent>
+            </CardActionArea>
+            <CardActions>
+              <Button size="small" color="primary" onClick = {this.addItem}>
+                Add To Cart
+              </Button>
+              <Button size="small" color="primary">
+                Learn More
+              </Button>
+            </CardActions>
+          </Card>
+        </Grid>
     )
   }
 }
 
 //obtain state from store as props for component
 
-//get login value
+//get login value and user email
 const mapStateToProps = state => {
   return{
-      user: state.auth.login
+      user: state.auth.user,
+      login: state.auth.login
   }
 }
 

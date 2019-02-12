@@ -35,12 +35,12 @@ class ShopView extends Component {
     });
 
     return (
-      <div>
+      <div className = "grow">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
           <h1> Shop </h1>
         </Grid>
 
-        <Grid container = {true} direction="row" justify="center" alignItems="center" justify-xs-space-evenly>
+        <Grid container spacing={24} direction="row" justify="center" alignItems="center" justify-xs-space-evenly>
           {items}
         </Grid>
       </div>

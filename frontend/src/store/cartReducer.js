@@ -30,6 +30,13 @@ const reducer = (state = initialState, action) => {
 
       }
 
+    //empty cart, either on logout or checkout
+    case actions.EMPTY_CART:
+      return{
+        ...state,
+        items: state.items.length = 0
+      }
+
     default:
       return state;
   }

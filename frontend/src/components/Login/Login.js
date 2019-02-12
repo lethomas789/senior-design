@@ -15,11 +15,28 @@ class Login extends Component{
             email: "",
             password: ""        
         }
+        this.getCart = this.getCart.bind(this);
         this.sendLogin = this.sendLogin.bind(this);
     }
 
+    //get logged in user's cart info
+    getCart(){
+      const apiURL = "http://localhost:4000/api/getUserCart";
+    //const apiURL = "http://localhost:4000/api/getAllProducts";
+      axios.get(apiURL, {
+        params:{
+          user: this.state.email
+        }
+      }).then(res => {
+          //after getting cart info, update redux store container
+          this.props.updateItems(res.data.data);
+        })
+        .catch(err => {
+          alert(err);
+        })
+    }
+
     //send login request, display if login was successful
-    //retrieve JWT to use for authetnicated page access
     sendLogin(){
         const apiURL = "http://localhost:4000/api/login";
         // const apiURL = "http://localhost:4000/api/login";
@@ -29,14 +46,18 @@ class Login extends Component{
                 password: this.state.password
             }
         })
+        //successful login, display message
         .then(res => {
             if(res.data.success === true){
                 alert(res.data.message);
                 //dispatch update login action to update login state
                 let email = this.state.email;
                 this.props.updateLogin(email);
-            }
 
+                //after updating login, get cart info
+                this.getCart();
+            }
+            //display error message with logging in
             else{
                 alert(res.data);
             }
@@ -73,12 +94,19 @@ class Login extends Component{
     }
 }
 
-//redux, dispatch to update state
+//redux, dispatch action to reducer to update state
 const mapDispatchToProps = dispatch => {
     return{
+        //update logged in values
         updateLogin: (currentEmail) => dispatch({
             type: actions.LOGGED_IN,
             user: currentEmail
+        }),
+
+        //get user's cart from state after logging in
+        updateItems: (response) => dispatch({
+          type: actions.GET_CART,
+          cart: response
         })
     }
 }
