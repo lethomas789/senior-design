@@ -21,6 +21,7 @@ class ShopView extends Component {
     axios.get(apiURL)
       .then(res => {
         //update product state in redux store
+        console.log(res.data);
         this.props.updateProducts(res.data.data);
       })
       .catch(err => {
@@ -30,7 +31,7 @@ class ShopView extends Component {
 
   render() {
     const items = this.props.products.map(result => {
-      return <ShopItem key = {result.productName} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
+      return <ShopItem key = {result.pid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
     });
 
     return (
@@ -50,6 +51,8 @@ class ShopView extends Component {
 //redux
 
 //dispatch action to reducer
+
+//update items from server to become state of store
 const mapDispatchToProps = dispatch => {
   return{
       updateProducts: (products) => dispatch({
@@ -59,6 +62,7 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
+//get items from products state of store
 //obtain state from store as props for component
 const mapStateToProps = state => {
   return{

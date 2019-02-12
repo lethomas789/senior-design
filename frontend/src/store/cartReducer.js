@@ -21,6 +21,7 @@ const reducer = (state = initialState, action) => {
     case actions.ADD_CART:
       return{
         ...state,
+        items: state.items.concat(action.item)
       }
 
     //remove item from cart, update state

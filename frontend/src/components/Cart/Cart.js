@@ -19,23 +19,22 @@ class Cart extends Component {
 
     axios.get(apiURL, {
       params:{
-        user: "test2@gmail.com"
+        user: this.props.user
       }
     }).then(res => {
         this.props.updateItems(res.data.data);
       })
       .catch(err => {
-
+        alert(err);
       })
   }
 
   render() {
-
     const cart = this.props.items.map(result => {
       return <CartItem key = {result.productName} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
     });
 
-    return (
+    return(
       <div>
         <Grid container direction="row">
           <h1> Current Cart: </h1>
@@ -50,7 +49,6 @@ class Cart extends Component {
 }
 
 //redux
-
 //dispatch action to reducer
 const mapDispatchToProps = dispatch => {
   return{
@@ -65,7 +63,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return{
     items: state.cart.items,
-    login: state.auth.login
+    login: state.auth.login,
+    user: state.auth.user
   }
 }
 

@@ -68,9 +68,9 @@ router.get('/', (req,res) => {
 
 router.post('/addItems', (req, res) => {
   // get user id and product id
-  let user = req.body.user;
-  let pid = req.body.pid;  // product id
-  let amtPurchased = req.body.amtPurchased;
+  let user = req.body.params.user;
+  let pid = req.body.params.pid;  // product id
+  let amtPurchased = req.body.params.amtPurchased;
 
   // return error if empty request
   if (user === '' || pid === '' || amtPurchased === '') {

@@ -6,6 +6,7 @@ import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
+//Login component, allows user to login with email and password credentials
 class Login extends Component{
     constructor(props){
         super(props);
@@ -21,6 +22,7 @@ class Login extends Component{
     //retrieve JWT to use for authetnicated page access
     sendLogin(){
         const apiURL = "http://localhost:4000/api/login";
+        // const apiURL = "http://localhost:4000/api/login";
         axios.post(apiURL, {
             params:{
                 email: this.state.email,
@@ -31,7 +33,8 @@ class Login extends Component{
             if(res.data.success === true){
                 alert(res.data.message);
                 //dispatch update login action to update login state
-                this.props.updateLogin();
+                let email = this.state.email;
+                this.props.updateLogin(email);
             }
 
             else{
@@ -73,8 +76,9 @@ class Login extends Component{
 //redux, dispatch to update state
 const mapDispatchToProps = dispatch => {
     return{
-        updateLogin: () => dispatch({
-            type: actions.LOGGED_IN
+        updateLogin: (currentEmail) => dispatch({
+            type: actions.LOGGED_IN,
+            user: currentEmail
         })
     }
 }
