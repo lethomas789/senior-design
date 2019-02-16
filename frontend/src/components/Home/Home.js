@@ -2,7 +2,9 @@ import React, { Component } from 'react';
 import './Home.css';
 import Grid from '@material-ui/core/Grid';
 import { Slide } from 'react-slideshow-image';
-
+import image1 from '../../images/dog1.jpg';
+import image2 from '../../images/dog2.jpg';
+import image3 from '../../images/dog3.jpg';
 
 const properties = {
   duration: 5000,
@@ -15,9 +17,9 @@ const properties = {
 export default class Home extends Component {
   render() {
     const slideImages = [
-      '/../images/dog1.jpg',
-      '/..images/dog2.jpg',
-      '/..images/dog3.jpg'
+      image1,
+      image2,
+      image3
     ];
      
     return (
@@ -27,22 +29,22 @@ export default class Home extends Component {
           <p>This is a ecommerce website for UC Davis's clubs. 
           Here we make merchandise available from all different clubs of Davis.</p>
           <Slide {...properties}>
-        <div className="each-slide">
-          <div style={{'backgroundImage': `url(${slideImages[0]})`}}>
-            <span>Slide 1</span>
-          </div>
-        </div>
-        <div className="each-slide">
-          <div style={{'backgroundImage': `url(${slideImages[1]})`}}>
-            <span>Slide 2</span>
-          </div>
-        </div>
-        <div className="each-slide">
-          <div style={{'backgroundImage': `url(${slideImages[2]})`}}>
-            <span>Slide 3</span>
-          </div>
-        </div>
-      </Slide>
+            <div className="each-slide">
+              <div className = "image-container">
+                <img src = {slideImages[0]}/>
+              </div>
+            </div>
+            <div className="each-slide">
+              <div className = "image-container">
+                <img src = {slideImages[1]}/>
+              </div>
+            </div>
+            <div className="each-slide">
+              <div className = "image-container">
+                <img src = {slideImages[2]}/>
+              </div>
+            </div>
+          </Slide>
         </Grid>
       </div>
     );

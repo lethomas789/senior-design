@@ -11,6 +11,10 @@ import Typography from '@material-ui/core/Typography';
 import actions from '../../store/actions';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import AddCircle from '@material-ui/icons/Add';
+import RemoveCircle from '@material-ui/icons/Remove';
+import Fab from '@material-ui/core/Fab';
+
 
 //component to display product info
 class ShopItem extends Component {
@@ -22,7 +26,11 @@ class ShopItem extends Component {
       pid: this.props.pid,
       amtPurchased: 1
     }
+
+    //bind functions to component
     this.addItem = this.addItem.bind(this);
+    this.addQuantity = this.addQuantity.bind(this);
+    this.removeQuantity = this.removeQuantity.bind(this);
   }
 
   //function to update cart of user
@@ -66,6 +74,30 @@ class ShopItem extends Component {
     }
   }
 
+  //add quantity purchased
+  addQuantity(){
+    var currentQuantity = this.state.amtPurchased;
+    currentQuantity += 1;
+    this.setState({
+      amtPurchased: currentQuantity
+    });
+  }
+
+  //remove quantity purchased
+  removeQuantity(){
+    var currentQuantity = this.state.amtPurchased;
+    if(currentQuantity <= 1){
+      alert("Must have at least one item");
+    }
+
+    else{
+      currentQuantity -= 1;
+      this.setState({
+        amtPurchased: currentQuantity
+      });
+    }
+  }
+
   render() {
     return (
         <Grid item xs> 
@@ -88,9 +120,20 @@ class ShopItem extends Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
+              <Typography variant = "h6">
+                <Fab size = "small" aria-label = "Remove" onClick = {this.removeQuantity}>
+                  <RemoveCircle/>
+                </Fab>
+                Quantity: {this.state.amtPurchased}
+                <Fab size = "small" aria-label = "Add" onClick = {this.addQuantity}>
+                  <AddCircle/>
+                </Fab>
+              </Typography>
+
               <Button size="small" color="primary" onClick = {this.addItem}>
                 Add To Cart
               </Button>
+
               <Button size="small" color="primary">
                 Learn More
               </Button>
