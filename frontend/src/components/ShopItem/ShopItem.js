@@ -20,6 +20,8 @@ import Fab from '@material-ui/core/Fab';
 class ShopItem extends Component {
   constructor(props){
     super(props);
+
+    //initial state of products
     this.state = {
       name: this.props.productName,
       price: this.props.productPrice,
@@ -44,12 +46,11 @@ class ShopItem extends Component {
 
     else{
       //create cart item to add to cart
-      //TODO fix amtPurchased
       var itemObject = {
         pid: this.state.pid,
         productName: this.state.name,
         productPrice: this.state.price,
-        amtPurchased: 1
+        amtPurchased: this.state.amtPurchased
       }
       //add to cart of redux state
       this.props.addToCart(itemObject);
