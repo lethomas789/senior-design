@@ -6,7 +6,12 @@ const db = admin.firestore();
 
 router.get('/', (req,res) => {
   // get user id
-  let user = req.query.user;
+  if (req.query.params) {
+    var user = req.query.params.user;
+  }
+  else {
+    var user = req.query.user;
+  }
 
   // return error if empty request
   if (!user) {
@@ -29,8 +34,6 @@ router.get('/', (req,res) => {
     // get cart from user
     // cart id doc is user id
     let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
-
-    // TODO, send back higher level cart info
 
     let cartItems = [];
 
@@ -66,11 +69,18 @@ router.get('/', (req,res) => {
 });
 
 router.post('/addItems', (req, res) => {
-  // get user id and product id
-  let user = req.body.params.user;
-  let pid = req.body.params.pid;  // product id
-  let amtPurchased = Number(req.body.params.amtPurchased);
-  
+  if (req.body.params) {
+    // get user id and product id
+    var user = req.body.params.user;
+    var pid = req.body.params.pid;  // product id
+    var amtPurchased = Number(req.body.params.amtPurchased);
+  }
+  else {
+    var user = req.body.user;
+    var pid = req.body.pid;  // product id
+    var amtPurchased = Number(req.body.amtPurchased);
+  }
+
   // return error if empty request
   if(!user || !pid || !amtPurchased) {
     return res.status(400).json({
@@ -115,6 +125,7 @@ router.post('/addItems', (req, res) => {
             let totalItemPrice = amtPurchased * productInfo.productPrice;
 
             let data = {
+              pid: pid,
               amtPurchased: amtPurchased,
               productName: productInfo.productName,
               productPrice: productInfo.productPrice,
@@ -137,6 +148,7 @@ router.post('/addItems', (req, res) => {
 
 
             let data = {
+              pid: pid,
               amtPurchased: newAmt,
               productName: productInfo.productName,
               productPrice: productInfo.productPrice,
@@ -182,8 +194,14 @@ router.post('/addItems', (req, res) => {
 });
 
 router.post('/deleteItems', (req,res) => {
-  let user = req.body.user;
-  let pid = req.body.pid;
+  if (req.body.params) {
+    var user = req.body.params.user;
+    var pid = req.body.params.pid;
+  }
+  else {
+    var user = req.body.user;
+    var pid = req.body.pid;
+  }
 
   // return error if empty request
   if (user === '' || pid === '') {
@@ -231,7 +249,6 @@ router.post('/deleteItems', (req,res) => {
         message: 'Error in getting cartItem ref:'  + err
       });
     });
-
   })
   .catch(err => {  // catch for userRef.get
     console.log('Error in getting user:', user);
@@ -244,9 +261,16 @@ router.post('/deleteItems', (req,res) => {
 
 // update amt on user cart page
 router.post('/updateItems', (req, res) => {
-  let user = req.body.user;
-  let pid = req.body.pid;
-  let amtPurchased = Number(req.body.amtPurchased);
+  if (req.body.params) {
+    var user = req.body.params.user;
+    var pid = req.body.params.pid;
+    var amtPurchased = Number(req.body.params.amtPurchased);
+  }
+  else {
+    var user = req.body.user;
+    var pid = req.body.pid;
+    var amtPurchased = Number(req.body.amtPurchased);
+  }
 
   // return error if empty request
   if (!user || !pid || !amtPurchased) {
@@ -304,5 +328,65 @@ router.post('/updateItems', (req, res) => {
     console.log('Error: UpdateItems transaction failed:', err);
   });
 });
+
+router.post('/updateCart', (req,res) => {
+  if (req.body.params) {
+    var user = req.body.params.user;
+    var cartTotalPrice = Number(req.body.params.cartTotalPrice);
+    var itemsInCart = Number(req.body.params.itemsInCart);
+    var vendorsInOrder = req.body.params.vendorsInOrder;
+  }
+  else {
+    var user = req.body.user;
+    var cartTotalPrice = Number(req.body.cartTotalPrice);
+    var itemsInCart = Number(req.body.itemsInCart);
+    var vendorsInOrder = req.body.vendorsInOrder;
+  }
+
+  if (!user || !cartTotalPrice || !itemsInCart || !vendorsInOrder) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid request params'
+    });
+  }
+
+  let userRef = db.collection('users').doc(user);
+
+  userRef.get().then(doc => {
+    // if user doesnt exist, stop
+    if (!doc.exists) {
+      console.log('Error: user does not exist: ', user);
+      return res.status(400).json({
+        success: false,
+        message: 'Cannot update cart for non-existent user: ' + user
+      });
+    }
+
+    // else update their cart
+    let userCartRef = db.collection('users').doc(user).collection('cart').doc(user);
+
+    let data = {
+      cartTotalPrice: cartTotalPrice,
+      itemsInCart: itemsInCart,
+      vendorsInOrder: vendorsInOrder
+    };
+
+    // set the new user Cart info
+    userCartRef.set(data);
+    return res.status(200).json({
+      success: true,
+      message: 'Succesfully set new cart info for user: ' + user
+    });
+  })
+  .catch(err => {
+    console.log('Error in getting user:', err);
+    return res.status(500).json({
+      success: false,
+      message: 'Error in getting user: ' + err
+    });
+  });
+});
+
+
 
 module.exports = router;
