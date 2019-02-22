@@ -194,6 +194,7 @@ router.post('/addItems', (req, res) => {
 });
 
 router.post('/deleteItems', (req,res) => {
+  console.log(req);
   if (req.body.params) {
     var user = req.body.params.user;
     var pid = req.body.params.pid;
