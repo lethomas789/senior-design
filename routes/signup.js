@@ -118,6 +118,7 @@ router.post('/', (req, res) => {
         return res.status(200).json({
           success: true,
           message: "Signup Successful!",
+          email: email,
           token: 'Bearer ' + token
         });
       });

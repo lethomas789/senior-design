@@ -6,12 +6,16 @@ const db = admin.firestore();
 
 router.get('/', (req,res) => {
   // get user id
+<<<<<<< HEAD
   if (req.query.params) {
     var user = req.query.params.user;
   }
   else {
     var user = req.query.user;
   }
+=======
+  let user = req.query.user;
+>>>>>>> a0b6bd5a1aaccda796bb6611cd668cad65dc4ef8
 
   // return error if empty request
   if (!user) {

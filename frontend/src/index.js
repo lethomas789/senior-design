@@ -3,8 +3,24 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 import * as serviceWorker from './serviceWorker';
+import {createStore, combineReducers} from 'redux';
+import {Provider} from 'react-redux';
+import loginReducer from './store/loginReducer';
+import getProductsReducer from './store/getProductsReducer';
+import cartReducer from './store/cartReducer';
 
-ReactDOM.render(<App />, document.getElementById('root'));
+//create store for redux state management
+//store stores state of application
+const rootReducer = combineReducers({
+  auth: loginReducer,
+  getAllItems: getProductsReducer,
+  cart: cartReducer
+});
+
+const store = createStore(rootReducer);
+
+//Provider tag allows all components to have access to store
+ReactDOM.render(<Provider store = {store}> <App /> </Provider>, document.getElementById('root'));
 
 // hot module reloading used to reload app in browser w/out performing a page
 // refresh. Useful when wanting to test w/out losing console.log() s
@@ -12,8 +28,4 @@ if (module.hot) {
   module.hot.accept()
 }
 
-
-// If you want your app to work offline and load faster, you can change
-// unregister() to register() below. Note this comes with some pitfalls.
-// Learn more about service workers: http://bit.ly/CRA-PWA
 serviceWorker.unregister();
