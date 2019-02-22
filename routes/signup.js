@@ -12,11 +12,21 @@ const saltRounds = 10;
 // sign up user
 router.post('/', (req, res) => {
 
-  // extract user info from request
-  var firstName = req.body.params.firstName;
-  var lastName = req.body.params.lastName;
-  var email = req.body.params.email;
-  var password = req.body.params.password;
+  if (req.body.params) {
+    // extract user info from request
+    var firstName = req.body.params.firstName;
+    var lastName = req.body.params.lastName;
+    var email = req.body.params.email;
+    var password = req.body.params.password;
+  }
+  else {
+    // extract user info from request
+    var firstName = req.body.firstName;
+    var lastName = req.body.lastName;
+    var email = req.body.email;
+    var password = req.body.password;
+  }
+
 
   // validation, checking empty inputs
   if (firstName.trim() === '' || lastName.trim() === '' || email.trim() === '' || password.trim() === '') {
