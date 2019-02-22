@@ -6,7 +6,7 @@ const db = admin.firestore();
 
 router.get('/', (req,res) => {
   // get user id
-  let user = req.body.user;
+  let user = req.query.user;
 
   // return error if empty request
   if (!user) {
@@ -67,10 +67,10 @@ router.get('/', (req,res) => {
 
 router.post('/addItems', (req, res) => {
   // get user id and product id
-  let user = req.body.user;
-  let pid = req.body.pid;  // product id
-  let amtPurchased = Number(req.body.amtPurchased);
-
+  let user = req.body.params.user;
+  let pid = req.body.params.pid;  // product id
+  let amtPurchased = Number(req.body.params.amtPurchased);
+  
   // return error if empty request
   if(!user || !pid || !amtPurchased) {
     return res.status(400).json({
