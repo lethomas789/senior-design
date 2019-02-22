@@ -9,7 +9,7 @@ router.get('/', (req,res) => {
   let user = req.body.user;
 
   // return error if empty request
-  if (user === '') {
+  if (!user) {
     return res.status(400).json({
       success: false,
       message: 'Invalid request params'
@@ -69,10 +69,10 @@ router.post('/addItems', (req, res) => {
   // get user id and product id
   let user = req.body.user;
   let pid = req.body.pid;  // product id
-  let amtPurchased = req.body.amtPurchased;
+  let amtPurchased = Number(req.body.amtPurchased);
 
   // return error if empty request
-  if (user === '' || pid === '' || amtPurchased === '') {
+  if(!user || !pid || !amtPurchased) {
     return res.status(400).json({
       success: false,
       message: 'Invalid request params'
@@ -112,20 +112,17 @@ router.post('/addItems', (req, res) => {
       var transaction = db.runTransaction(t => {
         return t.get(cartItemRef).then(doc => {
           if (!doc.exists) {
-            let totalItemPrice = Number(amtPurchased) * Number(productInfo.productPrice);
+            let totalItemPrice = amtPurchased * productInfo.productPrice;
 
             let data = {
-              amtPurchased: Number(amtPurchased),
+              amtPurchased: amtPurchased,
               productName: productInfo.productName,
-              productPrice: Number(productInfo.productPrice),
-              totalPrice: Number(totalItemPrice)
+              productPrice: productInfo.productPrice,
+              totalPrice: totalItemPrice
             };
 
             // set new item(s) purchased into cart, with pid as doc identifier
             cartRef.doc(pid).set(data);
-
-            // TODO, cloud functions to update cart info like vendorsInOrder,
-            // itemsInCart, totalPrice
 
             console.log('Succesfully added to cart of user: ' + user);
             return res.status(200).json({
@@ -135,8 +132,8 @@ router.post('/addItems', (req, res) => {
           }
           else {
             let oldItemAmt = doc.data().amtPurchased;
-            let newAmt = oldItemAmt + Number(amtPurchased);
-            let totalItemPrice = newAmt * Number(productInfo.productPrice);
+            let newAmt = oldItemAmt + amtPurchased;
+            let totalItemPrice = newAmt * productInfo.productPrice;
 
 
             let data = {
@@ -146,8 +143,7 @@ router.post('/addItems', (req, res) => {
               totalPrice: totalItemPrice
             };
 
-            // set new item(s) purchased into cart, with pid as doc identifier
-            // cartRef.doc(pid).set(data);
+            // update cart item
             t.update(cartItemRef, {
               amtPurchased: newAmt,
               totalPrice: totalItemPrice
@@ -162,10 +158,10 @@ router.post('/addItems', (req, res) => {
         });
       })
       .then(result => {
-        console.log('Transaction success!');
+        console.log('Update cart transaction success!');
       })
       .catch(err => {
-        console.log('Transaction failure:', err);
+        console.log('Update cart transaction failure:', err);
       });
     })
     .catch(err => {  // catch for productInfoRef.get()
@@ -199,6 +195,7 @@ router.post('/deleteItems', (req,res) => {
 
   let userRef = db.collection('users').doc(user);
 
+  // check to make sure existing user
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('No such user: ', user);
@@ -210,6 +207,7 @@ router.post('/deleteItems', (req,res) => {
     
     let cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(pid);
 
+    // check to make sure item exists for deltion
     cartItemRef.get().then(doc => {
       if (!doc.exists) {
         console.log('Cannot delete non-existing item for user:', user);
@@ -242,7 +240,69 @@ router.post('/deleteItems', (req,res) => {
       message: 'Error in getting user' + err
     });
   });
+});
 
+// update amt on user cart page
+router.post('/updateItems', (req, res) => {
+  let user = req.body.user;
+  let pid = req.body.pid;
+  let amtPurchased = Number(req.body.amtPurchased);
+
+  // return error if empty request
+  if (!user || !pid || !amtPurchased) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid request params'
+    });
+  }
+
+  if (amtPurchased <= 0) {
+    return res.status(400).json({
+      success: false,
+      message: 'Invalid request params'
+    });
+  }
+
+  let cartItemRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems').doc(pid);
+
+  let transaction = db.runTransaction(t => {
+    return t.get(cartItemRef).then(doc => {
+      if (!doc.exists) {
+        console.log('Cannot alter non-existing item in cart.');
+        return res.status(500).json({
+          success: false,
+          message: 'Cannot alter non-existing item in cart.'
+        });
+      }
+      else {
+        let productPrice = doc.data().productPrice;
+        let newTotalPrice = amtPurchased * productPrice;
+
+        t.update(cartItemRef, {
+          amtPurchased: amtPurchased,
+          totalPrice: newTotalPrice
+        });
+        console.log('Successfully altered item quantity in user cart:', user);
+        return res.status(200).json({
+          success: true,
+          message: 'Sucessfully altered item quantity in user cart: ' + user
+        });
+      }
+    })
+    .catch(err => {
+      console.log('Error in getting pid from cart', err);
+      return res.status(500).json({
+        success: false,
+        message: 'Error in getting pid from cart' + err
+      });
+    });
+  })
+  .then(result => {
+    console.log('UpdateItems transaction success.');
+  })
+  .catch(err => {
+    console.log('Error: UpdateItems transaction failed:', err);
+  });
 });
 
 module.exports = router;
