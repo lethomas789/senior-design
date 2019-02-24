@@ -1,28 +1,54 @@
-import React, { Component } from 'react'
-import PropTypes from 'prop-types';
-import { withStyles } from '@material-ui/core/styles';
-import AppBar from '@material-ui/core/AppBar';
-import Toolbar from '@material-ui/core/Toolbar';
-import Typography from '@material-ui/core/Typography';
-import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
-import Signup from '../Signup/Signup';
+import React, { Component } from 'react';
 import './Home.css';
+import Grid from '@material-ui/core/Grid';
+import { Slide } from 'react-slideshow-image';
+import image1 from '../../images/dog1.jpg';
+import image2 from '../../images/dog2.jpg';
+import image3 from '../../images/dog3.jpg';
+
+const properties = {
+  duration: 5000,
+  transitionDuration: 500,
+  infinite: true,
+  indicators: true,
+  arrows: true
+}
 
 export default class Home extends Component {
   render() {
+    const slideImages = [
+      image1,
+      image2,
+      image3
+    ];
+     
     return (
       <div id = "homeContainer">
-        <div id = "textContainer">
+        <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
           <h1> Welcome to ECS193 ECommerce! </h1>
           <p>This is a ecommerce website for UC Davis's clubs. 
           Here we make merchandise available from all different clubs of Davis.</p>
-        </div>
+          <Slide {...properties}>
+            <div className="each-slide">
+              <div className = "image-container">
+                <img src = {slideImages[0]}/>
+              </div>
+            </div>
+            <div className="each-slide">
+              <div className = "image-container">
+                <img src = {slideImages[1]}/>
+              </div>
+            </div>
+            <div className="each-slide">
+              <div className = "image-container">
+                <img src = {slideImages[2]}/>
+              </div>
+            </div>
+          </Slide>
+        </Grid>
       </div>
-    )
+    );
   }
 }
 
-
-
+ 

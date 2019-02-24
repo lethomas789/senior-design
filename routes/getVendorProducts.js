@@ -5,12 +5,17 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 
 router.get('/', (req,res) => {
-  var vendor = req.body.vendor;
+  if (req.query.params) {
+    var vendor = req.query.params.vendor;
+  }
+  else {
+    var vendor = req.query.vendor;
+  }
 
   // can do db.doc('collection/pathToDoc');
 
   // require certain response params
-  if (vendor ==- '') {
+  if (!vendor) {
     return res.status(400).json({
       success: false,
       message: 'Invalid request params'
