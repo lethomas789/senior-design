@@ -11,6 +11,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/storage": "^2.4.2",
     "bcrypt-nodejs": "0.0.3",
     "body-parser": "^1.18.3",
     "concurrently": "^4.1.0",

@@ -15,6 +15,18 @@ admin.initializeApp({
 
 const db = admin.firestore().settings({timestampsInSnapshots: true });
 
+// firebase setup
+const config = {
+    "apiKey": "AIzaSyAGZ_iJTiDvDC45U99h_xHMMkaR0BhIUJM",
+    "authDomain": "ecs193-ecommerce.firebaseapp.com",
+    "databaseURL": "https://ecs193-ecommerce.firebaseio.com",
+    "storageBucket": "ecs193-ecommerce.appspot.com",
+    "serviceAccount":
+    "./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-b1f4760eb4.json"
+};
+
+firebase.initializeApp(config);
+
 //express setup
 const app = express();
 // parse body request
