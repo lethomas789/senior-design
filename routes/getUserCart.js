@@ -119,6 +119,7 @@ router.post('/addItems', (req, res) => {
 
       let cartItemRef = cartRef.doc(pid);
 
+
       var transaction = db.runTransaction(t => {
         return t.get(cartItemRef).then(doc => {
           if (!doc.exists) {
@@ -224,6 +225,7 @@ router.post('/deleteItems', (req,res) => {
     }
     
     let cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(pid);
+
 
     // check to make sure item exists for deltion
     cartItemRef.get().then(doc => {

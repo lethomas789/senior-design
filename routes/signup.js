@@ -27,6 +27,8 @@ router.post('/', (req, res) => {
     var password = req.body.password;
   }
 
+  // TODO, confirm pass on signup
+
 
   // validation, checking empty inputs
   if (firstName.trim() === '' || lastName.trim() === '' || email.trim() === '' || password.trim() === '') {
@@ -75,7 +77,8 @@ router.post('/', (req, res) => {
           lastName: lastName,
         },
         email: email,
-        password: password
+        password: password,
+        isAdmin: false  // init to false, change to true somewhere else
       };
 
       // password hashing
