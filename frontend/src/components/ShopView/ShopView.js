@@ -13,8 +13,7 @@ class ShopView extends Component {
 
   //get products from server after mounting to screen
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getAllProducts";
-    // const apiURL = "http://localhost:4000/api/getAllProducts";
+    const apiURL = "/api/getAllProducts";
 
     //get all products from server
     //update state of view to obtain items
@@ -51,7 +50,6 @@ class ShopView extends Component {
 //redux
 
 //dispatch action to reducer
-
 //update items from server to become state of store
 const mapDispatchToProps = dispatch => {
   return{
