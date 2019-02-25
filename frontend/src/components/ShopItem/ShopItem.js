@@ -44,16 +44,6 @@ class ShopItem extends Component {
     }
 
     else{
-      //create cart item to add to cart
-      var itemObject = {
-        pid: this.state.pid,
-        productName: this.state.name,
-        productPrice: this.state.price,
-        amtPurchased: this.state.amtPurchased
-      }
-      //add to cart of redux state
-      this.props.addToCart(itemObject);
-
       //update user's cart on server
       var apiURL = "http://localhost:4000/api/getUserCart/addItems";
       axios.post(apiURL, {
@@ -65,6 +55,23 @@ class ShopItem extends Component {
       })
       .then(res => {
         if(res.data.success === true){
+
+          //after adding item to server, calculate total price of item to cart of store
+          var currentTotalPrice = 0;
+          currentTotalPrice = Number(this.state.amtPurchased) * Number(this.state.price);
+          currentTotalPrice = currentTotalPrice.toFixed(2);
+
+          //create item to add to redux store
+          var itemObject = {
+            pid: this.state.pid,
+            productName: this.state.name,
+            productPrice: this.state.price,
+            amtPurchased: this.state.amtPurchased,
+            totalPrice: currentTotalPrice
+          }
+
+          //add to cart of redux state
+          this.props.addToCart(itemObject);
           alert("Item added to cart!");
         }
       })

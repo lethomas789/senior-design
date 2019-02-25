@@ -4,7 +4,18 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import { connect } from 'react-redux';
 import actions from '../../store/actions';
+import PropTypes from 'prop-types';
+import { withStyles } from '@material-ui/core/styles';
 
+//styles for checkout button
+const styles = theme => ({
+  margin: {
+    margin: theme.spacing.unit,
+  },
+  extendedIcon: {
+    marginRight: theme.spacing.unit,
+  },
+});
 
 //calculate total price of user's cart and allow user to checkout
 //get user's cart info from state
@@ -13,42 +24,17 @@ class Checkout extends Component {
     super(props);
   }
 
-  //calculate total from user's cart
-  // componentDidMount(){
-  //   //get total from items
-  //   var currentCart = this.props.items;
-  //   var priceTotal = 0;
-
-  //   //if cart is empty, total price is $0
-  //   if(currentCart.length === 0){
-  //     this.setState({
-  //       total: 0
-  //     })
-  //   }
-
-  //   //if there are items, calculate price
-  //   else{
-  //     for(let i = 0; i < currentCart.length; i++){
-  //       priceTotal += Number(currentCart[i].totalPrice);
-  //     }
-  
-  //     this.setState({
-  //       total: priceTotal
-  //     })
-  //   }
-  // }
-
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <Grid container direction="row">
           <h1> Total: ${this.props.total} </h1>
-          <Button> Checkout </Button>
+          <Button variant = "contained" size = "small" color = "primary" className = {classes.margin}> Checkout </Button>
         </Grid>
       </div>
     )
   }
-
 }
 
 //obtain state from store as props for component
@@ -73,4 +59,8 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Checkout);
+Checkout.PropTypes = {
+  classes: PropTypes.object.isRequired
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout));

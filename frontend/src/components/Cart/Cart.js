@@ -33,6 +33,7 @@ class Cart extends Component {
         priceTotal += Number(currentCart[i].totalPrice);
       }
       console.log(priceTotal);
+      priceTotal = priceTotal.toFixed(2);
       this.props.updateTotal(priceTotal);
     }
   }
