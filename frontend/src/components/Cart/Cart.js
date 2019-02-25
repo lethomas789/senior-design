@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import actions from '../../store/actions';
 import Grid from '@material-ui/core/Grid';
 import CartItem from '../CartItem/CartItem';
+import Checkout from '../Checkout/Checkout';
 
 //component to display user's cart
 class Cart extends Component {
@@ -14,21 +15,25 @@ class Cart extends Component {
 
   //get cart from server for user
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getUserCart";
-    //if user is logged in, get cart info
-    if (this.props.login === true){
-      axios.get(apiURL,{
-        params:{
-          user: this.props.user
-        }
-      })
-      .then(res => {
-        //after getting cart from server, update user's items in redux state
-        this.props.updateItems(res.data.data);
-      })
-      .catch(err => {
-        alert(err);
-      })
+    console.log("calculating price");
+    //get total from items
+    var currentCart = this.props.items;
+    var priceTotal = 0;
+
+    //if cart is empty, total price is $0
+    if(currentCart.length === 0){
+      console.log("cart is empty");
+      this.props.updateTotal(priceTotal);
+    }
+
+    //if there are items, calculate total price
+    else{
+      console.log("cart is not empty");
+      for(let i = 0; i < currentCart.length; i++){
+        priceTotal += Number(currentCart[i].totalPrice);
+      }
+      console.log(priceTotal);
+      this.props.updateTotal(priceTotal);
     }
   }
 
@@ -47,6 +52,8 @@ class Cart extends Component {
         <Grid container direction="column" justify-xs-space-evenly>
           {cart}
         </Grid>
+
+        <Checkout/>
       </div>
     );
   }
@@ -59,6 +66,12 @@ const mapDispatchToProps = dispatch => {
     updateItems: (response) => dispatch({
       type: actions.GET_CART,
       cart: response
+    }),
+
+    //update store of cart total
+    updateTotal: (sum) => dispatch({
+      type: actions.UPDATE_TOTAL,
+      total: sum
     })
   }
 }

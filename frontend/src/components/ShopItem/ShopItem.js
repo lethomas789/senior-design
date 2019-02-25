@@ -55,7 +55,7 @@ class ShopItem extends Component {
       this.props.addToCart(itemObject);
 
       //update user's cart on server
-      var apiURL = "/api/getUserCart/addItems";
+      var apiURL = "http://localhost:4000/api/getUserCart/addItems";
       axios.post(apiURL, {
         params:{
           user: this.props.user,

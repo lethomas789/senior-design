@@ -3,7 +3,8 @@ import actions from './actions';
 
 //initial state of cart reducer
 const initialState = {
-  items: []
+  items: [],
+  total: 0
 };
 
 const reducer = (state = initialState, action) => {
@@ -16,7 +17,6 @@ const reducer = (state = initialState, action) => {
         items: action.cart
       }
 
-    //TO DO, 
     //add item to cart, update state
     case actions.ADD_CART:
       return{
@@ -37,10 +37,15 @@ const reducer = (state = initialState, action) => {
         items: state.items.length = 0
       }
 
+    case actions.UPDATE_TOTAL:
+      return{
+        ...state,
+        total: action.total
+      }
+
     default:
       return state;
   }
 }
 
 export default reducer;
-
