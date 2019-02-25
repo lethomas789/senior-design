@@ -13,6 +13,7 @@ import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
 import CartIcon from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
+import axios from 'axios';
 
 //variables to store routes to redirect to with Link component
 const homeRoute = "/";
@@ -53,9 +54,31 @@ class ButtonAppBar extends Component {
 
     //check if user is logged in to view cart
     viewCartCheck(){
+      //prevent user from using cart until logged in
       if(this.props.loginValue === false){
         alert("Please login to view cart");
-      }   
+      }
+      
+      //if logged in, get cart and calculate cart's total
+      else{
+        const apiURL = "http://localhost:4000/api/getUserCart";
+        //if user is logged in, get cart info
+        if (this.props.login === true){
+          axios.get(apiURL,{
+            params:{
+              user: this.props.user
+            }
+          })
+          .then(res => {
+            //after getting cart from server, update user's items in redux state
+            alert("updating store with new items");
+            this.props.updateItems(res.data.data);
+          })
+          .catch(err => {
+            alert(err);
+          })
+        }
+      }
     }
     
     render(){
@@ -122,10 +145,12 @@ class ButtonAppBar extends Component {
   //dispatch action to reducer
   const mapDispatchToProps = dispatch => {
     return{
+        //update store that user logged out
         updateLogout: () => dispatch({
-            type: actions.LOGGED_OUT
+          type: actions.LOGGED_OUT
         }),
 
+        //update store cart is empty
         emptyCart: () => dispatch({
           type: actions.EMPTY_CART
         })
@@ -138,7 +163,9 @@ class ButtonAppBar extends Component {
     return{
         loginValue: state.auth.login,
         loginText: state.auth.text,
-        cartLength: state.cart.items.length
+        user: state.auth.user,
+        cartLength: state.cart.items.length,
+        items: state.cart.items
     }
   }
 
