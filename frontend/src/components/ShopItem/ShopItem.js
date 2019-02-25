@@ -15,7 +15,6 @@ import AddCircle from '@material-ui/icons/Add';
 import RemoveCircle from '@material-ui/icons/Remove';
 import Fab from '@material-ui/core/Fab';
 
-
 //component to display product info
 class ShopItem extends Component {
   constructor(props){
@@ -56,7 +55,7 @@ class ShopItem extends Component {
       this.props.addToCart(itemObject);
 
       //update user's cart on server
-      var apiURL = "http://localhost:4000/api/getUserCart/addItems";
+      var apiURL = "/api/getUserCart/addItems";
       axios.post(apiURL, {
         params:{
           user: this.props.user,
@@ -87,6 +86,7 @@ class ShopItem extends Component {
   //remove quantity purchased
   removeQuantity(){
     var currentQuantity = this.state.amtPurchased;
+    //can't have negative amount of items selected
     if(currentQuantity <= 1){
       alert("Must have at least one item");
     }
@@ -146,7 +146,6 @@ class ShopItem extends Component {
 }
 
 //obtain state from store as props for component
-
 //get login value and user email
 const mapStateToProps = state => {
   return{
@@ -157,7 +156,6 @@ const mapStateToProps = state => {
 
 
 //dispatch action to reducer
-
 //update redux state of current cart
 const mapDispatchToProps = dispatch => {
   return{
