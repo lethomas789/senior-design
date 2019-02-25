@@ -13,7 +13,7 @@ class ShopView extends Component {
 
   //get products from server after mounting to screen
   componentDidMount(){
-    const apiURL = "/api/getAllProducts";
+    const apiURL = "http://localhost:4000/api/getAllProducts";
 
     //get all products from server
     //update state of view to obtain items
