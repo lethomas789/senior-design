@@ -7,7 +7,8 @@
     "backend": "nodemon app.js",
     "frontend": "cd frontend/ && npm run start",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
-    "start": "node.js"
+    "start": "app.js"
+
   },
   "author": "",
   "license": "ISC",
