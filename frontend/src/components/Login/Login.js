@@ -5,6 +5,19 @@ import './Login.css';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import { DialogActions } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles'; 
+import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
+
+const styles = theme => ({
+    progress: {
+        margin: theme.spacing.unit * 2
+    }
+});
 
 //Login component, allows user to login with email and password credentials
 class Login extends Component{
@@ -13,10 +26,15 @@ class Login extends Component{
         //store user input
         this.state = {
             email: "",
-            password: ""        
+            password: "",
+            open: false,
+            progressValue: 0,
+            progressVariant: 'determinate',
+            responseMessage: ''        
         }
         this.getCart = this.getCart.bind(this);
         this.sendLogin = this.sendLogin.bind(this);
+        this.handleClose = this.handleClose.bind(this);
     }
 
     //get logged in user's cart info
@@ -37,6 +55,11 @@ class Login extends Component{
 
     //send login request, display if login was successful
     sendLogin(){
+        //load progress circle to wait for login check
+        this.setState({
+            progressValue: 50,
+            progressVariant: "indeterminate"
+        });
         const apiURL = "http://localhost:4000/api/login";
         axios.post(apiURL, {
             params:{
@@ -47,7 +70,13 @@ class Login extends Component{
         //successful login, display message
         .then(res => {
             if(res.data.success === true){
-                alert(res.data.message);
+                //display dialog for login successful
+                this.setState({
+                    open: true,
+                    progressValue: 0,
+                    progressVariant: "determinate",
+                    responseMessage: "Login Succesful!"
+                });
                 //dispatch update login action to update login state
                 let email = this.state.email;
                 this.props.updateLogin(email);
@@ -57,7 +86,12 @@ class Login extends Component{
             }
             //display error message with logging in
             else{
-                alert(res.data.message);
+                this.setState({
+                    open: true,
+                    progressValue: 0,
+                    progressVariant: "determinate",
+                    responseMessage: res.data.message
+                });
             }
         })
         .catch(err => {
@@ -65,7 +99,15 @@ class Login extends Component{
         })
     }
 
+    //handle dialog closing
+    handleClose(){
+        this.setState({
+            open: false
+        })
+    }
+
     render(){
+        const { classes } = this.props;
         return(
             <div id = "loginContainer">
                 <div id = "loginForms">
@@ -85,7 +127,23 @@ class Login extends Component{
                         onChange={(event) => this.setState({ password: event.target.value })}
                         />
                     </div>
+
                     <Button id = "signupButton" onClick = {this.sendLogin}> Login  </Button>
+
+                    <CircularProgress size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
+                    
+                    <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+                        <DialogContent>
+                            <DialogContentText id = "alert-dialog-description">
+                                {this.state.responseMessage}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick = {this.handleClose} color = "primary">
+                                Ok
+                            </Button>
+                        </DialogActions>
+                    </Dialog> 
                 </div>
             </div>
         );
@@ -109,5 +167,8 @@ const mapDispatchToProps = dispatch => {
     }
 }
 
-export default connect(null,mapDispatchToProps)(Login)
+Login.propsTypes = {
+    classes: PropTypes.object.isRequired
+};
 
+export default connect(null,mapDispatchToProps)(withStyles(styles)(Login));

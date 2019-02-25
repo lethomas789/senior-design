@@ -3,8 +3,21 @@ import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import './Signup.css';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import { DialogActions } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles'; 
+import CircularProgress from '@material-ui/core/CircularProgress';
+import PropTypes from 'prop-types';
 
-export default class Signup extends Component {
+const styles = theme => ({
+  progress: {
+    margin: theme.spacing.unit * 2
+  }
+});
+
+class Signup extends Component {
   constructor(props) {
     super(props)
     //store user input
@@ -14,12 +27,29 @@ export default class Signup extends Component {
       email: "",
       password: "",
       confirmPassword: "",
+      open: false,
+      progressValue: 0,
+      progressVariant: 'determinate',
+      responseMessage: ''
     }
     this.sendSignup = this.sendSignup.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  //handle dialog closing
+  handleClose(){
+    this.setState({
+        open: false
+    })
   }
 
   //send signup request
   sendSignup(){
+    //load progress circle to wait for signup check
+    this.setState({
+      progressValue: 50,
+      progressVariant: "indeterminate"
+    });
     const apiURL = "http://localhost:4000/api/signup";
     axios.post(apiURL, {
       params: {
@@ -31,11 +61,21 @@ export default class Signup extends Component {
     })
     .then(res => {
       if(res.data.success === true){
-        alert(res.data.message);
+        this.setState({
+          open: true,
+          progressValue: 0,
+          progressVariant: "determinate",
+          responseMessage: "Signup successful! Please login!"
+        })
       }
 
       else{
-        alert(res.data.message);
+        this.setState({
+          open: true,
+          progressValue: 0,
+          progressVariant: "determinate",
+          responseMessage: res.data.message
+        })
       }
     })
     .catch(err => {
@@ -44,6 +84,7 @@ export default class Signup extends Component {
   }
   
   render() {
+    const { classes } = this.props;
     return (
       <div id = "signupContainer">
         <div id = "signupForms">
@@ -78,8 +119,27 @@ export default class Signup extends Component {
             />
           </div>
           <Button id = "signupButton" onClick = {this.sendSignup}> Sign Up  </Button>
+          <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+            <DialogContent>
+              <DialogContentText id = "alert-dialog-description">
+                {this.state.responseMessage}
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button onClick = {this.handleClose} color = "primary">
+                Ok
+              </Button>
+            </DialogActions>
+          </Dialog>
+          <CircularProgress variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
         </div>
       </div>
     )
   }
 }
+
+Signup.propTypes = {
+  classes: PropTypes.object.isRequired,
+};
+
+export default withStyles(styles)(Signup);
