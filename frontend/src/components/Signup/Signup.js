@@ -20,7 +20,7 @@ export default class Signup extends Component {
 
   //send signup request
   sendSignup(){
-    const apiURL = "/api/signup";
+    const apiURL = "http://localhost:4000/api/signup";
     axios.post(apiURL, {
       params: {
         firstName: this.state.firstName,

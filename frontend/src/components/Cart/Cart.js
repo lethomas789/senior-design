@@ -14,7 +14,7 @@ class Cart extends Component {
 
   //get cart from server for user
   componentDidMount(){
-    const apiURL = "/api/getUserCart";
+    const apiURL = "http://localhost:4000/api/getUserCart";
     //if user is logged in, get cart info
     if (this.props.login === true){
       axios.get(apiURL,{
