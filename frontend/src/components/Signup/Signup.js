@@ -20,14 +20,16 @@ export default class Signup extends Component {
 
   //send signup request
   sendSignup(){
-    axios.post('http://localhost:4000/api/signup', {
+    const apiURL = "/api/signup";
+    axios.post(apiURL, {
       params: {
         firstName: this.state.firstName,
         lastName: this.state.lastName,
         email: this.state.email,
         password: this.state.password
       }
-    }).then(res => {
+    })
+    .then(res => {
       if(res.data.success === true){
         alert(res.data.message);
       }
@@ -37,7 +39,7 @@ export default class Signup extends Component {
       }
     })
     .catch(err => {
-      console.log(err);
+      alert(err);
     })
   }
   

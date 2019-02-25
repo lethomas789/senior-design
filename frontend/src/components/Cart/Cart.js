@@ -14,24 +14,25 @@ class Cart extends Component {
 
   //get cart from server for user
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getUserCart";
-    //const apiURL = "http://localhost:4000/api/getAllProducts";
-
+    const apiURL = "/api/getUserCart";
     //if user is logged in, get cart info
     if (this.props.login === true){
       axios.get(apiURL,{
         params:{
           user: this.props.user
         }
-      }).then(res => {
-          this.props.updateItems(res.data.data);
-        })
-        .catch(err => {
-          alert(err);
-        })
+      })
+      .then(res => {
+        //after getting cart from server, update user's items in redux state
+        this.props.updateItems(res.data.data);
+      })
+      .catch(err => {
+        alert(err);
+      })
     }
   }
 
+  //render cart items to cart view
   render() {
     const cart = this.props.items.map(result => {
       return <CartItem key = {result.productName} pid = {result.pid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
@@ -52,7 +53,7 @@ class Cart extends Component {
 }
 
 //redux
-//dispatch action to reducer
+//dispatch action to reducer, get user's cart
 const mapDispatchToProps = dispatch => {
   return{
     updateItems: (response) => dispatch({

@@ -21,8 +21,7 @@ class Login extends Component{
 
     //get logged in user's cart info
     getCart(){
-      const apiURL = "http://localhost:4000/api/getUserCart";
-    //const apiURL = "http://localhost:4000/api/getAllProducts";
+      const apiURL = "/api/getUserCart";
       axios.get(apiURL, {
         params:{
           user: this.state.email
@@ -38,12 +37,11 @@ class Login extends Component{
 
     //send login request, display if login was successful
     sendLogin(){
-        const apiURL = "http://localhost:4000/api/login";
-        // const apiURL = "http://localhost:4000/api/login";
+        const apiURL = "/api/login";
         axios.post(apiURL, {
             params:{
-                email: this.state.email,
-                password: this.state.password
+              email: this.state.email,
+              password: this.state.password
             }
         })
         //successful login, display message
@@ -59,7 +57,7 @@ class Login extends Component{
             }
             //display error message with logging in
             else{
-                alert(res.data);
+                alert(res.data.message);
             }
         })
         .catch(err => {

@@ -16,6 +16,7 @@ import actions from '../../store/actions';
 class CartItem extends Component {
   constructor(props){
     super(props);
+    //store product id PID to reference for item removal
     this.state = {
       pid: this.props.pid
     }
@@ -24,7 +25,7 @@ class CartItem extends Component {
 
   //remove item from user's cart
   removeItem(){
-    const apiURL = "http://localhost:4000/api/getUserCart/deleteItems";
+    const apiURL = "/api/getUserCart/deleteItems";
     axios.post(apiURL, {
       params:{
         user: this.props.user,
@@ -32,7 +33,7 @@ class CartItem extends Component {
       }
     })
     .then(res => {
-      const getCart = "http://localhost:4000/api/getUserCart";
+      const getCart = "/api/getUserCart";
       //after successful deletion, get updated user's cart
       axios.get(getCart, {
         params:{
@@ -40,15 +41,15 @@ class CartItem extends Component {
         }
       })
       .then(res => {
-        //update cart
+        //after removing item from cart, update cart on server
         this.props.updateItems(res.data.data);
       })
       .catch(err => {
-
+        alert(err);
       })
     })
     .catch(err => {
-
+      alert(err);
     })
   }
 
@@ -98,7 +99,7 @@ const mapStateToProps = state => {
 }
 
 //redux
-//dispatch action to reducer
+//dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
   return{
     updateItems: (response) => dispatch({

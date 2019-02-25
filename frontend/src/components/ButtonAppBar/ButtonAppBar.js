@@ -14,7 +14,6 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CartIcon from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
 
-
 //variables to store routes to redirect to with Link component
 const homeRoute = "/";
 const aboutRoute = "/about";
