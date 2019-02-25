@@ -43,6 +43,25 @@ class CartItem extends Component {
       .then(res => {
         //after removing item from cart, update cart on server
         this.props.updateItems(res.data.data);
+        //get total from items
+        var currentCart = res.data.data;
+        var priceTotal = 0;
+        
+        //if cart is empty, total price is $0
+        if(currentCart.length === 0){
+          console.log("cart is empty");
+          this.props.updateTotal(priceTotal);
+        }
+
+        //if there are items, calculate total price
+        else{
+          console.log("cart is not empty");
+          for(let i = 0; i < currentCart.length; i++){
+            priceTotal += Number(currentCart[i].totalPrice);
+          }
+          console.log(priceTotal);
+          this.props.updateTotal(priceTotal);
+        }
       })
       .catch(err => {
         alert(err);
@@ -105,6 +124,12 @@ const mapDispatchToProps = dispatch => {
     updateItems: (response) => dispatch({
       type: actions.GET_CART,
       cart: response
+    }),
+
+    //update store of cart total
+    updateTotal: (sum) => dispatch({
+      type: actions.UPDATE_TOTAL,
+      total: sum
     })
   }
 }
