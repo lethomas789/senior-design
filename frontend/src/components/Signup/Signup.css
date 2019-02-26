@@ -1,5 +1,5 @@
 #signupContainer{
-    display:flex;
+    display: flex;
     flex-direction: column;
     justify-content: center;
 }
@@ -10,6 +10,34 @@
     align-self: center;
 }
 
+#signupPaperContainer{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    height: 400px;
+    width: 500px;
+    margin-top: 50px;
+}
+
+.textForm{
+    padding: 10px;
+}
+
+#signupForms{
+    display:flex;
+    flex-direction: column;
+    align-self: center;
+    padding: 10px;
+}
+
 #signupButton{
+    align-self: center;
+}
+
+.progressContainer{
+    display:flex;
+}
+
+.loadingCircle{
     align-self: center;
 }
