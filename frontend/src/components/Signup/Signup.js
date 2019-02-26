@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Paper from '@material-ui/core/Paper';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import './Signup.css';
@@ -91,37 +92,46 @@ class Signup extends Component {
     return (
       <div id = "signupContainer">
         <div id = "signupForms">
-          <h1> Sign Up </h1>
-          <div id="row">
-            <TextField
-              label="First Name"
-              required="true"
-              onChange={(event) => this.setState({ firstName: event.target.value })}
-            />
+          <Paper id = "signupPaperContainer">
+            <h1> Sign Up </h1>
+            <div className = "textForm" id="row">
+              <TextField
+                label="First Name"
+                required="true"
+                onChange={(event) => this.setState({ firstName: event.target.value })}
+              />
+            </div>
+            <div className = "textForm" id="row">
+              <TextField
+                label="Last Name"
+                required="true"
+                onChange={(event) => this.setState({ lastName: event.target.value })}
+              />
+            </div>
+            <div className = "textForm" id="row">
+              <TextField
+                label="Email"
+                required="true"
+                onChange={(event) => this.setState({ email: event.target.value })}
+              />
+            </div>
+            <div className = "textForm" id="row">
+              <TextField
+                type="password"
+                label="Password"
+                required="true"
+                onChange={(event) => this.setState({ password: event.target.value })}
+              />
+            </div>
+            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
+          </Paper>
+
+          <div className = "progressContainer">
+            <div className = "circle">
+              <CircularProgress className = "loadingCircle" size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
+            </div>
           </div>
-          <div id="row">
-            <TextField
-              label="Last Name"
-              required="true"
-              onChange={(event) => this.setState({ lastName: event.target.value })}
-            />
-          </div>
-          <div id="row">
-            <TextField
-              label="Email"
-              required="true"
-              onChange={(event) => this.setState({ email: event.target.value })}
-            />
-          </div>
-          <div id="row">
-            <TextField
-              type="password"
-              label="Password"
-              required="true"
-              onChange={(event) => this.setState({ password: event.target.value })}
-            />
-          </div>
-          <Button id = "signupButton" onClick = {this.sendSignup}> Sign Up  </Button>
+          
           <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
             <DialogContent>
               <DialogContentText id = "alert-dialog-description">
@@ -134,7 +144,6 @@ class Signup extends Component {
               </Button>
             </DialogActions>
           </Dialog>
-          <CircularProgress variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
         </div>
       </div>
     )

@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import {connect} from 'react-redux';
 import actions from '../../store/actions';
 import './Login.css';
+import Paper from '@material-ui/core/Paper';
 import axios from 'axios';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
@@ -114,28 +115,33 @@ class Login extends Component{
         return(
             <div id = "loginContainer">
                 <div id = "loginForms">
-                    <h1> Login </h1>
-                    <div className = "textForm" id="row">
-                        <TextField
-                        id = "outline-simple-start-adornment"
-                        label="Email"
-                        required="true"
-                        onChange={(event) => this.setState({ email: event.target.value })}
-                        />
-                    </div>
-                    <div className = "textForm" id="row">
-                        <TextField
-                        type="password"
-                        label="Password"
-                        required="true"
-                        onChange={(event) => this.setState({ password: event.target.value })}
-                        />
-                    </div>
-
-                    <Button id = "signupButton" onClick = {this.sendLogin}> Login  </Button>
-
-                    <CircularProgress size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
+                    <Paper className = "paperContainer">
+                        <h1> Login </h1>
+                        <div className = "textForm" id="row">
+                            <TextField
+                            id = "outline-simple-start-adornment"
+                            label="Email"
+                            required="true"
+                            onChange={(event) => this.setState({ email: event.target.value })}
+                            />
+                        </div>
+                        <div className = "textForm" id="row">
+                            <TextField
+                            type="password"
+                            label="Password"
+                            required="true"
+                            onChange={(event) => this.setState({ password: event.target.value })}
+                            />
+                        </div>
+                        <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
+                    </Paper>
                     
+                    <div className = "progressContainer">
+                        <div className = "circle">
+                            <CircularProgress className = "loadingCircle" size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
+                        </div>
+                    </div>
+
                     <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
                         <DialogContent>
                             <DialogContentText id = "alert-dialog-description">
