@@ -12,10 +12,12 @@ import { DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles'; 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
+import {withRouter} from 'react-router-dom';
+
 
 const styles = theme => ({
     progress: {
-        margin: theme.spacing.unit * 2
+      margin: theme.spacing.unit * 2
     }
 });
 
@@ -70,6 +72,13 @@ class Login extends Component{
         //successful login, display message
         .then(res => {
             if(res.data.success === true){
+                //dispatch update login action to update login state
+                let email = this.state.email;
+                this.props.updateLogin(email);
+
+                //after updating login, get cart info
+                this.getCart();
+
                 //display dialog for login successful
                 this.setState({
                     open: true,
@@ -77,12 +86,6 @@ class Login extends Component{
                     progressVariant: "determinate",
                     responseMessage: "Login Succesful!"
                 });
-                //dispatch update login action to update login state
-                let email = this.state.email;
-                this.props.updateLogin(email);
-
-                //after updating login, get cart info
-                this.getCart();
             }
             //display error message with logging in
             else{
@@ -103,7 +106,7 @@ class Login extends Component{
     handleClose(){
         this.setState({
             open: false
-        })
+        });
     }
 
     render(){
@@ -112,14 +115,15 @@ class Login extends Component{
             <div id = "loginContainer">
                 <div id = "loginForms">
                     <h1> Login </h1>
-                    <div id="row">
+                    <div className = "textForm" id="row">
                         <TextField
+                        id = "outline-simple-start-adornment"
                         label="Email"
                         required="true"
                         onChange={(event) => this.setState({ email: event.target.value })}
                         />
                     </div>
-                    <div id="row">
+                    <div className = "textForm" id="row">
                         <TextField
                         type="password"
                         label="Password"

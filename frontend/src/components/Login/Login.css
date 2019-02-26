@@ -10,6 +10,10 @@
     align-self: center;
 }
 
+.textForm{
+    border: solid black 1 px;
+}
+
 #loginButton{
     align-self: center;
 }

@@ -44,7 +44,8 @@ class ButtonAppBar extends Component {
     constructor(props){
       super(props);
       this.state = {
-        open: false        
+        open: false,
+        alertMessage: ''        
       }
       this.logoutUser = this.logoutUser.bind(this);
       this.viewCartCheck = this.viewCartCheck.bind(this);
@@ -66,7 +67,8 @@ class ButtonAppBar extends Component {
         this.props.emptyCart();
         //display dialog
         this.setState({
-          open: true
+          open: true,
+          alertMessage: "Logout successful!"
         });
       }
     }
@@ -75,7 +77,10 @@ class ButtonAppBar extends Component {
     viewCartCheck(){
       //prevent user from using cart until logged in
       if(this.props.loginValue === false){
-        alert("Please login to view cart");
+        this.setState({
+          open: true,
+          alertMessage: "Please login to view cart"
+        })
       }
       
       //if logged in, get cart and calculate cart's total
@@ -154,7 +159,7 @@ class ButtonAppBar extends Component {
                   <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
                         <DialogContent>
                             <DialogContentText id = "alert-dialog-description">
-                                Logout successful!
+                              {this.state.alertMessage}
                             </DialogContentText>
                         </DialogContent>
                         <DialogActions>

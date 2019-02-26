@@ -15,24 +15,21 @@ class Cart extends Component {
 
   //get cart from server for user
   componentDidMount(){
-    console.log("calculating price");
     //get total from items
     var currentCart = this.props.items;
     var priceTotal = 0;
 
     //if cart is empty, total price is $0
     if(currentCart.length === 0){
-      console.log("cart is empty");
       this.props.updateTotal(priceTotal);
     }
 
     //if there are items, calculate total price
     else{
-      console.log("cart is not empty");
+      //go through each item in cart and sum up price
       for(let i = 0; i < currentCart.length; i++){
         priceTotal += Number(currentCart[i].totalPrice);
       }
-      console.log(priceTotal);
       priceTotal = priceTotal.toFixed(2);
       this.props.updateTotal(priceTotal);
     }

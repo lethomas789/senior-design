@@ -51,6 +51,7 @@ class Signup extends Component {
       progressVariant: "indeterminate"
     });
     const apiURL = "http://localhost:4000/api/signup";
+    //send signup request
     axios.post(apiURL, {
       params: {
         firstName: this.state.firstName,
@@ -60,6 +61,7 @@ class Signup extends Component {
       }
     })
     .then(res => {
+      //if signup is successful, display success message
       if(res.data.success === true){
         this.setState({
           open: true,
@@ -69,6 +71,7 @@ class Signup extends Component {
         })
       }
 
+      //display error message
       else{
         this.setState({
           open: true,
