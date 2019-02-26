@@ -14,6 +14,11 @@ import axios from 'axios';
 import AddCircle from '@material-ui/icons/Add';
 import RemoveCircle from '@material-ui/icons/Remove';
 import Fab from '@material-ui/core/Fab';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import { DialogActions } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
 
 //component to display product info
 class ShopItem extends Component {
@@ -25,13 +30,23 @@ class ShopItem extends Component {
       name: this.props.productName,
       price: this.props.productPrice,
       pid: this.props.pid,
-      amtPurchased: 1
+      amtPurchased: 1,
+      open: false,
+      alertMessage: ''
     }
 
     //bind functions to component
     this.addItem = this.addItem.bind(this);
     this.addQuantity = this.addQuantity.bind(this);
     this.removeQuantity = this.removeQuantity.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+  }
+
+  //handle dialog closing
+  handleClose(){
+    this.setState({
+        open: false
+    })
   }
 
   //function to update cart of user
@@ -40,7 +55,10 @@ class ShopItem extends Component {
     //check if user is logged in
     //only allow user to add to cart if logged in
     if(this.props.login === false){
-      alert("Please login to add to cart");
+      this.setState({
+        open: true,
+        alertMessage: "Please login to add to cart!"
+      })
     }
 
     else{
@@ -55,31 +73,31 @@ class ShopItem extends Component {
       })
       .then(res => {
         if(res.data.success === true){
-
-          //after adding item to server, calculate total price of item to cart of store
-          var currentTotalPrice = 0;
-          currentTotalPrice = Number(this.state.amtPurchased) * Number(this.state.price);
-          currentTotalPrice = currentTotalPrice.toFixed(2);
-
-          //create item to add to redux store
-          var itemObject = {
-            pid: this.state.pid,
-            productName: this.state.name,
-            productPrice: this.state.price,
-            amtPurchased: this.state.amtPurchased,
-            totalPrice: currentTotalPrice
-          }
-
-          //add to cart of redux state
-          this.props.addToCart(itemObject);
-          alert("Item added to cart!");
+          //after adding to item, get updated cart
+          const getCartURL = "http://localhost:4000/api/getUserCart";
+          axios.get(getCartURL, {
+            params:{
+              user: this.props.user
+            }
+          })
+          .then(res => {
+            //after getting cart info, update redux store container
+            this.props.updateItems(res.data.data);
+            this.setState({
+              open: true,
+              alertMessage: "Item added to cart!"
+            });
+          })
+          .catch(err => {
+            alert(err);
+          })
         }
       })
       .catch(err => {
         alert(err);
       })
     }
-  }
+  } //end of add item
 
   //add quantity purchased
   addQuantity(){
@@ -145,6 +163,19 @@ class ShopItem extends Component {
               <Button size="small" color="primary">
                 Learn More
               </Button>
+
+              <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+                <DialogContent>
+                  <DialogContentText id = "alert-dialog-description">
+                    {this.state.alertMessage}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick = {this.handleClose} color = "primary">
+                    Ok
+                  </Button>
+                </DialogActions>
+              </Dialog>
             </CardActions>
           </Card>
         </Grid>
@@ -161,14 +192,14 @@ const mapStateToProps = state => {
   }
 }
 
-
 //dispatch action to reducer
 //update redux state of current cart
 const mapDispatchToProps = dispatch => {
   return{
-      addToCart: (addedItem) => dispatch({
-          type: actions.ADD_CART,
-          item: addedItem
+      //get user's cart from state after logging in
+      updateItems: (response) => dispatch({
+        type: actions.GET_CART,
+        cart: response
       })
   }
 }

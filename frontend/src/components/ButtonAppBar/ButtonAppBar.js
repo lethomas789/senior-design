@@ -14,6 +14,10 @@ import MenuIcon from '@material-ui/icons/Menu';
 import CartIcon from '@material-ui/icons/ShoppingCart';
 import Badge from '@material-ui/core/Badge';
 import axios from 'axios';
+import Dialog from '@material-ui/core/Dialog';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import { DialogActions } from '@material-ui/core';
 
 //variables to store routes to redirect to with Link component
 const homeRoute = "/";
@@ -39,8 +43,20 @@ const styles = theme => ({
 class ButtonAppBar extends Component {
     constructor(props){
       super(props);
+      this.state = {
+        open: false,
+        alertMessage: ''        
+      }
       this.logoutUser = this.logoutUser.bind(this);
       this.viewCartCheck = this.viewCartCheck.bind(this);
+      this.handleClose = this.handleClose.bind(this);
+    }
+
+    //handle dialog closing
+    handleClose(){
+      this.setState({
+          open: false
+      })
     }
 
     //logout user when clicking "Logout" on navbar
@@ -49,6 +65,11 @@ class ButtonAppBar extends Component {
       if (this.props.loginText === "Logout"){
         this.props.updateLogout();
         this.props.emptyCart();
+        //display dialog
+        this.setState({
+          open: true,
+          alertMessage: "Logout successful!"
+        });
       }
     }
 
@@ -56,7 +77,10 @@ class ButtonAppBar extends Component {
     viewCartCheck(){
       //prevent user from using cart until logged in
       if(this.props.loginValue === false){
-        alert("Please login to view cart");
+        this.setState({
+          open: true,
+          alertMessage: "Please login to view cart"
+        })
       }
       
       //if logged in, get cart and calculate cart's total
@@ -132,6 +156,18 @@ class ButtonAppBar extends Component {
                     <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
                     <Button color = "inherit" onClick = {this.viewCartCheck}> <CartIcon/> </Button>
                   </div>
+                  <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+                        <DialogContent>
+                            <DialogContentText id = "alert-dialog-description">
+                              {this.state.alertMessage}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick = {this.handleClose} color = "primary">
+                                Ok
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
               </Toolbar>
             </AppBar>
         </div>
