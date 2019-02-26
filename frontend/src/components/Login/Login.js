@@ -133,7 +133,9 @@ class Login extends Component{
                             onChange={(event) => this.setState({ password: event.target.value })}
                             />
                         </div>
+                        <div className = "pushDown">
                         <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
+                        </div>
                     </Paper>
                     
                     <div className = "progressContainer">
