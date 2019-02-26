@@ -25,7 +25,7 @@ app.use(bodyParser.urlencoded({extended: false}));
 app.use(cors());
 
 //serve react files
-app.use(express.static(path.join(__dirname, 'frontend/build')));
+app.use(express.static(path.join(__dirname, '/frontend/build')));
 
 //fix react app crashing on refresh
 app.get('/*', (req,res) => {
