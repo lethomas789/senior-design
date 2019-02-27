@@ -18,7 +18,12 @@ router.get('/', (req, res) => {
 
     // NOTE: will send all data; the date will not be converted here.
     snapshot.forEach(doc => {
-      vendors.push(doc.data());
+      let vendorData = {
+        bio: doc.data().bio,
+        vendorName: doc.data().vendorName,
+        vid: doc.data().vid
+      };
+      vendors.push(vendorData);
     });
     console.log('Successfully retrieved all vendor info.');
     return res.status(200).json({
