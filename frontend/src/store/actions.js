@@ -4,6 +4,7 @@ const actions =  {
     LOGGED_IN: "LOGGED_IN",
     LOGGED_OUT: "LOGGED_OUT",
     GET_PRODUCTS: "GET_PRODUCTS",
+    ADMIN_LOGGED_IN: "ADMIN_LOGGED_IN",
     //cart actions
     GET_CART: "GET_CART",
     ADD_CART:"ADD_CART",

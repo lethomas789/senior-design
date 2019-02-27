@@ -110,7 +110,7 @@ class ButtonAppBar extends Component {
       //conditonal rendering
       //render navbar based on whether user is logged in or not
       //if user is logged in, hide parts of navbar such as signup and display "Logout"
-      if(this.props.loginValue === true){
+      if(this.props.loginValue === true && this.props.isAdmin === false){
         return(
           <div className= "root">
             <AppBar position="static">
@@ -138,7 +138,7 @@ class ButtonAppBar extends Component {
       }
 
       //user is not logged in
-      else{
+      else if (this.props.loginValue === false && this.props.isAdmin === false){
         return(
           <div className= "root">
             <AppBar position="static">
@@ -173,6 +173,45 @@ class ButtonAppBar extends Component {
         </div>
         );
       }
+
+      else if (this.props.loginValue === true && this.isAdmin === true){
+        return(
+          <div className= "root">
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton className = "menuButton" color="inherit" aria-label="Menu">
+                  <MenuIcon />
+                </IconButton>
+                <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
+                  ECS193 ECommerce
+                </Typography>
+                  <div id = "navLink">
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Club Info </Button> 
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Items </Button>
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Add Items </Button> 
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
+                    <Button component = {Link} to = {signupRoute} color = "inherit"> Sign Up </Button> 
+                    <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
+                    <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
+                    <Button color = "inherit" onClick = {this.viewCartCheck}> <CartIcon/> </Button>
+                  </div>
+                  <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+                        <DialogContent>
+                            <DialogContentText id = "alert-dialog-description">
+                              {this.state.alertMessage}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick = {this.handleClose} color = "primary">
+                                Ok
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+              </Toolbar>
+            </AppBar>
+          </div>
+        );
+      }
     }
   }
 
@@ -200,6 +239,7 @@ class ButtonAppBar extends Component {
         loginValue: state.auth.login,
         loginText: state.auth.text,
         user: state.auth.user,
+        isAdmin: state.auth.isAdmin,
         cartLength: state.cart.items.length,
         items: state.cart.items
     }

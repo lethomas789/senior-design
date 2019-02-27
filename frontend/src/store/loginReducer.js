@@ -8,7 +8,8 @@ import actions from './actions';
 const initialState = {
     login: false,
     text: "Login",
-    user: ''
+    user: '',
+    isAdmin: false
 };
 
 const reducer = (state = initialState, action) => {
@@ -25,6 +26,15 @@ const reducer = (state = initialState, action) => {
                 login: true,
                 text: "Logout",
                 user: action.user
+            }
+        //when an admin is logged in
+        case actions.ADMIN_LOGGED_IN:
+            return{
+                ...state,
+                login: true,
+                text: "Logout",
+                user:action.user,
+                isAdmin: true
             }
         //if user logs out, update state
         case actions.LOGGED_OUT:
