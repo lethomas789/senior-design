@@ -19,6 +19,7 @@ import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
+import {Link} from 'react-router-dom';
 
 //component to display product info
 class ShopItem extends Component {
@@ -31,6 +32,7 @@ class ShopItem extends Component {
       price: this.props.productPrice,
       pid: this.props.pid,
       amtPurchased: 1,
+      vendorID: this.props.vendorID,
       open: false,
       alertMessage: ''
     }
@@ -40,6 +42,11 @@ class ShopItem extends Component {
     this.addQuantity = this.addQuantity.bind(this);
     this.removeQuantity = this.removeQuantity.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.updateVendor = this.updateVendor.bind(this);
+  }
+
+  componentDidMount(){
+    console.log(this.props.vendorID);
   }
 
   //handle dialog closing
@@ -47,6 +54,13 @@ class ShopItem extends Component {
     this.setState({
         open: false
     })
+  }
+
+  //update vendor in redux store
+  updateVendor(){
+    var viewVendor = this.state.vendorID;
+    console.log("trying to update vendor ", viewVendor);
+    this.props.updateVendor(viewVendor);
   }
 
   //function to update cart of user
@@ -68,7 +82,8 @@ class ShopItem extends Component {
         params:{
           user: this.props.user,
           pid: this.state.pid,
-          amtPurchased: this.state.amtPurchased
+          amtPurchased: this.state.amtPurchased,
+          vendorID: this.state.vendorID
         }
       })
       .then(res => {
@@ -160,8 +175,8 @@ class ShopItem extends Component {
                 Add To Cart
               </Button>
 
-              <Button size="small" color="primary">
-                Learn More
+              <Button size="small" color="primary" onClick = {this.updateVendor}>
+                <Link to = "/vendorProducts"> More From Vendor </Link>
               </Button>
 
               <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
@@ -200,6 +215,11 @@ const mapDispatchToProps = dispatch => {
       updateItems: (response) => dispatch({
         type: actions.GET_CART,
         cart: response
+      }),
+
+      updateVendor: (newVendor) => dispatch({
+        type: actions.GET_VENDOR_PRODUCTS,
+        vendor: newVendor
       })
   }
 }

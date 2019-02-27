@@ -1,42 +1,44 @@
 import React, { Component } from 'react';
-import './ShopView.css';
-import ShopItem from '../ShopItem/ShopItem';
-import Grid from '@material-ui/core/Grid';
+import './VendorView.css';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import actions from '../../store/actions';
+import ShopItem from '../ShopItem/ShopItem';
+import Grid from '@material-ui/core/Grid';
 
-class ShopView extends Component {
+class VendorView extends Component {
   constructor(props){
     super(props);
+    this.state = {
+      products: []
+    }
   }
 
-  //get products from server after mounting to screen
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getAllProducts";
-
-    //get all products from server
-    //update state of view to obtain items
-    axios.get(apiURL)
-      .then(res => {
-        //update product state in redux store
-        console.log(res.data);
-        this.props.updateProducts(res.data.data);
+    const apiURL = "http://localhost:4000/api/getVendorProducts";
+    axios.get(apiURL, {
+      params:{
+        vendor: this.props.vendor
+      }
+    })
+    .then(res => {
+      console.log("getting vendor products ", res.data);
+      //update component state, list of products from vendor
+      this.setState({
+        products: res.data.data
       })
-      .catch(err => {
-        alert("Server error retrieving items");
-      })
+    })
   }
 
   render() {
-    const items = this.props.products.map(result => {
+    const items = this.state.products.map(result => {
       return <ShopItem key = {result.pid} vendorID = {result.vid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
     });
 
     return (
       <div className = "grow">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
-          <h1> Shop </h1>
+          <h1> Vendor Items </h1>
         </Grid>
 
         <Grid container spacing={24} direction="row" justify="center" alignItems="center" justify-xs-space-evenly>
@@ -64,8 +66,8 @@ const mapDispatchToProps = dispatch => {
 //obtain state from store as props for component
 const mapStateToProps = state => {
   return{
-      products: state.getAllItems.products
+    vendor: state.vendor.vendor
   }
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(ShopView);
+export default connect(mapStateToProps, mapDispatchToProps)(VendorView);
