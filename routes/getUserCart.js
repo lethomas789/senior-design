@@ -74,11 +74,13 @@ router.post('/addItems', (req, res) => {
     var user = req.body.params.user;
     var pid = req.body.params.pid;  // product id
     var amtPurchased = Number(req.body.params.amtPurchased);
+    var vendorID = req.body.params.vendorID;
   }
   else {
     var user = req.body.user;
     var pid = req.body.pid;  // product id
     var amtPurchased = Number(req.body.amtPurchased);
+    var vendorID = req.body.vendorID;
   }
 
   // return error if empty request
@@ -129,7 +131,8 @@ router.post('/addItems', (req, res) => {
               amtPurchased: amtPurchased,
               productName: productInfo.productName,
               productPrice: productInfo.productPrice,
-              totalPrice: totalItemPrice
+              totalPrice: totalItemPrice,
+              vid: vendorID
             };
 
             // set new item(s) purchased into cart, with pid as doc identifier
@@ -152,7 +155,8 @@ router.post('/addItems', (req, res) => {
               amtPurchased: newAmt,
               productName: productInfo.productName,
               productPrice: productInfo.productPrice,
-              totalPrice: totalItemPrice
+              totalPrice: totalItemPrice,
+              vid: vendorID
             };
 
             // update cart item

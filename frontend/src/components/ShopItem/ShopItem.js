@@ -82,7 +82,8 @@ class ShopItem extends Component {
         params:{
           user: this.props.user,
           pid: this.state.pid,
-          amtPurchased: this.state.amtPurchased
+          amtPurchased: this.state.amtPurchased,
+          vendorID: this.state.vendorID
         }
       })
       .then(res => {
