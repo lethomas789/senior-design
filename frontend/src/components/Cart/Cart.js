@@ -38,7 +38,7 @@ class Cart extends Component {
   //render cart items to cart view
   render() {
     const cart = this.props.items.map(result => {
-      return <CartItem key = {result.productName} pid = {result.pid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
+      return <CartItem key = {result.productName} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
     });
 
     return(
