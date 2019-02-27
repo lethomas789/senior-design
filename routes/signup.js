@@ -75,7 +75,8 @@ router.post('/', (req, res) => {
           lastName: lastName,
         },
         email: email,
-        password: password
+        password: password,
+        isAdmin: false
       };
 
       // password hashing

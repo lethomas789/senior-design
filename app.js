@@ -40,6 +40,7 @@ const login = require('./routes/login');
 const getVendorProducts = require('./routes/getVendorProducts');
 const getUserCart = require('./routes/getUserCart');
 const getAllProducts = require('./routes/getAllProducts');
+const adminVendor = require('./routes/adminVendor');
 
 app.use('/api/users', users);
 app.use('/api/signup', signup);
@@ -47,6 +48,7 @@ app.use('/api/login', login);
 app.use('/api/getVendorProducts', getVendorProducts);
 app.use('/api/getUserCart', getUserCart);
 app.use('/api/getAllProducts', getAllProducts);
+app.use('/api/adminVendor', adminVendor);
 
 // listen to requests on port
 // choose port based on environment
