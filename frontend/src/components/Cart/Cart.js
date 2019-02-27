@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import actions from '../../store/actions';
 import Grid from '@material-ui/core/Grid';
 import CartItem from '../CartItem/CartItem';
+import Checkout from '../Checkout/Checkout';
 
 //component to display user's cart
 class Cart extends Component {
@@ -14,27 +15,30 @@ class Cart extends Component {
 
   //get cart from server for user
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getUserCart";
-    //const apiURL = "http://localhost:4000/api/getAllProducts";
+    //get total from items
+    var currentCart = this.props.items;
+    var priceTotal = 0;
 
-    //if user is logged in, get cart info
-    if (this.props.login === true){
-      axios.get(apiURL,{
-        params:{
-          user: this.props.user
-        }
-      }).then(res => {
-          this.props.updateItems(res.data.data);
-        })
-        .catch(err => {
-          alert(err);
-        })
+    //if cart is empty, total price is $0
+    if(currentCart.length === 0){
+      this.props.updateTotal(priceTotal);
+    }
+
+    //if there are items, calculate total price
+    else{
+      //go through each item in cart and sum up price
+      for(let i = 0; i < currentCart.length; i++){
+        priceTotal += Number(currentCart[i].totalPrice);
+      }
+      priceTotal = priceTotal.toFixed(2);
+      this.props.updateTotal(priceTotal);
     }
   }
 
+  //render cart items to cart view
   render() {
     const cart = this.props.items.map(result => {
-      return <CartItem key = {result.productName} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
+      return <CartItem key = {result.productName} pid = {result.pid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
     });
 
     return(
@@ -46,18 +50,26 @@ class Cart extends Component {
         <Grid container direction="column" justify-xs-space-evenly>
           {cart}
         </Grid>
+
+        <Checkout/>
       </div>
     );
   }
 }
 
 //redux
-//dispatch action to reducer
+//dispatch action to reducer, get user's cart
 const mapDispatchToProps = dispatch => {
   return{
     updateItems: (response) => dispatch({
       type: actions.GET_CART,
       cart: response
+    }),
+
+    //update store of cart total
+    updateTotal: (sum) => dispatch({
+      type: actions.UPDATE_TOTAL,
+      total: sum
     })
   }
 }

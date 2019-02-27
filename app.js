@@ -24,6 +24,14 @@ app.use(bodyParser.urlencoded({extended: false}));
 // use cors;
 app.use(cors());
 
+//serve react files
+app.use(express.static(path.join(__dirname, '/frontend/build')));
+
+//fix react app crashing on refresh
+// app.get('/*', (req,res) => {
+//   res.sendFile(path.join(__dirname + '/frontend/build/index.html'))
+// })
+
 //routes
 const router = express.Router();
 const users = require('./routes/users');

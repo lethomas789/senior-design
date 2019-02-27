@@ -13,3 +13,29 @@
 #loginButton{
     align-self: center;
 }
+
+.textForm{
+    padding: 10px;
+}
+
+.paperContainer{
+    display:flex;
+    flex-direction: column;
+    align-items: center;
+    height: 300px;
+    width: 400px;
+    margin-top: 50px;
+}
+
+.progressContainer{
+    display:flex;
+    flex-direction: column;
+}
+
+.loadingCircle{
+    align-self: center;
+}
+
+.circle{
+    align-self: center;
+}
