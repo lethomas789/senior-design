@@ -9,7 +9,9 @@ const actions =  {
     ADD_CART:"ADD_CART",
     REMOVE_CART:"REMOVE_CART",
     EMPTY_CART: "EMPTY_CART",
-    UPDATE_TOTAL: "UPDATE_TOTAL"
+    UPDATE_TOTAL: "UPDATE_TOTAL",
+    //vendor actions
+    GET_VENDOR_PRODUCTS: "GET_VENDOR_PRODUCTS"
 }
 
 export default actions;
