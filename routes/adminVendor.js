@@ -3,206 +3,186 @@ const router = express.Router();
 const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
-// const multer = require('multer');  // for multipart bodies e.g. formdata
 
 
 /**
- * Route adds a new admin user for given vendor
+ * GET returns vendor about info for frontend.
  * 
- * @params vid - vendor ID
- * @params user - username of user we are trying to make an admin
- * @params adminCode - adminCode associated with vendor
+ * @param user - admin getting info
+ * @param vid - vid must be sent to obtain vendor DB info
+ * 
+ * @returns Vendor about page info.
  */
-router.post('/addAdminUser', (req, res) => {
+router.get('/', (req, res) => {
   if (req.body.params) {
-    var vid = req.body.params.vid;
-    var user = req.body.params.user;
-    var adminCode = req.body.params.adminCode;
+    var user = req.query.params.user;
+    var vid = req.query.params.vid;
   }
   else {
-    var vid = req.body.vid;
-    var user = req.body.user;
-    var adminCode = req.body.adminCode;
+    var user = req.query.user;
+    var vid = req.query.vid;
   }
 
-  /*
-   * 1. do param checking
-   * 2. check vendor code to make sure it matches vendor
-   * 3. add to admins list in vendor
-   */
-
-  if (!vid || !user || !adminCode) {
-    console.log('Error in addAdminUser: missing required request paramters');
+  if (!user || !vid) {
+    console.log('Error: missing params for GET adminVendor.');
     return res.status(400).json({
       success: false,
-      message: 'Error in addAdminUser: missing required request paramters'
+      message: 'Error: missing params for GET adminVendor.'
     });
   }
 
-  // let vendorRef = db.collection('vendors');
   let vendorRef = db.collection('vendors').doc(vid);
 
   vendorRef.get().then(doc => {
     if (!doc.exists) {
-      console.log('Error: no such vendor for given vid:', vid);
+      console.log('Error: no such vendor for given vid.');
       return res.status(400).json({
         success: false,
-        message: 'Error: no such vendor for given vid: '+ vid
+        message: 'Error: no such vendor for given vid. '
       });
     }
 
-    vendorRef.collection('adminCode').doc('adminCode').get().then(doc => {
-      // check to see if their admin code matches submitted admin code
-      if (doc.data().adminCode !== adminCode) {
-        console.log('Error: submitted adminCode does not match vendor adminCode');
+    let vendorData = doc.data();
+
+    // check to make sure user is admin for security purposes
+    vendorRef.collection('admins').doc(user).get().then(doc => {
+      if (!doc.exists) {
+        console.log('Error: provided user is not an admin for given vendor.');
         return res.status(400).json({
           success: false,
-          message: 'Error: submitted adminCode does not match vendor adminCode'
+          messaage: 'Error: provided user is not an admin for given vendor.'
         });
       }
 
-      // else matches, proceed to making user an admin under vendor
-      // NOTE: we store admins under a subcollection for security purposes, so
-      // the adminList doesnt get pulled anytime you want to pull vendor data
+      // else good to send back data
 
-      let adminsRef = db.collection('vendors').doc(vid).collection('admins');
-
-      // create a new admin doc
-      adminsRef.doc(user).set({
-        email: user
-      });
-
-      // now set that user's isAdmin flag to be true
-      db.collection('users').doc(user).update({isAdmin: true});
-
-      // now add them to admins root collection
-      // NOTE: we merge b/c a user can be admin of more than one club
-      db.collection('admins').doc(user).set({
-        email: user
-      }, {merge: true});
-
-      // b/c arrays work differently, update array of vendors here
-      db.collection('admins').doc(user).update({
-        vendors: admin.firestore.FieldValue.arrayUnion(vid)
-      });
-
-      console.log('Made new admin:', user);
-      console.log('Added new vendor for vid:', vid);
+      console.log('Succesfully retrieved vendor info.');
+      console.log('Vendor:', vendorData.vendorName);
+      console.log('User:', user);
       return res.status(200).json({
         success: true,
-        message: 'Succesfully added new admin.'
+        bio: vendorData.bio,
+        lastUpdate: vendorData.lastUpdate.toDate(),
+        lastUpdateUser: vendorData.lastUpdateUser,
+        vendorName: vendorData.vendorName
       });
     })
-    .catch(err => {  // catch for getAdminCodeRef
-      console.log('Error in getting adminCodeRef:', err); 
+    .catch(err => {  // catch for admins ref
+      console.log('Error in getting adminRef:', err);
       return res.status(500).json({
         success: false,
-        message: 'Error in getting adminCodeRef: ' + err
+        message: 'Error in getting adminRef: ' + err
       });
     });
 
   })
-  .catch(err => {  // catch for vendorRef
-    console.log('Error in getting vendorRef', err);
+  .catch(err => {   // catch for vendorRef.get
+    console.log('Error in getting vendorRef:', err);
     return res.status(500).json({
       success: false,
       message: 'Error in getting vendorRef: ' + err
     });
   });
-});
+});  // END GET /
+
 
 /**
- * Route returns 
+ * For params, assume that when an admin goes to the edit page, frontend does a
+ * GET on the vendor's old info. Even if the admin makes only one change, this
+ * route expects old and new data sent for ease of update purposes.
  * 
- * @param user - user whose isAdmin flag true, and want to retrieve their club
- *
- * @returns: vendors - array of vid(s) for the vendor(s) user is admin of
+ * @param user - admin editing; assumed to have passed admin check already
+ * @param vid - vid must be sent from frontend to obtain vendor DB info
+ * @param bio - vendor description
+ * @param vendorName - if user wants to change vendorName
+ * 
+ * @returns res success true or false
  */
-router.get('/getAdminVendor', (req, res) => {
+router.patch('/editVendorInfo', (req, res) => {
+
   if (req.body.params) {
-    var user = req.query.params.user;
+    var user = req.body.params.user;
+    var vid = req.body.params.vid;
+    var vendorName = req.body.params.vendorName;
+    var bio = req.body.params.bio;
   }
   else {
-    var user = req.query.user;
+    var user = req.body.user;
+    var vid = req.body.vid;
+    var vendorName = req.body.vendorName;
+    var bio = req.body.bio;
   }
 
-  if (!user) {
-    console.log('Error in getAdminVendor: missing required request paramters');
+  // must include editing user and vid; bio and vendorName not always edited
+  if (!user || !vendorName || !bio || !vid) {
+    console.log('Error: missing params for editVendorInfo.');
     return res.status(400).json({
       success: false,
-      message: 'Error in getAdminVendor: missing required request paramters'
+      message: 'Error: missing params for editVendorInfo.'
     });
   }
 
-  db.collection('admins').doc(user).get().then(doc => {
+  // assume image done through frontend
+
+  let vendorRef = db.collection('vendors').doc(vid);
+  
+  vendorRef.get().then(doc => {
     if (!doc.exists) {
-      console.log('Error: user is not admin.')
+      console.log('Error: no such vendor for given vid.');
       return res.status(400).json({
         success: false,
-        message: 'Error: user is not admin.'
+        message: 'Error: no such vendor for given vid.'
       });
     }
 
-    // else, return the vid's of whom they are admins of
-    console.log('Got admin info for provided user:', user);
-    return res.status(200).json({
-      success: true,
-      message: 'Got admin info for provided user.',
-      vendors: doc.data().vendors
-    });
+    // check to make sure user is admin for security purposes
+    vendorRef.collection('admins').doc(user).get().then(doc => {
+      if (!doc.exists) {
+        console.log('Error: provided user is not an admin for given vendor.');
+        return res.status(400).json({
+          success: false,
+          messaage: 'Error: provided user is not an admin for given vendor.'
+        });
+      }
 
+      // else, good to update
+
+      let lastUpdate = admin.firestore.Timestamp.now();
+      let lastUpdateUser = user;  // user who did most recent update
+
+      // else vendor exists, write new data
+      vendorRef.update({
+        vendorName: vendorName,
+        bio: bio,
+        lastUpdate: lastUpdate,
+        lastUpdateUser: lastUpdateUser
+      });
+
+      console.log('Succesfully updated vendor info.');
+      console.log('Vendor:', vendorName);
+      console.log('User:', user);
+
+      return res.status(200).json({
+        success: true,
+        message: 'Succesfully updated vendor info for: ' + vendorName
+      });
+
+    })
+    .catch(err => {  // catch for admins ref
+      console.log('Error in getting adminRef:', err);
+      return res.status(500).json({
+        success: false,
+        message: 'Error in getting adminRef: ' + err
+      });
+    });
   })
-  .catch(err => {
-    console.log('Error in getting userRef', err);
+  .catch(err => {   // catch for vendorRef.get
+    console.log('Error in getting vendorRef:', err);
     return res.status(500).json({
       success: false,
-      message: 'Error in getting userRef: ' + err
+      message: 'Error in getting vendorRef: ' + err
     });
   });
-});
-
-router.post('/editVendorInfo', (req, res) => {
-  if (req.body.params) {
-
-
-  }
-  else {
-
-  }
-
-});
-
-
-router.post('/addNewProduct', (req, res) => {
-  if (req.body.params){ 
-    var vendor = req.body.params.vendor;
-    var user = req.body.params.user;
-    var productInfo = req.body.params.productInfo;
-    var productName = req.body.params.productName;
-    // TODO figure out how to add many pictures
-    // var productPicture = req.body.params.productPicture;
-    var productPrice = req.body.params.productPrice;
-    var stock = req.body.params.stock;
-  }
-  else {
-    var vendor = req.body.vendor;
-    var user = req.body.user;
-    var productInfo = req.body.productInfo;
-    var productName = req.body.productName;
-    // TODO figure out how to add many pictures
-    // var productPicture = req.body.productPicture;
-    var productPrice = req.body.productPrice;
-    var stock = req.body.stock;
-  }
-
-  /*
-   * 1. do various param checking
-   * 2. check if user is admin in vendor info
-   * 3. add product to products root colletion
-   * 4. add product to vendors/products
-   *
-   */
-
-});
+});  // END PATCH /editVendorInfo
 
 module.exports = router;

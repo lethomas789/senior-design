@@ -40,6 +40,8 @@ const login = require('./routes/login');
 const getVendorProducts = require('./routes/getVendorProducts');
 const getUserCart = require('./routes/getUserCart');
 const getAllProducts = require('./routes/getAllProducts');
+const adminUser = require('./routes/adminUser');
+const adminProducts = require('./routes/adminProducts');
 const adminVendor = require('./routes/adminVendor');
 
 app.use('/api/users', users);
@@ -48,6 +50,8 @@ app.use('/api/login', login);
 app.use('/api/getVendorProducts', getVendorProducts);
 app.use('/api/getUserCart', getUserCart);
 app.use('/api/getAllProducts', getAllProducts);
+app.use('/api/adminUser', adminUser);
+app.use('/api/adminProducts', adminProducts);
 app.use('/api/adminVendor', adminVendor);
 
 // listen to requests on port
