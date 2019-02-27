@@ -14,7 +14,7 @@ const db = admin.firestore();
  * @returns Vendor about page info.
  */
 router.get('/', (req, res) => {
-  if (req.body.params) {
+  if (req.query.params) {
     var user = req.query.params.user;
     var vid = req.query.params.vid;
   }

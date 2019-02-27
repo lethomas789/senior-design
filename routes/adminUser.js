@@ -13,7 +13,7 @@ const db = admin.firestore();
  * @returns: vendors - array of vid(s) for the vendor(s) user is admin of
  */
 router.get('/', (req, res) => {
-  if (req.body.params) {
+  if (req.query.params) {
     var user = req.query.params.user;
   }
   else {
