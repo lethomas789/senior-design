@@ -9,6 +9,7 @@ import ButtonAppBar from './components/ButtonAppBar/ButtonAppBar';
 import Shop from './components/Shop/Shop';
 import Cart from './components/Cart/Cart';
 import VendorView from './components/VendorView/VendorView';
+import VendorSignup from './components/VendorSignup/VendorSignup'
 
 class App extends Component {
   render() {
@@ -23,6 +24,7 @@ class App extends Component {
           <Route exact path = "/login" component = {Login} /> 
           <Route exact path = "/cart" component = {Cart}/>
           <Route exact path = "/vendorProducts" component = {VendorView}/>
+          <Route exact path = "/abcdefg/vendorSignup" component = {VendorSignup}/>
         </div>
       </Router>
     );
