@@ -24,14 +24,27 @@ class VendorSignup extends Component {
     this.state = {
       email: '',
       code: '',
-      vendor: '',
+      vendor: 'Select Club Name',
       open: false,
-      value: ''
+      value: '',
+      vendorID: '',
+      vendors: []
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.handleOpen = this.handleOpen.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+  }
+
+  //store list of active vendors from database
+  componentDidMount(){
+    const apiURL = "http://localhost:4000/api/getVendorInfo";
+    axios.get(apiURL)
+      .then(res => {
+        this.setState({
+          vendors: res.data.vendors
+        })
+      })
   }
 
   //close select
@@ -50,9 +63,18 @@ class VendorSignup extends Component {
 
   //update value selected
   handleSelect(event){
+    console.log(event);
     this.setState({
-      value: event.target.value
+      vendorID: event.target.value    
     })
+    //obtain vid by searching list of active vendors and comparing dropdown value
+    // for(let i = 0; i < this.state.vendors.length; i++){
+    //   if (event.target.value === this.state.vendors[i].vendorName){
+    //     this.setState({
+    //       vendorID: this.state.vendors[i].vid
+    //     })
+    //   }
+    // }
   }
 
   //send signup to verify admin process
@@ -61,14 +83,24 @@ class VendorSignup extends Component {
 
     axios.post(apiURL, {
       params:{
-        
+        user: this.state.email,
+        vid: this.state.vendorID,
+        adminCode: this.state.code
       }
     })
-
-
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      alert(err);
+    })
   }
 
   render() {
+    const vendorList = this.state.vendors.map(result => {
+      return <MenuItem value = {result.vid} name = {result.vendorName}> {result.vendorName} </MenuItem>
+    });
+
     return (
       <div>
         <Grid container direction = "column" justify = "center" alignItems = "center">
@@ -87,18 +119,16 @@ class VendorSignup extends Component {
               <TextField
                 label="Access Code"
                 required="true"
-                onChange={(event) => this.setState({ password: event.target.value })}
+                onChange={(event) => this.setState({ code: event.target.value })}
               />
             </div>
 
             <h5> Select Vendor </h5>
             <div className = "textForm" id = "row">
               <FormControl id = "clubForm">
-                <InputLabel> Select Club Name </InputLabel>
+                <InputLabel> {this.state.vendor} </InputLabel>
                 <Select value = {this.state.value} open = {this.state.open} onClose = {this.handleClose} onOpen = {this.handleOpen} onChange = {this.handleSelect}>
-                  <MenuItem value = "Vendor1"> Vendor1 </MenuItem>
-                  <MenuItem value = "Vendor2"> Vendor2 </MenuItem>
-                  <MenuItem value = "Vendor3"> Vendor3 </MenuItem>
+                  {vendorList}
                 </Select>
               </FormControl>
             </div>
