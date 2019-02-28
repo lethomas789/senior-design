@@ -27,6 +27,7 @@ const loginRoute = "/login";
 const shopRoute = "/shop";
 const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
+const addProductRoute = "/addProduct";
 
 //style for cart to display number of items
 const styles = theme => ({
@@ -152,8 +153,8 @@ class ButtonAppBar extends Component {
                 </Typography>
                   <div id = "navLink">
                     <Button component = {Link} to = {editClubRoute} color = "inherit"> Edit Club Info </Button> 
+                    <Button component = {Link} to = {addProductRoute} color = "inherit"> Add Items </Button> 
                     <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Items </Button>
-                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Add Items </Button> 
                     <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
                     <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
                     <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
