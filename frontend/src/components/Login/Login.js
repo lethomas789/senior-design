@@ -108,6 +108,8 @@ class Login extends Component{
         this.setState({
             open: false
         });
+
+        this.props.history.push('/shop');
     }
 
     render(){

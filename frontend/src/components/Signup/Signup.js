@@ -41,7 +41,8 @@ class Signup extends Component {
   handleClose(){
     this.setState({
         open: false
-    })
+    });
+    this.props.history.push('/shop');
   }
 
   //send signup request

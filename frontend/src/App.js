@@ -13,6 +13,9 @@ import VendorSignup from './components/VendorSignup/VendorSignup';
 import EditClubInfo from './components/EditClubInfo/EditClubInfo';
 import AddProduct from './components/AddProduct/AddProduct';
 
+import { createHashHistory, createBrowserHistory } from 'history';
+const history = createBrowserHistory();
+
 class App extends Component {
   render() {
     return (

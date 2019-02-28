@@ -11,7 +11,9 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { createHashHistory } from 'history';
+import { createHashHistory, createBrowserHistory } from 'history';
+const history = createBrowserHistory();
+
 
 //vendor confirmation
 
@@ -19,7 +21,6 @@ import { createHashHistory } from 'history';
 //dropdown menu to select clubs
 //insert access code
 
-const history = createHashHistory();
 
 class VendorSignup extends Component {
   constructor(props){
@@ -120,7 +121,7 @@ class VendorSignup extends Component {
       <div>
         <Grid container direction = "column" justify = "center" alignItems = "center">
           <Paper id = "signupPaperContainer">
-            <h1> Vendor Sign Up </h1>
+            <h1> Admin Verification </h1>
             <div className = "textForm" id="row">
               <TextField
                 label="Email"
