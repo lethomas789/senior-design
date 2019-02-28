@@ -41,7 +41,8 @@ class Signup extends Component {
   handleClose(){
     this.setState({
         open: false
-    })
+    });
+    this.props.history.push('/shop');
   }
 
   //send signup request
@@ -123,7 +124,9 @@ class Signup extends Component {
                 onChange={(event) => this.setState({ password: event.target.value })}
               />
             </div>
+            <div className = "pushDown">
             <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
+            </div>
           </Paper>
 
           <div className = "progressContainer">

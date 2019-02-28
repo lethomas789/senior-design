@@ -22,6 +22,17 @@ class ShopView extends Component {
         //update product state in redux store
         console.log(res.data);
         this.props.updateProducts(res.data.data);
+
+        //after getting products, get list of vendors
+        const vendorsURL = "http://localhost:4000/api/getVendorInfo";
+        axios.get(vendorsURL)
+          .then(res => {
+            console.log(res.data);
+            this.props.updateVendors(res.data.vendors);
+          })
+          .catch(err => {
+            alert("error getting vendors");
+          })
       })
       .catch(err => {
         alert("Server error retrieving items");
@@ -56,6 +67,11 @@ const mapDispatchToProps = dispatch => {
       updateProducts: (products) => dispatch({
           type: actions.GET_PRODUCTS,
           items: products
+      }),
+
+      updateVendors: (currentVendors) => dispatch({
+        type: actions.GET_VENDORS,
+        vendors: currentVendors
       })
   }
 }
