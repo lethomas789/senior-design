@@ -1,3 +1,8 @@
 .grow{
   flex-grow: 1;
 }
+
+.test {
+  width: 10px;
+  height: 10px; 
+}
