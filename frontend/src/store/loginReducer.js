@@ -42,7 +42,8 @@ const reducer = (state = initialState, action) => {
                 ...state,
                 login: false,
                 text: "Login",
-                email: ''
+                email: '',
+                isAdmin: false
             }
         default:
             return state;

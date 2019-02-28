@@ -137,8 +137,46 @@ class ButtonAppBar extends Component {
         );
       }
 
-      //user is not logged in
-      else if (this.props.loginValue === false && this.props.isAdmin === false){
+      //admin version of navbar after logging in
+      else if (this.props.loginValue === true && this.props.isAdmin === true){
+        return(
+          <div className= "root">
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton className = "menuButton" color="inherit" aria-label="Menu">
+                  <MenuIcon />
+                </IconButton>
+                <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
+                  ECS193 ECommerce
+                </Typography>
+                  <div id = "navLink">
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Club Info </Button> 
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Items </Button>
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Add Items </Button> 
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
+                    <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
+                    <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
+                    <Button color = "inherit" onClick = {this.viewCartCheck}> <CartIcon/> </Button>
+                  </div>
+                  <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+                        <DialogContent>
+                            <DialogContentText id = "alert-dialog-description">
+                              {this.state.alertMessage}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick = {this.handleClose} color = "primary">
+                                Ok
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+              </Toolbar>
+            </AppBar>
+          </div>
+        );
+      }
+
+      else{
         return(
           <div className= "root">
             <AppBar position="static">
@@ -171,45 +209,6 @@ class ButtonAppBar extends Component {
               </Toolbar>
             </AppBar>
         </div>
-        );
-      }
-
-      else if (this.props.loginValue === true && this.isAdmin === true){
-        return(
-          <div className= "root">
-            <AppBar position="static">
-              <Toolbar>
-                <IconButton className = "menuButton" color="inherit" aria-label="Menu">
-                  <MenuIcon />
-                </IconButton>
-                <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
-                  ECS193 ECommerce
-                </Typography>
-                  <div id = "navLink">
-                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Club Info </Button> 
-                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Items </Button>
-                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Add Items </Button> 
-                    <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
-                    <Button component = {Link} to = {signupRoute} color = "inherit"> Sign Up </Button> 
-                    <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
-                    <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
-                    <Button color = "inherit" onClick = {this.viewCartCheck}> <CartIcon/> </Button>
-                  </div>
-                  <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
-                        <DialogContent>
-                            <DialogContentText id = "alert-dialog-description">
-                              {this.state.alertMessage}
-                            </DialogContentText>
-                        </DialogContent>
-                        <DialogActions>
-                            <Button onClick = {this.handleClose} color = "primary">
-                                Ok
-                            </Button>
-                        </DialogActions>
-                    </Dialog>
-              </Toolbar>
-            </AppBar>
-          </div>
         );
       }
     }

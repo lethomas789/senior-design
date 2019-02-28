@@ -11,12 +11,15 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
+import { createHashHistory } from 'history';
 
 //vendor confirmation
 
 //insert email for verification
 //dropdown menu to select clubs
 //insert access code
+
+const history = createHashHistory();
 
 class VendorSignup extends Component {
   constructor(props){
@@ -63,23 +66,23 @@ class VendorSignup extends Component {
 
   //update value selected
   handleSelect(event){
-    console.log(event);
-    this.setState({
-      vendorID: event.target.value    
-    })
-    //obtain vid by searching list of active vendors and comparing dropdown value
-    // for(let i = 0; i < this.state.vendors.length; i++){
-    //   if (event.target.value === this.state.vendors[i].vendorName){
-    //     this.setState({
-    //       vendorID: this.state.vendors[i].vid
-    //     })
-    //   }
-    // }
+    var currentVendorID = event.target.value;
+    var currentVendorName = '';
+    for(let i = 0; i < this.state.vendors.length; i++){
+      if(this.state.vendors[i].vid === currentVendorID){
+        currentVendorName = this.state.vendors[i].vendorName;
+        this.setState({
+          vendorID: currentVendorID,
+          vendor: currentVendorName     
+        });
+        break;
+      }
+    }
   }
 
   //send signup to verify admin process
   sendSignup(){
-    const apiURL = "http://localhost:4000/api/adminVendor/addAdminUser";
+    const apiURL = "http://localhost:4000/api/adminUser/addAdminUser";
 
     axios.post(apiURL, {
       params:{
@@ -89,7 +92,14 @@ class VendorSignup extends Component {
       }
     })
     .then(res => {
-      console.log(res);
+      //if successful, set isAdmin = true
+      //login in user
+      //redirect back to homepage with admin version of navbar
+      if(res.data.success === true){
+        this.props.updateAdminLogin(this.state.email);
+        alert("Admin signup succesful!");
+        this.props.history.push('/');
+      }
     })
     .catch(err => {
       alert(err);
@@ -106,7 +116,6 @@ class VendorSignup extends Component {
         <Grid container direction = "column" justify = "center" alignItems = "center">
           <Paper id = "signupPaperContainer">
             <h1> Vendor Sign Up </h1>
-
             <div className = "textForm" id="row">
               <TextField
                 label="Email"
@@ -118,6 +127,7 @@ class VendorSignup extends Component {
             <div className = "textForm" id="row">
               <TextField
                 label="Access Code"
+                type="password"
                 required="true"
                 onChange={(event) => this.setState({ code: event.target.value })}
               />
@@ -132,7 +142,6 @@ class VendorSignup extends Component {
                 </Select>
               </FormControl>
             </div>
-
             <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
           </Paper>
         </Grid>
@@ -141,4 +150,25 @@ class VendorSignup extends Component {
   }
 }
 
-export default VendorSignup;
+//obtain state from store as props for component
+//get cart items, login value, and user email
+const mapStateToProps = state => {
+  return{
+    items: state.cart.items,
+    login: state.auth.login,
+    user: state.auth.user
+  }
+}
+
+//redux
+//dispatch action to reducer, get user's cart from store
+const mapDispatchToProps = dispatch => {
+  return{
+    updateAdminLogin: (currentEmail) => dispatch({
+      type: actions.ADMIN_LOGGED_IN,
+      user: currentEmail
+    })
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(VendorSignup);
