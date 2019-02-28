@@ -10,7 +10,9 @@ class VendorView extends Component {
   constructor(props){
     super(props);
     this.state = {
-      products: []
+      products: [],
+      vendorName: '',
+      bio: ''
     }
   }
 
@@ -23,10 +25,22 @@ class VendorView extends Component {
     })
     .then(res => {
       console.log("getting vendor products ", res.data);
-      //update component state, list of products from vendor
-      this.setState({
-        products: res.data.data
-      })
+
+      var currentVendorName = '';
+      var currentVendorBio = '';
+
+      //search for matching vendor id in array of vendors of redux store
+      for(let i = 0; i < this.props.vendors.length; i++){
+        if(this.props.vendors[i].vid === this.props.vendor){
+          //update component state, list of products from vendor
+          this.setState({
+            products: res.data.data,
+            vendorName: this.props.vendors[i].vendorName,
+            bio: this.props.vendors[i].bio
+          });
+          break;
+        }
+      }
     })
   }
 
@@ -38,7 +52,8 @@ class VendorView extends Component {
     return (
       <div className = "grow">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
-          <h1> Vendor Items </h1>
+          <h1> {this.state.vendorName} </h1>
+          <h3> Bio: {this.state.bio} </h3>
         </Grid>
 
         <Grid container spacing={24} direction="row" justify="center" alignItems="center" justify-xs-space-evenly>
@@ -66,7 +81,8 @@ const mapDispatchToProps = dispatch => {
 //obtain state from store as props for component
 const mapStateToProps = state => {
   return{
-    vendor: state.vendor.vendor
+    vendor: state.vendor.vendor,
+    vendors: state.vendor.vendors
   }
 }
 

@@ -1,7 +1,8 @@
 import actions from './actions';
 
 const initialState = {
-  vendor: ''
+  vendor: '',
+  vendors: []
 };
 
 const reducer = (state = initialState, action) => {
@@ -10,6 +11,12 @@ const reducer = (state = initialState, action) => {
       return{
         ...state,
         vendor: action.vendor
+      }
+
+    case actions.GET_VENDORS:
+      return{
+        ...state,
+        vendors: action.vendors
       }
 
     default:

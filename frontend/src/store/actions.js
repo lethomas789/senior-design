@@ -12,7 +12,8 @@ const actions =  {
     EMPTY_CART: "EMPTY_CART",
     UPDATE_TOTAL: "UPDATE_TOTAL",
     //vendor actions
-    GET_VENDOR_PRODUCTS: "GET_VENDOR_PRODUCTS"
+    GET_VENDOR_PRODUCTS: "GET_VENDOR_PRODUCTS",
+    GET_VENDORS: "GET_VENDORS"
 }
 
 export default actions;
