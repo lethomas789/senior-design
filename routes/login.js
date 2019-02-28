@@ -59,8 +59,6 @@ router.post('/', (req, res) =>{
       let vendors = [];
       // if passwords match, send JWT to authenticate login
       if (validPassword) {
-
-        // if successfuly login, check if they are an admin
         // if they are an admin, get their vendors
         if (doc.data().isAdmin) {
           // we assume they will exist in admin collection
@@ -133,6 +131,7 @@ router.post('/', (req, res) =>{
   });
 
 
+  /*
   //check to see if email exists
   else {
     var ref = db.collection('users').where('email', '==', email);
@@ -194,8 +193,7 @@ router.post('/', (req, res) =>{
         }
       })
   }
-
-
+  */
 })
 
 module.exports = router;

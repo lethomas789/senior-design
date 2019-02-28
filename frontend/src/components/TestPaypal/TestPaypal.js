@@ -41,6 +41,33 @@ export default class TestPaypal extends Component {
     // For production app-ID:
     //   => https://developer.paypal.com/docs/classic/lifecycle/goingLive/
 
+    let paymentOptions = {
+      "intent": "sale",
+      "payer": {
+        "payment_method": "paypal"
+      },
+      "redirect_urls": {
+        "return_url": "localhost:3000", // send back to localhosts
+        "cancel_url": "localhost:3000/testPaypal"
+      },
+      "transactions": [{
+        "item_list": {
+          "items": [{
+            "name": "item",
+            "sku": "item",
+            "price": "1.00",
+            "currency": "USD",
+            "quantity": 1
+          }]
+        },
+        "amount": {
+          "currency": "USD",
+          "total": "0.01"
+        },
+        "description": "This is the payment description."
+      }]
+    };
+
     // NB. You can also have many Paypal express checkout buttons on page, just pass in the correct amount and they will work!
     return (
       <PaypalExpressBtn env={env} client={client} currency={currency} total={total} onError={onError} onSuccess={onSuccess} onCancel={onCancel} shipping={1}/>

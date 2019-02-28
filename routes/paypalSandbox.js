@@ -21,8 +21,8 @@ var payReq = {
     "payment_method": "paypal"
   },
   "redirect_urls": {
-    "return_url": "https://www.google.com/", // send back to localhosts
-    "cancel_url": "https://old.reddit.com/"
+    "return_url": "localhost:3000", // send back to localhosts
+    "cancel_url": "localhost:3000/testPaypal"
   },
   "transactions": [{
     "item_list": {
@@ -36,7 +36,7 @@ var payReq = {
     },
     "amount": {
       "currency": "USD",
-      "total": "1.00"
+      "total": "0.01"
     },
     "description": "This is the payment description."
   }]
