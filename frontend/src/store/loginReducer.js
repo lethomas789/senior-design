@@ -9,7 +9,8 @@ const initialState = {
     login: false,
     text: "Login",
     user: '',
-    isAdmin: false
+    isAdmin: false,
+    vendorID: ''
 };
 
 const reducer = (state = initialState, action) => {
@@ -34,7 +35,8 @@ const reducer = (state = initialState, action) => {
                 login: true,
                 text: "Logout",
                 user:action.user,
-                isAdmin: true
+                isAdmin: true,
+                vendorID: action.vid
             }
         //if user logs out, update state
         case actions.LOGGED_OUT:
@@ -43,7 +45,8 @@ const reducer = (state = initialState, action) => {
                 login: false,
                 text: "Login",
                 email: '',
-                isAdmin: false
+                isAdmin: false,
+                vendorID: ''
             }
         default:
             return state;

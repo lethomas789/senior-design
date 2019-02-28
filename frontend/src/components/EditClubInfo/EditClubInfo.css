@@ -1,0 +1,10 @@
+#editClubForm{
+  display: flex;
+  flex-direction: column;
+}
+
+.inputWidth{
+  width: 400px;
+  padding: 5px;
+  height: 100px;
+}

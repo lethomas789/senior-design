@@ -96,9 +96,14 @@ class VendorSignup extends Component {
       //login in user
       //redirect back to homepage with admin version of navbar
       if(res.data.success === true){
-        this.props.updateAdminLogin(this.state.email);
-        alert("Admin signup succesful!");
+        this.props.updateAdminLogin(this.state.email, this.state.vendorID);
+        alert("Admin verification succesful!");
         this.props.history.push('/');
+      }
+
+      //print why verification didn't work
+      else{
+        alert(res.data.message);
       }
     })
     .catch(err => {
@@ -108,7 +113,7 @@ class VendorSignup extends Component {
 
   render() {
     const vendorList = this.state.vendors.map(result => {
-      return <MenuItem value = {result.vid} name = {result.vendorName}> {result.vendorName} </MenuItem>
+      return <MenuItem key = {result.vid} value = {result.vid} name = {result.vendorName}> {result.vendorName} </MenuItem>
     });
 
     return (
@@ -142,7 +147,7 @@ class VendorSignup extends Component {
                 </Select>
               </FormControl>
             </div>
-            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
+            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Verify  </Button>
           </Paper>
         </Grid>
       </div>
@@ -164,9 +169,10 @@ const mapStateToProps = state => {
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
   return{
-    updateAdminLogin: (currentEmail) => dispatch({
+    updateAdminLogin: (currentEmail, vendorID) => dispatch({
       type: actions.ADMIN_LOGGED_IN,
-      user: currentEmail
+      user: currentEmail,
+      vid: vendorID
     })
   }
 }
