@@ -18,7 +18,8 @@ class CartItem extends Component {
     super(props);
     //store product id PID to reference for item removal
     this.state = {
-      pid: this.props.pid
+      pid: this.props.pid,
+      vid: this.props.vendorID
     }
     this.removeItem = this.removeItem.bind(this);
   }
