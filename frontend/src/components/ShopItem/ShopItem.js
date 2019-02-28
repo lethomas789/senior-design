@@ -146,15 +146,16 @@ class ShopItem extends Component {
               </CardContent>
             </CardActionArea>
             <CardActions>
-              <Typography variant = "h6">
-                <Fab size = "small" aria-label = "Remove" onClick = {this.removeQuantity}>
-                  <RemoveCircle/>
-                </Fab>
-                Quantity: {this.state.amtPurchased}
-                <Fab size = "small" aria-label = "Add" onClick = {this.addQuantity}>
-                  <AddCircle/>
-                </Fab>
-              </Typography>
+                <Button id = "test" onClick = {this.removeQuantity}>
+                 -
+                </Button>
+                <div className= "quantity">
+                {this.state.amtPurchased}
+                </div>
+                <Button id = "test" onClick = {this.addQuantity}>
+                 +
+                </Button>
+              
 
               <Button size="small" color="primary" onClick = {this.addItem}>
                 Add To Cart
