@@ -71,7 +71,7 @@ router.get('/testCreate', (req, res) => {
       }
       else {
         console.log('no redirect URL present');
-        return res.status(400).json({
+        return res.status(200).json({
           success: false
         });
       }

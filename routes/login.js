@@ -22,7 +22,7 @@ router.post('/', (req, res) =>{
 
   //if email is invalid
   if (validator.isEmail(email) === false){
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: "Invalid Email"
     });
@@ -30,7 +30,7 @@ router.post('/', (req, res) =>{
 
   //if input fields were empty
   if (email.trim() === '' || password.trim() === ''){
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: "Empty Inputs"
     });
@@ -42,7 +42,7 @@ router.post('/', (req, res) =>{
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('No such account for given email:', email);
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'No such account for given email: ' + email
       });
@@ -50,13 +50,14 @@ router.post('/', (req, res) =>{
 
     bcrypt.compare(password, doc.data().password, (err, validPassword) => {
       if (err) {
-        return res.status(500).json({
+        return res.status(200).json({
           success: false,
           message: "Server error comparing passwords"
         });
       }
 
       let vendors = [];
+
       // if passwords match, send JWT to authenticate login
       if (validPassword) {
         // if they are an admin, get their vendors
@@ -65,12 +66,14 @@ router.post('/', (req, res) =>{
           db.collection('admins').doc(email).get().then(doc => {
             if (!doc.exists) {
               console.log('Server error in getting admin info');
-              return res.status(500).json({
+              return res.status(200).json({
                 success: false,
                 message: 'Server error in getting admin info' 
               });
             }
             vendors = doc.data().vendors;
+
+            // console.log('Vendors are:', vendors);
 
             //info that JWT stores
             const payload = { email: email };
@@ -88,7 +91,7 @@ router.post('/', (req, res) =>{
           })
           .catch(err => {
             console.log('Server error in getting admin info:', err);
-            return res.status(500).json({
+            return res.status(200).json({
               success: false,
               message: 'Server error in getting admin info: ' + err
             });
@@ -96,25 +99,27 @@ router.post('/', (req, res) =>{
 
         }
 
-        // else if not admin, send empty array
+        // else not admin, send empty array
+        else {
+          // info that JWT stores
+          const payload = { email: email };
 
-        //info that JWT stores
-        const payload = { email: email };
-
-        jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
-          return res.status(200).json({
-            success: true,
-            message: "Login Successful!",
-            email: email,
-            token: 'Bearer ' + token,
-            vendors: vendors
+          jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
+            return res.status(200).json({
+              success: true,
+              message: "Login Successful!",
+              email: email,
+              token: 'Bearer ' + token,
+              vendors: vendors
+            });
           });
-        });
+        }
+
       }
 
-      //if passwords don't match
+      // if passwords don't match
       else {
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           message: "Incorrect Password"
         });
@@ -124,7 +129,7 @@ router.post('/', (req, res) =>{
   })
   .catch(err => {  // catch for userRef.get
     console.log('Error in getting userRef:', err);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getting userRef: ' + err
     });

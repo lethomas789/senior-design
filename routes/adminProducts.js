@@ -43,7 +43,7 @@ router.post('/addNewProduct', (req, res) => {
 
    if (!vid || !user || !productInfo || !productName || !productPrice || !stock) {
     console.log('Error: missing params for adding new product.');
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Error: missing params for adding new product.'
     });
@@ -54,7 +54,7 @@ router.post('/addNewProduct', (req, res) => {
    vendorRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: no such vendor for given vid.');
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Error: no such vendor for given vid. '
       });
@@ -64,7 +64,7 @@ router.post('/addNewProduct', (req, res) => {
     vendorRef.collection('admins').doc(user).get().then(doc => {
       if (!doc.exists) {
         console.log('Error: provided user is not an admin for given vendor.');
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           messaage: 'Error: provided user is not an admin for given vendor.'
         });
@@ -96,7 +96,7 @@ router.post('/addNewProduct', (req, res) => {
         })
         .catch(err => {
           console.log('Error in adding new product:', err);
-          return res.status(500).json({
+          return res.status(200).json({
             success: false,
             message: 'Error in adding new product: ' + err
           });
@@ -105,7 +105,7 @@ router.post('/addNewProduct', (req, res) => {
       })
       .catch(err => {  // catch for setting new product
         console.log('Error in adding new product:', err);
-        return res.status(500).json({
+        return res.status(200).json({
           success: false,
           message: 'Error in adding new product: ' + err
         });
@@ -114,7 +114,7 @@ router.post('/addNewProduct', (req, res) => {
     })
     .catch(err => {  // catch for adminRef
       console.log('Error in getting adminref:', err);
-      return res.status(500).json({
+      return res.status(200).json({
         success: false,
         message: 'Error in getting adminRef: ' + err
       });
@@ -123,7 +123,7 @@ router.post('/addNewProduct', (req, res) => {
    })
    .catch(err => {   // catch for vendorref.get
      console.log('Error in getting vendorRef:', err);
-     return res.status(500).json({
+     return res.status(200).json({
        success: false,
        message: 'Error in getting vendorRef: ' + err
      });
