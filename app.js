@@ -7,7 +7,7 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 
 // firebase setup
-const serviceAccount = require('./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-b1f4760eb4.json');
+const serviceAccount = require('./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562');
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://ecs193-ecommerce.firebaseio.com'
