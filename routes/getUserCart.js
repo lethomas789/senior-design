@@ -15,7 +15,7 @@ router.get('/', (req,res) => {
 
   // return error if empty request
   if (!user) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
@@ -25,7 +25,7 @@ router.get('/', (req,res) => {
 
   userRef.get().then(doc => {
     if (!doc.exists) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'No such user'
       });
@@ -53,7 +53,7 @@ router.get('/', (req,res) => {
       })
       .catch(err => {  // catch for cartRef.get()
         console.log('Error in getting cart items:', err);
-        return res.status(400).json({
+        return res.status(200).json({
           succes: false,
           message: 'Error in getting cart items'
         });
@@ -61,7 +61,7 @@ router.get('/', (req,res) => {
   })
   .catch(err => {  // catch for userRef.get()
     console.log('Error getting user info:', err);
-    return res.status(400).json({
+    return res.status(200).json({
       succes: false,
       message: 'Error in getting user info'
     });
@@ -85,7 +85,7 @@ router.post('/addItems', (req, res) => {
 
   // return error if empty request
   if(!user || !pid || !amtPurchased) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
@@ -95,7 +95,7 @@ router.post('/addItems', (req, res) => {
 
   userRef.get().then(doc => {
     if (!doc.exists) {
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'No such user'
       });
@@ -111,7 +111,7 @@ router.post('/addItems', (req, res) => {
     productInfoRef.get().then(doc => {
       if (!doc.exists) {
         console.log('No such product doc');
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           message: 'No such product doc'
         });
@@ -182,7 +182,7 @@ router.post('/addItems', (req, res) => {
     })
     .catch(err => {  // catch for productInfoRef.get()
       console.log('No such product doc');
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'No such product doc'
       });
@@ -190,7 +190,7 @@ router.post('/addItems', (req, res) => {
   })
   .catch(err => {  // catch for userRef.get()
     console.log('Error in userRef.get().then:', err);
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in userRef.get().then' + err
     });
@@ -209,7 +209,7 @@ router.post('/deleteItems', (req,res) => {
 
   // return error if empty request
   if (user === '' || pid === '') {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
@@ -221,7 +221,7 @@ router.post('/deleteItems', (req,res) => {
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('No such user: ', user);
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'No such user'
       });
@@ -233,7 +233,7 @@ router.post('/deleteItems', (req,res) => {
     cartItemRef.get().then(doc => {
       if (!doc.exists) {
         console.log('Cannot delete non-existing item for user:', user);
-        return res.status(500).json({
+        return res.status(200).json({
           success: false,
           message: 'Cannot delete non-existing item for user:' + user
         });
@@ -248,7 +248,7 @@ router.post('/deleteItems', (req,res) => {
     })
     .catch(err => {
       console.log('Error in getting cartItem doc:', err);
-      return res.status(500).json({
+      return res.status(200).json({
         success: false,
         message: 'Error in getting cartItem ref:'  + err
       });
@@ -256,7 +256,7 @@ router.post('/deleteItems', (req,res) => {
   })
   .catch(err => {  // catch for userRef.get
     console.log('Error in getting user:', user);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getting user' + err
     });
@@ -278,14 +278,14 @@ router.post('/updateItems', (req, res) => {
 
   // return error if empty request
   if (!user || !pid || !amtPurchased) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
   }
 
   if (amtPurchased <= 0) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
@@ -297,7 +297,7 @@ router.post('/updateItems', (req, res) => {
     return t.get(cartItemRef).then(doc => {
       if (!doc.exists) {
         console.log('Cannot alter non-existing item in cart.');
-        return res.status(500).json({
+        return res.status(200).json({
           success: false,
           message: 'Cannot alter non-existing item in cart.'
         });
@@ -319,7 +319,7 @@ router.post('/updateItems', (req, res) => {
     })
     .catch(err => {
       console.log('Error in getting pid from cart', err);
-      return res.status(500).json({
+      return res.status(200).json({
         success: false,
         message: 'Error in getting pid from cart' + err
       });
@@ -348,7 +348,7 @@ router.post('/updateCart', (req,res) => {
   }
 
   if (!user || !cartTotalPrice || !itemsInCart || !vendorsInOrder) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
@@ -360,7 +360,7 @@ router.post('/updateCart', (req,res) => {
     // if user doesnt exist, stop
     if (!doc.exists) {
       console.log('Error: user does not exist: ', user);
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Cannot update cart for non-existent user: ' + user
       });
@@ -384,7 +384,7 @@ router.post('/updateCart', (req,res) => {
   })
   .catch(err => {
     console.log('Error in getting user:', err);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getting user: ' + err
     });

@@ -25,7 +25,7 @@ router.get('/', (req, res) => {
 
   if (!user || !vid) {
     console.log('Error: missing params for GET adminVendor.');
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Error: missing params for GET adminVendor.'
     });
@@ -36,7 +36,7 @@ router.get('/', (req, res) => {
   vendorRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: no such vendor for given vid.');
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Error: no such vendor for given vid. '
       });
@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
     vendorRef.collection('admins').doc(user).get().then(doc => {
       if (!doc.exists) {
         console.log('Error: provided user is not an admin for given vendor.');
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           messaage: 'Error: provided user is not an admin for given vendor.'
         });
@@ -69,7 +69,7 @@ router.get('/', (req, res) => {
     })
     .catch(err => {  // catch for admins ref
       console.log('Error in getting adminRef:', err);
-      return res.status(500).json({
+      return res.status(200).json({
         success: false,
         message: 'Error in getting adminRef: ' + err
       });
@@ -78,7 +78,7 @@ router.get('/', (req, res) => {
   })
   .catch(err => {   // catch for vendorRef.get
     console.log('Error in getting vendorRef:', err);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getting vendorRef: ' + err
     });
@@ -116,7 +116,7 @@ router.patch('/editVendorInfo', (req, res) => {
   // must include editing user and vid; bio and vendorName not always edited
   if (!user || !vendorName || !bio || !vid) {
     console.log('Error: missing params for editVendorInfo.');
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Error: missing params for editVendorInfo.'
     });
@@ -129,7 +129,7 @@ router.patch('/editVendorInfo', (req, res) => {
   vendorRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: no such vendor for given vid.');
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Error: no such vendor for given vid.'
       });
@@ -139,7 +139,7 @@ router.patch('/editVendorInfo', (req, res) => {
     vendorRef.collection('admins').doc(user).get().then(doc => {
       if (!doc.exists) {
         console.log('Error: provided user is not an admin for given vendor.');
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           messaage: 'Error: provided user is not an admin for given vendor.'
         });
@@ -170,7 +170,7 @@ router.patch('/editVendorInfo', (req, res) => {
     })
     .catch(err => {  // catch for admins ref
       console.log('Error in getting adminRef:', err);
-      return res.status(500).json({
+      return res.status(200).json({
         success: false,
         message: 'Error in getting adminRef: ' + err
       });
@@ -178,7 +178,7 @@ router.patch('/editVendorInfo', (req, res) => {
   })
   .catch(err => {   // catch for vendorRef.get
     console.log('Error in getting vendorRef:', err);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getting vendorRef: ' + err
     });

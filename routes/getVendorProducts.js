@@ -16,7 +16,7 @@ router.get('/', (req,res) => {
 
   // require certain response params
   if (!vendor) {
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
@@ -30,7 +30,7 @@ router.get('/', (req,res) => {
       // no such vendor 
       if (!doc.exists) {
         // console.log('No such vendor: ', vendor);
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           message: 'No such vendor'
         });
@@ -52,7 +52,7 @@ router.get('/', (req,res) => {
         })
         .catch(err => {  // catch for productsRef.get()
           console.log('Error in getting vendor products:', err);
-          return res.status(400).json({
+          return res.status(200).json({
             succes: false,
             message: 'Error in getting vendor products'
           });
@@ -60,7 +60,7 @@ router.get('/', (req,res) => {
     })
     .catch(err => {  // catch for vendorRef.get()
       console.log('Error getting vendor info:', err);
-      return res.status(400).json({
+      return res.status(200).json({
         succes: false,
         message: 'Error in getting vendor info'
       });

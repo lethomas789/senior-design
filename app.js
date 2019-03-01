@@ -7,7 +7,8 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 
 // firebase setup
-const serviceAccount = require('./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562');
+const serviceAccount = require('./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json');
+
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: 'https://ecs193-ecommerce.firebaseio.com'
@@ -44,6 +45,8 @@ const adminUser = require('./routes/adminUser');
 const adminProducts = require('./routes/adminProducts');
 const adminVendor = require('./routes/adminVendor');
 const getVendorInfo = require('./routes/getVendorInfo');
+const paypalSandbox = require('./routes/paypalSandbox');
+// const orders = require('./routes/orders');
 
 app.use('/api/users', users);
 app.use('/api/signup', signup);
@@ -55,6 +58,8 @@ app.use('/api/adminUser', adminUser);
 app.use('/api/adminProducts', adminProducts);
 app.use('/api/adminVendor', adminVendor);
 app.use('/api/getVendorInfo', getVendorInfo);
+app.use('/api/paypalSandbox', paypalSandbox);
+// app.use('/api/orders', orders);
 
 // listen to requests on port
 // choose port based on environment

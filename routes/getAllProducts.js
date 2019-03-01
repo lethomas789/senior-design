@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
     })
     .catch(err => {
       console.log('Error in getting products:', err);
-      res.status(400).json({
+      res.status(200).json({
         success: false,
         message: 'Error in getting proudcts'
       });
