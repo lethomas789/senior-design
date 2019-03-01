@@ -88,11 +88,15 @@ export default class TestPaypal extends Component {
     return (
       // shipping = {1} means no shipping
       <div>
-        <PaypalExpressBtn env={env} client={client} currency={currency} total={total} onError={onError} onSuccess={onSuccess} onCancel={onCancel} shipping={1} paymentOptions={paymentOptions} />
+        <PaypalExpressBtn env={env} client={client} currency={currency}
+        total={total} onError={onError} onSuccess={onSuccess}
+        onCancel={onCancel} shipping={1} paymentOptions={paymentOptions} />
 
         <br></br>
 
-        <PaypalExpressBtn env={env} client={client} currency={currency} total={total} onError={onError} onSuccess={onSuccess} onCancel={onCancel} shipping={1} />
+        <PaypalExpressBtn env={env} client={client} currency={currency}
+        total={total} onError={onError} onSuccess={onSuccess}
+        onCancel={onCancel} shipping={1} />
       </div>
 
     );
