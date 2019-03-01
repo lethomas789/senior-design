@@ -130,19 +130,29 @@ router.post('/addAdminUser', (req, res) => {
       // NOTE: we merge b/c a user can be admin of more than one club
       db.collection('admins').doc(user).set({
         email: user
-      }, {merge: true});
+      }, {merge: true})
+      .then(() => {
+        // b/c arrays work differently, update array of vendors here
+        db.collection('admins').doc(user).update({
+          vendors: admin.firestore.FieldValue.arrayUnion(vid)
+        });
 
-      // b/c arrays work differently, update array of vendors here
-      db.collection('admins').doc(user).update({
-        vendors: admin.firestore.FieldValue.arrayUnion(vid)
+        console.log('Made new admin:', user);
+        console.log('Added new vendor for vid:', vid);
+        return res.status(200).json({
+          success: true,
+          message: 'Succesfully added new admin.'
+        });
+
+      })
+      .catch(err => {
+        console.log('Error occured in setting admin for user:', err);
+        return res.status(200).json({
+          success: false,
+          message: 'Server error occured in creating new admin. ' + err
+        });
       });
 
-      console.log('Made new admin:', user);
-      console.log('Added new vendor for vid:', vid);
-      return res.status(200).json({
-        success: true,
-        message: 'Succesfully added new admin.'
-      });
     })
     .catch(err => {  // catch for getAdminCodeRef
       console.log('Error in getting adminCodeRef:', err); 
