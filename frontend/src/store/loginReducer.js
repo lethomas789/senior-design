@@ -10,7 +10,9 @@ const initialState = {
     text: "Login",
     user: '',
     isAdmin: false,
-    vendorID: ''
+    vendorID: '',
+    adminsOf: [],
+    currentVendor: ''
 };
 
 const reducer = (state = initialState, action) => {
@@ -36,7 +38,9 @@ const reducer = (state = initialState, action) => {
                 text: "Logout",
                 user:action.user,
                 isAdmin: true,
-                vendorID: action.vid
+                vendorID: action.vid,
+                adminsOf: action.admins,
+                currentVendor: action.currentVendor
             }
         //if user logs out, update state
         case actions.LOGGED_OUT:
@@ -46,7 +50,16 @@ const reducer = (state = initialState, action) => {
                 text: "Login",
                 email: '',
                 isAdmin: false,
-                vendorID: ''
+                vendorID: '',
+                adminsOf: state.adminsOf.length = 0,
+                currentVendor: ''
+            }
+        //update vendor id of user if admin
+        case actions.UPDATE_VENDOR_ID:
+            return{
+              ...state,
+              vendorID: action.vid,
+              currentVendor: action.vendor
             }
         default:
             return state;

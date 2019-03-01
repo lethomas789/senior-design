@@ -13,7 +13,8 @@ const actions =  {
     UPDATE_TOTAL: "UPDATE_TOTAL",
     //vendor actions
     GET_VENDOR_PRODUCTS: "GET_VENDOR_PRODUCTS",
-    GET_VENDORS: "GET_VENDORS"
+    GET_VENDORS: "GET_VENDORS",
+    UPDATE_VENDOR_ID: "UPDATE_VENDOR_ID"
 }
 
 export default actions;

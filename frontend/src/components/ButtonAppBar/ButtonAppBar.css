@@ -19,3 +19,9 @@
   top: 50%;
   right: -3;
 }
+
+.navLabel{
+    width: 200px;
+    text-align: center;
+    color:white
+}
