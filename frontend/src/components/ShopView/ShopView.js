@@ -50,7 +50,7 @@ class ShopView extends Component {
           <h1> Shop </h1>
         </Grid>
 
-        <Grid container spacing={24} direction="row" justify="center" alignItems="center" justify-xs-space-evenly>
+        <Grid container spacing={24} direction="row" justify="flex-start" alignItems="center" justify-xs-space-evenly>
           {items}
         </Grid>
       </div>
