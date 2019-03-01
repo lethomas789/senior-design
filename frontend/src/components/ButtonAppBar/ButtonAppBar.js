@@ -21,6 +21,7 @@ import { DialogActions } from '@material-ui/core';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import Select from '@material-ui/core/Select';
+import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 
 //variables to store routes to redirect to with Link component
@@ -214,13 +215,11 @@ class ButtonAppBar extends Component {
                 </Typography>
                   <div id = "navLink">
                     <Button color = "inherit"> Change Club: </Button> 
-                    <Button>
-                      <FormControl id = "clubForm">
-                        <InputLabel> {this.props.currentVendor} </InputLabel>
-                        <Select value = {this.props.vendorID} open = {this.state.openSelect} onClose = {this.handleCloseSelect} onOpen = {this.handleOpenSelect} onChange = {this.handleSelect}>
-                          {vendorList}
-                        </Select>
-                      </FormControl>
+                    <Button color = "inherit">
+                      <InputLabel className = "navLabel" color = "inherit"> {this.props.currentVendor} </InputLabel>
+                      <Select color = "inherit" value = {this.props.vendorID} open = {this.state.openSelect} onClose = {this.handleCloseSelect} onOpen = {this.handleOpenSelect} onChange = {this.handleSelect}>
+                        {vendorList}
+                      </Select>
                     </Button>
                     <Button component = {Link} to = {editClubRoute} color = "inherit"> Edit Club Info </Button> 
                     <Button component = {Link} to = {addProductRoute} color = "inherit"> Add Items </Button> 

@@ -110,13 +110,11 @@ class VendorSignup extends Component {
         .then(res => {
           if(res.data.success === true){
             //update the user's email, update current admin of which vendor, and update which vendors user is an admin of
-            console.log("get vendors of", res.data.vendors);
             var currentVendor = '';
 
             //find matching vendor id, extract vendor name from list of vendors
             for(let i = 0; i < this.props.vendors.length; i++){
               if(this.props.vendors[i].vid === this.state.vendorID){
-                alert("found matching vid, update vendor name");
                 currentVendor = this.props.vendors[i].vendorName;
                 break;
               }
