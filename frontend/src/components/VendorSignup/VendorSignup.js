@@ -14,13 +14,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { createHashHistory, createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
-
 //vendor confirmation
 
 //insert email for verification
 //dropdown menu to select clubs
 //insert access code
-
 
 class VendorSignup extends Component {
   constructor(props){
@@ -69,6 +67,9 @@ class VendorSignup extends Component {
   handleSelect(event){
     var currentVendorID = event.target.value;
     var currentVendorName = '';
+    //search through list of available vendors
+    //save state of selected vendor
+    //save vendor id and name of selected vendor
     for(let i = 0; i < this.state.vendors.length; i++){
       if(this.state.vendors[i].vid === currentVendorID){
         currentVendorName = this.state.vendors[i].vendorName;
@@ -83,6 +84,7 @@ class VendorSignup extends Component {
 
   //send signup to verify admin process
   sendSignup(){
+    //add current user to be admin of selected vendor
     const apiURL = "http://localhost:4000/api/adminUser/addAdminUser";
 
     axios.post(apiURL, {
@@ -97,9 +99,39 @@ class VendorSignup extends Component {
       //login in user
       //redirect back to homepage with admin version of navbar
       if(res.data.success === true){
-        this.props.updateAdminLogin(this.state.email, this.state.vendorID);
-        alert("Admin verification succesful!");
-        this.props.history.push('/');
+        //get list of vendors user is an admin of
+        //get the vids of vendors in which user is an admin of
+        const adminsURL = "http://localhost:4000/api/adminUser";
+        axios.get(adminsURL, {
+          params:{
+            user: this.state.email
+          }
+        })
+        .then(res => {
+          if(res.data.success === true){
+            //update the user's email, update current admin of which vendor, and update which vendors user is an admin of
+            var currentVendor = '';
+
+            //find matching vendor id, extract vendor name from list of vendors
+            for(let i = 0; i < this.props.vendors.length; i++){
+              if(this.props.vendors[i].vid === this.state.vendorID){
+                currentVendor = this.props.vendors[i].vendorName;
+                break;
+              }
+            }
+
+            //update redux store
+            //update user's email, vendorID currently an admin of, list of vids of an admin of, and name of current
+            this.props.updateAdminLogin(this.state.email, this.state.vendorID, res.data.vendors,currentVendor);
+            alert("Admin verification succesful!");
+
+            //redirect user back home
+            this.props.history.push('/');
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
       }
 
       //print why verification didn't work
@@ -162,7 +194,8 @@ const mapStateToProps = state => {
   return{
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user
+    user: state.auth.user,
+    vendors: state.vendor.vendors
   }
 }
 
@@ -170,10 +203,12 @@ const mapStateToProps = state => {
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
   return{
-    updateAdminLogin: (currentEmail, vendorID) => dispatch({
+    updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor) => dispatch({
       type: actions.ADMIN_LOGGED_IN,
       user: currentEmail,
-      vid: vendorID
+      vid: vendorID,
+      admins: adminsOf,
+      currentVendor: vendor
     })
   }
 }

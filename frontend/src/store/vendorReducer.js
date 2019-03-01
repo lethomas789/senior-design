@@ -19,6 +19,8 @@ const reducer = (state = initialState, action) => {
         vendors: action.vendors
       }
 
+  
+
     default:
       return state;
   }
