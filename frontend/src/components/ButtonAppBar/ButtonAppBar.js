@@ -228,7 +228,11 @@ class ButtonAppBar extends Component {
                     <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
                     <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
                     <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
-                    <Button color = "inherit" onClick = {this.viewCartCheck}> <CartIcon/> </Button>
+                    <Button component = {Link} to = {cartRoute} color = "inherit" onClick = {this.viewCartCheck}>
+                      <Badge badgeContent = {this.props.cartLength} color = "primary" classes={{ badge: classes.badge }}>
+                        <CartIcon/> 
+                      </Badge>
+                    </Button>
                   </div>
                   <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
                         <DialogContent>

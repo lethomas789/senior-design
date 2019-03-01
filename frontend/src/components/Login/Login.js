@@ -107,6 +107,10 @@ class Login extends Component{
                 
                 //update redux store state
                 this.props.updateAdminLogin(email, currentVendorID, currentVendors, currentVendorName);
+
+                //after updating login, get cart info
+                this.getCart();
+                
                 //display dialog for login successful
                 this.setState({
                     open: true,
