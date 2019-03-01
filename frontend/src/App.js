@@ -9,6 +9,12 @@ import ButtonAppBar from './components/ButtonAppBar/ButtonAppBar';
 import Shop from './components/Shop/Shop';
 import Cart from './components/Cart/Cart';
 import VendorView from './components/VendorView/VendorView';
+import VendorSignup from './components/VendorSignup/VendorSignup';
+import EditClubInfo from './components/EditClubInfo/EditClubInfo';
+import AddProduct from './components/AddProduct/AddProduct';
+
+import { createHashHistory, createBrowserHistory } from 'history';
+const history = createBrowserHistory();
 
 class App extends Component {
   render() {
@@ -23,6 +29,9 @@ class App extends Component {
           <Route exact path = "/login" component = {Login} /> 
           <Route exact path = "/cart" component = {Cart}/>
           <Route exact path = "/vendorProducts" component = {VendorView}/>
+          <Route exact path = "/abcdefg/vendorSignup" component = {VendorSignup}/>
+          <Route exact path = "/editClubInfo" component = {EditClubInfo}/>
+          <Route exact path = "/addProduct" component = {AddProduct}/>
         </div>
       </Router>
     );

@@ -23,7 +23,7 @@
     flex-direction: column;
     align-items: center;
     height: 300px;
-    width: 400px;
+    width: 410px;
     margin-top: 50px;
 }
 
@@ -39,3 +39,8 @@
 .circle{
     align-self: center;
 }
+
+.pushDown {
+    padding-top: 25px;
+}
+

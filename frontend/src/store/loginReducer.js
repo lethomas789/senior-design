@@ -8,7 +8,11 @@ import actions from './actions';
 const initialState = {
     login: false,
     text: "Login",
-    user: ''
+    user: '',
+    isAdmin: false,
+    vendorID: '',
+    adminsOf: [],
+    currentVendor: ''
 };
 
 const reducer = (state = initialState, action) => {
@@ -26,13 +30,36 @@ const reducer = (state = initialState, action) => {
                 text: "Logout",
                 user: action.user
             }
+        //when an admin is logged in
+        case actions.ADMIN_LOGGED_IN:
+            return{
+                ...state,
+                login: true,
+                text: "Logout",
+                user:action.user,
+                isAdmin: true,
+                vendorID: action.vid,
+                adminsOf: action.admins,
+                currentVendor: action.currentVendor
+            }
         //if user logs out, update state
         case actions.LOGGED_OUT:
             return{
                 ...state,
                 login: false,
                 text: "Login",
-                email: ''
+                email: '',
+                isAdmin: false,
+                vendorID: '',
+                adminsOf: state.adminsOf.length = 0,
+                currentVendor: ''
+            }
+        //update vendor id of user if admin
+        case actions.UPDATE_VENDOR_ID:
+            return{
+              ...state,
+              vendorID: action.vid,
+              currentVendor: action.vendor
             }
         default:
             return state;

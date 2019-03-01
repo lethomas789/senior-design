@@ -18,6 +18,11 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogContentText from '@material-ui/core/DialogContentText';
 import { DialogActions } from '@material-ui/core';
+import FormControl from '@material-ui/core/FormControl';
+import InputLabel from '@material-ui/core/InputLabel';
+import Select from '@material-ui/core/Select';
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 
 //variables to store routes to redirect to with Link component
 const homeRoute = "/";
@@ -26,6 +31,8 @@ const signupRoute = "/signup";
 const loginRoute = "/login";
 const shopRoute = "/shop";
 const cartRoute = "/cart";
+const editClubRoute = "/editClubInfo";
+const addProductRoute = "/addProduct";
 
 //style for cart to display number of items
 const styles = theme => ({
@@ -45,17 +52,52 @@ class ButtonAppBar extends Component {
       super(props);
       this.state = {
         open: false,
-        alertMessage: ''        
+        alertMessage: '',
+        currentAdminOf: this.props.vendorID,
+        adminsOf: this.props.adminsOf,
+        openSelect: false,
+        currentVendor: ''        
       }
       this.logoutUser = this.logoutUser.bind(this);
       this.viewCartCheck = this.viewCartCheck.bind(this);
       this.handleClose = this.handleClose.bind(this);
+      this.handleSelect = this.handleSelect.bind(this);
+      this.handleCloseSelect = this.handleCloseSelect.bind(this);
+      this.handleOpenSelect = this.handleOpenSelect.bind(this);
+    }
+
+    //when navbar loads, get list of all vendors in database
+    //trying to get club names
+    componentDidMount(){
+      const apiURL = "http://localhost:4000/api/getVendorInfo";
+      axios.get(apiURL)
+        .then(res => {
+          //update vendors of redux store
+          this.props.updateVendors(res.data.vendors);
+        })
+        .catch(err => {
+          alert(err);
+        })
     }
 
     //handle dialog closing
     handleClose(){
       this.setState({
           open: false
+      })
+    }
+
+    //handle closing select
+    handleCloseSelect(){
+      this.setState({
+          openSelect: false
+      })
+    }
+
+    //handle open select
+    handleOpenSelect(){
+      this.setState({
+        openSelect: true
       })
     }
 
@@ -70,6 +112,23 @@ class ButtonAppBar extends Component {
           open: true,
           alertMessage: "Logout successful!"
         });
+      }
+    }
+
+    //update value selected from dropdown menu
+    //if user is an admin of multiple clubs, will change what is being updated
+    handleSelect(event){
+      var currentVendorName = event.target.value;
+      var currentVendorID = '';
+
+      //search through list of vendors, check if name selected equals vendor
+      //update vendor name selected and vid
+      for(let i = 0; i < this.props.vendors.length; i++){
+        if(this.props.vendors[i].vendorName === currentVendorName){
+          currentVendorID = this.props.vendors[i].vid;
+          this.props.updateCurrentVendor(currentVendorID, currentVendorName);
+          break;
+        }
       }
     }
 
@@ -110,7 +169,7 @@ class ButtonAppBar extends Component {
       //conditonal rendering
       //render navbar based on whether user is logged in or not
       //if user is logged in, hide parts of navbar such as signup and display "Logout"
-      if(this.props.loginValue === true){
+      if(this.props.loginValue === true && this.props.isAdmin === false){
         return(
           <div className= "root">
             <AppBar position="static">
@@ -137,7 +196,57 @@ class ButtonAppBar extends Component {
         );
       }
 
-      //user is not logged in
+      //admin version of navbar after logging in
+      else if (this.props.loginValue === true && this.props.isAdmin === true){
+
+        const vendorList = this.props.vendors.map(result => {
+          return <MenuItem key = {result.vid} value = {result.vendorName}> {result.vendorName} </MenuItem>
+        })
+
+        return(
+          <div className= "root">
+            <AppBar position="static">
+              <Toolbar>
+                <IconButton className = "menuButton" color="inherit" aria-label="Menu">
+                  <MenuIcon />
+                </IconButton>
+                <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
+                  ECS193 ECommerce
+                </Typography>
+                  <div id = "navLink">
+                    <Button color = "inherit"> Change Club: </Button> 
+                    <Button color = "inherit">
+                      <InputLabel className = "navLabel" color = "inherit"> {this.props.currentVendor} </InputLabel>
+                      <Select color = "inherit" value = {this.props.vendorID} open = {this.state.openSelect} onClose = {this.handleCloseSelect} onOpen = {this.handleOpenSelect} onChange = {this.handleSelect}>
+                        {vendorList}
+                      </Select>
+                    </Button>
+                    <Button component = {Link} to = {editClubRoute} color = "inherit"> Edit Club Info </Button> 
+                    <Button component = {Link} to = {addProductRoute} color = "inherit"> Add Items </Button> 
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> Edit Items </Button>
+                    <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
+                    <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
+                    <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
+                    <Button color = "inherit" onClick = {this.viewCartCheck}> <CartIcon/> </Button>
+                  </div>
+                  <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+                        <DialogContent>
+                            <DialogContentText id = "alert-dialog-description">
+                              {this.state.alertMessage}
+                            </DialogContentText>
+                        </DialogContent>
+                        <DialogActions>
+                            <Button onClick = {this.handleClose} color = "primary">
+                                Ok
+                            </Button>
+                        </DialogActions>
+                    </Dialog>
+              </Toolbar>
+            </AppBar>
+          </div>
+        );
+      }
+
       else{
         return(
           <div className= "root">
@@ -189,6 +298,19 @@ class ButtonAppBar extends Component {
         //update store cart is empty
         emptyCart: () => dispatch({
           type: actions.EMPTY_CART
+        }),
+
+        //update vendors
+        updateVendors: (response) => dispatch({
+          type: actions.GET_VENDORS,
+          vendors: response
+        }),
+
+        //update vendor id
+        updateCurrentVendor: (vendorID ,vendorName) => dispatch({
+          type: actions.UPDATE_VENDOR_ID,
+          vid: vendorID,
+          vendor: vendorName
         })
     }
   }
@@ -200,8 +322,13 @@ class ButtonAppBar extends Component {
         loginValue: state.auth.login,
         loginText: state.auth.text,
         user: state.auth.user,
+        isAdmin: state.auth.isAdmin,
         cartLength: state.cart.items.length,
-        items: state.cart.items
+        items: state.cart.items,
+        adminsOf: state.auth.adminsOf,
+        vendorID: state.auth.vendorID,
+        vendors: state.vendor.vendors,
+        currentVendor: state.auth.currentVendor
     }
   }
 

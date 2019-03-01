@@ -48,10 +48,9 @@ class Cart extends Component {
         </Grid>
 
         <Grid container direction="column" justify-xs-space-evenly>
+          <Checkout/>
           {cart}
         </Grid>
-
-        <Checkout/>
       </div>
     );
   }
