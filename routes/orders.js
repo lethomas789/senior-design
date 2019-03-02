@@ -77,18 +77,17 @@ router.post('/', (req, res) => {
       items: items,
       totalPrice: totalPrice,
       vid: vid,  // TODO vendor list
-      user: user,
       date: date,
       paid: true,  // if done through paypal express checkout, then paid
       pickedUp: false,
-      firstName: doc.data().name.firstName,
-      lastName: doc.data().name.lastName
+      name: doc.data().name,
+      email: doc.data().email
     };
 
     // TODO: have diff route if clubs want to do cash pickup
 
 
-    let ordersRef = db.collection('orders')
+    let ordersRef = db.collection('orders');
 
     // write to user order history
     ordersRef.add(orderData)
@@ -171,11 +170,11 @@ router.get('/getVendorOrders', (req, res) => {
           items: doc.data().items,
           totalPrice: doc.data().totalPrice,
           paid: doc.data().paid,
-          user: doc.data().user,
-          firstName: doc.data().firstName,
-          lastName: doc.data().lastName,
+          firstName: doc.data().name.firstName,
+          lastName: doc.data().name.lastName,
           oid: doc.data().oid,
-          pickedUp: doc.data().pickedUp
+          pickedUp: doc.data().pickedUp,
+          email: doc.data().email
         };
 
         // NOTE: chosen not to send payment id and payer id
@@ -238,9 +237,40 @@ router.get('/getVendorOrders', (req, res) => {
      });
    }
 
-   /**
-    * 1. Update orders in orders collection, vendor collection
-    */
+   let orderRef = db.collection('orders').doc(oid);
+   orderRef.get().then(doc => {
+     if (!doc.exists) {
+       console.log('Error: provided oid does not exist:', oid);
+       return res.status(200).json({
+         sucess: false,
+         message: 'Server Error: provided order does not exist: ' + oid
+       });
+     }
+
+     let lastUpdate = admin.firestore.Timestamp.now();
+
+     // TODO, do error checking and mark who updates later
+
+     // update order, flip pickedUp bool from false -> true or true -> false
+     orderRef.update({
+       pickedUp: !doc.data().pickedUp,
+       lastUpdate: lastUpdate
+      });
+
+     console.log('Successfully updated order.');
+     return res.status(200).json({
+       success: true,
+       message: 'Successfully updated order.'
+     });
+   })
+   .catch(err => {
+     console.log('Error: could not get order ref in DB', err);
+     return res.status(200).json({
+       success: false,
+       message: 'Server error in getting order ' + err
+     });
+   });
+
 
  });
 
