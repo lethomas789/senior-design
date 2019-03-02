@@ -22,6 +22,29 @@ router.get('/', (req,res) => {
     });
   }
 
+  // get all products where vid == vendor 
+  db.collection('products').where('vid', '==', vendor).get().then(snapshot => {
+    let products = [];
+    snapshot.forEach(doc => {
+      products.push(doc.data());
+    });
+
+    console.log('Succesfully retrieved vendor products.');
+    return res.status(200).json({
+      success: true,
+      message: 'Successfully retrieved vendor products.',
+      data: products
+    });
+  })
+  .catch(err => {
+    console.log('Server error in getting vendor products:', err);
+    return res.status(200).json({
+      success: false,
+      message: 'Server error in getting vendor products: ' + err
+    });
+  });
+
+  /*
   // get vendor path
   var vendorRef = db.collection('vendors').doc(vendor);
 
@@ -65,6 +88,7 @@ router.get('/', (req,res) => {
         message: 'Error in getting vendor info'
       });
     });  // end vendorRef.get()
+    */
 })
 
 
