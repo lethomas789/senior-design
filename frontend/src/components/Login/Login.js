@@ -72,7 +72,8 @@ class Login extends Component{
         })
         //successful login, display message
         .then(res => {
-            if(res.data.success === true){
+            //login for regular user, non-admin
+            if(res.data.success === true && res.data.vendors.length === 0){
                 //dispatch update login action to update login state
                 let email = this.state.email;
                 this.props.updateLogin(email);
@@ -80,6 +81,36 @@ class Login extends Component{
                 //after updating login, get cart info
                 this.getCart();
 
+                //display dialog for login successful
+                this.setState({
+                    open: true,
+                    progressValue: 0,
+                    progressVariant: "determinate",
+                    responseMessage: "Login Succesful!"
+                });
+            }
+
+            else if (res.data.success === true && res.data.vendors.length > 0){
+                console.log("admin login", res.data);
+                let currentVendorID = res.data.vendors[0];
+                let email = this.state.email;
+                let currentVendors = res.data.vendors;
+                let currentVendorName = '';
+
+                //search for vendor name
+                for(let i = 0; i < this.props.vendors.length; i++){
+                    if(this.props.vendors[i].vid === currentVendorID){
+                        currentVendorName = this.props.vendors[i].vendorName;
+                        break;
+                    }
+                }
+                
+                //update redux store state
+                this.props.updateAdminLogin(email, currentVendorID, currentVendors, currentVendorName);
+
+                //after updating login, get cart info
+                this.getCart();
+                
                 //display dialog for login successful
                 this.setState({
                     open: true,
@@ -109,7 +140,9 @@ class Login extends Component{
             open: false
         });
 
-        this.props.history.push('/shop');
+        if(this.props.login === true){
+            this.props.history.push('/shop');
+        }
     }
 
     render(){
@@ -164,6 +197,17 @@ class Login extends Component{
     }
 }
 
+//obtain state from store as props for component
+//get cart items, login value, and user email
+const mapStateToProps = state => {
+    return{
+      items: state.cart.items,
+      login: state.auth.login,
+      user: state.auth.user,
+      vendors: state.vendor.vendors
+    }
+  }
+
 //redux, dispatch action to reducer to update state
 const mapDispatchToProps = dispatch => {
     return{
@@ -177,6 +221,15 @@ const mapDispatchToProps = dispatch => {
         updateItems: (response) => dispatch({
           type: actions.GET_CART,
           cart: response
+        }),
+
+        //update admin login
+        updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor) => dispatch({
+            type: actions.ADMIN_LOGGED_IN,
+            user: currentEmail,
+            vid: vendorID,
+            admins: adminsOf,
+            currentVendor: vendor
         })
     }
 }
@@ -185,4 +238,4 @@ Login.propsTypes = {
     classes: PropTypes.object.isRequired
 };
 
-export default connect(null,mapDispatchToProps)(withStyles(styles)(Login));
+export default connect(mapStateToProps,mapDispatchToProps)(withStyles(styles)(Login));

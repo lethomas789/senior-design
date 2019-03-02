@@ -14,7 +14,7 @@ function auth (req,res,next) {
     else{
         jwt.verify(token, jwtKey.JWTSecret, (err, decoded) => {
             if(err){
-                res.status(500).send({auth: false, message: "Error validating token"});
+                res.status(200).send({auth: false, message: "Error validating token"});
             }
 
             else{

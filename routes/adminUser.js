@@ -22,7 +22,7 @@ router.get('/', (req, res) => {
 
   if (!user) {
     console.log('Error in getAdminVendor: missing required request paramters');
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getAdminVendor: missing required request paramters'
     });
@@ -31,7 +31,7 @@ router.get('/', (req, res) => {
   db.collection('admins').doc(user).get().then(doc => {
     if (!doc.exists) {
       console.log('Error: user is not admin.')
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Error: user is not admin.'
       });
@@ -48,7 +48,7 @@ router.get('/', (req, res) => {
   })
   .catch(err => {
     console.log('Error in getting userRef', err);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getting userRef: ' + err
     });
@@ -84,7 +84,7 @@ router.post('/addAdminUser', (req, res) => {
 
   if (!vid || !user || !adminCode) {
     console.log('Error in addAdminUser: missing required request paramters');
-    return res.status(400).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in addAdminUser: missing required request paramters'
     });
@@ -96,7 +96,7 @@ router.post('/addAdminUser', (req, res) => {
   vendorRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: no such vendor for given vid:', vid);
-      return res.status(400).json({
+      return res.status(200).json({
         success: false,
         message: 'Error: no such vendor for given vid: '+ vid
       });
@@ -106,7 +106,7 @@ router.post('/addAdminUser', (req, res) => {
       // check to see if their admin code matches submitted admin code
       if (doc.data().adminCode !== adminCode) {
         console.log('Error: submitted adminCode does not match vendor adminCode');
-        return res.status(400).json({
+        return res.status(200).json({
           success: false,
           message: 'Error: submitted adminCode does not match vendor adminCode'
         });
@@ -130,23 +130,33 @@ router.post('/addAdminUser', (req, res) => {
       // NOTE: we merge b/c a user can be admin of more than one club
       db.collection('admins').doc(user).set({
         email: user
-      }, {merge: true});
+      }, {merge: true})
+      .then(() => {
+        // b/c arrays work differently, update array of vendors here
+        db.collection('admins').doc(user).update({
+          vendors: admin.firestore.FieldValue.arrayUnion(vid)
+        });
 
-      // b/c arrays work differently, update array of vendors here
-      db.collection('admins').doc(user).update({
-        vendors: admin.firestore.FieldValue.arrayUnion(vid)
+        console.log('Made new admin:', user);
+        console.log('Added new vendor for vid:', vid);
+        return res.status(200).json({
+          success: true,
+          message: 'Succesfully added new admin.'
+        });
+
+      })
+      .catch(err => {
+        console.log('Error occured in setting admin for user:', err);
+        return res.status(200).json({
+          success: false,
+          message: 'Server error occured in creating new admin. ' + err
+        });
       });
 
-      console.log('Made new admin:', user);
-      console.log('Added new vendor for vid:', vid);
-      return res.status(200).json({
-        success: true,
-        message: 'Succesfully added new admin.'
-      });
     })
     .catch(err => {  // catch for getAdminCodeRef
       console.log('Error in getting adminCodeRef:', err); 
-      return res.status(500).json({
+      return res.status(200).json({
         success: false,
         message: 'Error in getting adminCodeRef: ' + err
       });
@@ -155,7 +165,7 @@ router.post('/addAdminUser', (req, res) => {
   })
   .catch(err => {  // catch for vendorRef
     console.log('Error in getting vendorRef', err);
-    return res.status(500).json({
+    return res.status(200).json({
       success: false,
       message: 'Error in getting vendorRef: ' + err
     });

@@ -141,7 +141,7 @@ class ShopItem extends Component {
 
   render() {
     return (
-        <Grid item xs> 
+        <Grid item xs = {3}> 
           <Card className= "card">
             <CardActionArea>
               <CardMedia className = "media"/>
