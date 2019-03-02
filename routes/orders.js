@@ -8,6 +8,17 @@ const nodemailer = require('nodemailer');
 
 
 
+/**
+ * Creates a new order when a user checksout a purchase. Saves order to orders
+ * collection, vendor orders, and user's order history.
+ * 
+ * @param items - array of purchased items in paypal API format
+ * @param totalPrice - total price of all items
+ * @param vid - vendor id - TODO multiple vendors
+ * @param user - email of user
+ * @param paymentID - paymentID from paypal API
+ * @param payerID - payerID from paypal API
+ */
 router.post('/', (req, res) => {
   if (req.body.params) {
     var items = req.body.params.items;
@@ -31,8 +42,7 @@ router.post('/', (req, res) => {
 
   /**
    * 1. Write to orders root collection.
-   * 2. Write to user's orders. 
-   * 3. Write to vendor's orders.
+   * 2. Send emails
    */
 
   if (!items || !totalPrice || !vid || !user || !paymentID || !payerID) {
@@ -77,34 +87,29 @@ router.post('/', (req, res) => {
 
     // TODO: have diff route if clubs want to do cash pickup
 
+
+    let ordersRef = db.collection('orders')
+
     // write to user order history
-    userRef.collection('orders').add(orderData)
+    ordersRef.add(orderData)
     .then(orderDoc => {
-      doc.update({oid: orderDoc.id});
+      var oid = orderDoc.id;
+      orderDoc.update({oid: oid});
 
-      // set in vendor orders 
-      // TODO multiple vendors
-      db.collection('vendors').doc(vid).collection('orders').doc(orderDoc.id).set(orderData);
+      // TODO send emails
 
-      // write to orders root collection
-      db.collection('orders').doc(orderDoc.id).set(orderData);
-
+      console.log('Finished saving new order:', oid);
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully saved new order: ' + oid
+      });
     })
-    .catch(err => {
+    .catch(err => {  // catch for ordersRef
       console.log('Error in adding new order:', err);
       return res.status(200).json({
         success: false,
         message: 'Error in adding new order: ' + err
       });
-    });
-
-
-    // TODO send emails
-
-    console.log('Finished saving new order:', paymentID);
-    return res.status(200).json({
-      success: true,
-      message: 'Successfully saved new order: ' + paymentID
     });
   })
   .catch(err => {  // catch for userRef get
@@ -153,33 +158,40 @@ router.get('/getVendorOrders', (req, res) => {
     // now get vendor orders
     let orders = [];
 
-    vendorsRef.collection('orders').orderBy('date', 'desc').get().then(snapshot => {
-        snapshot.forEach(doc => {
-          let orderData = {
-            // have to call toDate on firestore data or else errors
-            date: doc.data().date.toDate(),
-            items: doc.data().items,
-            totalPrice: doc.data().totalPrice,
-            paid: doc.data().paid,
-            user: doc.data().user,
-            firstName: doc.data().firstName,
-            lastName: doc.data().lastName
-          };
+    let ordersRef = db.collection('orders');
 
-          // NOTE: chosen not to send payment id and payer id
+    // TODO, do an array contains for multiple vendors?
 
-          // TODO, transaction ID
-          // might be too much of a pain not to use the library
+    // get all orders with vid, ordered by date
+    ordersRef.where('vid', '==', vid).orderBy('date').get().then(snapshot => {
+      snapshot.forEach(doc => {
+        let orderData = {
+          // have to call toDate on firestore data or else errors
+          date: doc.data().date.toDate(),
+          items: doc.data().items,
+          totalPrice: doc.data().totalPrice,
+          paid: doc.data().paid,
+          user: doc.data().user,
+          firstName: doc.data().firstName,
+          lastName: doc.data().lastName,
+          oid: doc.data().oid,
+          pickedUp: doc.data().pickedUp
+        };
 
-          orders.push(orderData);
-        });
+        // NOTE: chosen not to send payment id and payer id
 
-        console.log('Successfully retrieved vendor order history.');
-        return res.status(200).json({
-          success: true,
-          message: 'Successfully retrieved vendor order history.',
-          orders: orders
-        });
+        // TODO, transaction ID
+        // might be too much of a pain not to use the library
+
+        orders.push(orderData);
+      });
+
+      console.log('Successfully retrieved vendor order history.');
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully retrieved vendor order history.',
+        orders: orders
+      });
     })
     .catch(err => {  // catch for vendor orders get
       console.log('Server error in retrieving vendor orders:', err);
@@ -204,10 +216,31 @@ router.get('/getVendorOrders', (req, res) => {
  * 
  * @param vid - vendor id
  * @param user - vendor admin
- * @param orderID - firestore document order ID
+ * @param oid - firestore document order ID
  */
-
  router.patch('/updateOrder', (req, res) => {
+   if (req.body.params) {
+     var vid = req.body.params.vid;
+     var user = req.body.params.user;
+     var oid = req.body.params.oid;
+   }
+   else {
+     var vid = req.body.vid;
+     var user = req.body.user;
+     var oid = req.body.oid;
+   }
+
+   if (!vid || !user || !oid) {
+     console.log('Error: missing request params in update orders route.');
+     return res.status(200).json({
+       success: false,
+       message: 'Error: missing request params in update orders route.'
+     });
+   }
+
+   /**
+    * 1. Update orders in orders collection, vendor collection
+    */
 
  });
 
