@@ -16,6 +16,7 @@
     "body-parser": "^1.18.3",
     "concurrently": "^4.1.0",
     "cors": "^2.8.5",
+    "email-templates": "^5.0.4",
     "express": "^4.16.4",
     "firebase": "^5.8.1",
     "firebase-admin": "^6.5.1",
@@ -24,6 +25,7 @@
     "nodemon": "^1.18.9",
     "path": "^0.12.7",
     "paypal-rest-sdk": "^1.8.1",
+    "pug": "^2.0.3",
     "react-redux": "^6.0.0",
     "validator": "^10.11.0"
   }
