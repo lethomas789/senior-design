@@ -3,6 +3,9 @@ const router = express.Router();
 const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
+const nodemailer = require('nodemailer');
+// let transporter = nodemailer.createTransport(transport[, defaults]);
+
 
 
 router.post('/', (req, res) => {
@@ -75,14 +78,26 @@ router.post('/', (req, res) => {
     // TODO: have diff route if clubs want to do cash pickup
 
     // write to user order history
-    userRef.collection('orders').doc(paymentID).set(orderData);
+    userRef.collection('orders').add(orderData)
+    .then(orderDoc => {
+      doc.update({oid: orderDoc.id});
 
-    // set in vendor orders 
-    // TODO multiple vendors
-    db.collection('vendors').doc(vid).collection('orders').doc(paymentID).set(orderData);
+      // set in vendor orders 
+      // TODO multiple vendors
+      db.collection('vendors').doc(vid).collection('orders').doc(orderDoc.id).set(orderData);
 
-    // write to orders root collection
-    db.collection('orders').doc(paymentID).set(orderData);
+      // write to orders root collection
+      db.collection('orders').doc(orderDoc.id).set(orderData);
+
+    })
+    .catch(err => {
+      console.log('Error in adding new order:', err);
+      return res.status(200).json({
+        success: false,
+        message: 'Error in adding new order: ' + err
+      });
+    });
+
 
     // TODO send emails
 
@@ -189,6 +204,7 @@ router.get('/getVendorOrders', (req, res) => {
  * 
  * @param vid - vendor id
  * @param user - vendor admin
+ * @param orderID - firestore document order ID
  */
 
  router.patch('/updateOrder', (req, res) => {
