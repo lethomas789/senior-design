@@ -20,8 +20,8 @@ router.post('/addNewProduct', (req, res) => {
     var productName = req.body.params.productName;
     // TODO figure out how to add many pictures
     // var productPicture = req.body.params.productPicture;
-    var productPrice = req.body.params.productPrice;
-    var stock = req.body.params.stock;
+    var productPrice = Number(req.body.params.productPrice);
+    var stock = Number(req.body.params.stock);
   }
   else {
     var vid = req.body.vid;
@@ -30,8 +30,8 @@ router.post('/addNewProduct', (req, res) => {
     var productName = req.body.productName;
     // TODO figure out how to add many pictures
     // var productPicture = req.body.productPicture;
-    var productPrice = req.body.productPrice;
-    var stock = req.body.stock;
+    var productPrice = Number(req.body.productPrice);
+    var stock = Number(req.body.stock);
   }
 
   /*
@@ -41,17 +41,17 @@ router.post('/addNewProduct', (req, res) => {
    * 4. add product to vendors/products
    */
 
-   if (!vid || !user || !productInfo || !productName || !productPrice || !stock) {
+  if (!vid || !user || !productInfo || !productName || !productPrice || !stock) {
     console.log('Error: missing params for adding new product.');
     return res.status(200).json({
       success: false,
       message: 'Error: missing params for adding new product.'
     });
-   }
+  }
 
-   // check existing vendor
-   let vendorRef = db.collection('vendors').doc(vid);
-   vendorRef.get().then(doc => {
+  // check existing vendor
+  let vendorRef = db.collection('vendors').doc(vid);
+  vendorRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: no such vendor for given vid.');
       return res.status(200).json({
@@ -84,23 +84,23 @@ router.post('/addNewProduct', (req, res) => {
       .then(ref => {
         console.log('Added new product with ID: ', ref.id);
 
-        db.collection('products').doc(ref.id).update({pid: ref.id});
+        db.collection('products').doc(ref.id).update({ pid: ref.id });
 
         vendorRef.collection('products').doc(ref.id).set(productData)
-        .then(_ => {
-          console.log('Succesfully added new product.');
-          return res.status(200).json({
-            success: true,
-            message: 'Successfully added new product.' 
+          .then(_ => {
+            console.log('Succesfully added new product.');
+            return res.status(200).json({
+              success: true,
+              message: 'Successfully added new product.'
+            });
+          })
+          .catch(err => {
+            console.log('Error in adding new product:', err);
+            return res.status(200).json({
+              success: false,
+              message: 'Error in adding new product: ' + err
+            });
           });
-        })
-        .catch(err => {
-          console.log('Error in adding new product:', err);
-          return res.status(200).json({
-            success: false,
-            message: 'Error in adding new product: ' + err
-          });
-        });
 
       })
       .catch(err => {  // catch for setting new product
@@ -110,7 +110,6 @@ router.post('/addNewProduct', (req, res) => {
           message: 'Error in adding new product: ' + err
         });
       });
-
     })
     .catch(err => {  // catch for adminRef
       console.log('Error in getting adminref:', err);
@@ -120,14 +119,14 @@ router.post('/addNewProduct', (req, res) => {
       });
     });
 
-   })
-   .catch(err => {   // catch for vendorref.get
-     console.log('Error in getting vendorRef:', err);
-     return res.status(200).json({
-       success: false,
-       message: 'Error in getting vendorRef: ' + err
-     });
-   });
+  })
+  .catch(err => {   // catch for vendorref.get
+    console.log('Error in getting vendorRef:', err);
+    return res.status(200).json({
+      success: false,
+      message: 'Error in getting vendorRef: ' + err
+    });
+  });
 
 });  // END POST /addNewProduct
 
