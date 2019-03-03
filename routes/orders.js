@@ -274,12 +274,96 @@ router.get('/getVendorOrders', (req, res) => {
 
   })
   .catch(err => {   // catch for vendor get
+    console.log('Server error in retrieving vendor:', err);
+    return res.status(200).json({
+      sucess: false,
+      message: 'Server error in retrieving vendor: ' + err
+    });
+  });
+});
+
+/**
+ * GET order history of given user.
+ * 
+ * @param user - email for user
+ */
+router.get('/getUserOrders', (req, res) => {
+  if (req.query.params) {
+    var user = req.query.params.user;
+  }
+  else {
+    var user = req.query.user;
+  }
+
+  if (!user) {
+    console.log('Error: missing request params in GET orders route.');
+    return res.status(200).json({
+      success: false,
+      message: 'Error: missing request params in GET orders route.'
+    });
+  }
+
+  // check to make sure given vid exists
+  let vendorsRef = db.collection('users').doc(user);
+  vendorsRef.get().then(vendorDoc => {
+    if (!vendorDoc.exists) {
+      console.log('Error: provided vendor does not exist:', user);
+      return res.status(200).json({
+        sucess: false,
+        message: 'Error: provided vid does not exist: ' + user 
+      });
+    }
+
+    // now get vendor orders
+    let orders = [];
+
+    let ordersRef = db.collection('orders');
+
+    // TODO, do an array contains for multiple vendors?
+
+    // get all orders with user, ordered by date
+    ordersRef.where('email', '==', user).orderBy('date').get().then(snapshot => {
+      snapshot.forEach(doc => {
+        let orderData = {
+          // have to call toDate on firestore data or else errors
+          date: doc.data().date.toDate(),
+          items: doc.data().items,
+          totalPrice: doc.data().totalPrice,
+          paid: doc.data().paid,
+          firstName: doc.data().name.firstName,
+          lastName: doc.data().name.lastName,
+          oid: doc.data().oid,
+          pickedUp: doc.data().pickedUp,
+          email: doc.data().email
+        };
+
+        orders.push(orderData);
+      });
+
+      console.log('Successfully retrieved user order history.');
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully retrieved user order history.',
+        orders: orders
+      });
+    })
+    .catch(err => {  // catch for user orders get
+      console.log('Server error in retrieving user orders:', err);
+      return res.status(200).json({
+        sucess: false,
+        message: 'Server error in retrieving user orders: ' + err
+      });
+    });
+
+  })
+  .catch(err => {   // catch for user get
     console.log('Server error in retrieving user:', err);
     return res.status(200).json({
       sucess: false,
       message: 'Server error in retrieving user: ' + err
     });
   });
+
 });
 
 /**
