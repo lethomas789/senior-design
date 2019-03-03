@@ -126,13 +126,30 @@ router.post('/', (req, res) => {
 
       const testEmail = new Email({
         message: {
+          // from: 'ecs193.ecommerce@gmail.com',
           from: 'test@test.com',
           subject: emailSubject,
-          to: 'test@test.com'
+          to: doc.data().email
         },
-        send: false,
+        send: false,  // set send to true when not testing
+        // preview: false,  // TODO turn off preview before production
+
         transport: {
-          jsonTransport: true
+          host: 'localhost', // TODO update w/ website?
+          port: 465,
+          secure: true,  
+          tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
+          },
+          /*
+          // uncomment when actually sending emails
+          service: 'gmail',
+          auth: {
+            user: 'ecs193.ecommerce@gmail.com',
+            pass: '193ecommerce'
+          }
+          */
         }
       });
 
@@ -141,7 +158,7 @@ router.post('/', (req, res) => {
         locals: {
           items: newItems,
           totalPrice: totalPrice,
-          location: 'Test club location here.',
+          location: 'Test club location here.', 
           emailIntro: emailIntro,
           oid: oid
         }
