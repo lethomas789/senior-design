@@ -4,12 +4,7 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 const nodemailer = require('nodemailer');
-var EmailTemplate = require('email-templates').EmailTemplate;
 const Email = require('email-templates');
-
-// let transporter = nodemailer.createTransport(transport[, defaults]);
-
-
 
 /**
  * Creates a new order when a user checksout a purchase. Saves order to orders
@@ -70,13 +65,7 @@ router.post('/', (req, res) => {
       });
     }
 
-    // 7:44 test paymentID = transactionID
-    // paymentID = LR47X3Y9CA5706187855000T
-    // ok so transaction id does not equal paymentID
-
-    // buyer@buyer.com
-    // "www.google.com/?paymentId=PAYID-LR5AQFQ0YN32001HC067310S&token=EC-7KS50256JG196743N&PayerID=LBVNHUDLVK75E"
-
+    // TODO save vendorName, pickup time, pickup location, etc.
     let date = admin.firestore.Timestamp.now();
     let orderData = {
       paymentID: paymentID,
@@ -304,9 +293,9 @@ router.get('/getUserOrders', (req, res) => {
   }
 
   // check to make sure given vid exists
-  let vendorsRef = db.collection('users').doc(user);
-  vendorsRef.get().then(vendorDoc => {
-    if (!vendorDoc.exists) {
+  let userRef = db.collection('users').doc(user);
+  userRef.get().then(userDoc => {
+    if (!userDoc.exists) {
       console.log('Error: provided vendor does not exist:', user);
       return res.status(200).json({
         sucess: false,
