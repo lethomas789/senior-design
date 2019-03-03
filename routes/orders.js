@@ -131,7 +131,6 @@ router.post('/', (req, res) => {
           to: 'test@test.com'
         },
         send: false,
-        // transport: transport
         transport: {
           jsonTransport: true
         }
@@ -143,7 +142,8 @@ router.post('/', (req, res) => {
           items: newItems,
           totalPrice: totalPrice,
           location: 'Test club location here.',
-          emailIntro: emailIntro
+          emailIntro: emailIntro,
+          oid: oid
         }
       })
       .then(() => {
