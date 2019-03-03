@@ -91,33 +91,41 @@ class Login extends Component{
             }
 
             else if (res.data.success === true && res.data.vendors.length > 0){
+
+                //after determining user is an admin, get object list of user's active vendors
                 console.log("admin login", res.data);
-                let currentVendorID = res.data.vendors[0];
-                let email = this.state.email;
-                let currentVendors = res.data.vendors;
-                let currentVendorName = '';
 
-                //search for vendor name
-                for(let i = 0; i < this.props.vendors.length; i++){
-                    if(this.props.vendors[i].vid === currentVendorID){
-                        currentVendorName = this.props.vendors[i].vendorName;
-                        break;
+                const vendorURL = "http://localhost:4000/api/adminUser";
+                axios.get(vendorURL, {
+                    params:{
+                        user: this.state.email
                     }
-                }
-                
-                //update redux store state
-                this.props.updateAdminLogin(email, currentVendorID, currentVendors, currentVendorName);
+                })
+                .then(res => {
+                    console.log(res.data);
+                    let currentVendorID = res.data.vendors[0].vid;
+                    let email = this.state.email;
+                    let currentVendors = res.data.vendors;
+                    let currentVendorName = res.data.vendors[0].vendorName;
 
-                //after updating login, get cart info
-                this.getCart();
+                    //update redux store state
+                    this.props.updateAdminLogin(email, currentVendorID, currentVendors, currentVendorName);
+
+                    //after updating login, get cart info
+                    this.getCart();
                 
-                //display dialog for login successful
-                this.setState({
-                    open: true,
-                    progressValue: 0,
-                    progressVariant: "determinate",
-                    responseMessage: "Login Succesful!"
-                });
+                    //display dialog for login successful
+                    this.setState({
+                        open: true,
+                        progressValue: 0,
+                        progressVariant: "determinate",
+                        responseMessage: "Login Succesful!"
+                    });
+
+                })
+                .catch(err => {
+                    alert(err);
+                })
             }
             //display error message with logging in
             else{

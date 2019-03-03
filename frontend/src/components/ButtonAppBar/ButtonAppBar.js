@@ -181,16 +181,16 @@ class ButtonAppBar extends Component {
                 <Typography component = {Link} to = {homeRoute} variant="h6" color="inherit" className = "grow">
                   ECS193 ECommerce
                 </Typography>
-                  <div id = "navLink">
-                    <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
-                    <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
-                    <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
-                    <Button component = {Link} to = {cartRoute} color = "inherit" onClick = {this.viewCartCheck}> 
-                      <Badge badgeContent = {this.props.cartLength} color = "primary" classes={{ badge: classes.badge }}>
-                        <CartIcon/> 
-                      </Badge>
-                    </Button>
-                  </div>
+                <div id = "navLink">
+                  <Button component = {Link} to = {aboutRoute} color = "inherit"> About </Button> 
+                  <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
+                  <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
+                  <Button component = {Link} to = {cartRoute} color = "inherit" onClick = {this.viewCartCheck}> 
+                    <Badge badgeContent = {this.props.cartLength} color = "primary" classes={{ badge: classes.badge }}>
+                      <CartIcon/> 
+                    </Badge>
+                  </Button>
+                </div>
               </Toolbar>
             </AppBar>
         </div>
@@ -200,7 +200,7 @@ class ButtonAppBar extends Component {
       //admin version of navbar after logging in
       else if (this.props.loginValue === true && this.props.isAdmin === true){
 
-        const vendorList = this.props.vendors.map(result => {
+        const vendorList = this.props.adminsOf.map(result => {
           return <MenuItem key = {result.vid} value = {result.vendorName}> {result.vendorName} </MenuItem>
         })
 
