@@ -15,6 +15,10 @@ const Email = require('email-templates');
  * Creates a new order when a user checksout a purchase. Saves order to orders
  * collection, vendor orders, and user's order history.
  * 
+ * NOTE: paypal payment objects save numbers as strings. Thus, for ease and
+ * also for html email formatting, numbers will be saved as strings in the
+ * orders collection.
+ * 
  * @param items - array of purchased items in paypal API format
  * @param totalPrice - total price of all items
  * @param vid - vendor id - TODO multiple vendors
@@ -99,6 +103,53 @@ router.post('/', (req, res) => {
       orderDoc.update({oid: oid});
 
       // TODO send emails
+
+      let firstName = doc.data().name.firstName;
+      let lastName = doc.data().name.lastName;
+
+      let newItems = [];
+
+      // convert paypal items numbers from strings to numbers to do calculations
+      for (let i = 0; i < items.length; ++i) {
+        let newItem = {
+          name: items[i].name,
+          price: Number(items[i].price).toFixed(2),
+          quantity: Number(items[i].quantity),
+          totalPrice: (Number(items[i].price) * Number(items[i].quantity)).toFixed(2)
+        }
+
+        newItems.push(newItem);
+      }
+
+      let emailSubject = 'ECS193 E-commerce Order Recipt: ' + oid;
+      let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
+
+      const testEmail = new Email({
+        message: {
+          from: 'test@test.com',
+          subject: emailSubject,
+          to: 'test@test.com'
+        },
+        send: false,
+        // transport: transport
+        transport: {
+          jsonTransport: true
+        }
+      });
+
+      testEmail.send({
+        template: 'receipt',
+        locals: {
+          items: newItems,
+          totalPrice: totalPrice,
+          location: 'Test club location here.',
+          emailIntro: emailIntro
+        }
+      })
+      .then(() => {
+        console.log('Finished Sending Email.');
+      })
+      .catch(console.error);
 
 
       console.log('Finished saving new order:', oid);
@@ -327,7 +378,7 @@ router.get('/testEmail', (req, res) => {
   const testEmail = new Email({
     message: {
       from: 'test@test.com',
-      subject: 'Test Subject',
+      subject: 'ECS193 E-commerce Order Receipt',
       to: 'test@test.com'
     },
     send: false,

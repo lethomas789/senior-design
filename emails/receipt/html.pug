@@ -120,7 +120,8 @@ html
                           td.padding-copy(align='center', style='font-size: 32px; font-family: Helvetica, Arial, sans-serif; color: #333333; padding-top: 30px;') Thanks for purchasing!
                         tr
                           td.padding-copy(align='left', style='padding: 20px 0 0 0; font-size: 16px; line-height: 25px; font-family: Helvetica, Arial, sans-serif; color: #666666;')
-                            | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius, leo a ullamcorper feugiat, ante purus sodales justo, a faucibus libero lacus a est. Aenean at mollis ipsum.
+                            | #{emailIntro}
+                            //- | Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed varius, leo a ullamcorper feugiat, ante purus sodales justo, a faucibus libero lacus a est. Aenean at mollis ipsum.
             //if (gte mso 9)|(IE)
         tr
           td.padding(bgcolor='#ffffff', align='center', style='padding: 15px;')
@@ -145,9 +146,9 @@ html
                                   td(style='padding: 0 0 10px 0;')
                                     table(cellpadding='0', cellspacing='0', border='0', width='100%')
                                       tbody
-                                        each val in testArray
+                                        each val in items
                                           tr
-                                            td(align='left', style='font-family: Arial, sans-serif; color: #333333; font-size: 16px;') #{val.item}
+                                            td(align='left', style='font-family: Arial, sans-serif; color: #333333; font-size: 16px;') #{val.name} (x#{val.quantity})
                                             //- td(align='left', style='font-family: Arial, sans-serif; color: #333333; font-size: 16px;') Purchased Item (1)
                             // RIGHT COLUMN
                             table(cellpadding='0', cellspacing='0', border='0', width='47%', style='width: 47%;', align='right')
@@ -156,9 +157,9 @@ html
                                   td(style='padding: 0 0 10px 0;')
                                     table(cellpadding='0', cellspacing='0', border='0', width='100%')
                                       tbody
-                                        each val in testArray
+                                        each val in items
                                           tr
-                                            td(align='right', style='font-family: Arial, sans-serif; color: #333333; font-size: 16px;') $#{val.price}
+                                            td(align='right', style='font-family: Arial, sans-serif; color: #333333; font-size: 16px;') $#{val.totalPrice}
                                             //- td(align='right', style='font-family: Arial, sans-serif; color: #333333; font-size: 16px;') $XX.XX
                 //- tr
                 //-   td
