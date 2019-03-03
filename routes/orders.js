@@ -235,7 +235,8 @@ router.get('/getVendorOrders', (req, res) => {
           lastName: doc.data().name.lastName,
           oid: doc.data().oid,
           pickedUp: doc.data().pickedUp,
-          email: doc.data().email
+          email: doc.data().email,
+          seenByVendor: false  // init as false, for cron emailing purposes
         };
 
         // NOTE: chosen not to send payment id and payer id
