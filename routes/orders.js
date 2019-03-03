@@ -77,7 +77,8 @@ router.post('/', (req, res) => {
       paid: true,  // if done through paypal express checkout, then paid
       pickedUp: false,
       name: doc.data().name,
-      email: doc.data().email
+      email: doc.data().email,
+      seenByVendor: false  // init as false, for cron emailing purposes
     };
 
     // TODO: have diff route if clubs want to do cash pickup
@@ -236,7 +237,7 @@ router.get('/getVendorOrders', (req, res) => {
           oid: doc.data().oid,
           pickedUp: doc.data().pickedUp,
           email: doc.data().email,
-          seenByVendor: false  // init as false, for cron emailing purposes
+          seenByVendor: doc.data().seenByVendor
         };
 
         // NOTE: chosen not to send payment id and payer id
