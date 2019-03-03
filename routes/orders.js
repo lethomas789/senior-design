@@ -340,7 +340,9 @@ router.get('/testEmail', (req, res) => {
   testEmail.send({
     template: 'receipt',
     locals: {
-      location: 'Test club location here.'
+      testArray: [{"item": "item0", "price": "1.00"}, {"item": "item1", "price": "2.00"}],
+      location: 'Test club location here.',
+      totalPrice: "3.00"
     }
   })
   .then(() => {
@@ -348,6 +350,16 @@ router.get('/testEmail', (req, res) => {
   })
   .catch(console.error);
 
+    // pug testing
+    // div
+    //   table
+    //     thead
+    //       tr: th Test
+    //     tbody
+    //       each val in testArray
+    //         tr
+    //           td #{val.item}
+    //           td #{val.price}
 
   return res.sendStatus(200);
 
