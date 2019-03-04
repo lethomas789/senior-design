@@ -68,8 +68,8 @@ app.use('/api/getProductInfo', getProductInfo);
 
 db = admin.firestore();
 // TODO vars
-// var midnightSchedule = "59 23 * * *";
-var midnightSchedule = "52 16 * * *";
+var midnightSchedule = "59 23 * * *";
+// var midnightSchedule = "52 16 * * *";
 cron.schedule(midnightSchedule, function() {
   console.log('------------------------');
   console.log('Running Cron Job');
