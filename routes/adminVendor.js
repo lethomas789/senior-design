@@ -95,6 +95,7 @@ router.get('/', (req, res) => {
  * @param vid - vid must be sent from frontend to obtain vendor DB info
  * @param bio - vendor description
  * @param vendorName - if user wants to change vendorName
+ * @param adminEmail - email to receive product purchases
  * 
  * @returns res success true or false
  */
@@ -105,16 +106,18 @@ router.patch('/editVendorInfo', (req, res) => {
     var vid = req.body.params.vid;
     var vendorName = req.body.params.vendorName;
     var bio = req.body.params.bio;
+    var adminEmail = req.body.params.adminEmail;
   }
   else {
     var user = req.body.user;
     var vid = req.body.vid;
     var vendorName = req.body.vendorName;
     var bio = req.body.bio;
+    var adminEmail = req.body.adminEmail;
   }
 
   // must include editing user and vid; bio and vendorName not always edited
-  if (!user || !vendorName || !bio || !vid) {
+  if (!user || !vendorName || !bio || !vid || !adminEmail) {
     console.log('Error: missing params for editVendorInfo.');
     return res.status(200).json({
       success: false,
@@ -155,7 +158,8 @@ router.patch('/editVendorInfo', (req, res) => {
         vendorName: vendorName,
         bio: bio,
         lastUpdate: lastUpdate,
-        lastUpdateUser: lastUpdateUser
+        lastUpdateUser: lastUpdateUser,
+        adminEmail: adminEmail
       });
 
       console.log('Succesfully updated vendor info.');
