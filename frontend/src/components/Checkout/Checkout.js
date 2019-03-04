@@ -26,6 +26,7 @@ class Checkout extends Component {
   constructor(props){
     super(props);
     this.state = {
+      total: this.props.total,
       env: "sandbox",
       currency: "USD",
       client: {
@@ -81,6 +82,7 @@ class Checkout extends Component {
     paypalTransactions.item_list.items = paypalItems;
     paypalTransactions.amount.currency = this.state.currency;
     paypalTransactions.amount.total = String(this.props.total.toFixed(2));
+    //paypalTransactions.amount.total = String(this.state.total.toFixed(2));
 
     //update payment options to be list of paypal items
     console.log(this.state.paymentOptions.transactions);
@@ -90,7 +92,9 @@ class Checkout extends Component {
 
   //update payment option on update
   componentDidUpdate(){
+    console.log("THIS IS THE TOTAL PLEASE FIX STATE", this.props.total);
     this.state.paymentOptions.transactions[0].amount.total = this.props.total;
+    this.state.paymentOptions.transactions[0].amount.total = String(this.props.total);
     console.log("testing payment options ", this.state.paymentOptions);
   }
 
@@ -171,7 +175,7 @@ const mapStateToProps = state => {
     items: state.cart.items,
     login: state.auth.login,
     user: state.auth.user,
-    total: state.cart.total,
+  //  total: state.cart.total,
     cart: state.cart.items
   }
 }

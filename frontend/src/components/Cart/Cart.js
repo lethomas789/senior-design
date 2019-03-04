@@ -11,6 +11,10 @@ import Checkout from '../Checkout/Checkout';
 class Cart extends Component {
   constructor(props){
     super(props);
+
+    this.state = {
+      total: 0
+    }
   }
 
   //get cart from server for user
@@ -31,6 +35,9 @@ class Cart extends Component {
         priceTotal += Number(currentCart[i].totalPrice);
       }
       priceTotal = priceTotal.toFixed(2);
+      this.setState({
+        total: priceTotal
+      });
       this.props.updateTotal(priceTotal);
     }
   }
@@ -48,7 +55,7 @@ class Cart extends Component {
         </Grid>
 
         <Grid container direction="column" justify-xs-space-evenly>
-          <Checkout/>
+          <Checkout total = {this.state.total}/>
           {cart}
         </Grid>
       </div>
