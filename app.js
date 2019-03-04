@@ -79,6 +79,8 @@ cron.schedule(midnightSchedule, function() {
 
   // get vendors
   db.collection('vendors').get().then(snapshot => {
+    // for each vendor, get all orders they are a part of
+    // where we haven't sent an email about the order yet
     snapshot.forEach(vdoc =>{
       db.collection('orders').where('vid', '==', vdoc.id)
       .where('seenByVendor', '==', false)
