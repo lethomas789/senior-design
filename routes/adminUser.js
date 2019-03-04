@@ -5,6 +5,17 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 // const multer = require('multer');  // for multipart bodies e.g. formdata
 
+async function getVendorNames(arrayOfRefs, retArray) {
+  return db.runTransaction(t => {
+    return Promise.all(arrayOfRefs.map(async (element) => {
+      const doc = await t.get(element);
+      retArray.push(doc.data().vendorName);
+      console.log(retArray);
+    }));
+  });
+}
+
+
 /**
  * Route gets the list of vendor(s) the provided user is an admin of
  * 
@@ -20,6 +31,7 @@ router.get('/', (req, res) => {
     var user = req.query.user;
   }
 
+  // check if given user
   if (!user) {
     console.log('Error in getAdminVendor: missing required request paramters');
     return res.status(200).json({
@@ -28,6 +40,7 @@ router.get('/', (req, res) => {
     });
   }
 
+  // get the user in the admins root collection
   db.collection('admins').doc(user).get().then(doc => {
     if (!doc.exists) {
       console.log('Error: user is not admin.')
@@ -37,12 +50,45 @@ router.get('/', (req, res) => {
       });
     }
 
-    // else, return the vid's of whom they are admins of
-    console.log('Got admin info for provided user:', user);
-    return res.status(200).json({
-      success: true,
-      message: 'Got admin info for provided user.',
-      vendors: doc.data().vendors
+
+    let vendorIDs = doc.data().vendors;
+    let vendorRefs = [];
+    
+    let vendorObjects = [];
+
+    // push all vid's into an array for below
+    for (let i = 0; i < vendorIDs.length; ++i) {
+      vendorRefs.push(db.collection('vendors').doc(vendorIDs[i]));
+    }
+
+    // use transaction to grab all vid's and vendorName's to grab them all in
+    // one go.
+    db.runTransaction(transaction => {
+      return transaction.getAll(vendorRefs).then(docs => {
+        for (let i = 0; i < vendorRefs.length; ++i) {
+          vendorObjects.push({
+            vid: docs[i].data().vid,
+            vendorName: docs[i].data().vendorName
+          });
+        }
+      });
+    })
+    .then(() => {
+      // once finished, send the object to frontend
+      console.log('Got admin info for provided user:', user);
+      return res.status(200).json({
+        success: true,
+        message: 'Got admin info for provided user.',
+        vendors: vendorObjects
+      });
+
+    })
+    .catch(err => {
+      console.log('Server error in running vendor transaction:', err);
+      return res.status(200).json({
+        success: false,
+        message: 'Server error in running vendor transaction: ' + err
+      });
     });
 
   })
@@ -130,8 +176,7 @@ router.post('/addAdminUser', (req, res) => {
       // NOTE: we merge b/c a user can be admin of more than one club
       db.collection('admins').doc(user).set({
         email: user
-      }, {merge: true})
-      .then(() => {
+      }, {merge: true}).then(() => {
         // b/c arrays work differently, update array of vendors here
         db.collection('admins').doc(user).update({
           vendors: admin.firestore.FieldValue.arrayUnion(vid)

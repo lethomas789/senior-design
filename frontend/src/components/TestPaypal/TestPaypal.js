@@ -68,7 +68,7 @@ export default class TestPaypal extends Component {
       "transactions": [{
         "item_list": {
           "items": [{
-            "name": "newItem with payer_info 4:31",
+            "name": "test paymentID = transactionID",
             // "sku": "p0",  // stock keeping unit, 
             "price": "1.00",
             "currency": "USD",
