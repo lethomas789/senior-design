@@ -141,7 +141,8 @@ class ShopItem extends Component {
 
   render() {
     return (
-        <Grid item xs = {3}> 
+        <Grid item xs = {4} spacing = {24}> 
+        {/* <Grid container item xs={12} spacing={24}></Grid> */}
           <Card className= "card">
             <CardActionArea>
               <CardMedia className = "media"/>
