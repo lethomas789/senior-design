@@ -110,36 +110,38 @@ cron.schedule(midnightSchedule, function() {
           orderCount += 1;
         });
 
-        // once obtained the orders
-        let emailSubject = "You've got new orders from ECS193 E-commerce"
+        // dont send email if no new orders
+        if (orderCount > 0) {
+          // once obtained the orders
+          let emailSubject = "You've got new orders from ECS193 E-commerce"
 
-        const vendorEmail = new Email({
-          message: {
-            // from: 'ecs193.ecommerce@gmail.com',
-            from: 'test@test.com',
-            subject: emailSubject,
-            to: vdoc.data().email
-          },
-          send: false,  // set send to true when not testing
-          // preview: false,  // TODO turn off preview before production
-
-          transport: {
-            host: 'localhost', // TODO update w/ website?
-            port: 465,
-            secure: true,
-            tls: {
-              // do not fail on invalid certs
-              rejectUnauthorized: false
+          const vendorEmail = new Email({
+            message: {
+              // from: 'ecs193.ecommerce@gmail.com',
+              from: 'test@test.com',
+              subject: emailSubject,
+              to: vdoc.data().email
             },
-            /*
-            // uncomment when actually sending emails
-            service: 'gmail',
-            auth: {
-              user: 'ecs193.ecommerce@gmail.com',
-              pass: '193ecommerce'
+            send: false,  // set send to true when not testing
+            // preview: false,  // TODO turn off preview before production
+
+            transport: {
+              host: 'localhost', // TODO update w/ website?
+              port: 465,
+              secure: true,
+              tls: {
+                // do not fail on invalid certs
+                rejectUnauthorized: false
+              },
+              /*
+              // uncomment when actually sending emails
+              service: 'gmail',
+              auth: {
+                user: 'ecs193.ecommerce@gmail.com',
+                pass: '193ecommerce'
+              }
+              */
             }
-            */
-          }
         });
 
         // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
@@ -156,6 +158,8 @@ cron.schedule(midnightSchedule, function() {
           console.log('Finished Sending Email to:', vdoc.id);
         })
         .catch(console.log);
+
+        }
 
 
       })
