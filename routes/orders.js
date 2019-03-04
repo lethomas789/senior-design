@@ -4,12 +4,7 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 const nodemailer = require('nodemailer');
-var EmailTemplate = require('email-templates').EmailTemplate;
 const Email = require('email-templates');
-
-// let transporter = nodemailer.createTransport(transport[, defaults]);
-
-
 
 /**
  * Creates a new order when a user checksout a purchase. Saves order to orders
@@ -70,13 +65,7 @@ router.post('/', (req, res) => {
       });
     }
 
-    // 7:44 test paymentID = transactionID
-    // paymentID = LR47X3Y9CA5706187855000T
-    // ok so transaction id does not equal paymentID
-
-    // buyer@buyer.com
-    // "www.google.com/?paymentId=PAYID-LR5AQFQ0YN32001HC067310S&token=EC-7KS50256JG196743N&PayerID=LBVNHUDLVK75E"
-
+    // TODO save vendorName, pickup time, pickup location, etc.
     let date = admin.firestore.Timestamp.now();
     let orderData = {
       paymentID: paymentID,
@@ -88,7 +77,8 @@ router.post('/', (req, res) => {
       paid: true,  // if done through paypal express checkout, then paid
       pickedUp: false,
       name: doc.data().name,
-      email: doc.data().email
+      email: doc.data().email,
+      seenByVendor: false  // init as false, for cron emailing purposes
     };
 
     // TODO: have diff route if clubs want to do cash pickup
@@ -126,13 +116,30 @@ router.post('/', (req, res) => {
 
       const testEmail = new Email({
         message: {
+          // from: 'ecs193.ecommerce@gmail.com',
           from: 'test@test.com',
           subject: emailSubject,
-          to: 'test@test.com'
+          to: doc.data().email
         },
-        send: false,
+        send: false,  // set send to true when not testing
+        // preview: false,  // TODO turn off preview before production
+
         transport: {
-          jsonTransport: true
+          host: 'localhost', // TODO update w/ website?
+          port: 465,
+          secure: true,  
+          tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
+          },
+          /*
+          // uncomment when actually sending emails
+          service: 'gmail',
+          auth: {
+            user: 'ecs193.ecommerce@gmail.com',
+            pass: '193ecommerce'
+          }
+          */
         }
       });
 
@@ -141,7 +148,7 @@ router.post('/', (req, res) => {
         locals: {
           items: newItems,
           totalPrice: totalPrice,
-          location: 'Test club location here.',
+          location: 'Test club location here.', 
           emailIntro: emailIntro,
           oid: oid
         }
@@ -149,7 +156,7 @@ router.post('/', (req, res) => {
       .then(() => {
         console.log('Finished Sending Email.');
       })
-      .catch(console.error);
+      .catch(console.log);
 
 
       console.log('Finished saving new order:', oid);
@@ -257,12 +264,96 @@ router.get('/getVendorOrders', (req, res) => {
 
   })
   .catch(err => {   // catch for vendor get
+    console.log('Server error in retrieving vendor:', err);
+    return res.status(200).json({
+      sucess: false,
+      message: 'Server error in retrieving vendor: ' + err
+    });
+  });
+});
+
+/**
+ * GET order history of given user.
+ * 
+ * @param user - email for user
+ */
+router.get('/getUserOrders', (req, res) => {
+  if (req.query.params) {
+    var user = req.query.params.user;
+  }
+  else {
+    var user = req.query.user;
+  }
+
+  if (!user) {
+    console.log('Error: missing request params in GET orders route.');
+    return res.status(200).json({
+      success: false,
+      message: 'Error: missing request params in GET orders route.'
+    });
+  }
+
+  // check to make sure given vid exists
+  let userRef = db.collection('users').doc(user);
+  userRef.get().then(userDoc => {
+    if (!userDoc.exists) {
+      console.log('Error: provided vendor does not exist:', user);
+      return res.status(200).json({
+        sucess: false,
+        message: 'Error: provided vid does not exist: ' + user 
+      });
+    }
+
+    // now get vendor orders
+    let orders = [];
+
+    let ordersRef = db.collection('orders');
+
+    // TODO, do an array contains for multiple vendors?
+
+    // get all orders with user, ordered by date
+    ordersRef.where('email', '==', user).orderBy('date').get().then(snapshot => {
+      snapshot.forEach(doc => {
+        let orderData = {
+          // have to call toDate on firestore data or else errors
+          date: doc.data().date.toDate(),
+          items: doc.data().items,
+          totalPrice: doc.data().totalPrice,
+          paid: doc.data().paid,
+          firstName: doc.data().name.firstName,
+          lastName: doc.data().name.lastName,
+          oid: doc.data().oid,
+          pickedUp: doc.data().pickedUp,
+          email: doc.data().email
+        };
+
+        orders.push(orderData);
+      });
+
+      console.log('Successfully retrieved user order history.');
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully retrieved user order history.',
+        orders: orders
+      });
+    })
+    .catch(err => {  // catch for user orders get
+      console.log('Server error in retrieving user orders:', err);
+      return res.status(200).json({
+        sucess: false,
+        message: 'Server error in retrieving user orders: ' + err
+      });
+    });
+
+  })
+  .catch(err => {   // catch for user get
     console.log('Server error in retrieving user:', err);
     return res.status(200).json({
       sucess: false,
       message: 'Server error in retrieving user: ' + err
     });
   });
+
 });
 
 /**
@@ -330,88 +421,95 @@ router.get('/getVendorOrders', (req, res) => {
  });
 
 router.get('/testEmail', (req, res) => {
-  // Generate SMTP service account from ethereal.email
-  let transport = nodemailer.createTestAccount((err, account) => {
-    if (err) {
-      console.error('Failed to create a testing account. ' + err.message);
-      return process.exit(1);
-    }
+  db.collection('vendors').get().then(snapshot => {
+    snapshot.forEach(vdoc => {
+      db.collection('orders').where('vid', '==', vdoc.id)
+        .where('seenByVendor', '==', false)
+        .orderBy('date', 'asc')
+        .get().then(ordersSnapshot => {
+          let orders = [];
+          let orderCount = 0;
+          ordersSnapshot.forEach(odoc => {
+            odoc.update({ seenByVendor: true });
 
-    // console.log('Credentials obtained, sending message...');
+            /*
+            let orderData = {
+              // have to call toDate on firestore data or else errors
+              date: odoc.data().date.toDate(),
+              items: odoc.data().items,
+              totalPrice: odoc.data().totalPrice,
+              paid: odoc.data().paid,
+              firstName: odoc.data().name.firstName,
+              lastName: odoc.data().name.lastName,
+              oid: odoc.data().oid,
+              pickedUp: odoc.data().pickedUp,
+              email: odoc.data().email
+            };
+            orders.push(orderData);
+            */
 
-    // Create a SMTP transporter object
-    let transporter = nodemailer.createTransport({
-      host: account.smtp.host,
-      port: account.smtp.port,
-      secure: account.smtp.secure,
-      auth: {
-        user: account.user,
-        pass: account.pass
-      }
-    });
+            // NOTE: for our own sanity, we are just gonna send a count of items
+            // and a link to order history page.
+            orderCount += 1;
+          });
 
-    // Message object
-    /*
-    let message = {
-      from: 'Sender Name <sender@example.com>',
-      to: 'Recipient <recipient@example.com>',
-      subject: 'Nodemailer is unicode friendly ✔',
-      text: 'Hello to myself!',
-      html: '<p><b>Hello</b> to myself!</p>'
-    };
-    */
+          // once obtained the orders
+          let emailSubject = "You've got new orders from ECS193 E-commerce"
 
-    /*
-    transporter.sendMail(message, (err, info) => {
-      if (err) {
-        console.log('Error occurred. ' + err.message);
-        return process.exit(1);
-      }
+          const vendorEmail = new Email({
+            message: {
+              // from: 'ecs193.ecommerce@gmail.com',
+              from: 'test@test.com',
+              subject: emailSubject,
+              to: 'test@test.com'
+            },
+            send: false,  // set send to true when not testing
+            // preview: false,  // TODO turn off preview before production
 
-      console.log('Message sent: %s', info.messageId);
-      // Preview only available when sending through an Ethereal account
-      console.log('Preview URL: %s', nodemailer.getTestMessageUrl(info));
-    });
-    */
-  });
+            transport: {
+              host: 'localhost', // TODO update w/ website?
+              port: 465,
+              secure: true,
+              tls: {
+                // do not fail on invalid certs
+                rejectUnauthorized: false
+              },
+              /*
+              // uncomment when actually sending emails
+              service: 'gmail',
+              auth: {
+                user: 'ecs193.ecommerce@gmail.com',
+                pass: '193ecommerce'
+              }
+              */
+            }
+          });
 
-  const testEmail = new Email({
-    message: {
-      from: 'test@test.com',
-      subject: 'ECS193 E-commerce Order Receipt',
-      to: 'test@test.com'
-    },
-    send: false,
-    // transport: transport
-    transport: {
-      jsonTransport: true
-    }
-  });
+          // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
+          let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
 
-  testEmail.send({
-    template: 'receipt',
-    locals: {
-      testArray: [{"item": "item0", "price": "1.00"}, {"item": "item1", "price": "2.00"}],
-      location: 'Test club location here.',
-      totalPrice: "3.00"
-    }
+          vendorEmail.send({
+            template: 'ordersNotification',
+            locals: {
+              emailIntro: emailIntro,
+            }
+          })
+            .then(() => {
+              console.log('Finished Sending Email.');
+            })
+            .catch(console.log);
+
+        })
+        .catch(err => {
+          console.log('Error in getting user orders for emailing:', err);
+        });
+
+    });  // end forEach vendor
+
   })
-  .then(() => {
-    console.log('Finished Sending Email.');
-  })
-  .catch(console.error);
-
-    // pug testing
-    // div
-    //   table
-    //     thead
-    //       tr: th Test
-    //     tbody
-    //       each val in testArray
-    //         tr
-    //           td #{val.item}
-    //           td #{val.price}
-
+    .catch(err => {
+      console.log('Server error in getting vendors for emailing:', err);
+    });
   return res.sendStatus(200);
 
 });
