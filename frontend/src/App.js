@@ -12,7 +12,6 @@ import VendorView from './components/VendorView/VendorView';
 import VendorSignup from './components/VendorSignup/VendorSignup';
 import EditClubInfo from './components/EditClubInfo/EditClubInfo';
 import AddProduct from './components/AddProduct/AddProduct';
-import TestPaypal from './components/TestPaypal/TestPaypal';
 import OrderHistory from './components/OrderHistory/OrderHistory';
 
 import { createBrowserHistory } from 'history';
@@ -34,7 +33,6 @@ class App extends Component {
           <Route exact path = "/abcdefg/vendorSignup" component = {VendorSignup}/>
           <Route exact path = "/editClubInfo" component = {EditClubInfo}/>
           <Route exact path = "/addProduct" component = {AddProduct}/>
-          <Route exact path = "/testPaypal" component = {TestPaypal}/>
           <Route exact path = "/orderHistory" component = {OrderHistory}/>
         </div>
       </Router>
