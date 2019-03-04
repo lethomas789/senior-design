@@ -224,7 +224,7 @@ router.get('/getVendorOrders', (req, res) => {
     // TODO, do an array contains for multiple vendors?
 
     // get all orders with vid, ordered by date
-    ordersRef.where('vid', '==', vid).orderBy('date').get().then(snapshot => {
+    ordersRef.where('vid', '==', vid).orderBy('date', 'desc').get().then(snapshot => {
       snapshot.forEach(doc => {
         let orderData = {
           // have to call toDate on firestore data or else errors
@@ -312,7 +312,7 @@ router.get('/getUserOrders', (req, res) => {
     // TODO, do an array contains for multiple vendors?
 
     // get all orders with user, ordered by date
-    ordersRef.where('email', '==', user).orderBy('date').get().then(snapshot => {
+    ordersRef.where('email', '==', user).orderBy('date', 'desc').get().then(snapshot => {
       snapshot.forEach(doc => {
         let orderData = {
           // have to call toDate on firestore data or else errors
@@ -430,7 +430,7 @@ router.get('/testEmail', (req, res) => {
           let orders = [];
           let orderCount = 0;
           ordersSnapshot.forEach(odoc => {
-            odoc.update({ seenByVendor: true });
+            db.collection('orders').doc(odoc.id).update({seenByVendor: true});
 
             /*
             let orderData = {
