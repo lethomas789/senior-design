@@ -45,28 +45,8 @@ class Checkout extends Component {
         "redirect_urls": {
           "return_url": "www.google.com", 
           "cancel_url": "www.reddit.com",
-          // "return_url": "http:localhost:3000", // send back to localhosts
-          // "cancel_url": "http:localhost:3000/testPaypal"
         },
         "transactions": [],
-      //   {
-      //     //items is an array of objects, with each object having these parameters
-      //     // {
-      //     //   "name": "test paymentID = transactionID",
-      //     //   // "sku": "p0",  // stock keeping unit, 
-      //     //   "price": "1.00",
-      //     //   "currency": "USD",
-      //     //   "quantity": 1
-      //     // }
-      //   "item_list": {
-      //     "items": []  
-      //   },
-      //   "amount": {
-      //     "currency": "USD",
-      //     "total": "1.00"
-      //   },
-      //   "description": "This is a sale.",  // purchase description; memo for vendor
-      // }
         "note_to_payer": "Pickup the sale at this location:"  // does a popup, not incuded in transaction on paypal
       },
       cartTotal: this.props.total
@@ -100,7 +80,7 @@ class Checkout extends Component {
 
     paypalTransactions.item_list.items = paypalItems;
     paypalTransactions.amount.currency = this.state.currency;
-    paypalTransactions.amount.total = this.props.total;
+    paypalTransactions.amount.total = String(this.props.total.toFixed(2));
 
     //update payment options to be list of paypal items
     console.log(this.state.paymentOptions.transactions);
@@ -122,11 +102,11 @@ class Checkout extends Component {
 
     axios.post(apiURL, {
       params:{
-        items: this.state.transactions.paymentOptions.items_list.items,
-        totalPrice: this.props.total,
+        items: this.state.paymentOptions.transactions[0].item_list.items,
+        totalPrice: String(this.props.total),
         vid: this.props.cart[0].vid,
         user: this.props.user,
-        payentID: payment.paymentID,
+        paymentID: payment.paymentID,
         payerID: payment.payerID
       }
     })

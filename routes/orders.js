@@ -22,6 +22,7 @@ const Email = require('email-templates');
  * @param payerID - payerID from paypal API
  */
 router.post('/', (req, res) => {
+
   if (req.body.params) {
     var items = req.body.params.items;
     var totalPrice = req.body.params.totalPrice;
