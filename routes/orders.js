@@ -40,6 +40,8 @@ router.post('/', (req, res) => {
     var payerID = req.body.payerID;
   }
 
+  console.log("vid is", vid);
+
   // TODO: figure out how we want to structure multiple vendors in an order.
   // TODO: test if paymentID is transaction ID in paypal
 

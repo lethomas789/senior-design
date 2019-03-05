@@ -99,8 +99,9 @@ class Checkout extends Component {
   }
 
   onSuccess = (payment) => {
-    // 1, 2, and ... Poof! You made it, everything's fine and dandy!
     console.log("Payment successful!", payment);
+    console.log(this.props.cart);
+    this.props.updateSelectedVendor(this.props.cart[0].vid);
 
     const apiURL = "http://localhost:4000/api/orders";
 
@@ -187,6 +188,11 @@ const mapDispatchToProps = dispatch => {
     updateItems: (response) => dispatch({
       type: actions.GET_CART,
       cart: response
+    }),
+
+    updateSelectedVendor: (currentVendor) => dispatch({
+      type: actions.GET_VENDOR_PRODUCTS,
+      vendor: currentVendor
     })
   }
 }

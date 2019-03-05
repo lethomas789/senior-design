@@ -37,6 +37,10 @@ class OrderHistoryItem extends Component {
                 <Typography gutterBottom variant="h5" component="h2">
                   Picked Up: {this.props.pickedUp}
                 </Typography>
+
+                <Typography gutterBottom variant="h5" component="h2">
+                  Total Price: {this.props.totalPrice}
+                </Typography>
                 
               </CardContent>
             </CardActionArea>
