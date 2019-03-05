@@ -39,7 +39,7 @@ class OrderHistoryItem extends Component {
                 </Typography>
 
                 <Typography gutterBottom variant="h5" component="h5">
-                  Total Price: {this.props.totalPrice}
+                  Total Price: ${this.props.totalPrice}
                 </Typography>
                 
               </CardContent>
