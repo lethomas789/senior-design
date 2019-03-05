@@ -6,11 +6,17 @@ import actions from '../../store/actions';
 import Grid from '@material-ui/core/Grid';
 import CartItem from '../CartItem/CartItem';
 import Checkout from '../Checkout/Checkout';
+import { Link } from 'react-router-dom';
+
 
 //component to display user's cart
 class Cart extends Component {
   constructor(props){
     super(props);
+
+    this.state = {
+      total: 0
+    }
   }
 
   //get cart from server for user
@@ -31,6 +37,9 @@ class Cart extends Component {
         priceTotal += Number(currentCart[i].totalPrice);
       }
       priceTotal = priceTotal.toFixed(2);
+      this.setState({
+        total: priceTotal
+      });
       this.props.updateTotal(priceTotal);
     }
   }
@@ -43,12 +52,13 @@ class Cart extends Component {
 
     return(
       <div>
-        <Grid container direction="row">
+        <Grid container direction="column">
+          <h1> <Link to = "/orderHistory"> Order History </Link> </h1>
           <h1> Current Cart: </h1>
         </Grid>
 
         <Grid container direction="column" justify-xs-space-evenly>
-          <Checkout/>
+          <Checkout total = {this.state.total}/>
           {cart}
         </Grid>
       </div>

@@ -33,7 +33,6 @@ const shopRoute = "/shop";
 const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
-const testPaypal = "/testPaypal";
 
 //style for cart to display number of items
 const styles = theme => ({
@@ -269,7 +268,6 @@ class ButtonAppBar extends Component {
                     <Button component = {Link} to = {loginRoute} color="inherit" onClick = {this.logoutUser}> {this.props.loginText} </Button> 
                     <Button component = {Link} to = {shopRoute} color = "inherit"> Shop </Button>
                     <Button color = "inherit" onClick = {this.viewCartCheck}> <CartIcon/> </Button>
-                    <Button component = {Link} to = {testPaypal} color="inherit">TEST PAYPAL</Button> 
                   </div>
                   <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
                         <DialogContent>

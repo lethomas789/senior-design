@@ -31,7 +31,8 @@ class Signup extends Component {
       open: false,
       progressValue: 0,
       progressVariant: 'determinate',
-      responseMessage: ''
+      responseMessage: '',
+      success: false
     }
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -42,58 +43,74 @@ class Signup extends Component {
     this.setState({
         open: false
     });
-    this.props.history.push('/shop');
+
+    if(this.state.success === true){
+      this.props.history.push('/shop');
+    }
   }
 
   //send signup request
   sendSignup(){
-    //load progress circle to wait for signup check
-    this.setState({
-      progressValue: 50,
-      progressVariant: "indeterminate"
-    });
-    const apiURL = "http://localhost:4000/api/signup";
-    //send signup request
-    axios.post(apiURL, {
-      params: {
-        firstName: this.state.firstName,
-        lastName: this.state.lastName,
-        email: this.state.email,
-        password: this.state.password
-      }
-    })
-    .then(res => {
-      //if signup is successful, display success message
-      if(res.data.success === true){
+      //load progress circle to wait for signup check
+      this.setState({
+        progressValue: 50,
+        progressVariant: "indeterminate"
+      });
+
+      if(this.state.password != this.state.confirmPassword){
         this.setState({
           open: true,
           progressValue: 0,
           progressVariant: "determinate",
-          responseMessage: "Signup successful! Please login!"
-        })
+          responseMessage: "Passwords do not match!"
+        });
       }
 
-      //display error message
       else{
-        this.setState({
-          open: true,
-          progressValue: 0,
-          progressVariant: "determinate",
-          responseMessage: res.data.message
+        const apiURL = "http://localhost:4000/api/signup";
+        //send signup request
+        axios.post(apiURL, {
+          params: {
+            firstName: this.state.firstName,
+            lastName: this.state.lastName,
+            email: this.state.email,
+            password: this.state.password
+          }
         })
-      }
-    })
-    .catch(err => {
-      alert(err);
-    })
-  }
+        .then(res => {
+          //if signup is successful, display success message
+          if(res.data.success === true){
+            this.setState({
+              open: true,
+              progressValue: 0,
+              progressVariant: "determinate",
+              responseMessage: "Signup successful! Please login!",
+              success: true
+            })
+          }
+
+          //display error message
+          else{
+            this.setState({
+              open: true,
+              progressValue: 0,
+              progressVariant: "determinate",
+              responseMessage: res.data.message
+            })
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
+      }    
+    }
   
   render() {
     const { classes } = this.props;
     return (
       <div id = "signupContainer">
         <div id = "signupForms">
-          <Paper id = "signupPaperContainer">
+          <Paper className = "signupPaperContainer">
             <h1> Sign Up </h1>
             <div className = "textForm" id="row">
               <TextField
@@ -124,8 +141,16 @@ class Signup extends Component {
                 onChange={(event) => this.setState({ password: event.target.value })}
               />
             </div>
+            <div className = "textForm" id="row">
+              <TextField
+                type="password"
+                label="Confirm Password"
+                required="true"
+                onChange={(event) => this.setState({ confirmPassword: event.target.value })}
+              />
+            </div>
             <div className = "pushDown">
-            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
+            <Button variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
             </div>
           </Paper>
 

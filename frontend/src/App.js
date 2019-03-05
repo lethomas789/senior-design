@@ -12,9 +12,9 @@ import VendorView from './components/VendorView/VendorView';
 import VendorSignup from './components/VendorSignup/VendorSignup';
 import EditClubInfo from './components/EditClubInfo/EditClubInfo';
 import AddProduct from './components/AddProduct/AddProduct';
-import TestPaypal from './components/TestPaypal/TestPaypal';
+import OrderHistory from './components/OrderHistory/OrderHistory';
 
-import { createHashHistory, createBrowserHistory } from 'history';
+import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
 
 class App extends Component {
@@ -33,7 +33,7 @@ class App extends Component {
           <Route exact path = "/abcdefg/vendorSignup" component = {VendorSignup}/>
           <Route exact path = "/editClubInfo" component = {EditClubInfo}/>
           <Route exact path = "/addProduct" component = {AddProduct}/>
-          <Route exact path = "/testPaypal" component = {TestPaypal}/>
+          <Route exact path = "/orderHistory" component = {OrderHistory}/>
         </div>
       </Router>
     );
