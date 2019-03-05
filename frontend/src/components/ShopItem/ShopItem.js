@@ -20,6 +20,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
+import { test } from '../../images/test_shirt1.png';
 
 //component to display product info
 class ShopItem extends Component {
@@ -141,24 +142,29 @@ class ShopItem extends Component {
 
   render() {
     return (
-        <Grid item xs = {4} spacing = {24}> 
+
+        <Grid item xs = {4} spacing = {2}> 
         {/* <Grid container item xs={12} spacing={24}></Grid> */}
           <Card className= "card">
             <CardActionArea>
-              <CardMedia className = "media"/>
+              <CardMedia className = "media" />
+              <div className="resize">
+              <img src={require('../../images/test_shirt1.png')} width="60%" height="60%"/>
+              </div>
+              {/* <img src = {test}/> */}
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography component="p">
                   {this.props.productName}
                 </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography component="p">
                   Price: ${this.props.productPrice}
                 </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography component="p">
                   Stock: {this.props.stock}
                 </Typography>
-                <Typography component="p">
+                {/* <Typography component="p">
                   Info: {this.props.productInfo}
-                </Typography>
+                </Typography> */}
               </CardContent>
             </CardActionArea>
             <CardActions>
@@ -196,6 +202,7 @@ class ShopItem extends Component {
             </CardActions>
           </Card>
         </Grid>
+    
     )
   }
 }

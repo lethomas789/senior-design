@@ -1,10 +1,44 @@
 .card {
   max-width: 400px;
+  margin-bottom: 12px;
+  margin-left: 30px;
+}
+
+.bullet {
+  display: 'inline-block';
+  margin: '0 2px';
+  transform: scale(0.8);
+
+}
+
+.resize {
+  margin-left: 110px;
+}
+
+h2 {
+  font-size: 12;
 }
 
 .media {
   height: 140;
 }
+
+/* const styles = {
+  card: {
+    minWidth: 275,
+  },
+  bullet: {
+    display: 'inline-block',
+    margin: '0 2px',
+    transform: 'scale(0.8)',
+  },
+  title: {
+    fontSize: 14,
+  },
+  pos: {
+    marginBottom: 12,
+  },
+}; */
 
 
 #test {
@@ -15,6 +49,11 @@
 
 .quantity {
   font-size: 15px;
+  padding-left: 5px;
+  position: relative;
+}
+
+.spacing {
   padding-left: 10px;
 }
 
