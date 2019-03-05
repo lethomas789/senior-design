@@ -23,7 +23,7 @@ class EditClubInfo extends Component {
 
   //get club info
   getClubInfo(){
-    const apiURL = "http://localhost:4000/api/adminVendor";
+    const apiURL = "/api/adminVendor";
     axios.get(apiURL, {
       params:{
         user: this.props.user,
@@ -55,7 +55,7 @@ class EditClubInfo extends Component {
 
   //update club info on server
   sendEdit(){
-    const apiURL = "http://localhost:4000/api/adminVendor/editVendorInfo";
+    const apiURL = "/api/adminVendor/editVendorInfo";
     axios.patch(apiURL, {
       params:{
         user: this.props.user,

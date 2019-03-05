@@ -40,7 +40,7 @@ class VendorSignup extends Component {
 
   //store list of active vendors from database
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getVendorInfo";
+    const apiURL = "/api/getVendorInfo";
     axios.get(apiURL)
       .then(res => {
         this.setState({
@@ -85,7 +85,7 @@ class VendorSignup extends Component {
   //send signup to verify admin process
   sendSignup(){
     //add current user to be admin of selected vendor
-    const apiURL = "http://localhost:4000/api/adminUser/addAdminUser";
+    const apiURL = "/api/adminUser/addAdminUser";
 
     axios.post(apiURL, {
       params:{
@@ -101,7 +101,7 @@ class VendorSignup extends Component {
       if(res.data.success === true){
         //get list of vendors user is an admin of
         //get the vids of vendors in which user is an admin of
-        const adminsURL = "http://localhost:4000/api/adminUser";
+        const adminsURL = "/api/adminUser";
         axios.get(adminsURL, {
           params:{
             user: this.state.email

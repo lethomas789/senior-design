@@ -15,7 +15,7 @@ class OrderHistory extends Component {
   }
 
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/orders/getUserOrders";
+    const apiURL = "/api/orders/getUserOrders";
 
     axios.get(apiURL, {
       params:{
