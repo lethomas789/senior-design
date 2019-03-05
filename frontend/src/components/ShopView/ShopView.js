@@ -13,8 +13,8 @@ class ShopView extends Component {
 
   //get products from server after mounting to screen
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getAllProducts";
-
+    //const apiURL = "http://localhost:4000/api/getAllProducts";
+    const apiURL = "/api/getAllProducts";
     //get all products from server
     //update state of view to obtain items
     axios.get(apiURL)
@@ -24,7 +24,7 @@ class ShopView extends Component {
         this.props.updateProducts(res.data.data);
 
         //after getting products, get list of vendors
-        const vendorsURL = "http://localhost:4000/api/getVendorInfo";
+        const vendorsURL = "/api/getVendorInfo";
         axios.get(vendorsURL)
           .then(res => {
             console.log(res.data);
