@@ -31,10 +31,7 @@ app.use(cors());
 //serve react files
 app.use(express.static(path.join(__dirname, '/frontend/build')));
 
-//fix react app crashing on refresh
-// app.get('/*', (req,res) => {
-//   res.sendFile(path.join(__dirname + '/frontend/build/index.html'))
-// })
+
 
 //routes
 const router = express.Router();
@@ -65,6 +62,11 @@ app.use('/api/getVendorInfo', getVendorInfo);
 app.use('/api/paypalSandbox', paypalSandbox);
 app.use('/api/orders', orders);
 app.use('/api/getProductInfo', getProductInfo);
+
+//fix react app crashing on refresh
+app.get('*', (req,res) => {
+  res.sendFile(path.join(__dirname + '/frontend/build/index.html'))
+})
 
 db = admin.firestore();
 // TODO vars
@@ -175,7 +177,6 @@ cron.schedule(midnightSchedule, function() {
   });
 
 });
-
 
 // listen to requests on port
 // choose port based on environment
