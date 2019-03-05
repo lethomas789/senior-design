@@ -40,8 +40,33 @@ class OrderHistory extends Component {
 
   render() {
     const orders = this.state.orders.map(order => {
-      let convertDate = new Date(order.date).toDateString();
-      return <OrderHistoryItem orderDate = {convertDate} email = {order.email} firstName = {order.firstName} 
+      console.log(order.date);
+
+
+      let convertDate = new Date(order.date);
+      let hours = convertDate.getHours();
+      let timeOfDay = "AM";
+
+      console.log("hours ", hours);
+
+      if(hours > 12){
+        hours = hours -12;
+        timeOfDay = "PM";
+      }
+
+      hours = String(hours);
+
+      let minutes = String(convertDate.getMinutes());
+
+      if(minutes.length === 1){
+        minutes = '0' + minutes;
+      }
+
+      let seconds = String(convertDate.getSeconds());
+
+      let actualDate = convertDate.toDateString() + ' ' + hours + ':' + minutes + ' ' + timeOfDay;
+            
+      return <OrderHistoryItem orderDate = {actualDate} email = {order.email} firstName = {order.firstName} 
             lastName = {order.lastName} oid = {order.oid} paid = {String(order.paid)} pickedUp = {String(order.pickedUp)}
             totalPrice = {order.totalPrice} 
             />

@@ -11,34 +11,34 @@ class OrderHistoryItem extends Component {
   render() {
     return (
       <div>
-        <Card className= "card">
+        <Card className= "card orderHistoryCard">
             <CardActionArea>
               <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h5">
                   Date: {this.props.orderDate}
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h5">
                   First Name: {this.props.firstName}
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h5">
                   Last Name: {this.props.lastName}
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h5">
                   Order ID: {this.props.oid}
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h5">
                   Paid: {this.props.paid}
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h5">
                   Picked Up: {this.props.pickedUp}
                 </Typography>
 
-                <Typography gutterBottom variant="h5" component="h2">
+                <Typography gutterBottom variant="h5" component="h5">
                   Total Price: {this.props.totalPrice}
                 </Typography>
                 
