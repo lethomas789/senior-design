@@ -42,7 +42,8 @@ class Login extends Component{
 
     //get logged in user's cart info
     getCart(){
-      const apiURL = "http://localhost:4000/api/getUserCart";
+   //   const apiURL = "http://localhost:4000/api/getUserCart"
+      const apiURL = "/api/getUserCart";
       axios.get(apiURL, {
         params:{
           user: this.state.email
@@ -63,8 +64,9 @@ class Login extends Component{
             progressValue: 50,
             progressVariant: "indeterminate"
         });
-        const apiURL = "http://localhost:4000/api/login";
-        axios.post(apiURL, {
+        //const apiURL = "http://localhost:4000/api/login";
+        const apiURL = "/api/login";
+	axios.post(apiURL, {
             params:{
               email: this.state.email,
               password: this.state.password
@@ -95,7 +97,7 @@ class Login extends Component{
                 //after determining user is an admin, get object list of user's active vendors
                 console.log("admin login", res.data);
 
-                const vendorURL = "http://localhost:4000/api/adminUser";
+                const vendorURL = "/api/adminUser";
                 axios.get(vendorURL, {
                     params:{
                         user: this.state.email

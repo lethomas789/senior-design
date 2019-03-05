@@ -67,7 +67,7 @@ class Signup extends Component {
       }
 
       else{
-        const apiURL = "http://localhost:4000/api/signup";
+        const apiURL = "/api/signup";
         //send signup request
         axios.post(apiURL, {
           params: {

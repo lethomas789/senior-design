@@ -69,7 +69,7 @@ class ButtonAppBar extends Component {
     //when navbar loads, get list of all vendors in database
     //trying to get club names
     componentDidMount(){
-      const apiURL = "http://localhost:4000/api/getVendorInfo";
+      const apiURL = "/api/getVendorInfo";
       axios.get(apiURL)
         .then(res => {
           //update vendors of redux store
@@ -144,7 +144,7 @@ class ButtonAppBar extends Component {
       
       //if logged in, get cart and calculate cart's total
       else{
-        const apiURL = "http://localhost:4000/api/getUserCart";
+        const apiURL = "/api/getUserCart";
         //if user is logged in, get cart info
         if (this.props.login === true){
           axios.get(apiURL,{

@@ -103,7 +103,7 @@ class Checkout extends Component {
     console.log(this.props.cart);
     this.props.updateSelectedVendor(this.props.cart[0].vid);
 
-    const apiURL = "http://localhost:4000/api/orders";
+    const apiURL = "/api/orders";
 
     axios.post(apiURL, {
       params:{

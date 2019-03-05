@@ -78,7 +78,7 @@ class ShopItem extends Component {
 
     else{
       //update user's cart on server
-      var apiURL = "http://localhost:4000/api/getUserCart/addItems";
+      var apiURL = "/api/getUserCart/addItems";
       axios.post(apiURL, {
         params:{
           user: this.props.user,
@@ -90,7 +90,7 @@ class ShopItem extends Component {
       .then(res => {
         if(res.data.success === true){
           //after adding to item, get updated cart
-          const getCartURL = "http://localhost:4000/api/getUserCart";
+          const getCartURL = "/api/getUserCart";
           axios.get(getCartURL, {
             params:{
               user: this.props.user
