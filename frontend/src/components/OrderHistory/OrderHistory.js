@@ -40,9 +40,8 @@ class OrderHistory extends Component {
 
   render() {
     const orders = this.state.orders.map(order => {
-      // let convertDate = new Date(order.date);
-      // convertDate = convertDate.format("dd.mm.yyy HH:MM:ss");
-      return <OrderHistoryItem orderDate = {order.date} email = {order.email} firstName = {order.firstName} 
+      let convertDate = new Date(order.date).toDateString();
+      return <OrderHistoryItem orderDate = {convertDate} email = {order.email} firstName = {order.firstName} 
             lastName = {order.lastName} oid = {order.oid} paid = {String(order.paid)} pickedUp = {String(order.pickedUp)}
             totalPrice = {order.totalPrice} 
             />
