@@ -142,7 +142,6 @@ class ShopItem extends Component {
 
   render() {
     return (
-
         <Grid item xs = {4} spacing = {2}> 
         {/* <Grid container item xs={12} spacing={24}></Grid> */}
           <Card className= "card">
