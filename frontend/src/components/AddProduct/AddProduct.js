@@ -26,7 +26,7 @@ class AddProduct extends Component {
 
   //add product to vendor's collection in database
   addProduct(){
-    const apiURL = "http://localhost:4000/api/adminProducts/addNewProduct";
+    const apiURL = "/api/adminProducts/addNewProduct";
     axios.post(apiURL, {
       params:{
         vid: this.props.vid,
