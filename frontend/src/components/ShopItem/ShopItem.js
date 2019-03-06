@@ -166,6 +166,25 @@ class ShopItem extends Component {
                 Stock: {this.props.stock}
                 
                 Info: {this.props.productInfo}
+
+                <Button id = "test" onClick = {this.removeQuantity}>
+                 -
+                </Button>
+                 <div className= "quantity">
+               {this.state.amtPurchased}
+                 </div>
+                 <Button id = "test" onClick = {this.addQuantity}>
+                  +
+                 </Button>
+              
+
+          <Button size="small" color="primary" onClick = {this.addItem}>
+              Add To Cart
+             </Button>
+
+             <Button size="small" color="primary" onClick = {this.updateVendor}>
+             <Link to = "/vendorProducts"> More From Vendor </Link>
+               </Button>
                
                </p>
                </div>
