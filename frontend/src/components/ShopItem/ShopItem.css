@@ -1,7 +1,23 @@
 .card {
   max-width: 400px;
-  margin-bottom: 12px;
+  margin-bottom: 5px;
   margin-left: 30px;
+}
+
+.smallCard {
+  max-width: 400px;
+  max-height: 150px;
+  margin-bottom: 5px;
+  margin-left: 30px;
+}
+
+.resizing {
+  margin-left: 30px;
+  max-width: 400px;
+}
+
+#background {
+  background-color: transparent;
 }
 
 .bullet {
@@ -15,9 +31,10 @@
   margin-left: 110px;
 }
 
-h2 {
-  font-size: 12;
+h5 {
+  font-size: 12pt;
 }
+
 
 .media {
   height: 140;

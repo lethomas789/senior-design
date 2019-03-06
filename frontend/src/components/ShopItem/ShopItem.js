@@ -142,66 +142,98 @@ class ShopItem extends Component {
 
   render() {
     return (
-
-        <Grid item xs = {4} spacing = {2}> 
-        {/* <Grid container item xs={12} spacing={24}></Grid> */}
-          <Card className= "card">
-            <CardActionArea>
-              <CardMedia className = "media" />
-              <div className="resize">
-              <img src={require('../../images/test_shirt1.png')} width="60%" height="60%"/>
-              </div>
-              {/* <img src = {test}/> */}
-              <CardContent>
-                <Typography component="p">
+      <Grid item xs = {4} spacing = {2}>
+      <Card className = "card">
+      <CardActionArea>
+      <CardMedia className = "media" />
+              
+        <img src={require('../../images/test_shirt1.png')} width="60%" height="60%"/>
+        </CardActionArea>
+      </Card>
+      {/* <Card id = "background" className = "smallCard">
+      <CardContent> */}
+                {/* <Typography gutterBottom variant="h5" component="h2"> */}
+                <div className = "resizing">
+               <h5>
                   {this.props.productName}
-                </Typography>
-                <Typography component="p">
-                  Price: ${this.props.productPrice}
-                </Typography>
-                <Typography component="p">
-                  Stock: {this.props.stock}
-                </Typography>
-                {/* <Typography component="p">
-                  Info: {this.props.productInfo}
-                </Typography> */}
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <Button id = "test" onClick = {this.removeQuantity}>
-                 -
-                </Button>
-                <div className= "quantity">
-                {this.state.amtPurchased}
-                </div>
-                <Button id = "test" onClick = {this.addQuantity}>
-                 +
-                </Button>
+                  </h5>
+                {/* </Typography> */}
+                
+                <p>
+               
+                Price: ${this.props.productPrice}
+                
+                Stock: {this.props.stock}
+                
+                Info: {this.props.productInfo}
+               
+               </p>
+               </div>
+              {/* </CardContent>
+      </Card> */}
+      </Grid>
+
+        // <Grid item xs = {4} spacing = {2}> 
+        // {/* <Grid container item xs={12} spacing={24}></Grid> */}
+        //   <Card className= "card">
+        //     <CardActionArea>
+        //       <CardMedia className = "media" />
+        //       <div className="resize">
+        //       <img src={require('../../images/test_shirt1.png')} width="60%" height="60%"/>
+        //       </div>
+        //       {/* <img src = {test}/> */}
+        //       <CardContent>
+        //         {/* <Typography gutterBottom variant="h5" component="h2"> */}
+        //        <h5>
+        //           {this.props.productName}
+        //           </h5>
+        //         {/* </Typography> */}
+        //         <Typography component="p">
+        //           Price: ${this.props.productPrice}
+        //         </Typography>
+        //         <Typography component="p">
+        //           Stock: {this.props.stock}
+        //         </Typography>
+        //         <Typography component="p">
+        //           Info: {this.props.productInfo}
+        //         </Typography>
+        //       </CardContent>
+        //     </CardActionArea>
+        //     <CardActions>
+        //         <Button id = "test" onClick = {this.removeQuantity}>
+        //          -
+        //         </Button>
+        //         <div className= "quantity">
+        //         {this.state.amtPurchased}
+        //         </div>
+        //         <Button id = "test" onClick = {this.addQuantity}>
+        //          +
+        //         </Button>
               
 
-              <Button size="small" color="primary" onClick = {this.addItem}>
-                Add To Cart
-              </Button>
+        //       <Button size="small" color="primary" onClick = {this.addItem}>
+        //         Add To Cart
+        //       </Button>
 
-              <Button size="small" color="primary" onClick = {this.updateVendor}>
-                <Link to = "/vendorProducts"> More From Vendor </Link>
-              </Button>
+        //       <Button size="small" color="primary" onClick = {this.updateVendor}>
+        //         <Link to = "/vendorProducts"> More From Vendor </Link>
+        //       </Button>
 
-              <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
-                <DialogContent>
-                  <DialogContentText id = "alert-dialog-description">
-                    {this.state.alertMessage}
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick = {this.handleClose} color = "primary">
-                    Ok
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </CardActions>
-          </Card>
-        </Grid>
+        //       <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+        //         <DialogContent>
+        //           <DialogContentText id = "alert-dialog-description">
+        //             {this.state.alertMessage}
+        //           </DialogContentText>
+        //         </DialogContent>
+        //         <DialogActions>
+        //           <Button onClick = {this.handleClose} color = "primary">
+        //             Ok
+        //           </Button>
+        //         </DialogActions>
+        //       </Dialog>
+        //     </CardActions>
+        //   </Card>
+        // </Grid>
     
     )
   }
