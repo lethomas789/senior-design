@@ -78,7 +78,7 @@ class ShopItem extends Component {
 
     else{
       //update user's cart on server
-      var apiURL = "/api/getUserCart/addItems";
+      var apiURL = "http://localhost:4000/api/getUserCart/addItems";
       axios.post(apiURL, {
         params:{
           user: this.props.user,
@@ -90,7 +90,7 @@ class ShopItem extends Component {
       .then(res => {
         if(res.data.success === true){
           //after adding to item, get updated cart
-          const getCartURL = "/api/getUserCart";
+          const getCartURL = "http://localhost:4000/api/getUserCart";
           axios.get(getCartURL, {
             params:{
               user: this.props.user
@@ -142,66 +142,119 @@ class ShopItem extends Component {
 
   render() {
     return (
-
-        <Grid item xs = {4} spacing = {2}> 
-        {/* <Grid container item xs={12} spacing={24}></Grid> */}
-          <Card className= "card">
-            <CardActionArea>
-              <CardMedia className = "media" />
-              <div className="resize">
-              <img src={require('../../images/test_shirt1.png')} width="60%" height="60%"/>
-              </div>
-              {/* <img src = {test}/> */}
-              <CardContent>
-                <Typography component="p">
+      <Grid item xs = {4} spacing = {2}>
+      <div className = "centerPage">
+     
+              <div className = "box">
+              <div className = "center">
+        <img src={require('../../images/test_shirt1.png')} width="80%" height="80%"/>
+        
+        </div>
+        </div>
+      {/* <Card id = "background" className = "smallCard">
+      <CardContent> */}
+                {/* <Typography gutterBottom variant="h5" component="h2"> */}
+                <div className = "resizing">
+               <h5>
                   {this.props.productName}
-                </Typography>
-                <Typography component="p">
-                  Price: ${this.props.productPrice}
-                </Typography>
-                <Typography component="p">
-                  Stock: {this.props.stock}
-                </Typography>
-                {/* <Typography component="p">
-                  Info: {this.props.productInfo}
-                </Typography> */}
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-                <Button id = "test" onClick = {this.removeQuantity}>
+                  </h5>
+                {/* </Typography> */}
+                
+                <p>
+               
+                ${this.props.productPrice}
+                
+                {/* Stock: {this.props.stock} */}
+                
+                {/* Info: {this.props.productInfo} */}
+
+                {/* <Button id = "test" onClick = {this.removeQuantity}>
                  -
                 </Button>
-                <div className= "quantity">
-                {this.state.amtPurchased}
-                </div>
-                <Button id = "test" onClick = {this.addQuantity}>
-                 +
-                </Button>
+                
+               {this.state.amtPurchased}
+                
+                 <Button id = "test" onClick = {this.addQuantity}>
+                  +
+                 </Button> */}
               
 
-              <Button size="small" color="primary" onClick = {this.addItem}>
-                Add To Cart
-              </Button>
+          <Button size="small" color="primary" onClick = {this.addItem}>
+              Add To Cart
+             </Button>
 
-              <Button size="small" color="primary" onClick = {this.updateVendor}>
-                <Link to = "/vendorProducts"> More From Vendor </Link>
-              </Button>
+             <Button size="small" color="primary" onClick = {this.updateVendor}>
+             <Link to = "/vendorProducts"> More From Vendor </Link>
+               </Button>
+               
+               </p>
+               </div>
+              {/* </CardContent>
+      </Card> */}
+      </div>
+      </Grid>
 
-              <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
-                <DialogContent>
-                  <DialogContentText id = "alert-dialog-description">
-                    {this.state.alertMessage}
-                  </DialogContentText>
-                </DialogContent>
-                <DialogActions>
-                  <Button onClick = {this.handleClose} color = "primary">
-                    Ok
-                  </Button>
-                </DialogActions>
-              </Dialog>
-            </CardActions>
-          </Card>
-        </Grid>
+        // <Grid item xs = {4} spacing = {2}> 
+        // {/* <Grid container item xs={12} spacing={24}></Grid> */}
+        //   <Card className= "card">
+        //     <CardActionArea>
+        //       <CardMedia className = "media" />
+        //       <div className="resize">
+        //       <img src={require('../../images/test_shirt1.png')} width="60%" height="60%"/>
+        //       </div>
+        //       {/* <img src = {test}/> */}
+        //       <CardContent>
+        //         {/* <Typography gutterBottom variant="h5" component="h2"> */}
+        //        <h5>
+        //           {this.props.productName}
+        //           </h5>
+        //         {/* </Typography> */}
+        //         <Typography component="p">
+        //           Price: ${this.props.productPrice}
+        //         </Typography>
+        //         <Typography component="p">
+        //           Stock: {this.props.stock}
+        //         </Typography>
+        //         <Typography component="p">
+        //           Info: {this.props.productInfo}
+        //         </Typography>
+        //       </CardContent>
+        //     </CardActionArea>
+        //     <CardActions>
+        //         <Button id = "test" onClick = {this.removeQuantity}>
+        //          -
+        //         </Button>
+        //         <div className= "quantity">
+        //         {this.state.amtPurchased}
+        //         </div>
+        //         <Button id = "test" onClick = {this.addQuantity}>
+        //          +
+        //         </Button>
+              
+
+        //       <Button size="small" color="primary" onClick = {this.addItem}>
+        //         Add To Cart
+        //       </Button>
+
+        //       <Button size="small" color="primary" onClick = {this.updateVendor}>
+        //         <Link to = "/vendorProducts"> More From Vendor </Link>
+        //       </Button>
+
+        //       <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
+        //         <DialogContent>
+        //           <DialogContentText id = "alert-dialog-description">
+        //             {this.state.alertMessage}
+        //           </DialogContentText>
+        //         </DialogContent>
+        //         <DialogActions>
+        //           <Button onClick = {this.handleClose} color = "primary">
+        //             Ok
+        //           </Button>
+        //         </DialogActions>
+        //       </Dialog>
+        //     </CardActions>
+        //   </Card>
+        // </Grid>
     
     )
   }
