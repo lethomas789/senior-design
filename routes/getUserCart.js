@@ -391,6 +391,68 @@ router.post('/updateCart', (req,res) => {
   });
 });
 
+/**
+ * Clears cart of a user.
+ * 
+ * @param user - email for user whose cart being cleared
+ */
+router.delete('/clearCart', (req, res) => {
+  if (req.body.params) {
+    var user = req.body.params.user;
+  }
+  else {
+    var user = req.body.user;
+  }
+
+  if (!user) {
+    console.log('Error, missing request params in clearCart')
+    return res.status(200).json({
+      success: false,
+      message: 'Missing request params in clearCart'
+    });
+  }
+
+  let cartRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems');
+  cartRef.get().then(snapshot => {
+    if (snapshot.empty) {
+      console.log('User cart successfully cleared.');
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully cleared cart.'
+      });
+    }
+
+    // do a batch delete on all cartItems
+    var batch = db.batch();
+
+    snapshot.forEach(doc => {
+      let itemRef = cartRef.doc(doc.id);
+      batch.delete(itemRef);
+    });
+
+    batch.commit().then(() => {
+      console.log('User cart successfully cleared.');
+      return res.status(200).json({
+        success: true,
+        message: 'Successfully cleared cart.'
+      });
+    })
+    .catch(err => {
+      console.log('Server error in batch delete of user cart:', err);
+      return res.status(200).json({
+        success: false,
+        message: 'server error in batch delete of user cart: ' + err
+      });
+    })
+  })
+  .catch(err => {
+    console.log('Server error in deleting cart:', err);
+    return res.status(200).json({
+      success: false,
+      message: 'Server error in deleting cart: ' + err
+    });
+  });
+});
 
 
 module.exports = router;

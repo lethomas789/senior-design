@@ -96,6 +96,8 @@ router.post('/', (req, res) => {
         })
       });  // end bcrypt.genSalt
 
+      /*
+      // NOTE: no longer needed/used
       // create cart for user with cartID == userID, then update to carts root collection
       let cartRef = db.collection('users').doc(email).collection('cart');
 
@@ -107,6 +109,7 @@ router.post('/', (req, res) => {
 
       // set empty cart Data
       cartRef.doc(email).set(cartData);
+      */
 
       // cartItems subcollection will be made when user adds something to cart;
       // see getUserCart/addItems; frontend will need to do checking for empty
