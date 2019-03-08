@@ -397,11 +397,12 @@ router.post('/updateCart', (req,res) => {
  * @param user - email for user whose cart being cleared
  */
 router.delete('/clearCart', (req, res) => {
+  //params is in query parameter
   if (req.body.params) {
     var user = req.body.params.user;
   }
   else {
-    var user = req.body.user;
+    var user = req.query.user;
   }
 
   if (!user) {

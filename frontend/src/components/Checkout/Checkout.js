@@ -96,11 +96,11 @@ class Checkout extends Component {
 
   onSuccess = (payment) => {
     console.log("Payment successful!", payment);
-    console.log(this.props.cart);
     this.props.updateSelectedVendor(this.props.cart[0].vid);
 
     const apiURL = "/api/orders";
 
+    //make post request to orders
     axios.post(apiURL, {
       params:{
         items: this.state.paymentOptions.transactions[0].item_list.items,
@@ -115,11 +115,28 @@ class Checkout extends Component {
       //on successful payment
       if(res.data.success === true){
         alert(res.data.message);
-        //when payment is successfully processed, clear cart and set total to 0
-        this.props.emptyCartOnPayment();
-        this.props.clearTotalOnPayment(0);
-      }
 
+        //clear cart on server
+        const clearcartURL = "/api/getUserCart/clearCart";
+        axios.delete(clearcartURL, {
+          params:{
+            user: this.props.user
+          }
+        })
+        .then(res => {
+          if(res.data.success === true){
+            //when payment is successfully processed, clear cart and set total to 0
+            this.props.emptyCartOnPayment();
+            this.props.clearTotalOnPayment(0);
+          }
+          else{
+            alert("error with server");
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
+      }
       else{
         alert("Error with sending order");
       }
