@@ -38,11 +38,13 @@ class Login extends Component{
         this.getCart = this.getCart.bind(this);
         this.sendLogin = this.sendLogin.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleEnter = this.handleEnter.bind(this);
     }
 
     //get logged in user's cart info
     getCart(){
-      const apiURL = "http://localhost:4000/api/getUserCart";
+   //   const apiURL = "http://localhost:4000/api/getUserCart"
+      const apiURL = "/api/getUserCart";
       axios.get(apiURL, {
         params:{
           user: this.state.email
@@ -63,8 +65,9 @@ class Login extends Component{
             progressValue: 50,
             progressVariant: "indeterminate"
         });
-        const apiURL = "http://localhost:4000/api/login";
-        axios.post(apiURL, {
+        //const apiURL = "http://localhost:4000/api/login";
+        const apiURL = "/api/login";
+	axios.post(apiURL, {
             params:{
               email: this.state.email,
               password: this.state.password
@@ -95,7 +98,7 @@ class Login extends Component{
                 //after determining user is an admin, get object list of user's active vendors
                 console.log("admin login", res.data);
 
-                const vendorURL = "http://localhost:4000/api/adminUser";
+                const vendorURL = "/api/adminUser";
                 axios.get(vendorURL, {
                     params:{
                         user: this.state.email
@@ -153,6 +156,14 @@ class Login extends Component{
         }
     }
 
+    //handle enter key being pressed
+    handleEnter(e){
+        var key = e.keyCode;
+        if(key === 13){
+            this.sendLogin();
+        }
+    }
+
     render(){
         const { classes } = this.props;
         return(
@@ -166,6 +177,7 @@ class Login extends Component{
                             label="Email"
                             required="true"
                             onChange={(event) => this.setState({ email: event.target.value })}
+                            onKeyDown = {this.handleEnter}
                             />
                         </div>
                         <div className = "textForm" id="row">
@@ -174,10 +186,11 @@ class Login extends Component{
                             label="Password"
                             required="true"
                             onChange={(event) => this.setState({ password: event.target.value })}
+                            onKeyDown = {this.handleEnter}
                             />
                         </div>
                         <div className = "pushDown">
-                        <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
+                        <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
                     </Paper>
                     

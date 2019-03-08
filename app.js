@@ -31,10 +31,7 @@ app.use(cors());
 //serve react files
 app.use(express.static(path.join(__dirname, '/frontend/build')));
 
-//fix react app crashing on refresh
-// app.get('/*', (req,res) => {
-//   res.sendFile(path.join(__dirname + '/frontend/build/index.html'))
-// })
+
 
 //routes
 const router = express.Router();
@@ -66,10 +63,15 @@ app.use('/api/paypalSandbox', paypalSandbox);
 app.use('/api/orders', orders);
 app.use('/api/getProductInfo', getProductInfo);
 
+//fix react app crashing on refresh
+app.get('*', (req,res) => {
+  res.sendFile(path.join(__dirname + '/frontend/build/index.html'))
+})
+
 db = admin.firestore();
 // TODO vars
-// var midnightSchedule = "59 23 * * *";
-var midnightSchedule = "39 16 * * *";
+var midnightSchedule = "59 23 * * *";
+// var midnightSchedule = "52 16 * * *";
 cron.schedule(midnightSchedule, function() {
   console.log('------------------------');
   console.log('Running Cron Job');
@@ -84,34 +86,34 @@ cron.schedule(midnightSchedule, function() {
       .where('seenByVendor', '==', false)
       .orderBy('date','asc')
       .get().then(ordersSnapshot => {
-        let orders = [];
-        let orderCount = 0;
-        ordersSnapshot.forEach(odoc => {
-          odoc.update({seenByVendor: true});
+        // do not send emails if no new orders
+        if (!ordersSnapshot.empty) {
+          let orders = [];
+          let orderCount = 0;
+          ordersSnapshot.forEach(odoc => {
+            db.collection('orders').doc(odoc.id).update({seenByVendor: true});
 
-          /*
-          let orderData = {
-            // have to call toDate on firestore data or else errors
-            date: odoc.data().date.toDate(),
-            items: odoc.data().items,
-            totalPrice: odoc.data().totalPrice,
-            paid: odoc.data().paid,
-            firstName: odoc.data().name.firstName,
-            lastName: odoc.data().name.lastName,
-            oid: odoc.data().oid,
-            pickedUp: odoc.data().pickedUp,
-            email: odoc.data().email
-          };
-          orders.push(orderData);
-          */
+            /*
+            let orderData = {
+              // have to call toDate on firestore data or else errors
+              date: odoc.data().date.toDate(),
+              items: odoc.data().items,
+              totalPrice: odoc.data().totalPrice,
+              paid: odoc.data().paid,
+              firstName: odoc.data().name.firstName,
+              lastName: odoc.data().name.lastName,
+              oid: odoc.data().oid,
+              pickedUp: odoc.data().pickedUp,
+              email: odoc.data().email
+            };
+            orders.push(orderData);
+            */
 
-          // NOTE: for our own sanity, we are just gonna send a count of items
-          // and a link to order history page.
-          orderCount += 1;
-        });
+            // NOTE: for our own sanity, we are just gonna send a count of items
+            // and a link to order history page.
+            orderCount += 1;
+          });
 
-        // dont send email if no new orders
-        if (orderCount > 0) {
           // once obtained the orders
           let emailSubject = "You've got new orders from ECS193 E-commerce"
 
@@ -142,25 +144,24 @@ cron.schedule(midnightSchedule, function() {
               }
               */
             }
-        });
+          });
 
-        // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
-        let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
+          // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
+          let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
 
-        vendorEmail.send({
-          template: 'ordersNotification',
-          locals: {
-            location: 'Test club location here.',
-            emailIntro: emailIntro,
-          }
-        })
-        .then(() => {
-          console.log('Finished Sending Email to:', vdoc.id);
-        })
-        .catch(console.log);
+          vendorEmail.send({
+            template: 'ordersNotification',
+            locals: {
+              location: 'Test club location here.',
+              emailIntro: emailIntro,
+            }
+          })
+          .then(() => {
+            console.log('Finished Sending Email to:', vdoc.id);
+          })
+          .catch(console.log);
 
-        }
-
+      }
 
       })
       .catch(err => {
@@ -169,13 +170,13 @@ cron.schedule(midnightSchedule, function() {
 
     });  // end forEach vendor
 
+
   })
   .catch(err => {
     console.log('Server error in getting vendors for emailing:', err);
   });
 
 });
-
 
 // listen to requests on port
 // choose port based on environment

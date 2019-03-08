@@ -36,6 +36,7 @@ class Signup extends Component {
     }
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
+    this.handleEnter = this.handleEnter.bind(this);
   }
 
   //handle dialog closing
@@ -67,7 +68,7 @@ class Signup extends Component {
       }
 
       else{
-        const apiURL = "http://localhost:4000/api/signup";
+        const apiURL = "/api/signup";
         //send signup request
         axios.post(apiURL, {
           params: {
@@ -104,6 +105,14 @@ class Signup extends Component {
         })
       }    
     }
+
+    //handle enter key being pressed
+    handleEnter(e){
+      var key = e.keyCode;
+      if(key === 13){
+          this.sendSignup();
+      }
+    }
   
   render() {
     const { classes } = this.props;
@@ -117,6 +126,7 @@ class Signup extends Component {
                 label="First Name"
                 required="true"
                 onChange={(event) => this.setState({ firstName: event.target.value })}
+                onKeyDown = {this.handleEnter}
               />
             </div>
             <div className = "textForm" id="row">
@@ -124,6 +134,7 @@ class Signup extends Component {
                 label="Last Name"
                 required="true"
                 onChange={(event) => this.setState({ lastName: event.target.value })}
+                onKeyDown = {this.handleEnter}
               />
             </div>
             <div className = "textForm" id="row">
@@ -131,6 +142,7 @@ class Signup extends Component {
                 label="Email"
                 required="true"
                 onChange={(event) => this.setState({ email: event.target.value })}
+                onKeyDown = {this.handleEnter}
               />
             </div>
             <div className = "textForm" id="row">
@@ -139,6 +151,7 @@ class Signup extends Component {
                 label="Password"
                 required="true"
                 onChange={(event) => this.setState({ password: event.target.value })}
+                onKeyDown = {this.handleEnter}
               />
             </div>
             <div className = "textForm" id="row">
@@ -147,10 +160,11 @@ class Signup extends Component {
                 label="Confirm Password"
                 required="true"
                 onChange={(event) => this.setState({ confirmPassword: event.target.value })}
+                onKeyDown = {this.handleEnter}
               />
             </div>
             <div className = "pushDown">
-            <Button variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
+              <Button variant = "contained" color = "primary" onClick = {this.sendSignup}> Sign Up  </Button>
             </div>
           </Paper>
 

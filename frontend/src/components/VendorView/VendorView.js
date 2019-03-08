@@ -17,7 +17,7 @@ class VendorView extends Component {
   }
 
   componentDidMount(){
-    const apiURL = "http://localhost:4000/api/getVendorProducts";
+    const apiURL = "/api/getVendorProducts";
     axios.get(apiURL, {
       params:{
         vendor: this.props.vendor

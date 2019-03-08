@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 import CartItem from '../CartItem/CartItem';
 import Checkout from '../Checkout/Checkout';
 import { Link } from 'react-router-dom';
+import EmptyItem from '../EmptyItem/EmptyItem';
 
 
 //component to display user's cart
@@ -46,23 +47,45 @@ class Cart extends Component {
 
   //render cart items to cart view
   render() {
-    const cart = this.props.items.map(result => {
-      return <CartItem key = {result.productName} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
-    });
+  
+    //render items in cart
+    if (this.props.items.length > 0){
 
-    return(
-      <div>
-        <Grid container direction="column">
-          <h1> <Link to = "/orderHistory"> Order History </Link> </h1>
-          <h1> Current Cart: </h1>
-        </Grid>
+      //map each entry in item array to render a component
+      const cart = this.props.items.map(result => {
+        return <CartItem key = {result.productName} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
+      });
 
-        <Grid container direction="column" justify-xs-space-evenly>
-          <Checkout total = {this.state.total}/>
-          {cart}
-        </Grid>
-      </div>
-    );
+      return(
+        <div>
+          <Grid container direction="column">
+            <h1> <Link to = "/orderHistory"> Order History </Link> </h1>
+            <h1> Current Cart: </h1>
+          </Grid>
+  
+          <Grid container direction="column" justify-xs-space-evenly>
+            <Checkout total = {this.state.total}/>
+            {cart}
+          </Grid>
+        </div>
+      );
+    }
+
+    //empty cart case
+    else{
+      return(
+        <div>
+          <Grid container direction="column">
+            <h1> <Link to = "/orderHistory"> Order History </Link> </h1>
+            <h1> Current Cart: </h1>
+          </Grid>
+  
+          <Grid container direction="column" justify-xs-space-evenly>
+            <Checkout total = {this.state.total}/>
+          </Grid>
+        </div>
+      );
+    }
   }
 }
 

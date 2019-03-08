@@ -26,7 +26,7 @@ class CartItem extends Component {
 
   //remove item from user's cart
   removeItem(){
-    const apiURL = "http://localhost:4000/api/getUserCart/deleteItems";
+    const apiURL = "/api/getUserCart/deleteItems";
     axios.post(apiURL, {
       params:{
         user: this.props.user,
@@ -34,7 +34,7 @@ class CartItem extends Component {
       }
     })
     .then(res => {
-      const getCart = "http://localhost:4000/api/getUserCart";
+      const getCart = "/api/getUserCart";
       //after successful deletion, get updated user's cart
       axios.get(getCart, {
         params:{

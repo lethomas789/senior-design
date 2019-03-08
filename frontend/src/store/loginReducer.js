@@ -44,16 +44,17 @@ const reducer = (state = initialState, action) => {
             }
         //if user logs out, update state
         case actions.LOGGED_OUT:
-            return{
-                ...state,
-                login: false,
-                text: "Login",
-                email: '',
-                isAdmin: false,
-                vendorID: '',
-                adminsOf: state.adminsOf.length = 0,
-                currentVendor: ''
-            }
+        return initialState
+            // return{
+            //     ...state,
+            //     login: false,
+            //     text: "Login",
+            //     email: '',
+            //     isAdmin: false,
+            //     vendorID: '',
+            //     adminsOf: state.adminsOf.length = 0,
+            //     currentVendor: ''
+            // }
         //update vendor id of user if admin
         case actions.UPDATE_VENDOR_ID:
             return{
