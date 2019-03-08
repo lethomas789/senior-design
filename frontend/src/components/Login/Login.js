@@ -38,6 +38,7 @@ class Login extends Component{
         this.getCart = this.getCart.bind(this);
         this.sendLogin = this.sendLogin.bind(this);
         this.handleClose = this.handleClose.bind(this);
+        this.handleEnter = this.handleEnter.bind(this);
     }
 
     //get logged in user's cart info
@@ -155,6 +156,14 @@ class Login extends Component{
         }
     }
 
+    //handle enter key being pressed
+    handleEnter(e){
+        var key = e.keyCode;
+        if(key === 13){
+            this.sendLogin();
+        }
+    }
+
     render(){
         const { classes } = this.props;
         return(
@@ -168,6 +177,7 @@ class Login extends Component{
                             label="Email"
                             required="true"
                             onChange={(event) => this.setState({ email: event.target.value })}
+                            onKeyDown = {this.handleEnter}
                             />
                         </div>
                         <div className = "textForm" id="row">
@@ -176,10 +186,11 @@ class Login extends Component{
                             label="Password"
                             required="true"
                             onChange={(event) => this.setState({ password: event.target.value })}
+                            onKeyDown = {this.handleEnter}
                             />
                         </div>
                         <div className = "pushDown">
-                        <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
+                        <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
                     </Paper>
                     

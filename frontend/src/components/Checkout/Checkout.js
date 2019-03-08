@@ -81,30 +81,26 @@ class Checkout extends Component {
 
     paypalTransactions.item_list.items = paypalItems;
     paypalTransactions.amount.currency = this.state.currency;
-    paypalTransactions.amount.total = String(this.props.total.toFixed(2));
-    //paypalTransactions.amount.total = String(this.state.total.toFixed(2));
+    paypalTransactions.amount.total = String(this.props.total);
 
     //update payment options to be list of paypal items
-    console.log(this.state.paymentOptions.transactions);
     paypalTransactionsArray.push(paypalTransactions);
     this.state.paymentOptions.transactions = paypalTransactionsArray;
   }
 
   //update payment option on update
   componentDidUpdate(){
-    console.log("THIS IS THE TOTAL PLEASE FIX STATE", this.props.total);
     this.state.paymentOptions.transactions[0].amount.total = this.props.total;
     this.state.paymentOptions.transactions[0].amount.total = String(this.props.total);
-    console.log("testing payment options ", this.state.paymentOptions);
   }
 
   onSuccess = (payment) => {
     console.log("Payment successful!", payment);
-    console.log(this.props.cart);
     this.props.updateSelectedVendor(this.props.cart[0].vid);
 
     const apiURL = "/api/orders";
 
+    //make post request to orders
     axios.post(apiURL, {
       params:{
         items: this.state.paymentOptions.transactions[0].item_list.items,
@@ -116,10 +112,31 @@ class Checkout extends Component {
       }
     })
     .then(res => {
+      //on successful payment
       if(res.data.success === true){
         alert(res.data.message);
-      }
 
+        //clear cart on server
+        const clearcartURL = "/api/getUserCart/clearCart";
+        axios.delete(clearcartURL, {
+          params:{
+            user: this.props.user
+          }
+        })
+        .then(res => {
+          if(res.data.success === true){
+            //when payment is successfully processed, clear cart and set total to 0
+            this.props.emptyCartOnPayment();
+            this.props.clearTotalOnPayment(0);
+          }
+          else{
+            alert("error with server");
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
+      }
       else{
         alert("Error with sending order");
       }
@@ -176,7 +193,7 @@ const mapStateToProps = state => {
     items: state.cart.items,
     login: state.auth.login,
     user: state.auth.user,
-  //  total: state.cart.total,
+    total: state.cart.total,
     cart: state.cart.items
   }
 }
@@ -193,6 +210,15 @@ const mapDispatchToProps = dispatch => {
     updateSelectedVendor: (currentVendor) => dispatch({
       type: actions.GET_VENDOR_PRODUCTS,
       vendor: currentVendor
+    }),
+
+    emptyCartOnPayment: () => dispatch({
+      type: actions.EMPTY_CART
+    }),
+
+    clearTotalOnPayment: (value) => dispatch({
+      type: actions.UPDATE_TOTAL,
+      total: value
     })
   }
 }
