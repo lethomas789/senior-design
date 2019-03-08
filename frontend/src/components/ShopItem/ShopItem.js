@@ -143,13 +143,14 @@ class ShopItem extends Component {
   render() {
     return (
       <Grid item xs = {4} spacing = {2}>
-      <Card className = "card">
-      <CardActionArea>
-      <CardMedia className = "media" />
-              
-        <img src={require('../../images/test_shirt1.png')} width="60%" height="60%"/>
-        </CardActionArea>
-      </Card>
+      <div className = "centerPage">
+     
+              <div className = "box">
+              <div className = "center">
+        <img src={require('../../images/test_shirt1.png')} width="80%" height="80%"/>
+        
+        </div>
+        </div>
       {/* <Card id = "background" className = "smallCard">
       <CardContent> */}
                 {/* <Typography gutterBottom variant="h5" component="h2"> */}
@@ -161,21 +162,21 @@ class ShopItem extends Component {
                 
                 <p>
                
-                Price: ${this.props.productPrice}
+                ${this.props.productPrice}
                 
-                Stock: {this.props.stock}
+                {/* Stock: {this.props.stock} */}
                 
-                Info: {this.props.productInfo}
+                {/* Info: {this.props.productInfo} */}
 
-                <Button id = "test" onClick = {this.removeQuantity}>
+                {/* <Button id = "test" onClick = {this.removeQuantity}>
                  -
                 </Button>
-                 <div className= "quantity">
+                
                {this.state.amtPurchased}
-                 </div>
+                
                  <Button id = "test" onClick = {this.addQuantity}>
                   +
-                 </Button>
+                 </Button> */}
               
 
           <Button size="small" color="primary" onClick = {this.addItem}>
@@ -190,6 +191,7 @@ class ShopItem extends Component {
                </div>
               {/* </CardContent>
       </Card> */}
+      </div>
       </Grid>
 
         // <Grid item xs = {4} spacing = {2}> 
