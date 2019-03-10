@@ -103,7 +103,7 @@ class AddProduct extends Component {
   //add product that is an apparel type
   //add product to vendor's collection in database
   addProduct(){ 
-    if(this.state.apparel === false){
+    if(this.state.apparel === true){
       const apiURL = "/api/adminProducts/addNewProduct";
       axios.post(apiURL, {
         params:{
@@ -114,7 +114,7 @@ class AddProduct extends Component {
           productPrice: this.state.productPrice,
           pid: this.state.productID,
           stock: this.state.stock,
-          apparel: this.state.apparel,
+          isApparel: this.state.apparel,
           s_stock: this.state.small,
           m_stock: this.state.medium,
           l_stock: this.state.large,
@@ -142,11 +142,12 @@ class AddProduct extends Component {
           productName: this.state.productName,
           productPrice: this.state.productPrice,
           stock: this.state.stock,
-          pid: this.state.productID
+          pid: this.state.productID,
+          isApparel: this.state.apparel
         }
       })
       .then(res => {
-        alert(res.data.message);
+        alert(res.data.message);  
         this.uploadFiles();
       })
       .catch(err => {
