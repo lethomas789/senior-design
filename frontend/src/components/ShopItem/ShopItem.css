@@ -47,6 +47,7 @@ h5 {
 .box {
   background-color: transparent;
   width: 300px;
+  min-height: 300px;
   box-sizing: content-box;  
   border: 1px solid rgba(211, 211, 211, 0.95);
   padding: 25px;
