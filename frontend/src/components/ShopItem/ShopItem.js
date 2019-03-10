@@ -147,7 +147,7 @@ class ShopItem extends Component {
      
               <div className = "box">
               <div className = "center">
-        <img src={require('../../images/test_shirt1.png')} width="80%" height="80%"/>
+        <img src={require('../../images/test_shirt1.png')} width="100%" height="100%"/>
         
         </div>
         </div>
