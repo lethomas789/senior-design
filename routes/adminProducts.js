@@ -31,6 +31,9 @@ router.post('/addNewProduct', (req, res) => {
     }
     // stock is total number of items
     var stock = Number(req.body.params.stock);
+
+    // frontend sends pid here b/c we want to save images under a pid
+    var pid = req.body.params.pid;
   }
   else {
     var vid = req.body.vid;
@@ -56,6 +59,9 @@ router.post('/addNewProduct', (req, res) => {
     }
     // stock is total number of items combined
     var stock = Number(req.body.stock);      
+
+    // frontend sends pid here b/c we want to save images under a pid
+    var pid = req.body.pid;
   }
 
   /*
@@ -134,7 +140,9 @@ router.post('/addNewProduct', (req, res) => {
           purchasedStock: 0,
 
           lastUpdate: lastUpdate,
-          lastUpdateUser: lastUpdateUser
+          lastUpdateUser: lastUpdateUser,
+
+          pid: pid
         };
       }
       // else, just save stock
@@ -151,15 +159,17 @@ router.post('/addNewProduct', (req, res) => {
           purchasedStock: 0,
 
           lastUpdate: lastUpdate,
-          lastUpdateUser: lastUpdateUser
+          lastUpdateUser: lastUpdateUser,
+
+          pid: pid
         };
       }
 
-      db.collection('products').add(productData)
+      db.collection('products').doc(pid).set(productData)
       .then(ref => {
-        console.log('Added new product with ID: ', ref.id);
+        // console.log('Added new product with ID: ', ref.id);
 
-        db.collection('products').doc(ref.id).update({ pid: ref.id });
+        // db.collection('products').doc(ref.id).update({ pid: ref.id });
 
         console.log('Succesfully added new product.');
         return res.status(200).json({
