@@ -19,6 +19,7 @@ import firebase from 'firebase';
 import FileUploader from 'react-firebase-file-uploader';
 import firebaseConfig from '../../config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json';
 
+//config file for firebase
 const config = {
   apiKey: firebaseConfig.private_key,
   authDomain: "ecs193-ecommerce.firebaseapp.com",
@@ -26,10 +27,10 @@ const config = {
   storageBucket: "ecs193-ecommerce.appspot.com"
 };
 
-const imageLocation = "images/vendors/";
-
 firebase.initializeApp(config);
 
+//image location for firestore upload
+const imageLocation = "images/vendors";
 
 class AddProduct extends Component {
   constructor(props){
@@ -41,17 +42,17 @@ class AddProduct extends Component {
       stock: '',
       productID: '',
       isApparel: false,
-      small: 0,
-      medium: 0,
-      large: 0,
-      xsmall: 0,
-      xlarge: 0,
+      small: '0',
+      medium: '0',
+      large: '0',
+      xsmall: '0',
+      xlarge: '0',
       apparelCSS: "hideApparelSizes",
-      images: []
+      images: [],
+      imageNames:[]
     }
     this.addProduct = this.addProduct.bind(this);
     this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
-    // this.handleFileChange = this.handleFileChange.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
   }
 
@@ -65,15 +66,27 @@ class AddProduct extends Component {
       // .then(url => this.setState({ avatarURL: url }));
   };
 
+  //detects when an image is uploaded from user
   //change number of files to upload
   handleFileChange = (event) => {
+    //extract file from upload component
     const { target: { files } } = event;
+
+    //store image names
     const filesToStore = [];
+    //store image files
+    const actualImages = [];
     console.log(files);
     console.log(files[0]);
 
-    filesToStore.push(files[0]);
+    //store image name as an object
+    let imageName = {};
+    imageName.name = files[0].name;
 
+    //store to arrays
+    filesToStore.push(imageName);
+    actualImages.push(files[0]);
+    
     //generate vid to match product with image
     let randomText = '';
     const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
@@ -87,13 +100,16 @@ class AddProduct extends Component {
     // });
 
     this.setState({
-      images: filesToStore,
-      productID: randomText
+      images: actualImages,
+      productID: randomText,
+      imageNames: filesToStore
     });
   };
 
   //upload images to database
   uploadFiles(){
+
+    //for each file in images array, upload to database
     const files = this.state.images;
     files.forEach(file => {
       this.fileUploader.startUpload(file);
@@ -103,7 +119,9 @@ class AddProduct extends Component {
   //add product that is an apparel type
   //add product to vendor's collection in database
   addProduct(){ 
-    if(this.state.apparel === true){
+
+    //handle if item being added is an apparel
+    if(this.state.isApparel === true){
       const apiURL = "/api/adminProducts/addNewProduct";
       axios.post(apiURL, {
         params:{
@@ -114,17 +132,22 @@ class AddProduct extends Component {
           productPrice: this.state.productPrice,
           pid: this.state.productID,
           stock: this.state.stock,
-          isApparel: this.state.apparel,
+          isApparel: this.state.isApparel,
           s_stock: this.state.small,
           m_stock: this.state.medium,
           l_stock: this.state.large,
           xs_stock: this.state.xsmall,
-          xl_stock: this.state.xlarge
+          xl_stock: this.state.xlarge,
+          productPicture: this.state.imageNames
         }
       })
       .then(res => {
-        alert(res.data.message);
-        this.uploadFiles();
+        //upload image only on success
+        if(res.data.success === true){
+          this.uploadFiles();
+          alert(res.data.message);
+        }
+        
       })
       .catch(err => {
         alert(err);
@@ -143,12 +166,16 @@ class AddProduct extends Component {
           productPrice: this.state.productPrice,
           stock: this.state.stock,
           pid: this.state.productID,
-          isApparel: this.state.apparel
+          isApparel: this.state.isApparel,
+          productPicture: this.state.imageNames
         }
       })
       .then(res => {
-        alert(res.data.message);  
-        this.uploadFiles();
+        //upload image only on success
+        if(res.data.success === true){
+          this.uploadFiles();
+          alert(res.data.message);
+        }  
       })
       .catch(err => {
         alert(err);
@@ -193,13 +220,8 @@ class AddProduct extends Component {
               />
             </div>
 
-            <FileUploader accept="image/*" onChange = {this.handleFileChange}
-              storageRef =  {firebase.storage().ref(imageLocation + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-              multiple 
-            />
-
             <FormControl component="fieldset">
-              <FormLabel component="legend">Product Type </FormLabel>
+              <FormLabel component="legend">Select Product Type </FormLabel>
               <RadioGroup
                 aria-label="gender"
                 name="gender2"
@@ -224,7 +246,7 @@ class AddProduct extends Component {
               </RadioGroup>
             </FormControl>
 
-            {/* add stock for apparel sizes */}
+            {/* add quantity for apparel sizes, toggel visibility if selected */}
             <div className = {this.state.apparelCSS}>
 
               <div className = "textForm" id="row">
@@ -265,6 +287,15 @@ class AddProduct extends Component {
                   onChange={(event) => this.setState({ xlarge: event.target.value })}
                 />
               </div>
+            </div>
+
+            <div className = "textForm" id = "row">
+              <h5 id = "uploadImageText"> Upload Image </h5>
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
             </div>
 
             <Button variant = "contained" color = "primary" onClick = {this.addProduct}> Add Product  </Button>

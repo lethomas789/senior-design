@@ -17,7 +17,6 @@ router.post('/addNewProduct', (req, res) => {
     var productName = req.body.params.productName;
     var productPicture = req.body.params.productPicture;
     var productPrice = Number(req.body.params.productPrice);
-
     var isApparel = false;  // init to be false
 
     // if apparel === true, multiple types of stock
@@ -44,7 +43,6 @@ router.post('/addNewProduct', (req, res) => {
     var productPicture = req.body.productPicture;
     var productPrice = Number(req.body.productPrice);
     var stock = Number(req.body.stock);
-
     var isApparel = false;  // init to be false
 
     // if apparel === true, multiple types of stock
@@ -55,7 +53,6 @@ router.post('/addNewProduct', (req, res) => {
       var m_stock = Number(req.body.m_stock);
       var l_stock = Number(req.body.l_stock);
       var xl_stock = Number(req.body.xl_stock);
-
     }
     // stock is total number of items combined
     var stock = Number(req.body.stock);      
@@ -107,10 +104,12 @@ router.post('/addNewProduct', (req, res) => {
         pictures.push('https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/shop.png?alt=media');
       }
       // else, iterate through strings in array and save them
+      //made edit, uploading name of image files to construct image url for product, requires image name
+      //made edit, extract file name from image name array
       else {
         for(let i = 0; i < productPicture.length; ++i) {
           let link =
-          `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${pid}%2F${productPicture[i]}?alt=media`;
+          `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${pid}%2F${productPicture[i].name}?alt=media`;
 
           // TODO, figure out order of push, in terms of what order vendors want
           // to show their pics
