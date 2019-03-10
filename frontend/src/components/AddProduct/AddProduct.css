@@ -1,3 +1,11 @@
 .textForm{
   padding: 10px;
 }
+
+.hideApparelSizes{
+  display:none;
+}
+
+.showApparelSizes{
+  display:block;
+}
