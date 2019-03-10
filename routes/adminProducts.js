@@ -217,6 +217,10 @@ router.post('/addNewProduct', (req, res) => {
 
 /**
  * Gets product for admin to edit.
+ * 
+ * @param vid - vendor id
+ * @param pid - product id
+ * @param user - admin doing checking the admin product info
  */
 router.get('/getProduct', (req, res) => {
 
