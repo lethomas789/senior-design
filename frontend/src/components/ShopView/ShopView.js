@@ -5,6 +5,7 @@ import Grid from '@material-ui/core/Grid';
 import axios from 'axios';
 import { connect } from 'react-redux';
 import actions from '../../store/actions';
+import { banner } from '../../images/generic_club.jpg';
 
 class ShopView extends Component {
   constructor(props){
@@ -48,6 +49,9 @@ class ShopView extends Component {
       <div className = "grow">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
           <h1> Shop </h1>
+        
+          <img src={require('../../images/generic_club.jpg')} width="100%" height="100%"/>
+      
         </Grid>
 
         <Grid container spacing={24} direction="row" justify="flex-start" alignItems="center" justify-xs-space-evenly>
