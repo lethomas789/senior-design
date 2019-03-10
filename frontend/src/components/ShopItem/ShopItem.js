@@ -35,7 +35,8 @@ class ShopItem extends Component {
       amtPurchased: 1,
       vendorID: this.props.vendorID,
       open: false,
-      alertMessage: ''
+      alertMessage: '',
+      imageLink: this.props.imageSrc
     }
 
     //bind functions to component
@@ -78,19 +79,20 @@ class ShopItem extends Component {
 
     else{
       //update user's cart on server
-      var apiURL = "http://localhost:4000/api/getUserCart/addItems";
+      var apiURL = "/api/getUserCart/addItems";
       axios.post(apiURL, {
         params:{
           user: this.props.user,
           pid: this.state.pid,
           amtPurchased: this.state.amtPurchased,
-          vendorID: this.state.vendorID
+          vendorID: this.state.vendorID,
+          image: this.state.imageLink
         }
       })
       .then(res => {
         if(res.data.success === true){
           //after adding to item, get updated cart
-          const getCartURL = "http://localhost:4000/api/getUserCart";
+          const getCartURL = "/api/getUserCart";
           axios.get(getCartURL, {
             params:{
               user: this.props.user
@@ -147,8 +149,10 @@ class ShopItem extends Component {
      
               <div className = "box">
               <div className = "center">
-        <img src={require('../../images/test_shirt1.png')} width="100%" height="100%"/>
-        
+        {/* <img src={require('../../images/test_shirt1.png')} width="100%" height="100%"/> */}
+        <img src={this.props.imageSrc} width="100%" height="100%"/>
+
+      
         </div>
         </div>
       {/* <Card id = "background" className = "smallCard">

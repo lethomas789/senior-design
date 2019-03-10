@@ -50,10 +50,9 @@ class Cart extends Component {
   
     //render items in cart
     if (this.props.items.length > 0){
-
       //map each entry in item array to render a component
       const cart = this.props.items.map(result => {
-        return <CartItem key = {result.productName} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
+        return <CartItem key = {result.productName} imageSrc = {result.imageLink} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
       });
 
       return(

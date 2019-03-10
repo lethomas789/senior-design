@@ -78,7 +78,7 @@ class CartItem extends Component {
       <Grid item xs>
         <Card className= "card">
           <CardActionArea>
-            <CardMedia className = "media"/>
+            <img src={this.props.imageSrc} width="100%" height="100%"/>
             <CardContent>
               <Typography gutterBottom variant="h5" component="h2">
                 {this.props.productName}

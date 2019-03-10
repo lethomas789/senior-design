@@ -41,7 +41,7 @@ class ShopView extends Component {
 
   render() {
     const items = this.props.products.map(result => {
-      return <ShopItem key = {result.pid} vendorID = {result.vid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
+      return <ShopItem key = {result.pid} imageSrc = {result.productPicture[0]} vendorID = {result.vid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
     });
 
     return (
