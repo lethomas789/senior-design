@@ -101,9 +101,9 @@ class ShopItem extends Component {
     return (
       <Grid item xs = {4} spacing = {2}>
         <div className = "centerPage">
-          <div className = "box">
+          <div onClick = {this.showDetailed} className = "box">
             <div className = "center">
-              <img onClick = {this.showDetailed} src={this.props.imageSrc}  width="100%" height="100%"/>
+              <img src={this.props.imageSrc}  width="100%" height="100%"/>
             </div>
           </div>
 

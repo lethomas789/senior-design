@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import axios from 'axios';
 import Button from '@material-ui/core/Button';
 import './ShopItemDetailed.css';
+import ReactImageMagnify from 'react-image-magnify';
 
 class ShopItemDetailed extends Component {
   constructor(props){
@@ -16,11 +17,18 @@ class ShopItemDetailed extends Component {
       amtPurchased: 1,
       vid: '',
       productStock: '',
-      isApparel: false
+      isApparel: false,
+      s_stock: 0,
+      m_stock: 0,
+      l_stock: 0,
+      xs_stock: 0,
+      xl_stock: 0,
+      size: ''
     };
     this.addItem = this.addItem.bind(this);
     this.addQuantity = this.addQuantity.bind(this);
     this.removeQuantity = this.removeQuantity.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   //add item to user's cart
@@ -37,47 +45,86 @@ class ShopItemDetailed extends Component {
 
     //add to user's cart
     else{
-    //update user's cart on server
+      //update user's cart on server
       var apiURL = "/api/getUserCart/addItems";
-      axios.post(apiURL, {
-        params:{
-          user: this.props.user,
-          pid: this.props.pid,
-          amtPurchased: this.state.amtPurchased,
-          vendorID: this.state.vid,
-          image: this.state.imageLink,
-          isApparel: this.state.isApparel,
-          s_stock: 0,
-          m_stock: 0,
-          l_stock: 0,
-          xs_stock: 0,
-          xl_stock: 0
-        }
-      })
-      .then(res => {
-        if(res.data.success === true){
-          //after adding to item, get updated cart
-          const getCartURL = "/api/getUserCart";
-          axios.get(getCartURL, {
-            params:{
-              user: this.props.user
-            }
-          })
-          .then(res => {
-            //after getting cart info, update redux store container
-            this.props.updateItems(res.data.data);
-            alert("Item added to cart!");
-          })
-          .catch(err => {
-            alert(err);
-          })
-        }
-      })
-      .catch(err => {
-        alert(err);
-      })
-    }
-  }
+      //item added to user's cart is not an apparel
+      if(this.state.isApparel === false){
+        axios.post(apiURL, {
+          params:{
+            user: this.props.user,
+            pid: this.props.pid,
+            amtPurchased: this.state.amtPurchased,
+            vendorID: this.state.vid,
+            image: this.state.imageLink,
+            isApparel: this.state.isApparel,
+          }
+        })
+        .then(res => {
+          if(res.data.success === true){
+            //after adding to item, get updated cart
+            const getCartURL = "/api/getUserCart";
+            axios.get(getCartURL, {
+              params:{
+                user: this.props.user
+              }
+            })
+            .then(res => {
+              //after getting cart info, update redux store container
+              this.props.updateItems(res.data.data);
+              alert("Item added to cart!");
+            })
+            .catch(err => {
+              alert(err);
+            })
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
+      }
+
+      //item added to user's cart is an apparel
+      else{
+        axios.post(apiURL, {
+          params:{
+            user: this.props.user,
+            pid: this.props.pid,
+            amtPurchased: this.state.amtPurchased,
+            vendorID: this.state.vid,
+            image: this.state.imageLink,
+            isApparel: this.state.isApparel,
+            s_stock: this.state.s_stock,
+            m_stock: this.state.m_stock,
+            l_stock: this.state.l_stock,
+            xs_stock: this.state.xs_stock,
+            xl_stock: this.state.xl_stock,
+          }
+        })
+        .then(res => {
+          if(res.data.success === true){
+            //after adding to item, get updated cart
+            const getCartURL = "/api/getUserCart";
+            axios.get(getCartURL, {
+              params:{
+                user: this.props.user
+              }
+            })
+            .then(res => {
+              //after getting cart info, update redux store container
+              this.props.updateItems(res.data.data);
+              alert("Item added to cart!");
+            })
+            .catch(err => {
+              alert(err);
+            })
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
+      } //end of else statement for isApparel
+    } //end of else statement for adding to user's cart
+  } //end of addItem function
 
   //increase number of quantity to add to user's cart
   addQuantity(){
@@ -102,6 +149,13 @@ class ShopItemDetailed extends Component {
         amtPurchased: currentQuantity
       });
     }
+  }
+
+  //handle select when user selects shirt size
+  handleSelect(){
+    this.setState({
+      size: this.selectedSize.value
+    })
   }
 
   //load item info by calling getProductInfo api and render to screen
@@ -159,10 +213,21 @@ class ShopItemDetailed extends Component {
         <div className = "itemDetailed">        
           <h3> {this.state.productName} </h3>
           <div className = "itemInfo">
-            <div id = "imageContainer">
-              <img id = "detailedImage" src = {this.state.imageLink[0]}/>
-            </div>
-  
+            <ReactImageMagnify {...{
+              smallImage: {
+                  alt: 'Test Image',
+                  width:300,
+                  height:300,
+                  src: this.state.imageLink[0]
+              },
+              largeImage: {
+                  src: this.state.imageLink[0],
+                  width: 600,
+                  height: 900,
+                  enlargedImagePosition: 'beside'
+              }
+            }}/>
+
             <div id = "itemDescriptions">
               <p> <strong> Price: </strong> ${this.state.productPrice} </p>
               <p> <strong> Description:</strong> {this.state.productInfo} </p>
@@ -191,19 +256,66 @@ class ShopItemDetailed extends Component {
         <div className = "itemDetailed">        
           <h3> {this.state.productName} </h3>
           <div className = "itemInfo">
-            <div id = "imageContainer">
-              <img id = "detailedImage" src = {this.state.imageLink[0]}/>
-            </div>
+            <ReactImageMagnify {...{
+              smallImage: {
+                  alt: 'Test Image',
+                  width: 300,
+                  height: 300,
+                  src: this.state.imageLink[0]
+              },
+              largeImage: {
+                  src: this.state.imageLink[0],
+                  width: 600,
+                  height: 900,
+                  enlargedImagePosition: 'beside'
+              }
+            }}/>
   
             <div id = "itemDescriptions">
               <p> <strong> Price: </strong> ${this.state.productPrice} </p>
               <p> <strong> Description:</strong> {this.state.productInfo} </p>
-              <p> <strong> Stock:</strong> {this.state.productStock} </p>
+              {/* <p> <strong> Stock:</strong> {this.state.productStock} </p>
               <p> <strong> Small Stock: </strong> {this.state.s_stock} </p>
               <p> <strong> Medium Stock:</strong> {this.state.m_stock} </p>
               <p> <strong> Large Stock:</strong> {this.state.l_stock} </p>
               <p> <strong> X-Small Stock: </strong> {this.state.xs_stock} </p>
-              <p> <strong> X-Large Stock:</strong> {this.state.xl_stock} </p>
+              <p> <strong> X-Large Stock:</strong> {this.state.xl_stock} </p> */}
+              <div id = "selectShirtSize">
+                <p> <strong> Select Size: </strong> </p>
+                <select onChange = {this.handleSelect} ref = {select => {this.selectedSize = select}}>
+                  <option value = "small"> Small </option>
+                  <option value = "medium"> Medium </option>
+                  <option value = "large"> Large </option>
+                  <option value = "x-small"> X-Small </option>
+                  <option value = "x-large"> X-Large </option>
+                </select>
+                {/* <form ref = {select => {this.selectedSize = select}}>
+                  <label>
+                    Small
+                    <input type="radio" name="small" value="small"/> 
+                  </label>
+
+                  <label>
+                    Medium
+                    <input type="radio" name="small" value="small"/> 
+                  </label>
+
+                  <label>
+                    Large
+                    <input type="radio" name="small" value="small"/> 
+                  </label>
+
+                  <label>
+                    X-Small
+                    <input type="radio" name="small" value="small"/> 
+                  </label>
+
+                  <label>
+                    X-Large
+                  <input type="radio" name="small" value="small"/> 
+                  </label>
+                </form> */}
+              </div>
               <Button size="small" color="primary" onClick = {this.addItem}>
                 Add To Cart
               </Button>
