@@ -50,10 +50,10 @@ class ShopView extends Component {
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
           <h1> Shop </h1>          
           <div className = "hero-image">
-          <img src={require('../../images/generic_club.jpg')} width="100%" height="100%"/>
+          <img src={require('../../images/generic_club.jpg')} width="100%" height="50%"/>
           </div>
           <div class="hero-text">
-          <p>UC DAVIS CLUBS</p>
+          <p>UCD CLUBS</p>
           </div>
         </Grid>
 
