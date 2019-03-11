@@ -20,7 +20,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import {Link} from 'react-router-dom';
-import { test } from '../../images/test_shirt1.png';
 
 //component to display product info
 class ShopItem extends Component {
@@ -45,10 +44,7 @@ class ShopItem extends Component {
     this.removeQuantity = this.removeQuantity.bind(this);
     this.handleClose = this.handleClose.bind(this);
     this.updateVendor = this.updateVendor.bind(this);
-  }
-
-  componentDidMount(){
-    console.log(this.props.vendorID);
+    this.showDetailed = this.showDetailed.bind(this);
   }
 
   //handle dialog closing
@@ -142,15 +138,22 @@ class ShopItem extends Component {
     }
   }
 
+  //show detailed info of item, reroute
+  showDetailed(){
+    //update which item was selected for detialed view
+    this.props.updateSelectedItem(this.state.pid);
+    // this.props.history.push('/itemDetails');
+  }
+
   render() {
     return (
       <Grid item xs = {4} spacing = {2}>
-      <div className = "centerPage">
+      <div onClick = {this.showDetailed} className = "centerPage">
      
-              <div className = "box">
-              <div className = "center">
+        <div className = "box">
+          <div className = "center">
         {/* <img src={require('../../images/test_shirt1.png')} width="100%" height="100%"/> */}
-        <img src={this.props.imageSrc} width="100%" height="100%"/>
+        <img src={this.props.imageSrc}  width="100%" height="100%"/>
 
       
         </div>
@@ -286,6 +289,11 @@ const mapDispatchToProps = dispatch => {
       updateVendor: (newVendor) => dispatch({
         type: actions.GET_VENDOR_PRODUCTS,
         vendor: newVendor
+      }),
+
+      updateSelectedItem: (pid) => dispatch({
+        type: actions.UPDATE_SELECTED_ITEM,
+        itemID: pid
       })
   }
 }

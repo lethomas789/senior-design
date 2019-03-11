@@ -14,7 +14,9 @@ const actions =  {
     //vendor actions
     GET_VENDOR_PRODUCTS: "GET_VENDOR_PRODUCTS",
     GET_VENDORS: "GET_VENDORS",
-    UPDATE_VENDOR_ID: "UPDATE_VENDOR_ID"
+    UPDATE_VENDOR_ID: "UPDATE_VENDOR_ID",
+    //update selected item in shop view for detailed item info
+    UPDATE_SELECTED_ITEM: "UPDATE_SELECTED_ITEM"
 }
 
 export default actions;
