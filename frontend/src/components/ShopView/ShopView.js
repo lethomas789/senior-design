@@ -48,10 +48,13 @@ class ShopView extends Component {
     return (
       <div className = "grow">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
-          <h1> Shop </h1>
-        
+          <h1> Shop </h1>          
+          <div className = "hero-image">
           <img src={require('../../images/generic_club.jpg')} width="100%" height="100%"/>
-      
+          </div>
+          <div class="hero-text">
+          <p>UC DAVIS CLUBS</p>
+          </div>
         </Grid>
 
         <Grid container spacing={24} direction="row" justify="flex-start" alignItems="center" justify-xs-space-evenly>
