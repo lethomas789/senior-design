@@ -13,7 +13,9 @@ import VendorSignup from './components/VendorSignup/VendorSignup';
 import EditClubInfo from './components/EditClubInfo/EditClubInfo';
 import AddProduct from './components/AddProduct/AddProduct';
 import OrderHistory from './components/OrderHistory/OrderHistory';
-import ShopItemDetailedView from './components/ShopItemDetailedView/ShopItemDetailedView';
+// import ShopItemDetailedView from './components/ShopItemDetailedView/ShopItemDetailedView';
+import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
+
 
 import { createBrowserHistory } from 'history';
 const history = createBrowserHistory();
@@ -35,7 +37,7 @@ class App extends Component {
           <Route exact path = "/editClubInfo" component = {EditClubInfo}/>
           <Route exact path = "/addProduct" component = {AddProduct}/>
           <Route exact path = "/orderHistory" component = {OrderHistory}/>
-          <Route exact path = "/itemDetails" component = {ShopItemDetailedView}/>
+          <Route exact path = "/itemDetails" component = {ShopItemDetailed}/>
         </div>
       </Router>
     );

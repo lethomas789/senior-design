@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import actions from '../../store/actions';
 import { connect } from 'react-redux';
 import axios from 'axios';
+import Button from '@material-ui/core/Button';
+import './ShopItemDetailed.css';
 
 class ShopItemDetailed extends Component {
   constructor(props){
@@ -10,8 +12,89 @@ class ShopItemDetailed extends Component {
       imageLink: '',
       productInfo: '',
       productName: '',
-      productPrice: ''
+      productPrice: '',
+      amtPurchased: 1,
+      vid: '',
+      productStock: ''
     };
+    this.addItem = this.addItem.bind(this);
+    this.addQuantity = this.addQuantity.bind(this);
+    this.removeQuantity = this.removeQuantity.bind(this);
+  }
+
+  //add item to user's cart
+  addItem(){
+    //check if user is logged in
+    if(this.state.login === false){
+      alert("please login to add to cart");
+    }
+
+    //check if quantity exceeded stock
+    else if(this.state.amtPurchased > Number(this.state.productStock) ){
+      alert("Quantity exceeded stock amount");
+    }
+
+    //add to user's cart
+    else{
+    //update user's cart on server
+      var apiURL = "/api/getUserCart/addItems";
+      axios.post(apiURL, {
+        params:{
+          user: this.props.user,
+          pid: this.props.pid,
+          amtPurchased: this.state.amtPurchased,
+          vendorID: this.state.vid,
+          image: this.state.imageLink
+        }
+      })
+      .then(res => {
+        if(res.data.success === true){
+          //after adding to item, get updated cart
+          const getCartURL = "/api/getUserCart";
+          axios.get(getCartURL, {
+            params:{
+              user: this.props.user
+            }
+          })
+          .then(res => {
+            //after getting cart info, update redux store container
+            this.props.updateItems(res.data.data);
+            alert("Item added to cart!");
+          })
+          .catch(err => {
+            alert(err);
+          })
+        }
+      })
+      .catch(err => {
+        alert(err);
+      })
+    }
+  }
+
+  //increase number of quantity to add to user's cart
+  addQuantity(){
+    var currentQuantity = this.state.amtPurchased;
+    currentQuantity += 1;
+    this.setState({
+      amtPurchased: currentQuantity
+    });
+  }
+
+  //remove number of quantity to add to user's cart
+  removeQuantity(){
+    var currentQuantity = this.state.amtPurchased;
+    //can't have negative amount of items selected
+    if(currentQuantity <= 1){
+      alert("Must have at least one item");
+    }
+
+    else{
+      currentQuantity -= 1;
+      this.setState({
+        amtPurchased: currentQuantity
+      });
+    }
   }
 
   //load item info by calling getProductInfo api and render to screen
@@ -27,13 +110,14 @@ class ShopItemDetailed extends Component {
       if(res.data.success === true){
         //update state of component
         this.setState({
-          productInfo: res.data.productInfo,
-          productName: res.data.productName,
-          productPrice: res.data.productPrice,
-          imageLink: res.data.productPicture
+          productInfo: res.data.product.productInfo,
+          productName: res.data.product.productName,
+          productPrice: res.data.product.productPrice,
+          imageLink: res.data.product.productPicture,
+          productStock: res.data.product.productStock,
+          vid: res.data.product.vid
         })
       }
-
       else{
         alert(res.data.message);
       }
@@ -45,11 +129,32 @@ class ShopItemDetailed extends Component {
 
   render() {
     return (
-      <div>
-        <img src = {this.props.imageLink}/>
+      <div className = "itemDetailed">        
         <h3> {this.state.productName} </h3>
-        <p> ${this.state.productPrice} </p>
-        <p> {this.state.productInfo} </p>
+        <div className = "itemInfo">
+          <div id = "imageContainer">
+            <img id = "detailedImage" src = {this.state.imageLink[0]}/>
+          </div>
+
+          <div id = "itemDescriptions">
+            <p> <strong> Price: </strong> ${this.state.productPrice} </p>
+            <p> <strong> Description:</strong> {this.state.productInfo} </p>
+            <p> <strong> Stock:</strong> {this.state.productStock} </p>
+            <Button size="small" color="primary" onClick = {this.addItem}>
+              Add To Cart
+            </Button>
+
+            <Button id = "test" onClick = {this.removeQuantity}>
+              -
+            </Button>
+                
+            {this.state.amtPurchased}
+                
+            <Button id = "test" onClick = {this.addQuantity}>
+              +
+            </Button>
+          </div>
+        </div>
       </div>
     )
   }
@@ -59,7 +164,9 @@ class ShopItemDetailed extends Component {
 //get login value and user email
 const mapStateToProps = state => {
   return{
-      pid: state.selectedItem.selectedItemID
+      pid: state.selectedItem.selectedItemID,
+      login: state.auth.login,
+      user: state.auth.user
   }
 }
 
@@ -67,7 +174,11 @@ const mapStateToProps = state => {
 //update which item was selected for detailed view of item
 const mapDispatchToProps = dispatch => {
   return{
-      
+      //get user's cart from state after logging in
+      updateItems: (response) => dispatch({
+        type: actions.GET_CART,
+        cart: response
+      }),
   }
 }
 

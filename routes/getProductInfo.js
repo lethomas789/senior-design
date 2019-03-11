@@ -41,7 +41,9 @@ router.get('/', (req, res) => {
       productInfo: doc.data().productInfo,
       productName: doc.data().productName,
       productPicture: doc.data().productPicture,
-      productPrice: doc.data().productPrice
+      productPrice: doc.data().productPrice,
+      productStock: doc.data().stock,
+      vid: doc.data().vid
     };
 
     console.log('Successfully retrieved product info.')
