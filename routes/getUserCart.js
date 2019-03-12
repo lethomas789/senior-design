@@ -75,14 +75,18 @@ router.post('/addItems', (req, res) => {
     var pid = req.body.params.pid;  // product id
     var amtPurchased = Number(req.body.params.amtPurchased);
     var vendorID = req.body.params.vendorID;
-    var imageLink = req.body.params.image
+    var imageLink = req.body.params.image;
+    var size = req.body.params.size;
+    var isApparel = req.body.params.isApparel;
   }
   else {
     var user = req.body.user;
     var pid = req.body.pid;  // product id
     var amtPurchased = Number(req.body.amtPurchased);
     var vendorID = req.body.vendorID;
-    var imageLink = req.body.image
+    var imageLink = req.body.image;
+    var size = req.body.size;
+    var isApparel = req.body.isApparel;
   }
 
   // return error if empty request
@@ -126,41 +130,83 @@ router.post('/addItems', (req, res) => {
       var transaction = db.runTransaction(t => {
         return t.get(cartItemRef).then(doc => {
           if (!doc.exists) {
-            let totalItemPrice = amtPurchased * productInfo.productPrice;
 
-            let data = {
-              pid: pid,
-              amtPurchased: amtPurchased,
-              productName: productInfo.productName,
-              productPrice: productInfo.productPrice,
-              totalPrice: totalItemPrice,
-              vid: vendorID,
-              image: imageLink
-            };
+            let totalItemPrice = amtPurchased * productInfo.productPrice;
+            var data = {};
+
+            //if the item is an apparel, create a data object with size and isApparel field
+            if(isApparel === true){
+              data = {
+                pid: pid,
+                amtPurchased: amtPurchased,
+                productName: productInfo.productName,
+                productPrice: productInfo.productPrice,
+                totalPrice: totalItemPrice,
+                vid: vendorID,
+                image: imageLink,
+                size: size,
+                isApparel: isApparel
+              }
+            } 
+
+            //if regular item, create data object with regular properties
+            else{
+              data = {
+                pid: pid,
+                amtPurchased: amtPurchased,
+                productName: productInfo.productName,
+                productPrice: productInfo.productPrice,
+                totalPrice: totalItemPrice,
+                vid: vendorID,
+                image: imageLink,
+                isApparel: isApparel
+              };
+            }
 
             // set new item(s) purchased into cart, with pid as doc identifier
             cartRef.doc(pid).set(data);
-
             console.log('Succesfully added to cart of user: ' + user);
             return res.status(200).json({
               success: true,
               data: data
             });
           }
-          else {
-            let oldItemAmt = doc.data().amtPurchased;
-            let newAmt = oldItemAmt + amtPurchased;
-            let totalItemPrice = newAmt * productInfo.productPrice;
 
-            let data = {
-              pid: pid,
-              amtPurchased: newAmt,
-              productName: productInfo.productName,
-              productPrice: productInfo.productPrice,
-              totalPrice: totalItemPrice,
-              vid: vendorID,
-              image: imageLink
-            };
+          //if the item does not exist
+          else {
+            var oldItemAmt = doc.data().amtPurchased;
+            var newAmt = oldItemAmt + amtPurchased;
+            var totalItemPrice = newAmt * productInfo.productPrice;
+
+            var data;
+
+            //if item is not an apparel
+            if(isApparel === false){
+              data = {
+                pid: pid,
+                amtPurchased: newAmt,
+                productName: productInfo.productName,
+                productPrice: productInfo.productPrice,
+                totalPrice: totalItemPrice,
+                vid: vendorID,
+                image: imageLink
+              };
+            }
+
+            //if the item is an apparel
+            else{
+              data = {
+                pid: pid,
+                amtPurchased: newAmt,
+                productName: productInfo.productName,
+                productPrice: productInfo.productPrice,
+                totalPrice: totalItemPrice,
+                vid: vendorID,
+                image: imageLink,
+                size: size,
+                isApparel: isApparel
+              };
+            }
 
             // update cart item
             t.update(cartItemRef, {

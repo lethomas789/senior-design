@@ -9,7 +9,6 @@ import Checkout from '../Checkout/Checkout';
 import { Link } from 'react-router-dom';
 import EmptyItem from '../EmptyItem/EmptyItem';
 
-
 //component to display user's cart
 class Cart extends Component {
   constructor(props){
@@ -47,12 +46,16 @@ class Cart extends Component {
 
   //render cart items to cart view
   render() {
-  
     //render items in cart
     if (this.props.items.length > 0){
       //map each entry in item array to render a component
       const cart = this.props.items.map(result => {
-        return <CartItem key = {result.productName} imageSrc = {result.imageLink} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
+        if (result.size === undefined){
+          return <CartItem key = {result.productName} imageSrc = {result.imageLink} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
+        }
+        else{
+          return <CartItem key = {result.productName} size  = {result.size} imageSrc = {result.imageLink} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
+        }
       });
 
       return(

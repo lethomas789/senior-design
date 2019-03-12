@@ -85,6 +85,7 @@ class ShopItemDetailed extends Component {
 
       //item added to user's cart is an apparel
       else{
+        console.log("checking shirt size", this.state.size);
         axios.post(apiURL, {
           params:{
             user: this.props.user,
@@ -98,6 +99,7 @@ class ShopItemDetailed extends Component {
             l_stock: this.state.l_stock,
             xs_stock: this.state.xs_stock,
             xl_stock: this.state.xl_stock,
+            size: this.state.size
           }
         })
         .then(res => {
@@ -184,7 +186,8 @@ class ShopItemDetailed extends Component {
             m_stock: res.data.product.m_stock,
             l_stock: res.data.product.l_stock,
             xs_stock: res.data.product.xs_stock,
-            xl_stock: res.data.product.xl_stock
+            xl_stock: res.data.product.xl_stock,
+            size: res.data.product.size
           })
         }
         else{
@@ -274,47 +277,16 @@ class ShopItemDetailed extends Component {
             <div id = "itemDescriptions">
               <p> <strong> Price: </strong> ${this.state.productPrice} </p>
               <p> <strong> Description:</strong> {this.state.productInfo} </p>
-              {/* <p> <strong> Stock:</strong> {this.state.productStock} </p>
-              <p> <strong> Small Stock: </strong> {this.state.s_stock} </p>
-              <p> <strong> Medium Stock:</strong> {this.state.m_stock} </p>
-              <p> <strong> Large Stock:</strong> {this.state.l_stock} </p>
-              <p> <strong> X-Small Stock: </strong> {this.state.xs_stock} </p>
-              <p> <strong> X-Large Stock:</strong> {this.state.xl_stock} </p> */}
               <div id = "selectShirtSize">
                 <p> <strong> Select Size: </strong> </p>
                 <select onChange = {this.handleSelect} ref = {select => {this.selectedSize = select}}>
-                  <option value = "small"> Small </option>
-                  <option value = "medium"> Medium </option>
-                  <option value = "large"> Large </option>
-                  <option value = "x-small"> X-Small </option>
-                  <option value = "x-large"> X-Large </option>
+                  <option value = "select"> Select </option>
+                  <option value = "Small"> Small </option>
+                  <option value = "Medium"> Medium </option>
+                  <option value = "Large"> Large </option>
+                  <option value = "X-Small"> X-Small </option>
+                  <option value = "X-Large"> X-Large </option>
                 </select>
-                {/* <form ref = {select => {this.selectedSize = select}}>
-                  <label>
-                    Small
-                    <input type="radio" name="small" value="small"/> 
-                  </label>
-
-                  <label>
-                    Medium
-                    <input type="radio" name="small" value="small"/> 
-                  </label>
-
-                  <label>
-                    Large
-                    <input type="radio" name="small" value="small"/> 
-                  </label>
-
-                  <label>
-                    X-Small
-                    <input type="radio" name="small" value="small"/> 
-                  </label>
-
-                  <label>
-                    X-Large
-                  <input type="radio" name="small" value="small"/> 
-                  </label>
-                </form> */}
               </div>
               <Button size="small" color="primary" onClick = {this.addItem}>
                 Add To Cart

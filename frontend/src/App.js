@@ -13,7 +13,6 @@ import VendorSignup from './components/VendorSignup/VendorSignup';
 import EditClubInfo from './components/EditClubInfo/EditClubInfo';
 import AddProduct from './components/AddProduct/AddProduct';
 import OrderHistory from './components/OrderHistory/OrderHistory';
-// import ShopItemDetailedView from './components/ShopItemDetailedView/ShopItemDetailedView';
 import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
 
 
