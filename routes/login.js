@@ -12,11 +12,11 @@ const jwtKey = require('../config/jwt.json');
 router.post('/', (req, res) =>{
   //extract email and password from request
   if (req.body.params) {
-    var email = req.body.params.email;
+    var email = req.body.params.email.toLowerCase();
     var password = req.body.params.password;
   }
   else {
-    var email = req.body.email;
+    var email = req.body.email.toLowerCase();
     var password = req.body.password;
   }
 

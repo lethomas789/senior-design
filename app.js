@@ -9,6 +9,8 @@ const admin = require('firebase-admin');
 const cron = require('node-cron');
 const Email = require('email-templates');
 
+global.schedule = require('node-schedule');
+
 // firebase setup
 const serviceAccount = require('./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json');
 
@@ -69,45 +71,25 @@ app.get('*', (req,res) => {
 })
 
 db = admin.firestore();
-// TODO vars
-var midnightSchedule = "59 23 * * *";
-// var midnightSchedule = "52 16 * * *";
-cron.schedule(midnightSchedule, function() {
-  console.log('------------------------');
-  console.log('Running Cron Job');
 
-  // for each vendor, get their orders, grab all un-emailed purchases, send them
-  // in an email
-
-  // get vendors
-  db.collection('vendors').get().then(snapshot => {
-    snapshot.forEach(vdoc =>{
+// on start of app, go through all vendors, and create their email schedules
+var initSchedules = db.collection('vendors').get().then(snapshot => {
+  snapshot.forEach(vdoc => {
+    // job name === doc.vid
+    // job schedule === doc.emailSchedule
+    let j = schedule.scheduleJob(vdoc.data().vid, vdoc.data().emailSchedule,
+    function() {
       db.collection('orders').where('vid', '==', vdoc.id)
       .where('seenByVendor', '==', false)
       .orderBy('date','asc')
       .get().then(ordersSnapshot => {
+        console.log('Email job ran for:', vdoc.data().vid);
+        console.log('Ran at time:', Date.now());
         // do not send emails if no new orders
         if (!ordersSnapshot.empty) {
-          let orders = [];
           let orderCount = 0;
           ordersSnapshot.forEach(odoc => {
             db.collection('orders').doc(odoc.id).update({seenByVendor: true});
-
-            /*
-            let orderData = {
-              // have to call toDate on firestore data or else errors
-              date: odoc.data().date.toDate(),
-              items: odoc.data().items,
-              totalPrice: odoc.data().totalPrice,
-              paid: odoc.data().paid,
-              firstName: odoc.data().name.firstName,
-              lastName: odoc.data().name.lastName,
-              oid: odoc.data().oid,
-              pickedUp: odoc.data().pickedUp,
-              email: odoc.data().email
-            };
-            orders.push(orderData);
-            */
 
             // NOTE: for our own sanity, we are just gonna send a count of items
             // and a link to order history page.
@@ -119,8 +101,8 @@ cron.schedule(midnightSchedule, function() {
 
           const vendorEmail = new Email({
             message: {
-              // from: 'ecs193.ecommerce@gmail.com',
-              from: 'test@test.com',
+              from: 'ecs193.ecommerce@gmail.com',
+              // from: 'test@test.com',
               subject: emailSubject,
               to: vdoc.data().email
             },
@@ -128,25 +110,15 @@ cron.schedule(midnightSchedule, function() {
             // preview: false,  // TODO turn off preview before production
 
             transport: {
-              host: 'localhost', // TODO update w/ website?
-              port: 465,
-              secure: true,
-              tls: {
-                // do not fail on invalid certs
-                rejectUnauthorized: false
-              },
-              /*
               // uncomment when actually sending emails
               service: 'gmail',
               auth: {
                 user: 'ecs193.ecommerce@gmail.com',
                 pass: '193ecommerce'
               }
-              */
             }
           });
 
-          // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
           let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
 
           vendorEmail.send({
@@ -160,23 +132,59 @@ cron.schedule(midnightSchedule, function() {
             console.log('Finished Sending Email to:', vdoc.id);
           })
           .catch(console.log);
+        }
 
-      }
-
-      })
-      .catch(err => {
+      }) 
+      .catch(err => {  // catch for orders ref
         console.log('Error in getting user orders for emailing:', err);
       });
 
-    });  // end forEach vendor
+    });  // end function for each job schedule
+  });   // END snapshot.forEach vdoc
 
+})
+.catch(err => {  // catch for initSchedule
+  console.log(err);
+  // TODO, send email to self on this breaking
+  // once obtained the orders
+  let emailSubject = "193 E-commerce: Error in Email Schedules"
 
-  })
-  .catch(err => {
-    console.log('Server error in getting vendors for emailing:', err);
+  const errorEmail = new Email({
+    message: {
+      from: 'ecs193.ecommerce@gmail.com',
+      // from: 'test@test.com',
+      subject: emailSubject,
+      to: 'thele@ucdavis.edu'
+    },
+    send: true,  // set send to true when not testing
+    // preview: false,  // TODO turn off preview before production
+
+    transport: {
+      // uncomment when actually sending emails
+      // TODO, change password, and hide it in config file
+      service: 'gmail',
+      auth: {
+        user: 'ecs193.ecommerce@gmail.com',
+        pass: '193ecommerce'
+      }
+    }
   });
 
+  let emailIntro = 'Error in email schedules for ECS193 Ecomerce.';
+
+  errorEmail.send({
+    template: 'ordersNotification',
+    locals: {
+      location: 'Test club location here.',
+      emailIntro: emailIntro,
+    }
+  })
+  .then(() => {
+    console.log('Finished Sending Error Email to self.');
+  })
+  .catch(console.log);
 });
+
 
 // listen to requests on port
 // choose port based on environment
