@@ -8,7 +8,8 @@ const admin = require('firebase-admin');
 
 const cron = require('node-cron');
 const Email = require('email-templates');
-const schedule = require('node-schedule');
+
+global.schedule = require('node-schedule');
 
 // firebase setup
 const serviceAccount = require('./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json');
@@ -169,7 +170,6 @@ var initSchedules = db.collection('vendors').get().then(snapshot => {
     }
   });
 
-  // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
   let emailIntro = 'Error in email schedules for ECS193 Ecomerce.';
 
   errorEmail.send({
@@ -185,113 +185,6 @@ var initSchedules = db.collection('vendors').get().then(snapshot => {
   .catch(console.log);
 });
 
-
-
-
-/*
-var midnightSchedule = "59 23 * * *";
-cron.schedule(midnightSchedule, function() {
-  console.log('------------------------');
-  console.log('Running Cron Job');
-
-  // for each vendor, get their orders, grab all un-emailed purchases, send them
-  // in an email
-
-  // get vendors
-  db.collection('vendors').get().then(snapshot => {
-    snapshot.forEach(vdoc =>{
-      db.collection('orders').where('vid', '==', vdoc.id)
-      .where('seenByVendor', '==', false)
-      .orderBy('date','asc')
-      .get().then(ordersSnapshot => {
-        // do not send emails if no new orders
-        if (!ordersSnapshot.empty) {
-          let orders = [];
-          let orderCount = 0;
-          ordersSnapshot.forEach(odoc => {
-            db.collection('orders').doc(odoc.id).update({seenByVendor: true});
-
-            let orderData = {
-              // have to call toDate on firestore data or else errors
-              date: odoc.data().date.toDate(),
-              items: odoc.data().items,
-              totalPrice: odoc.data().totalPrice,
-              paid: odoc.data().paid,
-              firstName: odoc.data().name.firstName,
-              lastName: odoc.data().name.lastName,
-              oid: odoc.data().oid,
-              pickedUp: odoc.data().pickedUp,
-              email: odoc.data().email
-            };
-            orders.push(orderData);
-
-            // NOTE: for our own sanity, we are just gonna send a count of items
-            // and a link to order history page.
-            orderCount += 1;
-          });
-
-          // once obtained the orders
-          let emailSubject = "You've got new orders from ECS193 E-commerce"
-
-          const vendorEmail = new Email({
-            message: {
-              // from: 'ecs193.ecommerce@gmail.com',
-              from: 'test@test.com',
-              subject: emailSubject,
-              to: vdoc.data().email
-            },
-            send: false,  // set send to true when not testing
-            // preview: false,  // TODO turn off preview before production
-
-            transport: {
-              host: 'localhost', // TODO update w/ website?
-              port: 465,
-              secure: true,
-              tls: {
-                // do not fail on invalid certs
-                rejectUnauthorized: false
-              },
-              // uncomment when actually sending emails
-              service: 'gmail',
-              auth: {
-                user: 'ecs193.ecommerce@gmail.com',
-                pass: '193ecommerce'
-              }
-            }
-          });
-
-          // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
-          let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
-
-          vendorEmail.send({
-            template: 'ordersNotification',
-            locals: {
-              location: 'Test club location here.',
-              emailIntro: emailIntro,
-            }
-          })
-          .then(() => {
-            console.log('Finished Sending Email to:', vdoc.id);
-          })
-          .catch(console.log);
-
-      }
-
-      })
-      .catch(err => {
-        console.log('Error in getting user orders for emailing:', err);
-      });
-
-    });  // end forEach vendor
-
-
-  })
-  .catch(err => {
-    console.log('Server error in getting vendors for emailing:', err);
-  });
-
-});
-*/
 
 // listen to requests on port
 // choose port based on environment
