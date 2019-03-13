@@ -4,6 +4,8 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
+// const schedule = require('node-schedule');
+
 
 /**
  * GET returns vendor about info for frontend.
@@ -64,7 +66,9 @@ router.get('/', (req, res) => {
         bio: vendorData.bio,
         lastUpdate: vendorData.lastUpdate.toDate(),
         lastUpdateUser: vendorData.lastUpdateUser,
-        vendorName: vendorData.vendorName
+        vendorName: vendorData.vendorName,
+        email: vendorData.email,
+        emailSchedule: vendorData.emailSchedule
       });
     })
     .catch(err => {  // catch for admins ref
@@ -105,12 +109,14 @@ router.patch('/editVendorInfo', (req, res) => {
     var vid = req.body.params.vid;
     var vendorName = req.body.params.vendorName;
     var bio = req.body.params.bio;
+    var email = req.body.params.email;
   }
   else {
     var user = req.body.user;
     var vid = req.body.vid;
     var vendorName = req.body.vendorName;
     var bio = req.body.bio;
+    var email = req.body.email;
   }
 
   // must include editing user and vid; bio and vendorName not always edited
@@ -121,8 +127,6 @@ router.patch('/editVendorInfo', (req, res) => {
       message: 'Error: missing params for editVendorInfo.'
     });
   }
-
-  // assume image done through frontend
 
   let vendorRef = db.collection('vendors').doc(vid);
   
@@ -155,7 +159,8 @@ router.patch('/editVendorInfo', (req, res) => {
         vendorName: vendorName,
         bio: bio,
         lastUpdate: lastUpdate,
-        lastUpdateUser: lastUpdateUser
+        lastUpdateUser: lastUpdateUser,
+        email: email
       });
 
       console.log('Succesfully updated vendor info.');
@@ -184,5 +189,162 @@ router.patch('/editVendorInfo', (req, res) => {
     });
   });
 });  // END PATCH /editVendorInfo
+
+router.patch('/emailSchedule', (req, res) => {
+
+  if (req.body.params) {
+    var vid = req.body.params.vid
+    var emailSchedule = req.body.params.emailSchedule
+    var user = req.body.params.user
+  }
+  else {
+    var vid = req.body.vid
+    var emailSchedule = req.body.emailSchedule
+    var user = req.body.user
+  }
+
+  // example:
+  // every 0th min, every 3 hours
+  // 0 */3 * * *
+
+  if (!vid || !emailSchedule || !user) {
+    console.log('Error missing request params for patch emailSchedule')
+    return res.status(200).json({
+      success: false,
+      message: 'Error missing request params for patch emailSchedule'
+    })
+  }
+
+  
+  let vendorRef = db.collection('vendors').doc(vid);
+  
+  vendorRef.get().then(vdoc => {
+    if (!vdoc.exists) {
+      console.log('Error: no such vendor for given vid.');
+      return res.status(200).json({
+        success: false,
+        message: 'Error: no such vendor for given vid.'
+      });
+    }
+
+    // check to make sure user is admin for security purposes
+    vendorRef.collection('admins').doc(user).get().then(doc => {
+      if (!doc.exists) {
+        console.log('Error: provided user is not an admin for given vendor.');
+        return res.status(200).json({
+          success: false,
+          messaage: 'Error: provided user is not an admin for given vendor.'
+        });
+      }
+
+      // else, good to update
+      let lastUpdate = admin.firestore.Timestamp.now();
+      let lastUpdateUser = user;  // user who did most recent update
+
+      // when updating emailSchedule, must first kill previous job with old
+      // schedule
+      var oldJob = schedule.scheduledJobs[vdoc.id];
+      oldJob.cancel();
+
+      // now, create new job with new emailSchedule
+      var j = schedule.scheduleJob(vdoc.id, emailSchedule,
+      function() {
+        db.collection('orders').where('vid', '==', vdoc.id)
+        .where('seenByVendor', '==', false)
+        .orderBy('date','asc')
+        .get().then(ordersSnapshot => {
+          console.log('Email job for:', vdoc.id);
+          console.log('Ran at time:', Date.now());
+          // do not send emails if no new orders
+          if (!ordersSnapshot.empty) {
+            let orderCount = 0;
+            ordersSnapshot.forEach(odoc => {
+              db.collection('orders').doc(odoc.id).update({seenByVendor: true});
+
+              // NOTE: for our own sanity, we are just gonna send a count of
+              // items and a link to order history page.
+              orderCount += 1;
+            });
+
+            // once obtained the orders
+            let emailSubject = "You've got new orders from ECS193 E-commerce"
+
+            const vendorEmail = new Email({
+              message: {
+                from: 'ecs193.ecommerce@gmail.com',
+                // from: 'test@test.com',
+                subject: emailSubject,
+                to: vdoc.data().email
+              },
+              send: false,  // set send to true when not testing
+              // preview: false,  // TODO turn off preview before production
+
+              // TODO
+              transport: {
+                // uncomment when actually sending emails
+                service: 'gmail',
+                auth: {
+                  user: 'ecs193.ecommerce@gmail.com',
+                  pass: '193ecommerce'
+                }
+              }
+            });
+
+            let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
+
+            vendorEmail.send({
+              template: 'ordersNotification',
+              locals: {
+                location: 'Test club location here.',
+                emailIntro: emailIntro,
+              }
+            })
+            .then(() => {
+              console.log('Finished Sending Email to:', vdoc.id);
+            })
+            // TODO send error email to shared account
+            .catch(console.log);
+          }
+
+        }) 
+        .catch(err => {  // catch for orders ref
+          console.log('Error in getting user orders for emailing:', err);
+          return res.status(200).json({
+            success: false,
+            message: 'Error in updating email schedule' + err
+          });
+        });
+      });  // end function for job schedule
+
+      // once done scheduling new task, update DB
+      db.collection('vendors').doc(vid).update({
+        emailSchedule: emailSchedule,
+        lastUpdate: lastUpdate,
+        lastUpdateUser: lastUpdateUser
+      });
+
+      console.log('Finished updating new email schedule for vid:', vid);
+      return res.status(200).json({
+        success: true,
+        message: 'Finished updating new email schedule for vid: ' + vid
+      });
+    })
+    .catch(err => {  // catch for admins ref
+      console.log('Error in getting adminRef:', err);
+      return res.status(200).json({
+        success: false,
+        message: 'Error in getting adminRef: ' + err
+      });
+    });
+  })
+  .catch(err => {   // catch for vendorRef.get
+    console.log('Error in getting vendorRef:', err);
+    return res.status(200).json({
+      success: false,
+      message: 'Error in getting vendorRef: ' + err
+    });
+  });
+});  // END PATCH /emailSchedule
+
 
 module.exports = router;
