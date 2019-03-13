@@ -4,7 +4,7 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
-const schedule = require('node-schedule');
+// const schedule = require('node-schedule');
 
 
 /**
@@ -203,6 +203,10 @@ router.patch('/emailSchedule', (req, res) => {
     var user = req.body.user
   }
 
+  // example:
+  // every 0th min, every 3 hours
+  // 0 */3 * * *
+
   if (!vid || !emailSchedule || !user) {
     console.log('Error missing request params for patch emailSchedule')
     return res.status(200).json({
@@ -215,7 +219,7 @@ router.patch('/emailSchedule', (req, res) => {
   let vendorRef = db.collection('vendors').doc(vid);
   
   vendorRef.get().then(vdoc => {
-    if (!doc.exists) {
+    if (!vdoc.exists) {
       console.log('Error: no such vendor for given vid.');
       return res.status(200).json({
         success: false,
@@ -239,7 +243,7 @@ router.patch('/emailSchedule', (req, res) => {
 
       // when updating emailSchedule, must first kill previous job with old
       // schedule
-      var oldJob = schedule.scheduleJob[vdoc.data().vid];
+      var oldJob = schedule.scheduledJobs[vdoc.id];
       oldJob.cancel();
 
       // now, create new job with new emailSchedule
@@ -249,7 +253,7 @@ router.patch('/emailSchedule', (req, res) => {
         .where('seenByVendor', '==', false)
         .orderBy('date','asc')
         .get().then(ordersSnapshot => {
-          console.log('Updated email job for:', vdoc.id);
+          console.log('Email job for:', vdoc.id);
           console.log('Ran at time:', Date.now());
           // do not send emails if no new orders
           if (!ordersSnapshot.empty) {
@@ -257,8 +261,8 @@ router.patch('/emailSchedule', (req, res) => {
             ordersSnapshot.forEach(odoc => {
               db.collection('orders').doc(odoc.id).update({seenByVendor: true});
 
-              // NOTE: for our own sanity, we are just gonna send a count of items
-              // and a link to order history page.
+              // NOTE: for our own sanity, we are just gonna send a count of
+              // items and a link to order history page.
               orderCount += 1;
             });
 
@@ -313,7 +317,6 @@ router.patch('/emailSchedule', (req, res) => {
       });  // end function for job schedule
 
       // once done scheduling new task, update DB
-
       db.collection('vendors').doc(vid).update({
         emailSchedule: emailSchedule,
         lastUpdate: lastUpdate,
@@ -341,7 +344,7 @@ router.patch('/emailSchedule', (req, res) => {
       message: 'Error in getting vendorRef: ' + err
     });
   });
-});
+});  // END PATCH /emailSchedule
 
 
 module.exports = router;
