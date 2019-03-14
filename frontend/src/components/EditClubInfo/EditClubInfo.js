@@ -140,11 +140,11 @@ class EditClubInfo extends Component {
               <div id = "updateEmails">
                 <select id = "emailSelect" onChange = {this.handleSelect} ref = {select => {this.selectedPreference = select}}>
                   <option value = "select"> Select </option>
-                  <option value = "1"> Every 1 Hour </option>
-                  <option value = "2"> Every 2 Hours </option>
-                  <option value = "4"> Every 4 Hours </option>
-                  <option value = "8"> Every 8 Hours</option>
-                  <option value = "24"> Every 24 Hours </option>
+                  <option value = "0 */1 * * *"> Every 1 Hour </option>
+                  <option value = "0 */2 * * *"> Every 2 Hours </option>
+                  <option value = "0 */4 * * *"> Every 4 Hours </option>
+                  <option value = "0 */8 * * *"> Every 8 Hours</option>
+                  <option value = "0 */24 * * *"> Every 24 Hours </option>
                 </select>
                 <Button variant = "contained" color = "primary" onClick = {this.updateEmailPreferences}> Update Email Preferences </Button>
               </div>
