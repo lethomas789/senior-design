@@ -15,12 +15,13 @@ class EditClubInfo extends Component {
       lastUpdate: '',
       lastUpdateUser: '',
       vendorName: '',
-      emailSchedule: ''
+      emailSchedule: '',
     };
 
     this.getClubInfo = this.getClubInfo.bind(this);
     this.sendEdit = this.sendEdit.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.updateEmailPreferences = this.updateEmailPreferences.bind(this);
   }
 
   //get club info
@@ -70,7 +71,7 @@ class EditClubInfo extends Component {
       params:{
         user: this.props.user,
         emailSchedule: this.state.emailSchedule,
-        vid: this.state.vendorID
+        vid: this.props.vendorID
       }
     })
     .then(res => {
@@ -145,7 +146,7 @@ class EditClubInfo extends Component {
                   <option value = "8"> Every 8 Hours</option>
                   <option value = "24"> Every 24 Hours </option>
                 </select>
-                <Button variant = "contained" color = "primary" onClick = {this.sendEdit}> Update Email Preferences </Button>
+                <Button variant = "contained" color = "primary" onClick = {this.updateEmailPreferences}> Update Email Preferences </Button>
               </div>
             </div>
           </form>
