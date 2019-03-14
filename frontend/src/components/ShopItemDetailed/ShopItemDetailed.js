@@ -23,12 +23,15 @@ class ShopItemDetailed extends Component {
       l_stock: 0,
       xs_stock: 0,
       xl_stock: 0,
-      size: ''
+      size: '',
+      currentImage: 0
     };
     this.addItem = this.addItem.bind(this);
     this.addQuantity = this.addQuantity.bind(this);
     this.removeQuantity = this.removeQuantity.bind(this);
     this.handleSelect = this.handleSelect.bind(this);
+    this.nextImage = this.nextImage.bind(this);
+    this.prevImage = this.prevImage.bind(this);
   }
 
   //add item to user's cart
@@ -160,6 +163,24 @@ class ShopItemDetailed extends Component {
     })
   }
 
+  //view next image, increment index in image array
+  nextImage(){
+    if(this.state.currentImage < this.state.imageLink.length-1){
+      this.setState({
+        currentImage: this.state.currentImage + 1
+      })
+    }
+  }
+
+  //previous image, decrement index in image array
+  prevImage(){
+    if(this.state.currentImage > 0){
+      this.setState({
+        currentImage: this.state.currentImage - 1
+      })
+    }
+  }
+
   //load item info by calling getProductInfo api and render to screen
   componentDidMount(){
     const apiURL = '/api/getProductInfo';
@@ -216,20 +237,29 @@ class ShopItemDetailed extends Component {
         <div className = "itemDetailed">        
           <h3> {this.state.productName} </h3>
           <div className = "itemInfo">
-            <ReactImageMagnify {...{
-              smallImage: {
-                  alt: 'Test Image',
-                  width:300,
-                  height:300,
-                  src: this.state.imageLink[0]
-              },
-              largeImage: {
-                  src: this.state.imageLink[0],
-                  width: 600,
-                  height: 900,
-                  enlargedImagePosition: 'beside'
-              }
-            }}/>
+            <div className = "imageMagnifyContainer">
+            
+              <ReactImageMagnify {...{
+                    smallImage: {
+                        alt: 'Test Image',
+                        width:300,
+                        height:300,
+                        src: this.state.imageLink[this.state.currentImage]
+                    },
+                    largeImage: {
+                        src: this.state.imageLink[this.state.currentImage],
+                        width: 600,
+                        height: 900,
+                        enlargedImagePosition: 'beside'
+                    }
+                }}/>
+
+              <div className = "imageButtons">
+                  <button onClick = {this.prevImage} id = "prevImage" > Previous </button>
+                  <button onClick = {this.nextImage} id = "nextImage"> Next </button>
+              </div>
+
+            </div>
 
             <div id = "itemDescriptions">
               <p> <strong> Price: </strong> ${this.state.productPrice} </p>
@@ -259,21 +289,30 @@ class ShopItemDetailed extends Component {
         <div className = "itemDetailed">        
           <h3> {this.state.productName} </h3>
           <div className = "itemInfo">
-            <ReactImageMagnify {...{
-              smallImage: {
-                  alt: 'Test Image',
-                  width: 300,
-                  height: 300,
-                  src: this.state.imageLink[0]
-              },
-              largeImage: {
-                  src: this.state.imageLink[0],
-                  width: 600,
-                  height: 900,
-                  enlargedImagePosition: 'beside'
-              }
-            }}/>
-  
+            <div className = "imageMagnifyContainer">
+
+              <ReactImageMagnify {...{
+                  smallImage: {
+                      alt: 'Test Image',
+                      width:300,
+                      height:300,
+                      src: this.state.imageLink[this.state.currentImage]
+                  },
+                  largeImage: {
+                      src: this.state.imageLink[this.state.currentImage],
+                      width: 600,
+                      height: 900,
+                      enlargedImagePosition: 'beside'
+                  }
+              }}/>
+
+              <div className = "imageButtons">
+                  <button onClick = {this.prevImage} id = "prevImage" > Previous </button>
+                  <button onClick = {this.nextImage} id = "nextImage"> Next </button>
+              </div>
+
+            </div>
+            
             <div id = "itemDescriptions">
               <p> <strong> Price: </strong> ${this.state.productPrice} </p>
               <p> <strong> Description:</strong> {this.state.productInfo} </p>

@@ -73,9 +73,12 @@ class AddProduct extends Component {
     const { target: { files } } = event;
 
     //store image names
-    const filesToStore = [];
-    //store image files
-    const actualImages = [];
+    // const filesToStore = [];
+    const filesToStore = this.state.imageNames;
+
+    //store actual image files
+    // const actualImages = [];
+    const actualImages = this.state.images;
     console.log(files);
     console.log(files[0]);
 
@@ -83,7 +86,7 @@ class AddProduct extends Component {
     let imageName = {};
     imageName.name = files[0].name;
 
-    //store to arrays
+    //push values to arrays
     filesToStore.push(imageName);
     actualImages.push(files[0]);
     
@@ -95,10 +98,7 @@ class AddProduct extends Component {
       randomText += possible.charAt(Math.floor(Math.random() * possible.length));
     }
 
-    // files[0].forEach(file => {
-    //   filesToStore.push(file);
-    // });
-
+    //set state of component
     this.setState({
       images: actualImages,
       productID: randomText,
@@ -108,18 +108,16 @@ class AddProduct extends Component {
 
   //upload images to database
   uploadFiles(){
-
     //for each file in images array, upload to database
     const files = this.state.images;
     files.forEach(file => {
       this.fileUploader.startUpload(file);
     });
   }
-
+  
   //add product that is an apparel type
   //add product to vendor's collection in database
   addProduct(){ 
-
     //handle if item being added is an apparel
     if(this.state.isApparel === true){
       const apiURL = "/api/adminProducts/addNewProduct";
@@ -290,7 +288,26 @@ class AddProduct extends Component {
             </div>
 
             <div className = "textForm" id = "row">
-              <h5 id = "uploadImageText"> Upload Image </h5>
+              <h5 id = "uploadImageText"> Upload Images </h5>
+
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
+
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
+
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
+
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple

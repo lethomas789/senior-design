@@ -192,6 +192,8 @@ router.patch('/editVendorInfo', (req, res) => {
 
 router.patch('/emailSchedule', (req, res) => {
 
+  console.log(req);
+
   if (req.body.params) {
     var vid = req.body.params.vid
     var emailSchedule = req.body.params.emailSchedule

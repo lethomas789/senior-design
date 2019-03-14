@@ -8,3 +8,20 @@
   padding: 5px;
   height: 100px;
 }
+
+#updateEmailsContainer{
+  display:flex;
+  flex-direction: column;
+}
+
+#emailSelect{
+  padding: 20px;
+}
+
+#updateEmails{
+  align-self: center;
+  width: 35%;
+  display:flex;
+  flex-direction: column;
+  padding: 10px;
+}

@@ -33,8 +33,6 @@ app.use(cors());
 //serve react files
 app.use(express.static(path.join(__dirname, '/frontend/build')));
 
-
-
 //routes
 const router = express.Router();
 const users = require('./routes/users');

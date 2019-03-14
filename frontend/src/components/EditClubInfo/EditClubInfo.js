@@ -14,11 +14,13 @@ class EditClubInfo extends Component {
       bio: '',
       lastUpdate: '',
       lastUpdateUser: '',
-      vendorName: ''
+      vendorName: '',
+      emailSchedule: ''
     };
 
     this.getClubInfo = this.getClubInfo.bind(this);
     this.sendEdit = this.sendEdit.bind(this);
+    this.handleSelect = this.handleSelect.bind(this);
   }
 
   //get club info
@@ -48,9 +50,40 @@ class EditClubInfo extends Component {
     })
   }
 
+  //handle select when user chooses email preference
+  handleSelect(){
+    //update email preference
+    this.setState({
+      emailSchedule: this.selectedPreference.value
+    });
+  }
+
   //when component loads, get club info from server
   componentDidMount(){
     this.getClubInfo();
+  }
+
+  //update email preferences
+  updateEmailPreferences(){
+    const apiURL = '/api/adminVendor/emailSchedule';
+    axios.patch(apiURL, {
+      params:{
+        user: this.props.user,
+        emailSchedule: this.state.emailSchedule,
+        vid: this.state.vendorID
+      }
+    })
+    .then(res => {
+      if(res.data.success === true){
+        alert(res.data.message);
+      }
+      else{
+        alert(res.data.message);
+      }
+    })
+    .catch(err => {
+      alert(err);
+    })
   }
 
   //update club info on server
@@ -83,6 +116,7 @@ class EditClubInfo extends Component {
           <h1> Edit Club Info </h1>
           <h6> Last Updated: {this.state.lastUpdate} </h6>
           <h6> Last Edited By: {this.state.lastUpdateUser} </h6>
+
           <form id = "editClubForm">
             <TextField
               className = "inputWidth"
@@ -101,7 +135,21 @@ class EditClubInfo extends Component {
 
             <Button variant = "contained" color = "primary" onClick = {this.sendEdit}> Update Club  </Button>
 
+            <div id = "updateEmailsContainer">
+              <div id = "updateEmails">
+                <select id = "emailSelect" onChange = {this.handleSelect} ref = {select => {this.selectedPreference = select}}>
+                  <option value = "select"> Select </option>
+                  <option value = "1"> Every 1 Hour </option>
+                  <option value = "2"> Every 2 Hours </option>
+                  <option value = "4"> Every 4 Hours </option>
+                  <option value = "8"> Every 8 Hours</option>
+                  <option value = "24"> Every 24 Hours </option>
+                </select>
+                <Button variant = "contained" color = "primary" onClick = {this.sendEdit}> Update Email Preferences </Button>
+              </div>
+            </div>
           </form>
+          
         </Grid>
       </div>
     )
