@@ -16,14 +16,14 @@ router.post('/', (req, res) => {
     // extract user info from request
     var firstName = req.body.params.firstName;
     var lastName = req.body.params.lastName;
-    var email = req.body.params.email;
+    var email = req.body.params.email.toLowerCase();
     var password = req.body.params.password;
   }
   else {
     // extract user info from request
     var firstName = req.body.firstName;
     var lastName = req.body.lastName;
-    var email = req.body.email;
+    var email = req.body.email.toLowerCase();
     var password = req.body.password;
   }
 

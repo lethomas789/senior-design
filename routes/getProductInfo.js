@@ -37,12 +37,39 @@ router.get('/', (req, res) => {
     }
 
     // TODO product picture(s)
-    let product = {
-      productInfo: doc.data().productInfo,
-      productName: doc.data().productName,
-      productPicture: doc.data().productPicture,
-      productPrice: doc.data().productPrice
-    };
+
+    //if the object is not an apparel
+    var product = {};
+    if(doc.data().isApparel === false){
+      product = {
+        productInfo: doc.data().productInfo,
+        productName: doc.data().productName,
+        productPicture: doc.data().productPicture,
+        productPrice: doc.data().productPrice,
+        productStock: doc.data().stock,
+        isApparel: doc.data().isApparel,
+        vid: doc.data().vid
+      };
+    }
+
+    //if it is an apparel
+    else{
+      product = {
+        productInfo: doc.data().productInfo,
+        productName: doc.data().productName,
+        productPicture: doc.data().productPicture,
+        productPrice: doc.data().productPrice,
+        productStock: doc.data().stock,
+        isApparel: doc.data().isApparel,
+        vid: doc.data().vid,
+        s_stock: doc.data().s_stock,
+        m_stock: doc.data().m_stock,
+        l_stock: doc.data().l_stock,
+        xs_stock: doc.data().xs_stock,
+        xl_stock: doc.data().xl_stock
+      };
+    }
+    
 
     console.log('Successfully retrieved product info.')
     return res.status(200).json({

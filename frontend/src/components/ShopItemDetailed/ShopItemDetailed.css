@@ -1,0 +1,28 @@
+.itemDetailed{
+  display:flex;
+  flex-direction: column;
+}
+
+.itemInfo{
+  display:flex;
+  flex-direction: row;
+  align-self: center;
+}
+
+#detailedImage{
+  width: 100%;
+  height: 100%;
+}
+
+.imageMagnifyContainer{
+  display:flex;
+  flex-direction: column;
+}
+
+#prevImage{
+  float: left;
+}
+
+#nextImage{
+  float: right;
+}

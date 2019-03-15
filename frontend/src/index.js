@@ -16,6 +16,7 @@ import loginReducer from './store/loginReducer';
 import getProductsReducer from './store/getProductsReducer';
 import cartReducer from './store/cartReducer';
 import vendorReducer from './store/vendorReducer';
+import shopItemReducer from './store/shopItemReducer';
 
 //create store for redux state management
 //store stores state of application
@@ -23,7 +24,8 @@ const rootReducer = combineReducers({
   auth: loginReducer,
   getAllItems: getProductsReducer,
   cart: cartReducer,
-  vendor: vendorReducer
+  vendor: vendorReducer,
+  selectedItem: shopItemReducer
 });
 
 //redux persistConfig

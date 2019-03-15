@@ -16,15 +16,10 @@
   max-width: 400px;
 }
 
-#background {
-  background-color: transparent;
-}
-
 .bullet {
   display: 'inline-block';
   margin: '0 2px';
   transform: scale(0.8);
-
 }
 
 .resize {
@@ -35,34 +30,9 @@ h5 {
   font-size: 12pt;
 }
 
-
 .media {
   height: 140;
 }
-
-/* const styles = {
-  card: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-}; */
-
-
-/* #test {
-  width: 30px;
-  height: 30px;
-  
-} */
 
 .quantity {
   font-size: 15px;
@@ -77,22 +47,28 @@ h5 {
 .box {
   background-color: transparent;
   width: 300px;
-  /* border: 0.5px solid grey; */
-  border: 1px solid rgba(211,211,211,0.95);
+  min-height: 300px;
+  box-sizing: content-box;  
+  border: 1px solid rgba(211, 211, 211, 0.95);
   padding: 25px;
   margin: 25px;
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: center; /* Safari 7.0+ */
+  display: flex;
+  align-items: center;
+  cursor: pointer;
 }
 
 .center {
   display: block;
   margin-left: auto;
-  margin-right: auto;
-  
+  margin-right: auto; 
+  align-items: center; 
 }
 
 .centerPage {
   display: block;
   margin-left: auto;
   margin-right: auto;
-
+  align-items: center;
 }
