@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import actions from "../../store/actions";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -13,13 +13,8 @@ import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 
 class ItemImageViewer extends Component {
-  static PropTypes = {
-    // array of image links 
-    imageLink: PropTypes.array.isRequired,
-  }
-
   state = {
-    currentImage: 0,
+    currentImage: 0
   };
 
   // view next image, increment index in image array
@@ -72,8 +67,96 @@ class ItemImageViewer extends Component {
           </div>
         </div>
       </section>
-    )
+    );
   }
+}
+
+class ApparelItemInfo extends Component {
+  render() {
+    const {
+      productName,
+      productPrice,
+      productInfo,
+      amtPurchased,
+      handleQuantityChange,
+      addItem,
+      handleChange,
+      size,
+      displayApparelStock,
+    } = this.props;
+
+    return (
+      <section className="item-info">
+        <h2> {productName} </h2>
+        <div className="price">${Number(productPrice).toFixed(2)}</div>
+        <div>
+          <b>Availability</b>: {displayApparelStock()}
+          <p>
+            <b>Club</b>: TODO
+          </p>
+        </div>
+        <p className="description">{productInfo}</p>
+
+        <div className="select-container">
+          {/* TODO fix selector */}
+          <FormControl className="select-size">
+            <InputLabel htmlFor="select-size">Select Size</InputLabel>
+            <Select
+              value={size}
+              onChange={handleChange("size")}
+              inputProps={{
+                name: "size",
+                id: "select-size"
+              }}
+            >
+              <MenuItem value="">
+                <em>None</em>
+              </MenuItem>
+              <MenuItem value={"X-Small"}> X-Small </MenuItem>
+              <MenuItem value={"Small"}> Small </MenuItem>
+              <MenuItem value={"Medium"}> Medium </MenuItem>
+              <MenuItem value={"Large"}> Large </MenuItem>
+              <MenuItem value={"X-Large"}> X-Large </MenuItem>
+            </Select>
+          </FormControl>
+
+          <TextField
+            className="quantity"
+            label="Quantity"
+            value={amtPurchased}
+            onChange={handleQuantityChange}
+            type="number"
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
+        </div>
+
+        <div className="btn-cart">
+          <Button
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={addItem}
+          >
+            Add To Cart
+          </Button>
+        </div>
+      </section>
+    );
+  }
+}
+
+ApparelItemInfo.propTypes = {
+  productName: PropTypes.string.isRequired,
+  productPrice: PropTypes.number.isRequired,
+  productInfo: PropTypes.string.isRequired,
+  amtPurchased: PropTypes.number.isRequired,
+  handleQuantityChange: PropTypes.func.isRequired,
+  handleChange: PropTypes.func.isRequired,
+  addItem: PropTypes.func.isRequired,
+  displayApparelStock: PropTypes.func.isRequired,
+  size: PropTypes.string.isRequired,
 }
 
 class ShopItemDetailed extends Component {
@@ -95,6 +178,7 @@ class ShopItemDetailed extends Component {
     currentImage: 0
   };
 
+  // TODO make this smarter
   displayApparelStock = () => {
     const { xs_stock, s_stock, m_stock, l_stock, xl_stock } = this.state;
     const totalStock = xs_stock + s_stock + m_stock + l_stock + xl_stock;
@@ -120,10 +204,8 @@ class ShopItemDetailed extends Component {
     //check if user is logged in
     if (this.state.login === false) {
       alert("please login to add to cart");
-    }
-
-    else if (this.state.amtPurchased <= 0) {
-      alert('Sorry, cannot add a quantity of 0.')
+    } else if (this.state.amtPurchased <= 0) {
+      alert("Sorry, cannot add a quantity of 0.");
     }
 
     //check if quantity exceeded stock
@@ -256,13 +338,11 @@ class ShopItemDetailed extends Component {
 
   handleQuantityChange = event => {
     if (event.target.value < 0) {
-      this.setState({ amtPurchased: 0})
+      this.setState({ amtPurchased: 0 });
+    } else {
+      this.setState({ amtPurchased: event.target.value });
     }
-    else {
-      this.setState({ amtPurchased: event.target.value })
-    }
-  }
-
+  };
 
   //load item info by calling getProductInfo api and render to screen
   componentDidMount() {
@@ -316,7 +396,10 @@ class ShopItemDetailed extends Component {
   render() {
     if (this.state.isApparel === false) {
       return (
-        <div className="itemDetailed">
+        <section className="item-detailed-container">
+          <ItemImageViewer imageLink={this.state.imageLink} />
+
+          {/* TODO */}
           <h3> {this.state.productName} </h3>
           <div className="itemInfo">
             <div className="imageMagnifyContainer">
@@ -377,109 +460,23 @@ class ShopItemDetailed extends Component {
               </Button>
             </div>
           </div>
-        </div>
+        </section>
       );
     } else {
       return (
         <section className="item-detailed-container">
-
-          <ItemImageViewer 
-            imageLink={this.state.imageLink}
+          <ItemImageViewer imageLink={this.state.imageLink} />
+          <ApparelItemInfo
+            productName={this.state.productName}
+            productPrice={this.state.productPrice}
+            productInfo={this.state.productInfo}
+            handleQuantityChange={this.handleQuantityChange}
+            handleChange={this.handleChange}
+            addItem={this.addItem}
+            displayApparelStock={this.displayApparelStock}
+            amtPurchased={this.state.amtPurchased}
+            size={this.state.size}
           />
-
-          <section className="item-info">
-            <h2> {this.state.productName} </h2>
-            <div className="price">
-              ${Number(this.state.productPrice).toFixed(2)}
-            </div>
-            <div>
-              <b>Availability</b>: {this.displayApparelStock()}
-            </div>
-            <div>
-              <b>Club</b>: TODO
-            </div>
-            <p className="description">{this.state.productInfo}</p>
-
-            <div className="select-container">
-              <FormControl className="select-size">
-                <InputLabel htmlFor="select-size">Select Size</InputLabel>
-                <Select
-                  value={this.state.size}
-                  onChange={this.handleChange("size")}
-                  inputProps={{
-                    name: "size",
-                    id: "select-size"
-                  }}
-                >
-                  <MenuItem value=""><em>None</em></MenuItem>
-                  <MenuItem value={"X-Small"}> X-Small </MenuItem>
-                  <MenuItem value={"Small"}> Small </MenuItem>
-                  <MenuItem value={"Medium"}> Medium </MenuItem>
-                  <MenuItem value={"Large"}> Large </MenuItem>
-                  <MenuItem value={"X-Large"}> X-Large </MenuItem>
-                </Select>
-              </FormControl>
-
-              <TextField
-                className="quantity"
-                label="Quantity"
-                value={this.state.amtPurchased}
-                onChange={this.handleQuantityChange}
-                type="number"
-                InputLabelProps={{
-                  shrink: true
-                }}
-              />
-            </div>
-
-            <div className="btn-cart">
-              <Button
-                variant="contained"
-                size="small"
-                color="primary"
-                onClick={this.addItem}
-              >
-                Add To Cart
-              </Button>
-            </div>
-
-            {/* <p>
-              {" "}
-              <strong> Description:</strong> {this.state.productInfo}{" "}
-            </p> */}
-            {/* <div id="selectShirtSize">
-              <p>
-                {" "}
-                <strong> Select Size: </strong>{" "}
-              </p>
-              <select
-                onChange={this.handleSelect}
-                ref={select => {
-                  this.selectedSize = select;
-                }}
-              >
-                <option value="select"> Select </option>
-                <option value="Small"> Small </option>
-                <option value="Medium"> Medium </option>
-                <option value="Large"> Large </option>
-                <option value="X-Small"> X-Small </option>
-                <option value="X-Large"> X-Large </option>
-              </select>
-            </div> */}
-            {/* <Button size="small" color="primary" onClick={this.addItem}>
-              Add To Cart
-            </Button>
-
-            <Button id="test" onClick={this.removeQuantity}>
-              -
-            </Button>
-
-            {this.state.amtPurchased}
-
-            <Button id="test" onClick={this.addQuantity}>
-              +
-            </Button> */}
-          </section>
         </section>
       );
     }
