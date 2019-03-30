@@ -18,6 +18,8 @@ import cartReducer from './store/cartReducer';
 import vendorReducer from './store/vendorReducer';
 import shopItemReducer from './store/shopItemReducer';
 
+import 'typeface-roboto';
+
 //create store for redux state management
 //store stores state of application
 const rootReducer = combineReducers({
