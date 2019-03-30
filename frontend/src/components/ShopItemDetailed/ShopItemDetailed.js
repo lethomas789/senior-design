@@ -57,6 +57,10 @@ class ShopItemDetailed extends Component {
       alert("please login to add to cart");
     }
 
+    else if (this.state.amtPurchased <= 0) {
+      alert('Sorry, cannot add a quantity of 0.')
+    }
+
     //check if quantity exceeded stock
     else if (this.state.amtPurchased > Number(this.state.productStock)) {
       alert("Quantity exceeded stock amount");
@@ -184,6 +188,15 @@ class ShopItemDetailed extends Component {
   handleChange = name => event => {
     this.setState({ [name]: event.target.value });
   };
+
+  handleQuantityChange = event => {
+    if (event.target.value < 0) {
+      this.setState({ amtPurchased: 0})
+    }
+    else {
+      this.setState({ amtPurchased: event.target.value })
+    }
+  }
 
   //view next image, increment index in image array
   nextImage = () => {
@@ -376,11 +389,12 @@ class ShopItemDetailed extends Component {
                     id: "select-size"
                   }}
                 >
-                  <MenuItem value="X-Small"> X-Small </MenuItem>
-                  <MenuItem value="Small"> Small </MenuItem>
-                  <MenuItem value="Medium"> Medium </MenuItem>
-                  <MenuItem value="Large"> Large </MenuItem>
-                  <MenuItem value="X-Large"> X-Large </MenuItem>
+                  <MenuItem value=""><em>None</em></MenuItem>
+                  <MenuItem value={"X-Small"}> X-Small </MenuItem>
+                  <MenuItem value={"Small"}> Small </MenuItem>
+                  <MenuItem value={"Medium"}> Medium </MenuItem>
+                  <MenuItem value={"Large"}> Large </MenuItem>
+                  <MenuItem value={"X-Large"}> X-Large </MenuItem>
                 </Select>
               </FormControl>
 
@@ -388,7 +402,7 @@ class ShopItemDetailed extends Component {
                 className="quantity"
                 label="Quantity"
                 value={this.state.amtPurchased}
-                onChange={this.handleChange("amtPurchased")}
+                onChange={this.handleQuantityChange}
                 type="number"
                 InputLabelProps={{
                   shrink: true
