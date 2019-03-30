@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import PropTypes from 'prop-types';
 import actions from "../../store/actions";
 import { connect } from "react-redux";
 import axios from "axios";
@@ -10,6 +11,70 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
+
+class ItemImageViewer extends Component {
+  static PropTypes = {
+    // array of image links 
+    imageLink: PropTypes.array.isRequired,
+  }
+
+  state = {
+    currentImage: 0,
+  };
+
+  // view next image, increment index in image array
+  nextImage = () => {
+    if (this.state.currentImage < this.props.imageLink.length - 1) {
+      this.setState({
+        currentImage: this.state.currentImage + 1
+      });
+    }
+  };
+
+  // previous image, decrement index in image array
+  prevImage = () => {
+    if (this.state.currentImage > 0) {
+      this.setState({
+        currentImage: this.state.currentImage - 1
+      });
+    }
+  };
+
+  render() {
+    return (
+      <section className="item-image">
+        <div className="magnify-container">
+          <ReactImageMagnify
+            {...{
+              smallImage: {
+                alt: "Test Image",
+                isFluidWidth: true,
+                src: this.props.imageLink[this.state.currentImage]
+              },
+              largeImage: {
+                src: this.props.imageLink[this.state.currentImage],
+                width: 1200,
+                height: 1800,
+                enlargedImagePosition: "over"
+              }
+            }}
+          />
+
+          <div className="imageButtons">
+            <button onClick={this.prevImage} id="prevImage">
+              {" "}
+              Previous{" "}
+            </button>
+            <button onClick={this.nextImage} id="nextImage">
+              {" "}
+              Next{" "}
+            </button>
+          </div>
+        </div>
+      </section>
+    )
+  }
+}
 
 class ShopItemDetailed extends Component {
   state = {
@@ -198,23 +263,6 @@ class ShopItemDetailed extends Component {
     }
   }
 
-  //view next image, increment index in image array
-  nextImage = () => {
-    if (this.state.currentImage < this.state.imageLink.length - 1) {
-      this.setState({
-        currentImage: this.state.currentImage + 1
-      });
-    }
-  };
-
-  //previous image, decrement index in image array
-  prevImage = () => {
-    if (this.state.currentImage > 0) {
-      this.setState({
-        currentImage: this.state.currentImage - 1
-      });
-    }
-  };
 
   //load item info by calling getProductInfo api and render to screen
   componentDidMount() {
@@ -334,36 +382,10 @@ class ShopItemDetailed extends Component {
     } else {
       return (
         <section className="item-detailed-container">
-          <section className="item-image">
-            <div className="magnify-container">
-              <ReactImageMagnify
-                {...{
-                  smallImage: {
-                    alt: "Test Image",
-                    isFluidWidth: true,
-                    src: this.state.imageLink[this.state.currentImage]
-                  },
-                  largeImage: {
-                    src: this.state.imageLink[this.state.currentImage],
-                    width: 1200,
-                    height: 1800,
-                    enlargedImagePosition: "over"
-                  }
-                }}
-              />
 
-              <div className="imageButtons">
-                <button onClick={this.prevImage} id="prevImage">
-                  {" "}
-                  Previous{" "}
-                </button>
-                <button onClick={this.nextImage} id="nextImage">
-                  {" "}
-                  Next{" "}
-                </button>
-              </div>
-            </div>
-          </section>
+          <ItemImageViewer 
+            imageLink={this.state.imageLink}
+          />
 
           <section className="item-info">
             <h2> {this.state.productName} </h2>
