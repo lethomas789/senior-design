@@ -159,6 +159,70 @@ ApparelItemInfo.propTypes = {
   size: PropTypes.string.isRequired,
 }
 
+class ItemInfo extends Component {
+  render() {
+    const {
+      productName,
+      productPrice,
+      productInfo,
+      amtPurchased,
+      handleQuantityChange,
+      addItem,
+      displayStock
+    } = this.props;
+
+    return (
+      <section className="item-info">
+        <h2> {productName} </h2>
+        <div className="price">${Number(productPrice).toFixed(2)}</div>
+        <div>
+          <b>Availability</b>: {displayStock()}
+          <p>
+            <b>Club</b>: TODO
+          </p>
+        </div>
+        <p className="description">{productInfo}</p>
+
+        <div className="select-container">
+          <TextField
+            className="quantity"
+            label="Quantity"
+            value={amtPurchased}
+            onChange={handleQuantityChange}
+            type="number"
+            InputLabelProps={{
+              shrink: true
+            }}
+          />
+        </div>
+
+        <div className="btn-cart">
+          <Button
+            variant="contained"
+            size="small"
+            color="primary"
+            onClick={addItem}
+          >
+            Add To Cart
+          </Button>
+        </div>
+      </section>
+
+    );
+  }
+}
+
+ItemInfo.propTypes = {
+  productName: PropTypes.string.isRequired,
+  productPrice: PropTypes.number.isRequired,
+  productInfo: PropTypes.string.isRequired,
+  amtPurchased: PropTypes.number.isRequired,
+  handleQuantityChange: PropTypes.func.isRequired,
+  addItem: PropTypes.func.isRequired,
+  displayStock: PropTypes.func.isRequired,
+}
+
+
 class ShopItemDetailed extends Component {
   state = {
     imageLink: "",
@@ -198,6 +262,23 @@ class ShopItemDetailed extends Component {
 
     return <span className="stock">{text}</span>;
   };
+
+
+  displayStock = () => {
+    const { productStock } = this.state;
+
+    let text = "";
+
+    if (productStock > 10) {
+      text = "In Stock";
+    }
+    else if (productStock > 0) {
+      text = `Only ${productStock} items left!`;
+    } else if (productStock === 0) {
+      text = "Item out of stock.";
+    }
+    return <span className="stock">{text}</span>;
+  }
 
   //add item to user's cart
   addItem = () => {
@@ -398,68 +479,15 @@ class ShopItemDetailed extends Component {
       return (
         <section className="item-detailed-container">
           <ItemImageViewer imageLink={this.state.imageLink} />
-
-          {/* TODO */}
-          <h3> {this.state.productName} </h3>
-          <div className="itemInfo">
-            <div className="imageMagnifyContainer">
-              <ReactImageMagnify
-                {...{
-                  smallImage: {
-                    alt: "Test Image",
-                    width: 300,
-                    height: 300,
-                    src: this.state.imageLink[this.state.currentImage]
-                  },
-                  largeImage: {
-                    src: this.state.imageLink[this.state.currentImage],
-                    width: 600,
-                    height: 900,
-                    enlargedImagePosition: "beside"
-                  }
-                }}
-              />
-
-              <div className="imageButtons">
-                <button onClick={this.prevImage} id="prevImage">
-                  {" "}
-                  Previous{" "}
-                </button>
-                <button onClick={this.nextImage} id="nextImage">
-                  {" "}
-                  Next{" "}
-                </button>
-              </div>
-            </div>
-
-            <div id="itemDescriptions">
-              <p>
-                {" "}
-                <strong> Price: </strong> ${this.state.productPrice}{" "}
-              </p>
-              <p>
-                {" "}
-                <strong> Description:</strong> {this.state.productInfo}{" "}
-              </p>
-              <p>
-                {" "}
-                <strong> Stock:</strong> {this.state.productStock}{" "}
-              </p>
-              <Button size="small" color="primary" onClick={this.addItem}>
-                Add To Cart
-              </Button>
-
-              <Button id="test" onClick={this.removeQuantity}>
-                -
-              </Button>
-
-              {this.state.amtPurchased}
-
-              <Button id="test" onClick={this.addQuantity}>
-                +
-              </Button>
-            </div>
-          </div>
+          <ItemInfo
+            productName={this.state.productName}
+            productPrice={this.state.productPrice}
+            productInfo={this.state.productInfo}
+            handleQuantityChange={this.handleQuantityChange}
+            addItem={this.addItem}
+            displayStock={this.displayStock}
+            amtPurchased={this.state.amtPurchased}
+          />
         </section>
       );
     } else {
