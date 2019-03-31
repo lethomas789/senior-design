@@ -13,6 +13,10 @@ import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 
 class ItemImageViewer extends Component {
+  static propTypes = {
+    imageLink: PropTypes.array.isRequired
+  };
+
   state = {
     currentImage: 0
   };
@@ -36,6 +40,8 @@ class ItemImageViewer extends Component {
   };
 
   render() {
+    const { imageLink } = this.props;
+
     return (
       <section className="item-image">
         <div className="magnify-container">
@@ -44,13 +50,16 @@ class ItemImageViewer extends Component {
               smallImage: {
                 alt: "Test Image",
                 isFluidWidth: true,
-                src: this.props.imageLink[this.state.currentImage]
+                src: imageLink[this.state.currentImage]
               },
               largeImage: {
-                src: this.props.imageLink[this.state.currentImage],
+                src: imageLink[this.state.currentImage],
                 width: 1200,
                 height: 1800,
                 enlargedImagePosition: "over"
+              },
+              enlargedImageContainerStyle: {
+                zIndex: 10000 // set so enlarged image always display above
               }
             }}
           />
@@ -72,6 +81,18 @@ class ItemImageViewer extends Component {
 }
 
 class ApparelItemInfo extends Component {
+  static propTypes = {
+    productName: PropTypes.string.isRequired,
+    productPrice: PropTypes.number.isRequired,
+    productInfo: PropTypes.string.isRequired,
+    amtPurchased: PropTypes.number.isRequired,
+    handleQuantityChange: PropTypes.func.isRequired,
+    handleChange: PropTypes.func.isRequired,
+    addItem: PropTypes.func.isRequired,
+    displayApparelStock: PropTypes.func.isRequired,
+    size: PropTypes.string.isRequired
+  };
+
   render() {
     const {
       productName,
@@ -82,8 +103,9 @@ class ApparelItemInfo extends Component {
       addItem,
       handleChange,
       size,
-      displayApparelStock,
+      displayApparelStock
     } = this.props;
+    console.log('size is:', size);
 
     return (
       <section className="item-info">
@@ -99,26 +121,25 @@ class ApparelItemInfo extends Component {
 
         <div className="select-container">
           {/* TODO fix selector */}
-          <FormControl className="select-size">
-            <InputLabel htmlFor="select-size">Select Size</InputLabel>
-            <Select
-              value={size}
-              onChange={handleChange("size")}
-              inputProps={{
-                name: "size",
-                id: "select-size"
-              }}
-            >
-              <MenuItem value="">
-                <em>None</em>
-              </MenuItem>
-              <MenuItem value={"X-Small"}> X-Small </MenuItem>
-              <MenuItem value={"Small"}> Small </MenuItem>
-              <MenuItem value={"Medium"}> Medium </MenuItem>
-              <MenuItem value={"Large"}> Large </MenuItem>
-              <MenuItem value={"X-Large"}> X-Large </MenuItem>
-            </Select>
-          </FormControl>
+          <form autoComplete="off">
+            <FormControl className="select-size">
+              <InputLabel htmlFor="select-size">Select Size</InputLabel>
+              <Select
+                value={size}
+                onChange={handleChange("size")}
+                name="size"
+              >
+                <MenuItem value="None">
+                  <em>None</em>
+                </MenuItem>
+                <MenuItem value="X-Small"> X-Small </MenuItem>
+                <MenuItem value="Small"> Small </MenuItem>
+                <MenuItem value="Medium"> Medium </MenuItem>
+                <MenuItem value="Large"> Large </MenuItem>
+                <MenuItem value="X-Large"> X-Large </MenuItem>
+              </Select>
+            </FormControl>
+          </form>
 
           <TextField
             className="quantity"
@@ -147,19 +168,17 @@ class ApparelItemInfo extends Component {
   }
 }
 
-ApparelItemInfo.propTypes = {
-  productName: PropTypes.string.isRequired,
-  productPrice: PropTypes.number.isRequired,
-  productInfo: PropTypes.string.isRequired,
-  amtPurchased: PropTypes.number.isRequired,
-  handleQuantityChange: PropTypes.func.isRequired,
-  handleChange: PropTypes.func.isRequired,
-  addItem: PropTypes.func.isRequired,
-  displayApparelStock: PropTypes.func.isRequired,
-  size: PropTypes.string.isRequired,
-}
-
 class ItemInfo extends Component {
+  static propTypes = {
+    productName: PropTypes.string.isRequired,
+    productPrice: PropTypes.number.isRequired,
+    productInfo: PropTypes.string.isRequired,
+    amtPurchased: PropTypes.number.isRequired,
+    handleQuantityChange: PropTypes.func.isRequired,
+    addItem: PropTypes.func.isRequired,
+    displayStock: PropTypes.func.isRequired
+  };
+
   render() {
     const {
       productName,
@@ -207,23 +226,13 @@ class ItemInfo extends Component {
           </Button>
         </div>
       </section>
-
     );
   }
 }
 
-ItemInfo.propTypes = {
-  productName: PropTypes.string.isRequired,
-  productPrice: PropTypes.number.isRequired,
-  productInfo: PropTypes.string.isRequired,
-  amtPurchased: PropTypes.number.isRequired,
-  handleQuantityChange: PropTypes.func.isRequired,
-  addItem: PropTypes.func.isRequired,
-  displayStock: PropTypes.func.isRequired,
-}
-
-
 class ShopItemDetailed extends Component {
+  // TODO update add item behavior for apparel; either frontend or backend or
+  // both
   state = {
     imageLink: "",
     productInfo: "",
@@ -238,7 +247,7 @@ class ShopItemDetailed extends Component {
     l_stock: 0,
     xs_stock: 0,
     xl_stock: 0,
-    size: "",
+    size: "None",
     currentImage: 0
   };
 
@@ -263,7 +272,6 @@ class ShopItemDetailed extends Component {
     return <span className="stock">{text}</span>;
   };
 
-
   displayStock = () => {
     const { productStock } = this.state;
 
@@ -271,14 +279,13 @@ class ShopItemDetailed extends Component {
 
     if (productStock > 10) {
       text = "In Stock";
-    }
-    else if (productStock > 0) {
+    } else if (productStock > 0) {
       text = `Only ${productStock} items left!`;
     } else if (productStock === 0) {
       text = "Item out of stock.";
     }
     return <span className="stock">{text}</span>;
-  }
+  };
 
   //add item to user's cart
   addItem = () => {
@@ -453,7 +460,6 @@ class ShopItemDetailed extends Component {
               l_stock: res.data.product.l_stock,
               xs_stock: res.data.product.xs_stock,
               xl_stock: res.data.product.xl_stock,
-              size: res.data.product.size
             });
           } else {
             this.setState({
@@ -491,6 +497,7 @@ class ShopItemDetailed extends Component {
         </section>
       );
     } else {
+      console.log('size down here is: ', this.state.size);
       return (
         <section className="item-detailed-container">
           <ItemImageViewer imageLink={this.state.imageLink} />
