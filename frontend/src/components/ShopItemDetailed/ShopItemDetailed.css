@@ -51,6 +51,36 @@
   margin-top: 30px;
 }
 
+.carousel-container {
+  display: flex;
+  justify-content: space-around;
+  width: 600px;
+  margin-top: 30px;
+}
+
+.carousel-img {
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 3px;
+}
+
+.selected-carousel-img {
+  width: 150px;
+  height: 150px;
+  cursor: pointer;
+  border: 1px solid black;
+  border-radius: 3px;
+  -webkit-filter: opacity(.5);
+  filter: opacity(.5);
+}
+
+.carousel-img:hover {
+  -webkit-filter: opacity(.5);
+  filter: opacity(.5);
+}
+
 @media screen 
   and (min-width: 900px) 
   and (max-width: 1199px)
@@ -82,6 +112,7 @@
   .item-info {
     margin-right: 100px;
   }
+
 }
 /*
 .itemDetailed{
