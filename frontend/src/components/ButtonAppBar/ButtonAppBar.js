@@ -200,10 +200,10 @@ class ButtonAppBar extends Component {
 
             {/* NAV BUTTONS */}
             <div id="navLink">
-
               {/* ADMIN BUTTONS */}
               {this.props.isAdmin ? (
                 <Fragment className="admin-buttons">
+                  <Button color = "inherit"> Change Club: </Button> 
                   <Button color="inherit">
                     <InputLabel className="navLabel" color="inherit">
                       {" "}
@@ -255,6 +255,9 @@ class ButtonAppBar extends Component {
                 <Fragment></Fragment>
               )}
 
+              {/* ACCOUNT BUTTON? */}
+
+              {/*LOGIN/LOGOUT BUTTON*/}
               <Button
                 component={Link}
                 to={loginRoute}
