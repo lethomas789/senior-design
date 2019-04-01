@@ -1,3 +1,17 @@
+@import "../../../node_modules/slick-carousel/slick/slick.css";
+@import "../../../node_modules/slick-carousel/slick/slick-theme.css";
+
+/* @import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css"; */
+
+.react-slick * {
+  min-height: 0;
+  min-width: 0;
+  justify-self: center;
+  max-width: 1200px;
+  max-height: 800px;
+}
+
 .item-detailed-container {
   display: grid;
   box-sizing: border-box;
@@ -8,8 +22,11 @@
 }
 
 .item-image {
-  margin: 0 auto;
+  /* margin: 0 auto; */
+  min-height: 0;
+  min-width: 0;
   justify-self: center;
+  max-width: 1200px;
 }
 
 .item-info h2 {
@@ -51,6 +68,12 @@
   margin-top: 30px;
 }
 
+.magnify-container {
+  min-width: 0;
+  min-height: 0;
+  justify-self: center;
+}
+
 @media screen 
   and (min-width: 900px) 
   and (max-width: 1199px)
@@ -71,6 +94,9 @@
   and (min-width: 1200px) 
   and (-webkit-min-device-pixel-ratio: 1) { 
 
+  .item-image{
+    margin-left: 500px;
+  }
 
   .magnify-container{
     max-width: 600px;

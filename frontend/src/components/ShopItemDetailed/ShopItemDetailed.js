@@ -11,6 +11,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
+import ReactSlick from "react-slick";
 
 class ItemImageViewer extends Component {
   static propTypes = {
@@ -40,43 +41,87 @@ class ItemImageViewer extends Component {
   };
 
   render() {
-    const { imageLink } = this.props;
+    if (this.props.imageLink.length === 0) {
+      return "LOADING";
+    } else {
+      const { imageLink } = this.props;
 
-    return (
-      <section className="item-image">
-        <div className="magnify-container">
-          <ReactImageMagnify
+      return (
+        <section className="item-image">
+          <ReactSlick
             {...{
-              smallImage: {
-                alt: "Test Image",
-                isFluidWidth: true,
-                src: imageLink[this.state.currentImage]
-              },
-              largeImage: {
-                src: imageLink[this.state.currentImage],
-                width: 1200,
-                height: 1800,
-                enlargedImagePosition: "over"
-              },
-              enlargedImageContainerStyle: {
-                zIndex: 10000 // set so enlarged image always display above
-              }
+              dots: true,
+              infinite: true,
+              speed: 500,
+              slidesToShow: 1,
+              slidesToScroll: 1,
             }}
-          />
+          >
+            {imageLink.map((img, index) => (
+              <div key={index} className="magnify-container">
+                <ReactImageMagnify
+                  {...{
+                    smallImage: {
+                      alt: "Test Image",
+                      isFluidWidth: true,
+                      src: img
+                    },
+                    largeImage: {
+                      src: img,
+                      width: 1200,
+                      height: 1800,
+                      enlargedImagePosition: "beside"
+                    },
+                    enlargedImageContainerStyle: {
+                      zIndex: 10000 // set so enlarged image always display above
+                    }
+                  }}
+                />
+              </div>
+            ))}
+          </ReactSlick>
+        </section>
+      );
 
-          <div className="imageButtons">
-            <button onClick={this.prevImage} id="prevImage">
-              {" "}
-              Previous{" "}
-            </button>
-            <button onClick={this.nextImage} id="nextImage">
-              {" "}
-              Next{" "}
-            </button>
+      /*
+      return (
+        <section className="item-image">
+          <div className="magnify-container">
+            <ReactImageMagnify
+              {...{
+                smallImage: {
+                  alt: "Test Image",
+                  isFluidWidth: true,
+                  src: imageLink[this.state.currentImage]
+                },
+                largeImage: {
+                  src: imageLink[this.state.currentImage],
+                  width: 1200,
+                  height: 1800,
+                  enlargedImagePosition: "over"
+                },
+                enlargedImageContainerStyle: {
+                  zIndex: 10000 // set so enlarged image always display above
+                }
+              }}
+            />
+
+            <div className="imageButtons">
+              <button onClick={this.prevImage} id="prevImage">
+                {" "}
+                Previous{" "}
+              </button>
+              <button onClick={this.nextImage} id="nextImage">
+                {" "}
+                Next{" "}
+              </button>
+            </div>
           </div>
-        </div>
-      </section>
-    );
+        </section>
+      );
+    }
+    */
+    }
   }
 }
 
@@ -105,7 +150,6 @@ class ApparelItemInfo extends Component {
       size,
       displayApparelStock
     } = this.props;
-    console.log('size is:', size);
 
     return (
       <section className="item-info">
@@ -124,11 +168,7 @@ class ApparelItemInfo extends Component {
           <form autoComplete="off">
             <FormControl className="select-size">
               <InputLabel htmlFor="select-size">Select Size</InputLabel>
-              <Select
-                value={size}
-                onChange={handleChange("size")}
-                name="size"
-              >
+              <Select value={size} onChange={handleChange("size")} name="size">
                 <MenuItem value="None">
                   <em>None</em>
                 </MenuItem>
@@ -171,7 +211,7 @@ class ApparelItemInfo extends Component {
 class ItemInfo extends Component {
   static propTypes = {
     productName: PropTypes.string.isRequired,
-    productPrice: PropTypes.number.isRequired,
+    productPrice: PropTypes.string.isRequired,
     productInfo: PropTypes.string.isRequired,
     amtPurchased: PropTypes.number.isRequired,
     handleQuantityChange: PropTypes.func.isRequired,
@@ -234,7 +274,7 @@ class ShopItemDetailed extends Component {
   // TODO update add item behavior for apparel; either frontend or backend or
   // both
   state = {
-    imageLink: "",
+    imageLink: [],
     productInfo: "",
     productName: "",
     productPrice: "",
@@ -459,7 +499,7 @@ class ShopItemDetailed extends Component {
               m_stock: res.data.product.m_stock,
               l_stock: res.data.product.l_stock,
               xs_stock: res.data.product.xs_stock,
-              xl_stock: res.data.product.xl_stock,
+              xl_stock: res.data.product.xl_stock
             });
           } else {
             this.setState({
@@ -497,7 +537,6 @@ class ShopItemDetailed extends Component {
         </section>
       );
     } else {
-      console.log('size down here is: ', this.state.size);
       return (
         <section className="item-detailed-container">
           <ItemImageViewer imageLink={this.state.imageLink} />
