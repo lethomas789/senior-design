@@ -5,11 +5,11 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 
 router.get('/', (req, res) => {
-  let productsRef = db.collection('products');
+  const productsRef = db.collection('products');
 
   productsRef.get()
     .then(snapshot => {
-      let products = [];
+      const products = [];
       snapshot.forEach(doc => {
         // push each product doc to array
         products.push(doc.data());

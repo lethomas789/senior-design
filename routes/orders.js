@@ -24,23 +24,25 @@ const Email = require('email-templates');
 router.post('/', (req, res) => {
 
   if (req.body.params) {
-    var items = req.body.params.items;
-    var totalPrice = req.body.params.totalPrice;
-    var vid = req.body.params.vid;  
-    var user = req.body.params.user;
-    var paymentID = req.body.params.paymentID;
-    var payerID = req.body.params.payerID;
+    var {
+      items,
+      totalPrice,
+      vid,
+      user,
+      paymentID,
+      payerID
+    } = req.body.params;
   }
   else {
-    var items = req.body.items;
-    var totalPrice = req.body.totalPrice;
-    var vid = req.body.vid;  
-    var user = req.body.user;
-    var paymentID = req.body.paymentID;
-    var payerID = req.body.payerID;
+    var {
+      items,
+      totalPrice,
+      vid,
+      user,
+      paymentID,
+      payerID
+    } = req.body;
   }
-
-  console.log("vid is", vid);
 
   // TODO: figure out how we want to structure multiple vendors in an order.
   // TODO: test if paymentID is transaction ID in paypal
@@ -58,7 +60,7 @@ router.post('/', (req, res) => {
     });
   }
   
-  var userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: provided user does not exist:', user);

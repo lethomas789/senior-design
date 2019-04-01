@@ -11,25 +11,25 @@ const db = admin.firestore();
  */
 router.get('/', (req, res) => {
 
-  let vendorsRef = db.collection('vendors');
+  const vendorsRef = db.collection('vendors');
 
   vendorsRef.get().then(snapshot => {
-    let vendors = [];
+    const vendors = [];
 
     // NOTE: will send all data; the date will not be converted here.
     snapshot.forEach(doc => {
       let vendorData = {
-        bio: doc.data().bio,
-        vendorName: doc.data().vendorName,
-        vid: doc.data().vid
-      };
+        bio,
+        vendorName,
+        vid
+      } = doc.data();
       vendors.push(vendorData);
     });
     console.log('Successfully retrieved all vendor info.');
     return res.status(200).json({
       success: true,
       message: 'Successfully retrieved all vendor info.',
-      vendors: vendors
+      vendors
     });
   })
   .catch(err => {

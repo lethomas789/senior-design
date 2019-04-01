@@ -10,55 +10,59 @@ const db = admin.firestore();
  */
 router.post('/addNewProduct', (req, res) => {
 
+
   if (req.body.params){ 
-    var vid = req.body.params.vid;
-    var user = req.body.params.user;
-    var productInfo = req.body.params.productInfo;
-    var productName = req.body.params.productName;
-    var productPicture = req.body.params.productPicture;
+    var {
+      vid,
+      user,
+      productInfo,
+      productName,
+      productPicture,  // TODO: ask how this is being sent again
+      pid,
+    } = req.body.params;
+
     var productPrice = Number(req.body.params.productPrice);
     var isApparel = false;  // init to be false
 
+    // stock is total number of items
+    var stock = Number(req.body.params.stock);
+
     // if apparel === true, multiple types of stock
     if (req.body.params.isApparel) {
-      isApparel = req.body.params.isApparel;  // change to true
+      isApparel = true;
       var xs_stock = Number(req.body.params.xs_stock);
       var s_stock = Number(req.body.params.s_stock);
       var m_stock = Number(req.body.params.m_stock);
       var l_stock = Number(req.body.params.l_stock);
       var xl_stock = Number(req.body.params.xl_stock);
     }
-    // stock is total number of items
-    var stock = Number(req.body.params.stock);
-
-    // frontend sends pid here b/c we want to save images under a pid
-    var pid = req.body.params.pid;
   }
+
   else {
-    var vid = req.body.vid;
-    var user = req.body.user;
-    var productInfo = req.body.productInfo;
-    var productName = req.body.productName;
-    // TODO figure out how to add many pictures
-    var productPicture = req.body.productPicture;
+    var {
+      vid,
+      user,
+      productInfo,
+      productName,
+      productPicture,
+      pid,
+    } = req.body;
+
     var productPrice = Number(req.body.productPrice);
-    var stock = Number(req.body.stock);
     var isApparel = false;  // init to be false
+
+    // stock is total number of items combined
+    var stock = Number(req.body.stock);      
 
     // if apparel === true, multiple types of stock
     if (req.body.isApparel) {
-      isApparel = req.body.isApparel;  // change to true
+      isApparel = true;
       var xs_stock = Number(req.body.xs_stock);
       var s_stock = Number(req.body.s_stock);
       var m_stock = Number(req.body.m_stock);
       var l_stock = Number(req.body.l_stock);
       var xl_stock = Number(req.body.xl_stock);
     }
-    // stock is total number of items combined
-    var stock = Number(req.body.stock);      
-
-    // frontend sends pid here b/c we want to save images under a pid
-    var pid = req.body.pid;
   }
 
   /*
@@ -123,44 +127,44 @@ router.post('/addNewProduct', (req, res) => {
       // if apparel true, save extra stock params
       if (isApparel) {
         var productData = {
-          productInfo: productInfo,
-          productName: productName,
-          productPrice: productPrice,
-          vid: vid,
-          productPicture: pictures,  // array of picture links
+          productInfo,
+          productName,
+          productPrice,
+          vid,
+          pictures,  // array of picture links
 
-          isApparel: isApparel,
-          stock: stock,
-          xs_stock: xs_stock,
-          s_stock: s_stock,
-          m_stock: m_stock,
-          l_stock: l_stock,
-          xl_stock: xl_stock,
-          purchasedStock: 0,
+          isApparel,
+          stock,
+          xs_stock,
+          s_stock,
+          m_stock,
+          l_stock,
+          xl_stock,
+          purchasedStock: 0,  // init to be 0
 
-          lastUpdate: lastUpdate,
-          lastUpdateUser: lastUpdateUser,
+          lastUpdate,
+          lastUpdateUser,
 
-          pid: pid
+          pid
         };
       }
       // else, just save stock
       else {
         var productData = {
-          productInfo: productInfo,
-          productName: productName,
-          productPrice: productPrice,
-          vid: vid,
-          productPicture: pictures,  // array of picture links
+          productInfo,
+          productName,
+          productPrice,
+          vid,
+          pictures,  // array of picture links
 
-          isApparel: isApparel,
-          stock: stock,
-          purchasedStock: 0,
+          isApparel,
+          stock,
+          purchasedStock: 0,  // init to be 0
 
-          lastUpdate: lastUpdate,
-          lastUpdateUser: lastUpdateUser,
+          lastUpdate,
+          lastUpdateUser,
 
-          pid: pid
+          pid
         };
       }
 
@@ -175,26 +179,6 @@ router.post('/addNewProduct', (req, res) => {
           success: true,
           message: 'Successfully added new product.'
         });
-
-        /*
-        // NOTE: no longer needed to add to vendor subcollection
-        vendorRef.collection('products').doc(ref.id).set(productData)
-          .then(_ => {
-            console.log('Succesfully added new product.');
-            return res.status(200).json({
-              success: true,
-              message: 'Successfully added new product.'
-            });
-          })
-          .catch(err => {
-            console.log('Error in adding new product:', err);
-            return res.status(200).json({
-              success: false,
-              message: 'Error in adding new product: ' + err
-            });
-          });
-        */
-
       })
       .catch(err => {  // catch for setting new product
         console.log('Error in adding new product:', err);
@@ -234,14 +218,18 @@ router.post('/addNewProduct', (req, res) => {
 router.get('/getProduct', (req, res) => {
 
   if (req.query.params) {
-    var vid = req.query.params.vid;
-    var user = req.query.params.user;
-    var pid = req.query.params.pid;
+    var {
+      vid,
+      user,
+      pid
+    } = req.query.params;
   }
   else {
-    var vid = req.query.vid;
-    var user = req.query.user;
-    var pid = req.query.pid;
+    var {
+      vid,
+      user,
+      pid
+    } = req.query;
   }
 
   /*
