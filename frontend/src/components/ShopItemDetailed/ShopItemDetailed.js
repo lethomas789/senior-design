@@ -12,6 +12,29 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 
+class CarouselImage extends Component {
+  handleClick = () => {
+    this.props.onClick(this.props.index);
+  };
+
+  render() {
+    const { src, index, isActive } = this.props;
+
+    return (
+      <img
+        key={index}
+        data-index={index}
+        className={
+          isActive ? "selected-carousel-img" : "carousel-img"
+        }
+        src={src}
+        alt={`Product Img${index}`}
+        onClick={this.handleClick}
+      />
+    );
+  }
+}
+
 class ItemImageViewer extends Component {
   static propTypes = {
     imageLink: PropTypes.array.isRequired
@@ -39,9 +62,17 @@ class ItemImageViewer extends Component {
     }
   };
 
+  changeImage = index => {
+    // console.log('click event');
+    // console.log(e.target.getAttribute('data-index'));
+    this.setState({
+      // currentImage: e.target.getAttribute("data-index")
+      currentImage: index
+    });
+  };
+
   render() {
     const { imageLink } = this.props;
-
     return (
       <section className="item-image">
         <div className="magnify-container">
@@ -64,7 +95,7 @@ class ItemImageViewer extends Component {
             }}
           />
 
-          <div className="imageButtons">
+          {/* <div className="imageButtons">
             <button onClick={this.prevImage} id="prevImage">
               {" "}
               Previous{" "}
@@ -73,7 +104,19 @@ class ItemImageViewer extends Component {
               {" "}
               Next{" "}
             </button>
-          </div>
+          </div> */}
+        </div>
+
+        <div className="carousel-container">
+          {imageLink.map((src, index) => (
+            <CarouselImage
+              key={index}
+              index={index}
+              src={src}
+              isActive={this.state.currentImage === index}
+              onClick={this.changeImage}
+            />
+          ))}
         </div>
       </section>
     );
@@ -105,7 +148,6 @@ class ApparelItemInfo extends Component {
       size,
       displayApparelStock
     } = this.props;
-    console.log('size is:', size);
 
     return (
       <section className="item-info">
@@ -124,11 +166,7 @@ class ApparelItemInfo extends Component {
           <form autoComplete="off">
             <FormControl className="select-size">
               <InputLabel htmlFor="select-size">Select Size</InputLabel>
-              <Select
-                value={size}
-                onChange={handleChange("size")}
-                name="size"
-              >
+              <Select value={size} onChange={handleChange("size")} name="size">
                 <MenuItem value="None">
                   <em>None</em>
                 </MenuItem>
@@ -234,7 +272,7 @@ class ShopItemDetailed extends Component {
   // TODO update add item behavior for apparel; either frontend or backend or
   // both
   state = {
-    imageLink: "",
+    imageLink: [],
     productInfo: "",
     productName: "",
     productPrice: "",
@@ -459,7 +497,7 @@ class ShopItemDetailed extends Component {
               m_stock: res.data.product.m_stock,
               l_stock: res.data.product.l_stock,
               xs_stock: res.data.product.xs_stock,
-              xl_stock: res.data.product.xl_stock,
+              xl_stock: res.data.product.xl_stock
             });
           } else {
             this.setState({
@@ -497,7 +535,6 @@ class ShopItemDetailed extends Component {
         </section>
       );
     } else {
-      console.log('size down here is: ', this.state.size);
       return (
         <section className="item-detailed-container">
           <ItemImageViewer imageLink={this.state.imageLink} />
