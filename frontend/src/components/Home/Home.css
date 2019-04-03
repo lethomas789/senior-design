@@ -1,5 +1,5 @@
 #homeContainer{
-    display:flex;
+    /* display:flex; */
     flex-direction: column;
 }
 
@@ -8,8 +8,8 @@
 }
 
 #carouselContainer{
-  width:80%;
-  height:80%;
+  width:70%;
+  height:70%;
   display:flex;
   flex-direction: column;
   justify-content: center;
@@ -34,7 +34,7 @@
     align-items: center;
     justify-content: center;
     background-size: cover;
-    height: 300px;
+    width: 300px;
   }
   
   .each-slide span {
@@ -65,3 +65,35 @@
     margin: 0;
     background: #adceed;
   }
+
+  .hero-image {
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))); */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+  }
+  
+  .hero-text {
+    /* text-align: center; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* overflow: hidden; */
+    font-size: 100px;
+    transform: translate(-50%, -50%);
+    color: white;
+  }
+ p {
+   text-align: center;
+   display: block;
+ }
+
+ .bottom-tabs {
+  -webkit-column-count: 3; /* Chrome, Safari, Opera */
+  -moz-column-count: 3; /* Firefox */
+  column-count: 3;
+  -webkit-column-width: 100px; /* Chrome, Safari, Opera */
+  -moz-column-width: 100px; /* Firefox */
+  column-width: 100px;
+}
