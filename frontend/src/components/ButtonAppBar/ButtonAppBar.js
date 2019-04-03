@@ -56,7 +56,8 @@ class ButtonAppBar extends Component {
     currentAdminOf: this.props.vendorID,
     adminsOf: this.props.adminsOf,
     openSelect: false,
-    currentVendor: ""
+    currentVendor: "",
+    anchorEl: null
   };
 
   //when navbar loads, get list of all vendors in database
@@ -73,6 +74,15 @@ class ButtonAppBar extends Component {
         alert(err);
       });
   }
+
+  // handle menu
+  handleMenuClose = () => {
+    this.setState({ anchorEl: null });
+  };
+
+  handleAdminClick = event => {
+    this.setState({ anchorEl: event.currentTarget });
+  };
 
   //handle dialog closing
   handleClose = () => {
@@ -161,6 +171,7 @@ class ButtonAppBar extends Component {
 
   render() {
     const { classes } = this.props;
+    const { anchorEl } = this.state;
 
     if (this.props.isAdmin) {
       var vendorList = this.props.adminsOf.map(result => {
@@ -203,7 +214,50 @@ class ButtonAppBar extends Component {
               {/* ADMIN BUTTONS */}
               {this.props.isAdmin ? (
                 <Fragment className="admin-buttons">
-                  <Button color = "inherit"> Change Club: </Button> 
+                  <Button
+                    aria-owns={anchorEl ? "admin-menu" : undefined}
+                    aria-haspopup="true"
+                    onClick={this.handleAdminClick}
+                  >
+                    Admin Menu
+                  </Button>
+                  <Menu
+                    id="admin-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleMenuClose}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={editClubRoute}
+                      color="inherit"
+                      onClick={this.handleMenuClose}
+                    >
+                      {" "}
+                      Edit Club Info{" "}
+                    </MenuItem>
+                    <MenuItem
+                      component={Link}
+                      to={addProductRoute}
+                      color="inherit"
+                      onClick={this.handleMenuClose}
+                    >
+                      {" "}
+                      Add Items{" "}
+                    </MenuItem>
+                    <MenuItem
+                      component={Link}
+                      to={aboutRoute}
+                      color="inherit"
+                      onClick={this.handleMenuClose}
+                    >
+                      {" "}
+                      Edit Items{" "}
+                    </MenuItem>
+                  </Menu>
+
+                  {/* old */}
+                  <Button color="inherit"> Change Club: </Button>
                   <Button color="inherit">
                     <InputLabel className="navLabel" color="inherit">
                       {" "}
@@ -251,8 +305,8 @@ class ButtonAppBar extends Component {
                   {" "}
                   Sign Up{" "}
                 </Button>
-              ): (
-                <Fragment></Fragment>
+              ) : (
+                <Fragment />
               )}
 
               {/* ACCOUNT BUTTON? */}
