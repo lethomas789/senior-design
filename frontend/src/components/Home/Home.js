@@ -14,14 +14,22 @@ export default class Home extends Component {
       <div id = "homeContainer">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
           <h1> Welcome to ECS193 ECommerce! </h1>
-          <div className = "hero-image">
+
           <img src={require('../../images/wics2.png')} width="100%" />
-          </div>
+       
           <p>This is a ecommerce website for UC Davis's clubs. 
           Here we make merchandise available from all different clubs of Davis.
           </p>
-          <div className = "bottom-tabs">
+          <div className = "roww">
+          <div className="colls">
           <img src={require('../../images/cows.jpg')} width="100%" />
+          </div>
+          <div className="colls">
+          <img src={require('../../images/orientation.jpg')} width="100%" />
+          </div>
+          <div className="colls">
+          <img src={require('../../images/band.jpg')} width="100%" />
+          </div>
           </div>
          
 

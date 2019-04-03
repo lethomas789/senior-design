@@ -1,6 +1,8 @@
 #homeContainer{
     /* display:flex; */
     flex-direction: column;
+    margin-left: 20px;
+    margin-right: 20px;
 }
 
 #textContainer{
@@ -96,4 +98,18 @@
   -webkit-column-width: 100px; /* Chrome, Safari, Opera */
   -moz-column-width: 100px; /* Firefox */
   column-width: 100px;
+}
+
+/* Create three equal columns that floats next to each other */
+.colls {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.roww:after {
+  content: "";
+  display: table;
+  clear: both;
 }
