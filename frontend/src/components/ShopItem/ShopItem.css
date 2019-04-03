@@ -45,7 +45,7 @@ h5 {
 }
 
 .box {
-  background-color: transparent;
+  background-color: white;
   width: 300px;
   min-height: 300px;
   box-sizing: content-box;  

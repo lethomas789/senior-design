@@ -47,7 +47,8 @@ class ShopView extends Component {
 
     return (
       <div className = "grow">
-        <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
+         <Grid container direction = "column" display= "flex"  justifyContent= "center" alignItems="center" height= "100vh">
+        {/* <Grid container direction="column" justify="center"alignContent = "center" alignItems="center"> */}
           <h1> Shop </h1>    
           <div className = "container">     
           <div className = "hero-image">
@@ -58,8 +59,10 @@ class ShopView extends Component {
           </div>
           </div> 
         </Grid>
+        
+        <Grid container direction = "row" display= "flex"  justifyContent= "center" alignItems="center" height= "100vh" justify-xs-space-evenly>
 
-        <Grid container spacing={24} direction="row" justify="flex-start" alignItems="center" justify-xs-space-evenly>
+        {/* <Grid container spacing={24} direction="row" justify="flex-start" alignItems="center" justify-xs-space-evenly> */}
           {items}
         </Grid>
       </div>
