@@ -1,0 +1,29 @@
+:root {
+  --table-columns: 2.5fr 1fr 1fr 1fr;
+  --table-border-color: 1px solid blue;
+}
+
+.cart-row-container {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: var(--table-columns);
+  border-bottom: var(--table-border-color);
+}
+
+.cart-item-container {
+  display: grid;
+  grid-template-columns: 1fr 2fr;
+}
+
+.cart-img {
+  height: 120px;
+  width: 120px;
+}
+
+.cart-item-info {
+  justify-self: start;
+}
+
+.cart-item-info ul {
+  list-style: none;
+}

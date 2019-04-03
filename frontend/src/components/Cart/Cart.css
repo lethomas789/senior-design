@@ -1,0 +1,42 @@
+:root {
+  --table-columns: 2.5fr 1fr 1fr 1fr;
+  --table-border-color: 1px solid blue;
+}
+
+.cart-container {
+  display: grid;
+  grid-template-columns: var(--table-columns);
+  max-width: 980px;
+
+  margin: 50px auto;
+}
+
+.table-header {
+  border-bottom: var(--table-border-color);
+}
+
+.table-row {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: var(--table-columns);
+  border-bottom: var(--table-border-color);
+
+}
+
+
+
+
+
+/*
+.table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.table {
+  width: 980px;
+  justify-content: space-between;
+  align-self: center;
+}
+*/
