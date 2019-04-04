@@ -133,7 +133,8 @@ class ApparelItemInfo extends Component {
     handleChange: PropTypes.func.isRequired,
     addItem: PropTypes.func.isRequired,
     displayApparelStock: PropTypes.func.isRequired,
-    size: PropTypes.string.isRequired
+    size: PropTypes.string.isRequired,
+    clubName: PropTypes.func.isRequired
   };
 
   render() {
@@ -146,7 +147,8 @@ class ApparelItemInfo extends Component {
       addItem,
       handleChange,
       size,
-      displayApparelStock
+      displayApparelStock,
+      clubName
     } = this.props;
 
     return (
@@ -156,7 +158,7 @@ class ApparelItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayApparelStock()}
           <p>
-            <b>Club</b>: TODO
+            <b>Club</b>: {clubName}
           </p>
         </div>
         <p className="description">{productInfo}</p>
@@ -214,7 +216,8 @@ class ItemInfo extends Component {
     amtPurchased: PropTypes.number.isRequired,
     handleQuantityChange: PropTypes.func.isRequired,
     addItem: PropTypes.func.isRequired,
-    displayStock: PropTypes.func.isRequired
+    displayStock: PropTypes.func.isRequired,
+    clubName: PropTypes.func.isRequired
   };
 
   render() {
@@ -225,7 +228,8 @@ class ItemInfo extends Component {
       amtPurchased,
       handleQuantityChange,
       addItem,
-      displayStock
+      displayStock,
+      clubName
     } = this.props;
 
     return (
@@ -277,7 +281,7 @@ class ShopItemDetailed extends Component {
     productName: "",
     productPrice: "",
     amtPurchased: 1,
-    vid: "",
+    vendor: "",
     productStock: "",
     isApparel: false,
     s_stock: 0,
@@ -286,7 +290,8 @@ class ShopItemDetailed extends Component {
     xs_stock: 0,
     xl_stock: 0,
     size: "None",
-    currentImage: 0
+    currentImage: 0,
+    vendorNames: []
   };
 
   // TODO make this smarter
@@ -472,56 +477,88 @@ class ShopItemDetailed extends Component {
 
   //load item info by calling getProductInfo api and render to screen
   componentDidMount() {
-    //extract param values from URL
-    //match object contains parameter values
-    const handle = this.props.match.params;
 
-    //obtain item info from server based on matching pid
-    //pid extracted from handle match object params
-    const apiURL = "/api/getProductInfo";
-    axios
-      .get(apiURL, {
-        params: {
-          pid: handle.pid
-        }
-      })
+    //get list of vendor names
+    const vendorAPI = "/api/getVendorInfo";
+
+    //update state of vendors
+    axios.get(vendorAPI)
       .then(res => {
-        //if successfully got product info, update component
-        if (res.data.success === true) {
-          //update state of component
-          console.log("checking response for is apparel ", res.data.product);
-          if (res.data.product.isApparel === true) {
-            this.setState({
-              productInfo: res.data.product.productInfo,
-              productName: res.data.product.productName,
-              productPrice: res.data.product.productPrice,
-              imageLink: res.data.product.productPicture,
-              productStock: res.data.product.productStock,
-              vid: res.data.product.vid,
-              isApparel: true,
-              s_stock: res.data.product.s_stock,
-              m_stock: res.data.product.m_stock,
-              l_stock: res.data.product.l_stock,
-              xs_stock: res.data.product.xs_stock,
-              xl_stock: res.data.product.xl_stock
+        if(res.data.success === true){
+          //update list of vendors
+          this.setState({
+            vendorNames: res.data.vendors
+          });
+
+          //after getting list of vendors, make request to get product info
+
+          //extract param values from URL
+          //match object contains parameter values
+          const handle = this.props.match.params;
+
+          //obtain item info from server based on matching pid
+          //pid extracted from handle match object params
+          const apiURL = "/api/getProductInfo";
+          axios
+            .get(apiURL, {
+              params: {
+                pid: handle.pid
+              }
+            })
+            .then(res => {
+              //if successfully got product info, update component
+              if (res.data.success === true) {
+                
+                //get club name for this product
+                var vendorName = "";
+
+                //go through each vendor and check if vid matches item vid
+                for(let i = 0; i < this.state.vendorNames.length; i++){
+                  //extract matching vid
+                  if(this.state.vendorNames[i].vid === res.data.product.vid){
+                    vendorName = this.state.vendorNames[i].vendorName;
+                  }
+                }
+
+                //if the product is an apparel
+                if (res.data.product.isApparel === true) {
+                  this.setState({
+                    productInfo: res.data.product.productInfo,
+                    productName: res.data.product.productName,
+                    productPrice: res.data.product.productPrice,
+                    imageLink: res.data.product.productPicture,
+                    productStock: res.data.product.productStock,
+                    vendor: vendorName,
+                    isApparel: true,
+                    s_stock: res.data.product.s_stock,
+                    m_stock: res.data.product.m_stock,
+                    l_stock: res.data.product.l_stock,
+                    xs_stock: res.data.product.xs_stock,
+                    xl_stock: res.data.product.xl_stock
+                  });
+                } else {
+                  this.setState({
+                    productInfo: res.data.product.productInfo,
+                    productName: res.data.product.productName,
+                    productPrice: res.data.product.productPrice,
+                    imageLink: res.data.product.productPicture,
+                    productStock: res.data.product.productStock,
+                    vendor: vendorName
+                  });
+                }
+              } else {
+                alert(res.data.message);
+              }
+            })
+            .catch(err => {
+              alert(err);
             });
-          } else {
-            this.setState({
-              productInfo: res.data.product.productInfo,
-              productName: res.data.product.productName,
-              productPrice: res.data.product.productPrice,
-              imageLink: res.data.product.productPicture,
-              productStock: res.data.product.productStock,
-              vid: res.data.product.vid
-            });
-          }
-        } else {
-          alert(res.data.message);
-        }
-      })
-      .catch(err => {
-        alert(err);
-      });
+              }
+            })
+            //catch error for getting vendors
+            .catch(err => {
+              alert(err);
+            })    
   }
 
   render() {
@@ -537,6 +574,7 @@ class ShopItemDetailed extends Component {
             addItem={this.addItem}
             displayStock={this.displayStock}
             amtPurchased={this.state.amtPurchased}
+            clubName = {this.state.vendor}
           />
         </section>
       );
@@ -554,6 +592,7 @@ class ShopItemDetailed extends Component {
             displayApparelStock={this.displayApparelStock}
             amtPurchased={this.state.amtPurchased}
             size={this.state.size}
+            clubName={this.state.vendor}
           />
         </section>
       );
