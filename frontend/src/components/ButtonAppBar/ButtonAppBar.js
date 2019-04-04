@@ -17,7 +17,7 @@ import axios from "axios";
 import Dialog from "@material-ui/core/Dialog";
 import DialogContent from "@material-ui/core/DialogContent";
 import DialogContentText from "@material-ui/core/DialogContentText";
-import { DialogActions } from "@material-ui/core";
+import { DialogActions, OutlinedInput } from "@material-ui/core";
 import FormControl from "@material-ui/core/FormControl";
 import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
@@ -209,8 +209,47 @@ class ButtonAppBar extends Component {
               ECS193 ECommerce
             </Typography>
 
+            <Typography variant="h6" color="inherit">
+              Select Club:
+            </Typography>
+
             {/* NAV BUTTONS */}
             <div id="navLink">
+              {/* SELECT CLUB */}
+              <FormControl variant="filled" className="club-select">
+                <InputLabel htmlFor="club-select">
+                  {this.props.currentVendor}
+                </InputLabel>
+
+                <Select
+                  value={this.props.currentvendor}
+                  open={this.state.openSelect}
+                  onClose={this.handleCloseSelect}
+                  onOpen={this.handleOpenSelect}
+                  onChange={this.handleSelect}
+                  input={<OutlinedInput name={this.props.currentVendor} />}
+                >
+                  {vendorList}
+                </Select>
+              </FormControl>
+
+              {/* <Button color="inherit">
+                <InputLabel className="navLabel" color="white">
+                  {" "}
+                  {this.props.currentVendor}{" "}
+                </InputLabel>
+                <Select
+                  color="inherit"
+                  value={this.props.vendorID}
+                  open={this.state.openSelect}
+                  onClose={this.handleCloseSelect}
+                  onOpen={this.handleOpenSelect}
+                  onChange={this.handleSelect}
+                >
+                  {vendorList}
+                </Select>
+              </Button> */}
+
               {/* ADMIN BUTTONS */}
               {this.props.isAdmin ? (
                 <Fragment className="admin-buttons">
@@ -218,6 +257,7 @@ class ButtonAppBar extends Component {
                     aria-owns={anchorEl ? "admin-menu" : undefined}
                     aria-haspopup="true"
                     onClick={this.handleAdminClick}
+                    style={{ color: "white" }}
                   >
                     Admin Menu
                   </Button>
@@ -255,38 +295,6 @@ class ButtonAppBar extends Component {
                       Edit Items{" "}
                     </MenuItem>
                   </Menu>
-
-                  {/* old */}
-                  <Button color="inherit"> Change Club: </Button>
-                  <Button color="inherit">
-                    <InputLabel className="navLabel" color="inherit">
-                      {" "}
-                      {this.props.currentVendor}{" "}
-                    </InputLabel>
-                    <Select
-                      color="inherit"
-                      value={this.props.vendorID}
-                      open={this.state.openSelect}
-                      onClose={this.handleCloseSelect}
-                      onOpen={this.handleOpenSelect}
-                      onChange={this.handleSelect}
-                    >
-                      {vendorList}
-                    </Select>
-                  </Button>
-
-                  <Button component={Link} to={editClubRoute} color="inherit">
-                    {" "}
-                    Edit Club Info{" "}
-                  </Button>
-                  <Button component={Link} to={addProductRoute} color="inherit">
-                    {" "}
-                    Add Items{" "}
-                  </Button>
-                  <Button component={Link} to={aboutRoute} color="inherit">
-                    {" "}
-                    Edit Items{" "}
-                  </Button>
                 </Fragment>
               ) : (
                 // else dont display admin stuff
