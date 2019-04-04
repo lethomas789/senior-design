@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import './App.css';
 import About from './components/About/About';
 import Signup from './components/Signup/Signup';
@@ -36,7 +36,7 @@ class App extends Component {
           <Route exact path = "/editClubInfo" component = {EditClubInfo}/>
           <Route exact path = "/addProduct" component = {AddProduct}/>
           <Route exact path = "/orderHistory" component = {OrderHistory}/>
-          <Route exact path = "/itemDetails" component = {ShopItemDetailed}/>
+          <Route path = "/itemDetails/:vid/:pid" component = {ShopItemDetailed}/>
         </div>
       </Router>
     );

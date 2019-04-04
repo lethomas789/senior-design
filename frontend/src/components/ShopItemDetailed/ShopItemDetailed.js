@@ -472,11 +472,17 @@ class ShopItemDetailed extends Component {
 
   //load item info by calling getProductInfo api and render to screen
   componentDidMount() {
+    //extract param values from URL
+    //match object contains parameter values
+    const handle = this.props.match.params;
+
+    //obtain item info from server based on matching pid
+    //pid extracted from handle match object params
     const apiURL = "/api/getProductInfo";
     axios
       .get(apiURL, {
         params: {
-          pid: this.props.pid
+          pid: handle.pid
         }
       })
       .then(res => {
