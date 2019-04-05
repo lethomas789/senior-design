@@ -22,14 +22,33 @@ export default class Home extends Component {
           </p>
           <div className = "roww">
           <div className="colls">
-          <img src={require('../../images/cows.jpg')} width="100%" />
+          <div className = "moreContainer">
+          <div className = "hero-imagee">
+          <img src={require('../../images/cows.jpg')} width="100%"/>
           </div>
-          <div className="colls">
-          <img src={require('../../images/orientation.jpg')} width="100%" />
+          <div className = "hero-textt">SHOP</div>
           </div>
+          </div>
+
+
           <div className="colls">
+          <div className = "moreContainer">
+          <div className = "hero-imagee">
           <img src={require('../../images/band.jpg')} width="100%" />
           </div>
+          <div className = "hero-textt">CLUBS</div>
+          </div>
+          </div>
+          
+          <div className="colls">
+          <div className = "moreContainer">
+          <div className = "hero-imagee">
+          <img src={require('../../images/horses.jpg')} width="100%"/>
+          </div>
+          <div className = "hero-textt">ABOUT</div>
+          </div>
+          </div>
+
           </div>
          
 
@@ -42,7 +61,7 @@ export default class Home extends Component {
           </div> */}
   
         </Grid>
-      </div>
+        </div>
     );
   }
 }
