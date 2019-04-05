@@ -1,6 +1,13 @@
 #homeContainer{
-    display:flex;
+    /* display:flex; */
     flex-direction: column;
+    margin-left: 40px;
+    margin-right: 40px;
+}
+.moreContainer {
+  position: relative;
+  text-align: center;
+  color: white;
 }
 
 #textContainer{
@@ -8,8 +15,8 @@
 }
 
 #carouselContainer{
-  width:80%;
-  height:80%;
+  width:70%;
+  height:70%;
   display:flex;
   flex-direction: column;
   justify-content: center;
@@ -34,7 +41,7 @@
     align-items: center;
     justify-content: center;
     background-size: cover;
-    height: 300px;
+    width: 300px;
   }
   
   .each-slide span {
@@ -65,3 +72,51 @@
     margin: 0;
     background: #adceed;
   }
+
+  .hero-imagee {
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))); */
+    /* background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)); */
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    position: relative;
+    
+  }
+  
+  .hero-textt {
+    /* text-align: center; */
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    /* overflow: hidden; */
+    font-size: 50px;
+    transform: translate(-50%, -50%);
+    color: white;
+  }
+ p {
+   text-align: center;
+   display: block;
+ }
+
+ .bottom-tabs {
+  -webkit-column-count: 3; /* Chrome, Safari, Opera */
+  -moz-column-count: 3; /* Firefox */
+  column-count: 3;
+  -webkit-column-width: 100px; /* Chrome, Safari, Opera */
+  -moz-column-width: 100px; /* Firefox */
+  column-width: 100px;
+}
+
+/* Create three equal columns that floats next to each other */
+.colls {
+  float: left;
+  width: 33.33%;
+  padding: 10px;
+}
+
+/* Clear floats after the columns */
+.roww:after {
+  content: "";
+  display: table;
+  clear: both;
+}
