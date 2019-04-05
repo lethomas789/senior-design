@@ -1,16 +1,10 @@
 import React, { Component, Fragment } from "react";
 import axios from "axios";
 import "./CartItem.css";
-import Grid from "@material-ui/core/Grid";
-import Card from "@material-ui/core/Card";
-import CardActionArea from "@material-ui/core/CardActionArea";
-import CardActions from "@material-ui/core/CardActions";
-import CardContent from "@material-ui/core/CardContent";
-import CardMedia from "@material-ui/core/CardMedia";
-import Button from "@material-ui/core/Button";
-import Typography from "@material-ui/core/Typography";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
+import TextField from "@material-ui/core/TextField";
+import Button from "@material-ui/core/Button";
 
 //component to display cart objects
 class CartItem extends Component {
@@ -18,7 +12,25 @@ class CartItem extends Component {
   state = {
     pid: this.props.pid,
     vid: this.props.vendorID,
-    size: this.props.size
+    size: this.props.size,
+    amtPurchased: 0
+  };
+
+  componentDidMount() {
+    this.setState({ amtPurchased: this.props.amtPurchased });
+  }
+
+  handleChange = name => event => {
+    this.setState({ [name]: event.target.value });
+  };
+
+  // TODO figure out how we want to handle 0 change here
+  handleQuantityChange = event => {
+    if (event.target.value < 0) {
+      this.setState({ amtPurchased: 1 });
+    } else {
+      this.setState({ amtPurchased: event.target.value });
+    }
   };
 
   //remove item from user's cart
@@ -73,14 +85,11 @@ class CartItem extends Component {
   };
 
   render() {
-    const {
-      imageSrc,
-      productName,
-      amtPurchased,
-      productPrice,
-      size
-    } = this.props;
+    const { imageSrc, productName, size } = this.props;
 
+    const { amtPurchased } = this.state;
+
+    const productPrice = this.props.productPrice.toFixed(2);
     const totalPrice = this.props.totalPrice.toFixed(2);
 
     return (
@@ -98,21 +107,24 @@ class CartItem extends Component {
             ) : (
               ""
             )}
+            <Button size="small" color="primary" onClick={this.removeItem} id="btn-remove">
+              Remove Item
+            </Button>
+
           </div>
         </div>
 
-        <div>
-          {`${productPrice}`}
-        </div>
+        <div>${productPrice}</div>
 
-        <div>
-          qty
-        </div>
+        <TextField
+          className="cart-qty"
+          value={amtPurchased}
+          onChange={this.handleQuantityChange}
+          type="number"
+          InputLabelProps={{ shrink: true}}
+        />
 
-        <div>
-          ${`${totalPrice}`}
-        </div>
-
+        <div>${totalPrice}</div>
       </div>
     );
 

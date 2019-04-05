@@ -47,7 +47,7 @@ class Cart extends Component {
   //render cart items to cart view
   render() {
     const cart = this.props.items.map(result => {
-      console.log('result in cart:', result);
+      console.log("result in cart:", result);
       if (result.size === undefined) {
         return (
           <CartItem
@@ -79,7 +79,7 @@ class Cart extends Component {
     });
 
     return (
-      <div className="cart-container">
+      <div className="cart-table-container">
         {/* TABLE HEADERS */}
         <span className="table-header table-row">
           <span>
@@ -97,46 +97,15 @@ class Cart extends Component {
         </span>
 
         {/* TABLE DATA */}
-        <div className="table-row">
-          <span>test</span>
-          <span>test</span>
-          <span>test</span>
-          <span>test</span>
-        </div>
-
-        <div className="table-row">
-          <span>test</span>
-          <span>test</span>
-          <span>test</span>
-          <span>test</span>
-        </div>
-
+        {/* TODO have conditional to render empty page */}
         {cart}
+
+        <div id="total-text">Total</div>
+        <div id="total-price">${this.state.total}</div>
+        <div id="btn-paypal">
+          <Checkout total={this.state.total} />
+        </div>
       </div>
-      /*
-      <div className="table-container">
-        <table className="table">
-          <tr className="table-header">
-            <th>My Cart</th>
-            <th>Price</th>
-            <th>Qty</th>
-            <th>Total</th>
-          </tr>
-          <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-          </tr>
-          <tr>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-            <td>test</td>
-          </tr>
-        </table>
-      </div>
-      */
     );
 
     /*

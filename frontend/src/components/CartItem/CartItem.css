@@ -1,6 +1,7 @@
 :root {
   --table-columns: 2.5fr 1fr 1fr 1fr;
-  --table-border-color: 1px solid blue;
+  --blue: #2196f3;
+  --table-border-color: 1px solid var(--blue);
 }
 
 .cart-row-container {
@@ -8,6 +9,8 @@
   display: grid;
   grid-template-columns: var(--table-columns);
   border-bottom: var(--table-border-color);
+  padding-top: 50px;
+  padding-bottom: 50px;
 }
 
 .cart-item-container {
@@ -21,9 +24,17 @@
 }
 
 .cart-item-info {
-  justify-self: start;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: flex-start;
 }
 
-.cart-item-info ul {
-  list-style: none;
+.cart-qty {
+  width: 40px;
+}
+
+#btn-remove {
+  padding: 0 0;
+  text-decoration: underline;
 }
