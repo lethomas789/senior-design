@@ -83,7 +83,7 @@ class Cart extends Component {
         {/* TABLE HEADERS */}
         <span className="table-header table-row">
           <span>
-            <strong>My Cart</strong>
+            <strong>My Cart ({this.props.items.length})</strong>
           </span>
           <span>
             <strong>Price</strong>
