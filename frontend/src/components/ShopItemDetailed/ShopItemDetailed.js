@@ -11,6 +11,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
+import {Link, withRouter} from 'react-router-dom';
+
 
 class CarouselImage extends Component {
   handleClick = () => {
@@ -158,7 +160,7 @@ class ApparelItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayApparelStock()}
           <p>
-            <b>Club</b>: {clubName}
+            <b>Club</b>: <Link to = {`/vendorProducts/${this.props.vendorID}`}> {clubName} </Link>
           </p>
         </div>
         <p className="description">{productInfo}</p>
@@ -209,6 +211,8 @@ class ApparelItemInfo extends Component {
 }
 
 class ItemInfo extends Component {
+
+  //props for ItemInfo
   static propTypes = {
     productName: PropTypes.string.isRequired,
     productPrice: PropTypes.number.isRequired,
@@ -239,7 +243,7 @@ class ItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayStock()}
           <p>
-            <b>Club</b>: TODO
+            <b>Club</b>: <Link to = {`/vendorProducts/${this.props.vendorID}`}> {clubName} </Link>
           </p>
         </div>
         <p className="description">{productInfo}</p>
@@ -291,7 +295,9 @@ class ShopItemDetailed extends Component {
     xl_stock: 0,
     size: "None",
     currentImage: 0,
-    vendorNames: []
+    vendorNames: [],
+    vid: '',
+    pid: ''
   };
 
   // TODO make this smarter
@@ -496,6 +502,15 @@ class ShopItemDetailed extends Component {
           //match object contains parameter values
           const handle = this.props.match.params;
 
+          console.log(handle);
+
+          //update vid for redux, link to about page
+          this.props.updateVendor(handle.vid);
+          this.setState({
+            vid: handle.vid,
+            pid: handle.pid
+          })
+
           //obtain item info from server based on matching pid
           //pid extracted from handle match object params
           const apiURL = "/api/getProductInfo";
@@ -575,6 +590,7 @@ class ShopItemDetailed extends Component {
             displayStock={this.displayStock}
             amtPurchased={this.state.amtPurchased}
             clubName = {this.state.vendor}
+            vendorID = {this.props.vendorID}
           />
         </section>
       );
@@ -593,6 +609,7 @@ class ShopItemDetailed extends Component {
             amtPurchased={this.state.amtPurchased}
             size={this.state.size}
             clubName={this.state.vendor}
+            vendorID = {this.props.vendorID}
           />
         </section>
       );
@@ -606,7 +623,8 @@ const mapStateToProps = state => {
   return {
     pid: state.selectedItem.selectedItemID,
     login: state.auth.login,
-    user: state.auth.user
+    user: state.auth.user,
+    vendorID: state.vendor.vendor
   };
 };
 
@@ -619,7 +637,13 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.GET_CART,
         cart: response
-      })
+      }),
+
+    updateVendor: newVendor => 
+      dispatch({
+        type: actions.GET_VENDOR_PRODUCTS,
+        vendor: newVendor
+      }),
   };
 };
 

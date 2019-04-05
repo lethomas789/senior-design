@@ -94,6 +94,7 @@ class ShopItem extends Component {
   showDetailed(){
     //update which item was selected for detailed view in Redux
     this.props.updateSelectedItem(this.state.pid);
+    this.props.updateVendor(this.state.vendorID);
 
     //add vendorID and pid to url as parameters
     //allows user to access shop info via URL instead of only being allowed click
@@ -128,7 +129,7 @@ class ShopItem extends Component {
               </Button>
 
               <Button size="small" color="primary" onClick = {this.updateVendor}>
-                <Link to = "/vendorProducts"> More From Vendor </Link>
+                <Link to = {`/vendorProducts/${this.state.vendorID}`}> More From Vendor </Link>
               </Button>
             </p>
           </div>
