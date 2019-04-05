@@ -252,7 +252,7 @@ class ButtonAppBar extends Component {
 
               {/* ADMIN BUTTONS */}
               {this.props.isAdmin ? (
-                <Fragment className="admin-buttons">
+                <Fragment>
                   <Button
                     aria-owns={anchorEl ? "admin-menu" : undefined}
                     aria-haspopup="true"
