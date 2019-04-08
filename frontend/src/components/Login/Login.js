@@ -15,7 +15,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
 
-
 const styles = theme => ({
     progress: {
       margin: theme.spacing.unit * 2
@@ -129,11 +128,11 @@ class Login extends Component{
                 .catch(err => {
                     alert(err);
                 })
-            }
+            }     
             //display error message with logging in
             else{
                 this.setState({
-                    open: true,
+     		    open: true,
                     progressValue: 0,
                     progressVariant: "determinate",
                     responseMessage: res.data.message
@@ -164,6 +163,7 @@ class Login extends Component{
         }
     }
 
+
     render(){
         const { classes } = this.props;
         return(
@@ -189,9 +189,11 @@ class Login extends Component{
                             onKeyDown = {this.handleEnter}
                             />
                         </div>
+
                         <div className = "pushDown">
                         <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
+												
                     </Paper>
                     
                     <div className = "progressContainer">

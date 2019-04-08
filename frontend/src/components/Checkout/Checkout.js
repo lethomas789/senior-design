@@ -223,8 +223,8 @@ const mapDispatchToProps = dispatch => {
   }
 }
 
-Checkout.PropTypes = {
+/*Checkout.PropTypes = {
   classes: PropTypes.object.isRequired
-};
+};*/
 
 export default connect(mapStateToProps, mapDispatchToProps)(withStyles(styles)(Checkout));

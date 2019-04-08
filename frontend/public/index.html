@@ -8,10 +8,22 @@
       content="width=device-width, initial-scale=1, shrink-to-fit=no"
     />
     <meta name="theme-color" content="#000000" />
+    <meta name="google-signin-client_id" 
+    content="409029968816-1bf8e3qtt6jb2ivj9udb1qata3q0bdrc.apps.googleusercontent.com"/>
+    <meta name="google-signin-scope" content="profile email">
+
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
     <link rel="manifest" href="%PUBLIC_URL%/manifest.json" />
     <title>ECS 193 ECommerce</title>
   </head>
   <body>
     <div id="root"></div>
+    <div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+      <script>
+        function on SignIn(googleUser) {
+	  var profile = googleUser.getBasicProfile();
+	  console.log("ID: " + profile.getId());
+	}
+      </script>
   </body>
 </html>

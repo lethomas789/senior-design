@@ -183,6 +183,21 @@ var initSchedules = db.collection('vendors').get().then(snapshot => {
   .catch(console.log);
 });
 
+/*var defaultApp = admin.initializeApp(defaultAppConfig);
+var defaultAuth = defaultApp.auth();
+
+var provider = new firebase.auth.GoogleAuthProvider();
+firebase.auth().signinWithRedirect(provider);
+firebase.auth().getRedirectResult().then(function(result) {
+	if (result.credential){
+		var token = result.credential.accessToken;
+	}
+}).catch(function(error) {
+	var errorCode = error.code;
+	var errorMessage = error.message;
+	var email = error.email;
+	var credential = error.credential;
+});*/
 
 // listen to requests on port
 // choose port based on environment
