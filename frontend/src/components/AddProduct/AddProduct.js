@@ -206,6 +206,7 @@ class AddProduct extends Component {
               <TextField
                 label="Product Price"
                 required="true"
+                type="number"
                 onChange={(event) => this.setState({ productPrice: event.target.value })}
               />
             </div>
@@ -214,6 +215,7 @@ class AddProduct extends Component {
               <TextField
                 label="Product Stock"
                 required="true"
+                type="number"
                 onChange={(event) => this.setState({ stock: event.target.value })}
               />
             </div>
@@ -251,6 +253,7 @@ class AddProduct extends Component {
                 <TextField
                   label="Small Stock"
                   required="false"
+                  type="number"
                   onChange={(event) => this.setState({ small: event.target.value })}
                 />
               </div>
@@ -259,6 +262,7 @@ class AddProduct extends Component {
                 <TextField
                   label="Medium Stock"
                   required="false"
+                  type="number"
                   onChange={(event) => this.setState({ medium: event.target.value })}
                 />
               </div>
@@ -267,6 +271,7 @@ class AddProduct extends Component {
                 <TextField
                   label="Large Stock"
                   required="false"
+                  type="number"
                   onChange={(event) => this.setState({ large: event.target.value })}
                 />
               </div>
@@ -274,6 +279,7 @@ class AddProduct extends Component {
                 <TextField
                   label="X-Small Stock"
                   required="false"
+                  type="number"
                   onChange={(event) => this.setState({ xsmall: event.target.value })}
                 />
               </div>
@@ -282,6 +288,7 @@ class AddProduct extends Component {
                 <TextField
                   label="X-Large Stock"
                   required="false"
+                  type="number"
                   onChange={(event) => this.setState({ xlarge: event.target.value })}
                 />
               </div>
