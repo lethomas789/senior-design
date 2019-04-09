@@ -7,6 +7,9 @@ export default class Home extends Component {
     return (
       <div>
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
+
+        <img src={require('../../images/ourgroup.png')} width="60%" height = "60%" />
+
           <h1 id = "aboutHeader"> About Us </h1>
           <p>We are a group of Computer Science seniors and this website is our senior design final project.
             From a technical standpoint, our goal was to make a site with secure end to end transactions using
