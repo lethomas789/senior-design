@@ -14,18 +14,24 @@ router.post('/', (req, res) => {
 
   if (req.body.params) {
     // extract user info from request
-    var firstName = req.body.params.firstName;
-    var lastName = req.body.params.lastName;
-    var email = req.body.params.email.toLowerCase();
-    var password = req.body.params.password;
+    var {
+      firstName,
+      lastName,
+      email,
+      password
+    } = req.body.params;
   }
   else {
-    // extract user info from request
-    var firstName = req.body.firstName;
-    var lastName = req.body.lastName;
-    var email = req.body.email.toLowerCase();
-    var password = req.body.password;
+    var {
+      firstName,
+      lastName,
+      email,
+      password
+    } = req.body;
   }
+
+  // emails case insensitive so lowercase them to save in DB
+  email = email.toLowerCase();
 
 
   // validation, checking empty inputs
@@ -54,7 +60,7 @@ router.post('/', (req, res) => {
 
   // check to see if data object exists in user collection
   // find document by email, email viewed as unique identifer 
-  var ref = db.collection('users').where('email', '==', email);
+  const ref = db.collection('users').where('email', '==', email);
 
   // get documents with matching query
   ref.get()
@@ -69,15 +75,15 @@ router.post('/', (req, res) => {
 
       // no matching results, create new user
       // create object to store into database
-      var newUser = {
+      const newUser = {
         name: {
-          firstName: firstName,
-          lastName: lastName,
+          firstName,
+          lastName,
         },
-        email: email,
-        password: password,
+        email,
+        password,
         isAdmin: false
-      };
+      }
 
       // password hashing
       bcrypt.genSalt(saltRounds, (err, salt) => {
@@ -96,33 +102,13 @@ router.post('/', (req, res) => {
         })
       });  // end bcrypt.genSalt
 
-      /*
-      // NOTE: no longer needed/used
-      // create cart for user with cartID == userID, then update to carts root collection
-      let cartRef = db.collection('users').doc(email).collection('cart');
-
-      let cartData = {
-        cartTotalPrice: 0,
-        itemsInCart: 0,
-        vendorsInOrder: []
-      };
-
-      // set empty cart Data
-      cartRef.doc(email).set(cartData);
-      */
-
-      // cartItems subcollection will be made when user adds something to cart;
-      // see getUserCart/addItems; frontend will need to do checking for empty
-      // cartItem subcollection
-
-
       // generate JWT
-      var payload = { email: email };
+      const payload = { email };
       jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
         return res.status(200).json({
           success: true,
           message: "Signup Successful!",
-          email: email,
+          email, 
           token: 'Bearer ' + token
         });
       });

@@ -17,6 +17,7 @@ import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
 
 
 import { createBrowserHistory } from 'history';
+import AboutClub from './components/AboutClub/AboutClub';
 const history = createBrowserHistory();
 
 class App extends Component {
@@ -37,6 +38,13 @@ class App extends Component {
           <Route exact path = "/addProduct" component = {AddProduct}/>
           <Route exact path = "/orderHistory" component = {OrderHistory}/>
           <Route path = "/itemDetails/:vid/:pid" component = {ShopItemDetailed}/>
+
+          {/* TODO, dynamic routes */}
+          {/* HARD CODED IN VID */}
+          <Route 
+            path="/aboutClub" 
+            render={() => <AboutClub vid="vid1" />}
+          />
         </div>
       </Router>
     );
