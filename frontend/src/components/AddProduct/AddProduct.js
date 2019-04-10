@@ -32,6 +32,10 @@ firebase.initializeApp(config);
 //image location for firestore upload
 const imageLocation = "images/vendors";
 
+const style = {
+  field: { width: "500px" }
+};
+
 class AddProduct extends Component {
   constructor(props){
     super(props);
@@ -42,11 +46,11 @@ class AddProduct extends Component {
       stock: '',
       productID: '',
       isApparel: false,
-      small: '0',
-      medium: '0',
-      large: '0',
-      xsmall: '0',
-      xlarge: '0',
+      small: 0,
+      medium: 0,
+      large: 0,
+      xsmall: 0,
+      xlarge: 0,
       apparelCSS: "hideApparelSizes",
       images: [],
       imageNames:[]
@@ -191,6 +195,7 @@ class AddProduct extends Component {
                 label="Product Name"
                 required="true"
                 onChange={(event) => this.setState({ productName: event.target.value })}
+                style={style.field}
               />
             </div>
 
@@ -198,7 +203,10 @@ class AddProduct extends Component {
               <TextField
                 label="Product Info"
                 required="true"
+                multiline={true}
+                rows={4}
                 onChange={(event) => this.setState({ productInfo: event.target.value })}
+                style={style.field}
               />
             </div>
 
@@ -254,6 +262,7 @@ class AddProduct extends Component {
                   label="Small Stock"
                   required="false"
                   type="number"
+                  value={this.state.small}
                   onChange={(event) => this.setState({ small: event.target.value })}
                 />
               </div>
@@ -263,6 +272,7 @@ class AddProduct extends Component {
                   label="Medium Stock"
                   required="false"
                   type="number"
+                  value={this.state.medium}
                   onChange={(event) => this.setState({ medium: event.target.value })}
                 />
               </div>
@@ -272,6 +282,7 @@ class AddProduct extends Component {
                   label="Large Stock"
                   required="false"
                   type="number"
+                  value={this.state.large}
                   onChange={(event) => this.setState({ large: event.target.value })}
                 />
               </div>
@@ -280,6 +291,7 @@ class AddProduct extends Component {
                   label="X-Small Stock"
                   required="false"
                   type="number"
+                  value={this.state.xsmall}
                   onChange={(event) => this.setState({ xsmall: event.target.value })}
                 />
               </div>
@@ -288,6 +300,7 @@ class AddProduct extends Component {
                 <TextField
                   label="X-Large Stock"
                   required="false"
+                  value={this.state.xlarge}
                   type="number"
                   onChange={(event) => this.setState({ xlarge: event.target.value })}
                 />
