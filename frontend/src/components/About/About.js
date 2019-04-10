@@ -7,10 +7,13 @@ export default class Home extends Component {
     return (
       <div>
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
-
-        <img src={require('../../images/ourgroup.png')} width="60%" height = "60%" />
+        <div className = "aboutBox">
+        <div className = "center">
+        
+        
 
           <h1 id = "aboutHeader"> About Us </h1>
+         
           <p>We are a group of Computer Science seniors and this website is our senior design final project.
             From a technical standpoint, our goal was to make a site with secure end to end transactions using
             modern technologies such as React, Node, Firebase, and Google Cloud Services. We utilize https protocols 
@@ -25,6 +28,10 @@ export default class Home extends Component {
             We learn to function in a team-oriented problem-solving environment, and learn the issues that are involved
             with the implementation process of large-scale.
           </p>
+          <img src={require('../../images/ourgroup.png')} width="100%" height = "100%"/>
+          </div>
+          </div>
+          
         </Grid>
       </div>
     );
