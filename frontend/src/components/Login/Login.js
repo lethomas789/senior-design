@@ -193,9 +193,11 @@ class Login extends Component{
                         <div className = "pushDown">
                         <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
-												
+			<div className = "pushDown2">
+				<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>	
+			</div>
                     </Paper>
-                    
+                 
                     <div className = "progressContainer">
                         <div className = "circle">
                             <CircularProgress className = "loadingCircle" size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
