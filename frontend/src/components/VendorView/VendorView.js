@@ -26,7 +26,7 @@ class VendorView extends Component {
     const apiURL = "/api/getVendorProducts";
     axios.get(apiURL, {
       params:{
-        vendor: handle.vid
+        vid: handle.vid
       }
     })
     .then(res => {

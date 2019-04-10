@@ -70,6 +70,29 @@ class AddProduct extends Component {
       // .then(url => this.setState({ avatarURL: url }));
   };
 
+  //handle stock change, update total stock values when user changes input
+  handleStockChangeApparel = name => stock => {
+
+    console.log("checking stock change", stock);
+
+    //if the user is setting the stock to a negative value, set default to 0
+    if(stock.target.value < 0){
+      this.setState({
+        [name]: 0
+      })
+    }
+
+    //update stock of current item and update running total of stock items
+    else{
+      var runningStockTotal = 0;
+      runningStockTotal = this.state.small + this.state.medium + this.state.large + this.state.xsmall + this.state.xlarge;
+      this.setState({
+        stock: String(runningStockTotal),
+        [name]: stock.target.value
+      })
+    }
+  };
+
   //detects when an image is uploaded from user
   //change number of files to upload
   handleFileChange = (event) => {
@@ -264,6 +287,7 @@ class AddProduct extends Component {
                   type="number"
                   value={this.state.small}
                   onChange={(event) => this.setState({ small: event.target.value })}
+                  onChange={handleChange("small")}
                 />
               </div>
 
@@ -283,7 +307,9 @@ class AddProduct extends Component {
                   required="false"
                   type="number"
                   value={this.state.large}
-                  onChange={(event) => this.setState({ large: event.target.value })}
+                  onChange={(event) =>
+                    this.handleStockChangeApparel(event)
+                  }
                 />
               </div>
               <div className = "textForm" id="row">
