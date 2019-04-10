@@ -86,13 +86,6 @@ router.get('/', (req,res) => {
  */
 router.post('/addItems', (req, res) => {
 
-  /**
-   * TODO: talk to Alex about sneidng image link, no need, I can grab 0th image
-   * from DB
-   */
-
-   // TODO refactor
-
   if (req.body.params) {
     var {
       user,

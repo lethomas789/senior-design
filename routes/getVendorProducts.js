@@ -6,10 +6,10 @@ const db = admin.firestore();
 
 router.get('/', (req,res) => {
   if (req.query.params) {
-    var vendor = req.query.params.vendor;
+    var vid = req.query.params.vid;
   }
   else {
-    var vendor = req.query.vendor;
+    var vid = req.query.vid;
   }
 
   // can do db.doc('collection/pathToDoc');
@@ -23,7 +23,7 @@ router.get('/', (req,res) => {
   }
 
   // get all products where vid == vendor 
-  db.collection('products').where('vid', '==', vendor).get().then(snapshot => {
+  db.collection('products').where('vid', '==', vid).get().then(snapshot => {
     let products = [];
     snapshot.forEach(doc => {
       products.push(doc.data());

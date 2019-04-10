@@ -9,8 +9,6 @@ const db = admin.firestore();
  * Adds new product for vendor.
  */
 router.post('/addNewProduct', (req, res) => {
-
-
   if (req.body.params){ 
     var {
       vid,
@@ -81,7 +79,7 @@ router.post('/addNewProduct', (req, res) => {
   }
 
   // check existing vendor
-  let vendorRef = db.collection('vendors').doc(vid);
+  const vendorRef = db.collection('vendors').doc(vid);
   vendorRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: no such vendor for given vid.');
@@ -344,63 +342,59 @@ router.get('/getProduct', (req, res) => {
 
 });  // END POST /addNewProduct
 
-
-
-/**
- * Edits vendor product.  TODO
- */
-router.patch('/editProduct', (req, res) => {
-
+router.patch('/editProduct ', (req, res) => {
   if (req.body.params){ 
-    var vid = req.body.params.vid;
-    var user = req.body.params.user;
-    var productInfo = req.body.params.productInfo;
-    var productName = req.body.params.productName;
-    var productPicture = req.body.params.productPicture;
-    var productPrice = Number(req.body.params.productPrice);
+    var {
+      vid,
+      user,
+      productInfo,
+      productName,
+      productPicture,  // TODO: ask how this is being sent again
+      pid,
+    } = req.body.params;
 
+    var productPrice = Number(req.body.params.productPrice);
     var isApparel = false;  // init to be false
 
+    // stock is total number of items
+    var stock = Number(req.body.params.stock);
+
     // if apparel === true, multiple types of stock
-    if (req.body.params.apparel) {
-      isApparel = req.body.params.isApparel;  // change to true
+    if (req.body.params.isApparel) {
+      isApparel = true;
       var xs_stock = Number(req.body.params.xs_stock);
       var s_stock = Number(req.body.params.s_stock);
       var m_stock = Number(req.body.params.m_stock);
       var l_stock = Number(req.body.params.l_stock);
       var xl_stock = Number(req.body.params.xl_stock);
     }
-    // stock is total number of items
-    var stock = Number(req.body.params.stock);
-    var pid = req.body.params.pid;
-    var purchasedStock = req.body.params.purchasedStock;
   }
-  else {
-    var vid = req.body.vid;
-    var user = req.body.user;
-    var productInfo = req.body.productInfo;
-    var productName = req.body.productName;
-    // TODO figure out how to add many pictures
-    var productPicture = req.body.productPicture;
-    var productPrice = Number(req.body.productPrice);
-    var stock = Number(req.body.stock);
 
+  else {
+    var {
+      vid,
+      user,
+      productInfo,
+      productName,
+      productPicture,
+      pid,
+    } = req.body;
+
+    var productPrice = Number(req.body.productPrice);
     var isApparel = false;  // init to be false
 
+    // stock is total number of items combined
+    var stock = Number(req.body.stock);      
+
     // if apparel === true, multiple types of stock
-    if (req.body.apparel) {
-      isApparel = req.body.isApparel;  // change to true
+    if (req.body.isApparel) {
+      isApparel = true;
       var xs_stock = Number(req.body.xs_stock);
       var s_stock = Number(req.body.s_stock);
       var m_stock = Number(req.body.m_stock);
       var l_stock = Number(req.body.l_stock);
       var xl_stock = Number(req.body.xl_stock);
-
     }
-    // stock is total number of items combined
-    var stock = Number(req.body.stock);      
-    var pid = req.body.pid;
-    var purchasedStock = req.body.purchasedStock;
   }
 
   /*
@@ -419,7 +413,7 @@ router.patch('/editProduct', (req, res) => {
   }
 
   // check existing vendor
-  let vendorRef = db.collection('vendors').doc(vid);
+  const vendorRef = db.collection('vendors').doc(vid);
   vendorRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: no such vendor for given vid.');
@@ -435,93 +429,97 @@ router.patch('/editProduct', (req, res) => {
         console.log('Error: provided user is not an admin for given vendor.');
         return res.status(200).json({
           success: false,
-          message: 'Error: provided user is not an admin for given vendor.'
+          messaage: 'Error: provided user is not an admin for given vendor.'
         });
       }
 
-      // check to make sure product exists for pid
-      db.collection('products').doc(pid).get().then(pdoc => {
-        if (!pdoc.exists) {
-          console.log('Error: no such product for given pid:', pid)
-          return res.status(200).json({
-            success: false,
-            message: 'Error: no such product for given pid: ' + pid
-          })
+      var pictures = [];
+
+      // if no pictures sent, make default image
+      if (productPicture.length === 0) {
+        pictures.push('https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/shop.png?alt=media');
+      }
+      // else, iterate through strings in array and save them
+      //made edit, uploading name of image files to construct image url for product, requires image name
+      //made edit, extract file name from image name array
+      else {
+        for(let i = 0; i < productPicture.length; ++i) {
+          let link =
+          `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${pid}%2F${productPicture[i].name}?alt=media`;
+
+          // TODO, figure out order of push, in terms of what order vendors want
+          // to show their pics
+          pictures.push(link);
         }
+      }
 
-        let lastUpdate = admin.firestore.Timestamp.now();
-        let lastUpdateUser = user;  // user who did most recent update
+      let lastUpdate = admin.firestore.Timestamp.now();
+      let lastUpdateUser = user;  // user who did most recent update
 
-        // if apparel true, save extra stock params
-        if (isApparel) {
-          var productData = {
-            productInfo: productInfo,
-            productName: productName,
-            productPrice: productPrice,
-            vid: vid,
-            productPicture: productPicture,  
+      // if apparel true, save extra stock params
+      if (isApparel) {
+        var productData = {
+          productInfo,
+          productName,
+          productPrice,
+          vid,
+          pictures,  // array of picture links
 
-            isApparel: isApparel,
-            stock: stock,
-            xs_stock: xs_stock,
-            s_stock: s_stock,
-            m_stock: m_stock,
-            l_stock: l_stock,
-            xl_stock: xl_stock,
-            purchasedStock: purchasedStock,
+          isApparel,
+          stock,
+          xs_stock,
+          s_stock,
+          m_stock,
+          l_stock,
+          xl_stock,
+          // purchasedStock: 0,  // init to be 0
 
-            lastUpdate: lastUpdate,
-            lastUpdateUser: lastUpdateUser,
+          lastUpdate,
+          lastUpdateUser,
 
-            // NOTE: we dont allow editiing of purchasedStock
-            // just overwrite what was given back from GET product
-          };
-        }
-        // else, just save stock
-        else {
-          var productData = {
-            productInfo: productInfo,
-            productName: productName,
-            productPrice: productPrice,
-            vid: vid,
-            productPicture: productPicture,  
+          pid
+        };
+      }
+      // else, just save stock
+      else {
+        var productData = {
+          productInfo,
+          productName,
+          productPrice,
+          vid,
+          pictures,  // array of picture links
 
-            isApparel: isApparel,
-            stock: stock,
-            purchasedStock: purchasedStock,
+          isApparel,
+          stock,
+          // on edit, do not alter already purchased stock
+          // purchasedStock: 0,  // init to be 0
 
-            lastUpdate: lastUpdate,
-            lastUpdateUser: lastUpdateUser
-          };
-        }
+          lastUpdate,
+          lastUpdateUser,
 
-        // set new product info
-        db.collection('products').doc(pid).set(productData).then(() => {
-          console.log('Finished editing product:', pid)
-          return res.status(200).json({
-            success: true,
-            message: 'Successfully edited product: ' + pid
-          })
-        })
-        .catch(err => {
-          console.log('Error in editing product', err)
-          return res.status(200).json({
-            success: false,
-            message: 'Error in editing product ' + err
-          })
-        })
+          pid
+        };
+      }
+
+      db.collection('products').doc(pid).update(productData)
+      .then(ref => {
+        // console.log('Added new product with ID: ', ref.id);
+
+        // db.collection('products').doc(ref.id).update({ pid: ref.id });
+
+        console.log('Succesfully updated new product.');
+        return res.status(200).json({
+          success: true,
+          message: 'Successfully updated new product.'
+        });
       })
-      .catch(err => {   // catch for productRef
-        console.log(err);
+      .catch(err => {  // catch for setting new product
+        console.log('Error in updating product:', err);
         return res.status(200).json({
           success: false,
-          message: 'Error in getting product ref: ' + err
-        })
-      })
-
-
-
-
+          message: 'Error in updating product: ' + err
+        });
+      });
     })
     .catch(err => {  // catch for adminRef
       console.log('Error in getting adminref:', err);
@@ -541,5 +539,7 @@ router.patch('/editProduct', (req, res) => {
   });
 
 });  // END PATCH /editProduct
+
+
 
 module.exports = router;
