@@ -47,17 +47,22 @@ class ShopView extends Component {
 
     return (
       <div className = "grow">
-        <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
-          <h1> Shop </h1>          
+         <Grid container direction = "column" display= "flex"  justifyContent= "center" alignItems="center" height= "100vh">
+        {/* <Grid container direction="column" justify="center"alignContent = "center" alignItems="center"> */}
+          <h1> Shop </h1>    
+          <div className = "container">     
           <div className = "hero-image">
-          <img src={require('../../images/generic_club.jpg')} width="100%" height="50%"/>
+          <img src={require('../../images/more_treats.jpg')} width="100%" height="100%"/>
           </div>
           <div class="hero-text">
-          <p>UCD CLUBS</p>
+          UCD CLUBS
           </div>
+          </div> 
         </Grid>
+        
+        <Grid container direction = "row" display= "flex"  justifyContent= "center" alignItems="center" height= "100vh" justify-xs-space-evenly>
 
-        <Grid container spacing={24} direction="row" justify="flex-start" alignItems="center" justify-xs-space-evenly>
+        {/* <Grid container spacing={24} direction="row" justify="flex-start" alignItems="center" justify-xs-space-evenly> */}
           {items}
         </Grid>
       </div>

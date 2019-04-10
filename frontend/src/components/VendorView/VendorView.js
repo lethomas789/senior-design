@@ -17,10 +17,16 @@ class VendorView extends Component {
   }
 
   componentDidMount(){
+
+    //extract param values from URL
+    //match object contains parameter values
+    const handle = this.props.match.params;
+    console.log("match params", handle);
+
     const apiURL = "/api/getVendorProducts";
     axios.get(apiURL, {
       params:{
-        vendor: this.props.vendor
+        vendor: handle.vid
       }
     })
     .then(res => {
@@ -46,7 +52,7 @@ class VendorView extends Component {
 
   render() {
     const items = this.state.products.map(result => {
-      return <ShopItem key = {result.pid} vendorID = {result.vid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
+      return <ShopItem key = {result.pid} imageSrc = {result.productPicture[0]} vendorID = {result.vid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
     });
 
     return (
