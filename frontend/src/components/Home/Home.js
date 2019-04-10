@@ -22,9 +22,6 @@ export default class Home extends Component {
           Here we make merchandise available from all different clubs of Davis.
           UC Davis clubs typically have an unofficial way to sell their merchandise, usually through Facebook and word of mouth. 
           There is no easy way to display, buy and sell goods. 
-          Our site is to provide a method to streamline this process. 
-          Clubs can post their items onto our site, customers purchase what they like, and the appropriate profits will go towards the participating clubs. 
-          Those interested in becoming vendors can apply on our site also.
           </p>
           </div>
           </div>
