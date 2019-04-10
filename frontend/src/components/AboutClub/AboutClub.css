@@ -1,0 +1,7 @@
+#about-club-container {
+  display: grid;
+  grid-template-columns: 1.5fr 2fr;
+  grid-template-rows: auto;
+  justify-content: center;
+  margin-top: 50px;
+}
