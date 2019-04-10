@@ -8,7 +8,7 @@ export default class About extends Component {
       <div>
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
         <div className = "aboutBox">
-        <div className = "center">
+        <div className = "plsCenter">
 
           <h1 id = "aboutHeader"> About Us </h1>
          
