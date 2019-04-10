@@ -287,7 +287,7 @@ class AddProduct extends Component {
                   type="number"
                   value={this.state.small}
                   onChange={(event) => this.setState({ small: event.target.value })}
-                  onChange={handleChange("small")}
+                  // onChange={handleChange("small")}
                 />
               </div>
 
