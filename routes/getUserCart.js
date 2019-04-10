@@ -4,6 +4,13 @@ const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
+/**
+ * @param user = user id
+ * 
+ * 1. Check existing user
+ * 2. Get user cart ref in DB
+ * 3. Collect all cart items, and return
+ */
 router.get('/', (req,res) => {
   // get user id
   if (req.query.params) {
@@ -21,7 +28,7 @@ router.get('/', (req,res) => {
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   userRef.get().then(doc => {
     if (!doc.exists) {
@@ -33,9 +40,9 @@ router.get('/', (req,res) => {
 
     // get cart from user
     // cart id doc is user id
-    let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
+    const cartRef = userRef.collection('cart').doc(user).collection('cartItems');
 
-    let cartItems = [];
+    const cartItems = [];
 
     cartRef.get()
       .then(snapshot => {
@@ -68,25 +75,45 @@ router.get('/', (req,res) => {
   });  // end userRef.get()
 });
 
+/**
+ * @param user - user id
+ * @param pid - product id
+ * @param vendorID - vendor id
+ * @param imageLink = TODO take out
+ * @param size - size of apparrel
+ * @param isApparel - bool
+ * @param amtPurchased - num items purchased
+ */
 router.post('/addItems', (req, res) => {
+
+  /**
+   * TODO: talk to Alex about sneidng image link, no need, I can grab 0th image
+   * from DB
+   */
+
+   // TODO refactor
+
   if (req.body.params) {
-    // get user id and product id
-    var user = req.body.params.user;
-    var pid = req.body.params.pid;  // product id
+    var {
+      user,
+      pid,
+      vendorID,
+      imageLink,
+      size,
+      isApparel
+    } = req.body.params;
     var amtPurchased = Number(req.body.params.amtPurchased);
-    var vendorID = req.body.params.vendorID;
-    var imageLink = req.body.params.image;
-    var size = req.body.params.size;
-    var isApparel = req.body.params.isApparel;
   }
   else {
-    var user = req.body.user;
-    var pid = req.body.pid;  // product id
+    var {
+      user,
+      pid,
+      vendorID,
+      imageLink,
+      size,
+      isApparel
+    } = req.body;
     var amtPurchased = Number(req.body.amtPurchased);
-    var vendorID = req.body.vendorID;
-    var imageLink = req.body.image;
-    var size = req.body.size;
-    var isApparel = req.body.isApparel;
   }
 
   // return error if empty request
@@ -97,7 +124,7 @@ router.post('/addItems', (req, res) => {
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   userRef.get().then(doc => {
     if (!doc.exists) {
@@ -109,10 +136,10 @@ router.post('/addItems', (req, res) => {
 
     // get cart from user
     // cart id doc is user id
-    let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
+    const cartRef = userRef.collection('cart').doc(user).collection('cartItems');
 
     // get product info from pid
-    let productInfoRef = db.collection('products').doc(pid);
+    const productInfoRef = db.collection('products').doc(pid);
 
     productInfoRef.get().then(doc => {
       if (!doc.exists) {
@@ -123,9 +150,9 @@ router.post('/addItems', (req, res) => {
         });
       }
       // else, get data
-      let productInfo = doc.data();
+      const productInfo = doc.data();
 
-      let cartItemRef = cartRef.doc(pid);
+      const cartItemRef = cartRef.doc(pid);
 
       var transaction = db.runTransaction(t => {
         return t.get(cartItemRef).then(doc => {
@@ -174,9 +201,9 @@ router.post('/addItems', (req, res) => {
 
           //if the item does not exist
           else {
-            var oldItemAmt = doc.data().amtPurchased;
-            var newAmt = oldItemAmt + amtPurchased;
-            var totalItemPrice = newAmt * productInfo.productPrice;
+            const oldItemAmt = doc.data().amtPurchased;
+            const newAmt = oldItemAmt + amtPurchased;
+            const totalItemPrice = newAmt * productInfo.productPrice;
 
             var data;
 
@@ -264,7 +291,7 @@ router.post('/deleteItems', (req,res) => {
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   // check to make sure existing user
   userRef.get().then(doc => {
@@ -276,7 +303,7 @@ router.post('/deleteItems', (req,res) => {
       });
     }
     
-    let cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(pid);
+    const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(pid);
 
     // check to make sure item exists for deltion
     cartItemRef.get().then(doc => {
@@ -340,7 +367,7 @@ router.post('/updateItems', (req, res) => {
     });
   }
 
-  let cartItemRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems').doc(pid);
+  const cartItemRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems').doc(pid);
 
   let transaction = db.runTransaction(t => {
     return t.get(cartItemRef).then(doc => {
@@ -352,8 +379,8 @@ router.post('/updateItems', (req, res) => {
         });
       }
       else {
-        let productPrice = doc.data().productPrice;
-        let newTotalPrice = amtPurchased * productPrice;
+        const productPrice = doc.data().productPrice;
+        const newTotalPrice = amtPurchased * productPrice;
 
         t.update(cartItemRef, {
           amtPurchased: amtPurchased,
@@ -403,7 +430,7 @@ router.post('/updateCart', (req,res) => {
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   userRef.get().then(doc => {
     // if user doesnt exist, stop
@@ -416,9 +443,9 @@ router.post('/updateCart', (req,res) => {
     }
 
     // else update their cart
-    let userCartRef = db.collection('users').doc(user).collection('cart').doc(user);
+    const userCartRef = db.collection('users').doc(user).collection('cart').doc(user);
 
-    let data = {
+    const data = {
       cartTotalPrice: cartTotalPrice,
       itemsInCart: itemsInCart,
       vendorsInOrder: vendorsInOrder
@@ -462,7 +489,7 @@ router.delete('/clearCart', (req, res) => {
     });
   }
 
-  let cartRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems');
+  const cartRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems');
   cartRef.get().then(snapshot => {
     if (snapshot.empty) {
       console.log('User cart successfully cleared.');

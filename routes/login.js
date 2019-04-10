@@ -38,7 +38,7 @@ router.post('/', (req, res) =>{
 
   // check to see if an account exists with given email
 
-  let userRef = db.collection('users').doc(email);
+  const userRef = db.collection('users').doc(email);
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('No such account for given email:', email);
@@ -73,18 +73,16 @@ router.post('/', (req, res) =>{
             }
             vendors = doc.data().vendors;
 
-            // console.log('Vendors are:', vendors);
-
             //info that JWT stores
-            const payload = { email: email };
+            const payload = { email };
 
             jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
               return res.status(200).json({
                 success: true,
                 message: "Login Successful!",
                 token: 'Bearer ' + token,
-                email: email,
-                vendors: vendors
+                email,
+                vendors
               });
             });
 
@@ -108,9 +106,9 @@ router.post('/', (req, res) =>{
             return res.status(200).json({
               success: true,
               message: "Login Successful!",
-              email: email,
               token: 'Bearer ' + token,
-              vendors: vendors
+              email,
+              vendors
             });
           });
         }
@@ -134,71 +132,6 @@ router.post('/', (req, res) =>{
       message: 'Error in getting userRef: ' + err
     });
   });
-
-
-  /*
-  //check to see if email exists
-  else {
-    var ref = db.collection('users').where('email', '==', email);
-    ref.get()
-      .then(snapshot => {
-        //needs to equal to 1
-        //user with email was found
-        if(snapshot.size === 1){
-          snapshot.forEach(doc => {
-            if(doc.data().email === email){
-              //compare passwords
-              bcrypt.compare(password, doc.data().password, (err, validPassword)=> {
-                if(err){
-                  return res.json({
-                    success: false,
-                    message: "Server error comparing passwords"
-                  });
-                }
-
-                //if passwords match, send JWT to authenticate login
-                if(validPassword){
-                  //info that JWT stores
-                  const payload = {email: email};
-
-                  jwt.sign(payload, jwtKey.JWTSecret, {expiresIn: 3600}, (err, token) => {
-                    return res.status(200).json({
-                      success: true,
-                      message: "Login Successful!",
-                      email: email,
-                      token: 'Bearer ' + token
-                    });
-                  });
-                }
-
-                //if passwords don't match
-                else{
-                  return res.json({
-                    success:false,
-                    message: "Incorrect Password"
-                  });
-                }
-              })
-            }
-
-            else{
-              return res.json({
-                success:false,
-                message: "Invalid Email"
-              });
-            }
-          })
-        }
-
-        else{
-          return res.json({
-            success:false,
-            message: "Email does not exist, please make an account"
-          });
-        }
-      })
-  }
-  */
 })
 
 module.exports = router;
