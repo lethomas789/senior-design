@@ -1,8 +1,9 @@
 #homeContainer{
     /* display:flex; */
     flex-direction: column;
-    margin-left: 40px;
-    margin-right: 40px;
+    margin-left: 100px;
+    margin-right: 100px;
+    
 }
 .moreContainer {
   position: relative;
@@ -74,8 +75,6 @@
   }
 
   .hero-imagee {
-    /* background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5))); */
-    /* background-image: linear-gradient(rgba(0, 0, 0, 0.1), rgba(0, 0, 0, 0.1)); */
     background-position: center;
     background-repeat: no-repeat;
     background-size: cover;
@@ -93,8 +92,9 @@
     transform: translate(-50%, -50%);
     color: white;
   }
+
  p {
-   display: block;
+  display: block;
  }
 
  .bottom-tabs {
@@ -105,6 +105,8 @@
   -moz-column-width: 100px; /* Firefox */
   column-width: 100px;
 }
+
+
 
 /* Create three equal columns that floats next to each other */
 .colls {
