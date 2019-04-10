@@ -32,9 +32,13 @@ export default class Home extends Component {
           <div className="colls">
           <div className = "moreContainer">
           <div className = "hero-imagee">
+          <a target="_blank" href="https://193ecommerce.com/shop">
           <img src={require('../../images/cows.jpg')} width="100%"/>
+          </a>
           </div>
+          <a target="_blank" href="https://193ecommerce.com/shop">
           <div className = "hero-textt">SHOP</div>
+          </a>
           </div>
           </div>
 
@@ -51,9 +55,13 @@ export default class Home extends Component {
           <div className="colls">
           <div className = "moreContainer">
           <div className = "hero-imagee">
+          <a target="_blank" href="https://193ecommerce.com/about">
           <img src={require('../../images/bikes.jpg')} width="100%"/>
+          </a>
           </div>
+          <a target="_blank" href="https://193ecommerce.com/about">
           <div className = "hero-textt">ABOUT</div>
+          </a>
           </div>
           </div>
 
