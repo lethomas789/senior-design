@@ -16,17 +16,26 @@ export default class Home extends Component {
           <h1> Welcome to ECS193 ECommerce! </h1>
 
           <img src={require('../../images/wics2.png')} width="100%" />
-       
+          <div className = "homeText">
+          <div className = "center">
           <p>This is a ecommerce website for UC Davis's clubs. 
           Here we make merchandise available from all different clubs of Davis.
+          UC Davis clubs typically have an unofficial way to sell their merchandise, usually through Facebook and word of mouth. 
+          There is no easy way to display, buy and sell goods. 
           </p>
+          </div>
+          </div>
           <div className = "roww">
           <div className="colls">
           <div className = "moreContainer">
           <div className = "hero-imagee">
+          <a target="_blank" href="https://193ecommerce.com/shop">
           <img src={require('../../images/cows.jpg')} width="100%"/>
+          </a>
           </div>
+          <a target="_blank" href="https://193ecommerce.com/shop">
           <div className = "hero-textt">SHOP</div>
+          </a>
           </div>
           </div>
 
@@ -43,9 +52,13 @@ export default class Home extends Component {
           <div className="colls">
           <div className = "moreContainer">
           <div className = "hero-imagee">
-          <img src={require('../../images/horses.jpg')} width="100%"/>
+          <a target="_blank" href="https://193ecommerce.com/about">
+          <img src={require('../../images/bikes.jpg')} width="100%"/>
+          </a>
           </div>
+          <a target="_blank" href="https://193ecommerce.com/about">
           <div className = "hero-textt">ABOUT</div>
+          </a>
           </div>
           </div>
 
