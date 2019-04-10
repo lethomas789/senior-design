@@ -17,6 +17,8 @@ router.post('/addNewProduct', (req, res) => {
       productName,
       productPicture,  // TODO: ask how this is being sent again
       pid,
+      pickupLocation,
+      pickupTime
     } = req.body.params;
 
     var productPrice = Number(req.body.params.productPrice);
@@ -44,6 +46,8 @@ router.post('/addNewProduct', (req, res) => {
       productName,
       productPicture,
       pid,
+      pickupLocation,
+      pickupTime
     } = req.body;
 
     var productPrice = Number(req.body.productPrice);
@@ -143,7 +147,9 @@ router.post('/addNewProduct', (req, res) => {
           lastUpdate,
           lastUpdateUser,
 
-          pid
+          pid,
+          pickupLocation,
+          pickupTime
         };
       }
       // else, just save stock
@@ -162,7 +168,9 @@ router.post('/addNewProduct', (req, res) => {
           lastUpdate,
           lastUpdateUser,
 
-          pid
+          pid,
+          pickupLocation,
+          pickupTime
         };
       }
 
@@ -351,6 +359,8 @@ router.patch('/editProduct ', (req, res) => {
       productName,
       productPicture,  // TODO: ask how this is being sent again
       pid,
+      pickupLocation,
+      pickupTime
     } = req.body.params;
 
     var productPrice = Number(req.body.params.productPrice);
@@ -378,6 +388,8 @@ router.patch('/editProduct ', (req, res) => {
       productName,
       productPicture,
       pid,
+      pickupLocation,
+      pickupTime
     } = req.body;
 
     var productPrice = Number(req.body.productPrice);
@@ -477,7 +489,9 @@ router.patch('/editProduct ', (req, res) => {
           lastUpdate,
           lastUpdateUser,
 
-          pid
+          pid,
+          pickupLocation,
+          pickupTime,
         };
       }
       // else, just save stock
@@ -497,7 +511,9 @@ router.patch('/editProduct ', (req, res) => {
           lastUpdate,
           lastUpdateUser,
 
-          pid
+          pid,
+          pickupLocation,
+          pickupTime,
         };
       }
 
