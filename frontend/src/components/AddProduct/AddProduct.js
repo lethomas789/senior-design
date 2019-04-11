@@ -73,8 +73,6 @@ class AddProduct extends Component {
   //handle stock change, update total stock values when user changes input
   handleStockChangeApparel = name => stock => {
 
-    console.log("checking stock change", stock);
-
     //if the user is setting the stock to a negative value, set default to 0
     if(stock.target.value < 0){
       this.setState({
@@ -84,11 +82,17 @@ class AddProduct extends Component {
 
     //update stock of current item and update running total of stock items
     else{
-      var runningStockTotal = 0;
-      runningStockTotal = this.state.small + this.state.medium + this.state.large + this.state.xsmall + this.state.xlarge;
+      //update stock value for current size
+      //after updating current stock, update running total of stock for all sizes
       this.setState({
-        stock: String(runningStockTotal),
-        [name]: stock.target.value
+        [name]: Number(stock.target.value)
+      }, () => {
+        //add running total of stocks when value is changed
+        var runningStockTotal = 0;
+        runningStockTotal = Number(this.state.small) + Number(this.state.medium) + Number(this.state.large) + Number(this.state.xsmall) + Number(this.state.xlarge);
+        this.setState({
+          stock: String(runningStockTotal)
+        })
       })
     }
   };
@@ -286,8 +290,9 @@ class AddProduct extends Component {
                   required="false"
                   type="number"
                   value={this.state.small}
-                  onChange={(event) => this.setState({ small: event.target.value })}
-                  // onChange={handleChange("small")}
+                  onChange={
+                    this.handleStockChangeApparel("small")
+                  }
                 />
               </div>
 
@@ -297,7 +302,9 @@ class AddProduct extends Component {
                   required="false"
                   type="number"
                   value={this.state.medium}
-                  onChange={(event) => this.setState({ medium: event.target.value })}
+                  onChange={
+                    this.handleStockChangeApparel("medium")
+                  }
                 />
               </div>
 
@@ -307,8 +314,8 @@ class AddProduct extends Component {
                   required="false"
                   type="number"
                   value={this.state.large}
-                  onChange={(event) =>
-                    this.handleStockChangeApparel(event)
+                  onChange={
+                    this.handleStockChangeApparel("large")
                   }
                 />
               </div>
@@ -318,7 +325,9 @@ class AddProduct extends Component {
                   required="false"
                   type="number"
                   value={this.state.xsmall}
-                  onChange={(event) => this.setState({ xsmall: event.target.value })}
+                  onChange={                    
+                    this.handleStockChangeApparel("xsmall")
+                  }
                 />
               </div>
 
@@ -328,7 +337,9 @@ class AddProduct extends Component {
                   required="false"
                   value={this.state.xlarge}
                   type="number"
-                  onChange={(event) => this.setState({ xlarge: event.target.value })}
+                  onChange={
+                    this.handleStockChangeApparel("xlarge")
+                  }
                 />
               </div>
             </div>
