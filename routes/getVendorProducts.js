@@ -15,7 +15,7 @@ router.get('/', (req,res) => {
   // can do db.doc('collection/pathToDoc');
 
   // require certain response params
-  if (!vendor) {
+  if (!vid) {
     return res.status(200).json({
       success: false,
       message: 'Invalid request params'

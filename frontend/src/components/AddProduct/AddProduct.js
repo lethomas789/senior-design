@@ -43,6 +43,7 @@ class AddProduct extends Component {
       productName: '',
       productInfo: '',
       productPrice: '',
+      pickupLocation: '',
       stock: '',
       productID: '',
       isApparel: false,
@@ -241,8 +242,17 @@ class AddProduct extends Component {
                 label="Product Info"
                 required="true"
                 multiline={true}
-                rows={4}
+                rows={2}
                 onChange={(event) => this.setState({ productInfo: event.target.value })}
+                style={style.field}
+              />
+            </div>
+
+            <div className = "textForm" id="row">
+              <TextField
+                label="Pickup Location (Enter location and date/time)"
+                required="true"
+                onChange={(event) => this.setState({ pickupLocation: event.target.value })}
                 style={style.field}
               />
             </div>
@@ -371,7 +381,7 @@ class AddProduct extends Component {
 
             <div className = "textForm" id = "row">
               <h5 className = "uploadImageText"> Upload Images </h5>
-              <h6 className = "uploadImageText"> *(First image uploaded on the left is default image displayed on shop) </h6>
+              <h6 className = "uploadImageText"> *(First image uploaded on the left is default image displayed on shop. Remaining images used in detailed view) </h6>
 
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }

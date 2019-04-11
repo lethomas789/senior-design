@@ -135,7 +135,7 @@ class EditClubInfo extends Component {
             id="standard-full-width"
             onChange={event => this.setState({ bio: event.target.value })}
             multiline={true}
-            rows={8}
+            rows={4}
           />
         </form>
         <div className="btn-update-info">

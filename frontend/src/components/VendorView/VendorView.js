@@ -17,37 +17,51 @@ class VendorView extends Component {
   }
 
   componentDidMount(){
+    //get array of vendor names and information associated with each vendor
+    const vendorAPI = "/api/getVendorInfo";
 
-    //extract param values from URL
-    //match object contains parameter values
-    const handle = this.props.match.params;
-    console.log("match params", handle);
+    //get vendor info as an array and store into redux
+    axios.get(vendorAPI)
+      .then(res => {
+        if(res.data.success === true){
+          //update array of vendors containing vid, name, bio etc.
+          this.props.updateVendors(res.data.vendors);
 
-    const apiURL = "/api/getVendorProducts";
-    axios.get(apiURL, {
-      params:{
-        vid: handle.vid
-      }
-    })
-    .then(res => {
-      console.log("getting vendor products ", res.data);
+          //extract param values from URL
+          //match object contains parameter values
+          const handle = this.props.match.params;
+          const apiURL = "/api/getVendorProducts";
+          axios.get(apiURL, {
+            params:{
+              vid: handle.vid
+            }
+          })
+          .then(res => {
+            console.log("getting vendor products ", res.data);
 
-      var currentVendorName = '';
-      var currentVendorBio = '';
+            var currentVendorName = '';
+            var currentVendorBio = '';
 
-      //search for matching vendor id in array of vendors of redux store
-      for(let i = 0; i < this.props.vendors.length; i++){
-        if(this.props.vendors[i].vid === this.props.vendor){
-          //update component state, list of products from vendor
-          this.setState({
-            products: res.data.data,
-            vendorName: this.props.vendors[i].vendorName,
-            bio: this.props.vendors[i].bio
-          });
-          break;
+            //search for matching vendor id in array of vendors of redux store
+            //compare parameter of vid in url to matching vid in array of vendors
+            for(let i = 0; i < this.props.vendors.length; i++){
+              if(this.props.vendors[i].vid === handle.vid){
+                //extract info from matching vid
+                //update component state, list of products from vendor, name of vendor, and bio
+                this.setState({
+                  products: res.data.data,
+                  vendorName: this.props.vendors[i].vendorName,
+                  bio: this.props.vendors[i].bio
+                });
+                break;
+              }
+            }
+          })
         }
-      }
-    })
+      })
+      .catch(err => {
+        alert(err);
+      })
   }
 
   render() {
@@ -76,9 +90,16 @@ class VendorView extends Component {
 //update items from server to become state of store
 const mapDispatchToProps = dispatch => {
   return{
+      //update products to view based on selected vendor
       updateProducts: (products) => dispatch({
           type: actions.GET_PRODUCTS,
           items: products
+      }),
+
+      //update vendor names and information
+      updateVendors: (currentVendors) => dispatch({
+        type: actions.GET_VENDORS,
+        vendors: currentVendors
       })
   }
 }
