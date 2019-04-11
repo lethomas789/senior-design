@@ -138,6 +138,7 @@ class EditClubInfo extends Component {
             rows={4}
           />
         </form>
+        
         <div className="btn-update-info">
           <Button variant="contained" color="primary" onClick={this.sendEdit}>
             Update Club Info

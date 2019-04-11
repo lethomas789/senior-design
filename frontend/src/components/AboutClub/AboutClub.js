@@ -41,10 +41,16 @@ export default class AboutClub extends Component {
   }
 
   componentDidMount() {
-    const route = `api/getVendorInfo/aboutClub`;
+    //extract param values from URL
+    //match object contains parameter values
+    const handle = this.props.match.params;
+    const route = `/api/getVendorInfo/aboutClub`;
 
     axios.get(route, {
-      params: { vid: this.props.vid }
+      // params: { vid: this.props.vid }
+
+      //extract vid from URL
+      params: { vid: handle.vid }
     })
       .then(res => {
         if (res.data.success) {
@@ -63,6 +69,7 @@ export default class AboutClub extends Component {
       });
   }
   
+  // TODO style about us page
   render() {
     const { vendorName, bio } = this.state;
 

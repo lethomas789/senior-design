@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import './VendorView.css';
 import axios from 'axios';
+import {Link} from "react-router-dom";
 import { connect } from 'react-redux';
 import actions from '../../store/actions';
 import ShopItem from '../ShopItem/ShopItem';
@@ -73,6 +74,7 @@ class VendorView extends Component {
       <div className = "grow">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
           <h1> {this.state.vendorName} </h1>
+          <h3> <Link to={`/aboutClub/${this.props.vendor}`}> About Us </Link> </h3>
           <h3> Bio: {this.state.bio} </h3>
         </Grid>
 
