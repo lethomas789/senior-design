@@ -52,9 +52,11 @@ class ClubImages extends Component {
 }
 
 export default class AboutClub extends Component {
+  /*
   static propTypes = {
     vid: PropTypes.string
   };
+  */
 
   state = {
     vendorName: "",

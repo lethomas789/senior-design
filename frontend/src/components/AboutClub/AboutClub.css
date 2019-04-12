@@ -31,6 +31,7 @@
 }
 
 .club-picture {
+  min-width: 0;
 }
 
 /*
