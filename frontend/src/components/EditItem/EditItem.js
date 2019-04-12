@@ -8,6 +8,11 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 class EditItem extends Component {
+  static propTypes = {
+    name: PropTypes.string.isRequired,
+    clickFunction: PropTypes.func.isRequired,
+  }
+
   constructor(props){
     super(props);
     this.state = {
@@ -16,9 +21,8 @@ class EditItem extends Component {
   }
 
   //onclick function, call function that was passed as a prop to EditItemView component
+  //pass name after being clicked to parent component to fill in form data
   updateFormAferClicked = () =>{
-    console.log(this.props);
-    console.log("calling parent function");
     this.props.clickFunction(this.state.name);
   }
   
