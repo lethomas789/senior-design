@@ -33,6 +33,7 @@ const shopRoute = "/shop";
 const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
+const editItemRoute = "/editItem";
 
 //style for cart to display number of items
 const styles = theme => ({
@@ -287,7 +288,7 @@ class ButtonAppBar extends Component {
                     </MenuItem>
                     <MenuItem
                       component={Link}
-                      to={aboutRoute}
+                      to={editItemRoute}
                       color="inherit"
                       onClick={this.handleMenuClose}
                     >

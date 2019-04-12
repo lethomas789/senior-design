@@ -1,0 +1,25 @@
+.editItem{
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+}
+
+#editItemForms{
+  display: none
+}
+
+#showItemForms{
+  display:block
+}
+
+.textFormEdit{
+  width: 250px;
+}
+
+#selectEditItem{
+  cursor: pointer;
+}
+
+#selectEditItem:hover{
+  color:blue;
+}
