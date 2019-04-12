@@ -86,6 +86,9 @@ router.get('/', (req,res) => {
  */
 router.post('/addItems', (req, res) => {
 
+  console.log(req.body.params);
+  console.log(req.body);
+
   if (req.body.params) {
     var {
       user,
@@ -167,6 +170,8 @@ router.post('/addItems', (req, res) => {
                 size: size,
                 isApparel: isApparel
               }
+
+              console.log("checking is apparel data", data);
             } 
 
             //if regular item, create data object with regular properties
@@ -181,6 +186,7 @@ router.post('/addItems', (req, res) => {
                 image: imageLink,
                 isApparel: isApparel
               };
+              console.log("checking non apparel data", data);
             }
 
             // set new item(s) purchased into cart, with pid as doc identifier
