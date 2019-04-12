@@ -15,3 +15,9 @@
     width: 800px;
 }
 
+.plsCenter {
+    text-align: center;
+    display: inline-block;
+    vertical-align: middle;
+}
+

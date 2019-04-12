@@ -1,12 +1,14 @@
 /* Normalize styles for browser consistency */
 @import '../node_modules/sanitize.css/sanitize.css';
+@import url('https://fonts.googleapis.com/css?family=Muli');
 
 html {
   font-family: 'Roboto', sans-serif;
 }
 
 body {
-  background-color: #E8E8E8;
+  /* background-color: #E8E8E8; */
+  font-family: 'Muli', sans-serif;
 }
 
 /*
