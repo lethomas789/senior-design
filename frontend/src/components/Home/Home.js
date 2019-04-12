@@ -36,6 +36,10 @@ export default class Home extends Component {
             </AliceCarousel>
           </div>
 
+          <div className = "helvv">
+          <h2 className = "decorated"><span>An E-Commerce Website for Clubs at UC Davis</span></h2>
+          </div>
+
 
           <div className = "roww">
           <div className="colls">

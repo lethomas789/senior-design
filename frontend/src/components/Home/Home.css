@@ -1,4 +1,5 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
 
 #homeContainer{
     /* display:flex; */
@@ -7,6 +8,30 @@
     margin-right: 100px;
     
 }
+
+.helvv {
+  overflow: hidden;
+  text-align: center;
+ }
+ .helvv:before,
+ .helvv:after {
+  background-color: #333;
+  content: "";
+  display: inline-block;
+  height: 1px;
+  position: relative;
+  vertical-align: middle;
+  width: 50%;
+ }
+ .helvv:before {
+  right: 0.5em;
+  margin-left: -50%;
+ }
+ .helvv:after {
+  left: 0.5em;
+  margin-right: -50%;
+ }
+
 .moreContainer {
   position: relative;
   text-align: center;
@@ -96,6 +121,7 @@
     color: white;
   }
 
+
  p {
   display: block;
  }
@@ -112,8 +138,13 @@
 .helv {
   font-family: 'Comfortaa';
   padding-top: 30px;
+}
+
+.helvv {
+  font-family: 'Raleway';
   padding-bottom: 30px;
 }
+
 
 .homeText {
   padding-top: 100px;
@@ -123,9 +154,6 @@
   padding: 10px;
   background-color: white;
 }
-
-
-
 
 /* 
 .center {
