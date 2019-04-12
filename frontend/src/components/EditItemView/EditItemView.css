@@ -1,0 +1,9 @@
+#editViewContainer{
+  display: flex;
+  flex-direction: column;
+}
+
+#editItemsContainer{
+  display: flex;
+  flex-direction: row;
+}

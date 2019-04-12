@@ -63,7 +63,7 @@ app.use('/api/getVendorInfo', getVendorInfo);
 app.use('/api/paypalSandbox', paypalSandbox);
 app.use('/api/orders', orders);
 app.use('/api/getProductInfo', getProductInfo);
-app.use('api/stock', stock);
+app.use('/api/stock', stock);
 
 //fix react app crashing on refresh
 app.get('*', (req,res) => {

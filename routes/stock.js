@@ -40,7 +40,7 @@ router.get('/', (req, res) => {
     const pdata = doc.data();
 
     // if apparel, check the size stock
-    if (isApparel) {
+    if (isApparel === true) {
       if (pdata[size] >= amt) {
         console.log('Successfully checked for existing stock:', pdata[size]);
         return res.json({
@@ -68,7 +68,6 @@ router.get('/', (req, res) => {
         });
       }
       else {
-        console.log('Successfully checked for existing stock:', pdata.stock);
         return res.json({
           success: true,
           message: 'Sorry not enough stock.',

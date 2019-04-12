@@ -345,97 +345,120 @@ class ShopItemDetailed extends Component {
       alert("Sorry, cannot add a quantity of 0.");
     }
 
-    //check if quantity exceeded stock
-    else if (this.state.amtPurchased > Number(this.state.productStock)) {
-      alert("Quantity exceeded stock amount");
-    }
-
     //add to user's cart
     else {
-      //update user's cart on server
-      var apiURL = "/api/getUserCart/addItems";
-      //item added to user's cart is not an apparel
-      if (this.state.isApparel === false) {
-        axios
-          .post(apiURL, {
-            params: {
-              user: this.props.user,
-              pid: this.props.pid,
-              amtPurchased: this.state.amtPurchased,
-              vendorID: this.state.vid,
-              image: this.state.imageLink,
-              isApparel: this.state.isApparel
-            }
-          })
-          .then(res => {
-            if (res.data.success === true) {
-              //after adding to item, get updated cart
-              const getCartURL = "/api/getUserCart";
-              axios
-                .get(getCartURL, {
-                  params: {
-                    user: this.props.user
-                  }
-                })
-                .then(res => {
-                  //after getting cart info, update redux store container
-                  this.props.updateItems(res.data.data);
-                  alert("Item added to cart!");
-                })
-                .catch(err => {
-                  alert(err);
-                });
-            }
-          })
-          .catch(err => {
-            alert(err);
-          });
-      }
+      //check stock in database before adding to user's cart
+      var stockURL = "/api/stock";
 
-      //item added to user's cart is an apparel
-      else {
-        console.log("checking shirt size", this.state.size);
-        axios
-          .post(apiURL, {
-            params: {
-              user: this.props.user,
-              pid: this.props.pid,
-              amtPurchased: this.state.amtPurchased,
-              vendorID: this.state.vid,
-              image: this.state.imageLink,
-              isApparel: this.state.isApparel,
-              s_stock: this.state.s_stock,
-              m_stock: this.state.m_stock,
-              l_stock: this.state.l_stock,
-              xs_stock: this.state.xs_stock,
-              xl_stock: this.state.xl_stock,
-              size: this.state.size
-            }
-          })
-          .then(res => {
-            if (res.data.success === true) {
-              //after adding to item, get updated cart
-              const getCartURL = "/api/getUserCart";
-              axios
-                .get(getCartURL, {
-                  params: {
-                    user: this.props.user
-                  }
-                })
-                .then(res => {
-                  //after getting cart info, update redux store container
-                  this.props.updateItems(res.data.data);
-                  alert("Item added to cart!");
-                })
-                .catch(err => {
-                  alert(err);
-                });
-            }
-          })
-          .catch(err => {
-            alert(err);
-          });
-      } //end of else statement for isApparel
+      axios.get(stockURL, {
+        params:{
+          pid: this.state.pid,
+          isApparel: this.state.isApparel,
+          size: this.state.size,
+          amt: Number(this.state.amtPurchased)
+        }
+      })
+      .then(res => {
+        console.log(res);
+        //successful stock check, amount being purchased is less than stock
+        if(res.data.availableStock === true){
+          console.log("adding items, stock doesn't exceed");
+          //add item to cart
+          //update user's cart on server
+          var apiURL = "/api/getUserCart/addItems";
+          //item added to user's cart is not an apparel
+          if (this.state.isApparel === false) {
+            console.log("adding item");
+            axios
+              .post(apiURL, {
+                params: {
+                  user: this.props.user,
+                  pid: this.props.pid,
+                  amtPurchased: this.state.amtPurchased,
+                  vendorID: this.state.vid,
+                  imageLink: this.state.imageLink,
+                  isApparel: this.state.isApparel
+                }
+              })
+              .then(res => {
+                if (res.data.success === true) {
+                  //after adding to item, get updated cart
+                  const getCartURL = "/api/getUserCart";
+                  axios
+                    .get(getCartURL, {
+                      params: {
+                        user: this.props.user
+                      }
+                    })
+                    .then(res => {
+                      //after getting cart info, update redux store container
+                      this.props.updateItems(res.data.data);
+                      alert("Item added to cart!");
+                    })
+                    .catch(err => {
+                      alert(err);
+                    });
+                }
+              })
+              .catch(err => {
+                alert(err);
+              });
+          }
+
+          //item added to user's cart is an apparel
+          else {
+            console.log("checking shirt size", this.state.size);
+            axios
+              .post(apiURL, {
+                params: {
+                  user: this.props.user,
+                  pid: this.props.pid,
+                  amtPurchased: this.state.amtPurchased,
+                  vendorID: this.state.vid,
+                  imageLink: this.state.imageLink,
+                  isApparel: this.state.isApparel,
+                  s_stock: this.state.s_stock,
+                  m_stock: this.state.m_stock,
+                  l_stock: this.state.l_stock,
+                  xs_stock: this.state.xs_stock,
+                  xl_stock: this.state.xl_stock,
+                  size: this.state.size
+                }
+              })
+              .then(res => {
+                if (res.data.success === true) {
+                  //after adding to item, get updated cart
+                  const getCartURL = "/api/getUserCart";
+                  axios
+                    .get(getCartURL, {
+                      params: {
+                        user: this.props.user
+                      }
+                    })
+                    .then(res => {
+                      //after getting cart info, update redux store container
+                      this.props.updateItems(res.data.data);
+                      alert("Item added to cart!");
+                    })
+                    .catch(err => {
+                      alert(err);
+                    });
+                }
+              })
+              .catch(err => {
+                alert(err);
+              });
+          } //end of else statement for isApparel
+        }//end of adding item to cart
+
+        //display error, amount purchased exceeds stock in database
+        else{
+          alert(res.data.message);
+        }
+      })
+      .catch(err => {
+        alert(err);
+      })
     } //end of else statement for adding to user's cart
   }; //end of addItem function
 
