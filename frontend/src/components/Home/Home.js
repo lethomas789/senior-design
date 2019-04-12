@@ -4,19 +4,21 @@ import Grid from '@material-ui/core/Grid';
 import { Slide } from 'react-slideshow-image';
 import AliceCarousel from 'react-alice-carousel';
 import "react-alice-carousel/lib/alice-carousel.css";
-import image1 from '../../images/dog1.jpg';
-import image2 from '../../images/dog2.jpg';
-import image3 from '../../images/dog3.jpg';
+import image1 from '../../images/muclubs.jpg';
+import image2 from '../../images/foodtruck.jpg';
+import image3 from '../../images/horses.jpg';
 
 export default class Home extends Component {
   render() {
     return (
       <div id = "homeContainer">
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
+        <div className = "helv">
           <h1> Welcome to ECS193 ECommerce! </h1>
+          </div>
 
-          <img src={require('../../images/wics2.png')} width="100%" />
-          <div className = "homeText">
+          {/* <img src={require('../../images/wics2.png')} width="100%" /> */}
+          {/* <div className = "homeText">
           <div className = "center">
           <p>This is a ecommerce website for UC Davis's clubs. 
           Here we make merchandise available from all different clubs of Davis.
@@ -24,7 +26,17 @@ export default class Home extends Component {
           There is no easy way to display, buy and sell goods. 
           </p>
           </div>
+          </div> */}
+
+           <div id = "carouselContainer">
+            <AliceCarousel autoPlay = {true} autoPlayInterval = {2000} buttonsDisabled = {true}>
+                <img className = "slideImage" src = {image1} />
+                <img className = "slideImage" src = {image2} />
+                <img className = "slideImage" src = {image3} />
+            </AliceCarousel>
           </div>
+
+
           <div className = "roww">
           <div className="colls">
           <div className = "moreContainer">
@@ -65,13 +77,7 @@ export default class Home extends Component {
           </div>
          
 
-          {/* <div id = "carouselContainer">
-            <AliceCarousel autoPlay = {true} autoPlayInterval = {2000} buttonsDisabled = {true}>
-                <img className = "slideImage" src = {image1} />
-                <img className = "slideImage" src = {image2} />
-                <img className = "slideImage" src = {image3} />
-            </AliceCarousel>
-          </div> */}
+         
   
         </Grid>
         </div>
