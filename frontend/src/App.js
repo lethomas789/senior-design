@@ -38,13 +38,7 @@ class App extends Component {
           <Route exact path = "/addProduct" component = {AddProduct}/>
           <Route exact path = "/orderHistory" component = {OrderHistory}/>
           <Route path = "/itemDetails/:vid/:pid" component = {ShopItemDetailed}/>
-
-          {/* TODO, dynamic routes */}
-          {/* HARD CODED IN VID */}
-          <Route 
-            path="/aboutClub" 
-            render={() => <AboutClub vid="vid1" />}
-          />
+          <Route path="/aboutClub/:vid" component = {AboutClub}/>
         </div>
       </Router>
     );

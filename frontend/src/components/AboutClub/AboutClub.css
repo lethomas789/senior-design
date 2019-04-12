@@ -1,7 +1,117 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+:root {
+  /* --color-primary-light: #2998ff; */
+  --color-primary-light: rgba(41, 152, 255);
+  --color-primary: #406efd;
+  /* --color-primary-dark: #5643fa; */
+  --color-primary-dark: rgba(86, 67, 250);
+}
+
 #about-club-container {
   display: grid;
-  grid-template-columns: 1.5fr 2fr;
+  /* grid-template-columns: 1.5fr 2fr; */
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: auto;
   justify-content: center;
   margin-top: 50px;
+  min-width: 0;
 }
+
+.club-pictures-container {
+  min-width: 0;
+  /* problems occur when trying to center; TODO */
+  /* justify-self: center; */
+}
+
+.club-pictures-slider {
+  min-width: 0;
+  max-width: 500px;
+}
+
+.club-picture {
+  min-width: 0;
+}
+
+/*
+.about-club-header {
+  height: 95vh;
+  background-image: linear-gradient(
+      to right,
+      rgba(41, 152, 255, 0.8),
+      rgba(67, 128, 250, 0.8)
+    ),
+    url(../../images/wics2.png);
+
+  background-size: cover;
+  background-position: top;
+  position: relative;
+  -webkit-clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+  clip-path: polygon(0 0, 100% 0, 100% 75vh, 0 100%);
+}
+
+.about-club-header__text-box {
+  position: absolute;
+  top: 40%;
+  left: 50%;
+
+  transform: translate(-50%, -50%);
+
+  text-align: center;
+}
+
+.heading-primary {
+  color: #fff;
+  text-transform: uppercase;
+
+  backface-visibility: hidden;
+  margin-bottom: 6rem;
+}
+
+.heading-primary--main {
+  display: block;
+  font-size: 6rem;
+  font-weight: 400;
+  letter-spacing: 3.5rem;
+
+  /* animation: moveInLeft;
+  animation-duration: 1s;
+  animation-timing-function: ease-in; */
+
+  /* Properties that exist:
+    animation-delay: 3s;
+    animation-iteration-count: 3;
+}
+
+.heading-primary--sub {
+  display: block;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: 1.65rem;
+  animation: moveInRight 1s;
+}
+
+/*
+.heading-secondary {
+  font-size: 3.5rem;
+  text-transform: uppercase;
+  font-weight: 700;
+  display: inline-block;
+  background-image: linear-gradient(
+    to right,
+    $color-primary-light,
+    $color-primary-dark
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  letter-spacing: 0.2rem;
+  transition: all 0.2s;
+}
+
+.heading-secondary:hover {
+  transform: skewY(2deg) skewX(15deg) scale(1.1);
+  text-shadow: 0.5rem 1rem 2rem rgba($color-black, 0.2);
+}
+*/

@@ -350,7 +350,7 @@ router.get('/getProduct', (req, res) => {
 
 });  // END POST /addNewProduct
 
-router.patch('/editProduct ', (req, res) => {
+router.patch('/editProduct', (req, res) => {
   if (req.body.params){ 
     var {
       vid,

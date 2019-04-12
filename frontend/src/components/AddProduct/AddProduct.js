@@ -43,6 +43,7 @@ class AddProduct extends Component {
       productName: '',
       productInfo: '',
       productPrice: '',
+      pickupLocation: '',
       stock: '',
       productID: '',
       isApparel: false,
@@ -52,6 +53,7 @@ class AddProduct extends Component {
       xsmall: 0,
       xlarge: 0,
       apparelCSS: "hideApparelSizes",
+      itemShowStock: "showItemStock",
       images: [],
       imageNames:[]
     }
@@ -73,22 +75,35 @@ class AddProduct extends Component {
   //handle stock change, update total stock values when user changes input
   handleStockChangeApparel = name => stock => {
 
-    console.log("checking stock change", stock);
-
     //if the user is setting the stock to a negative value, set default to 0
-    if(stock.target.value < 0){
+    if(Number(stock.target.value) < 0){
       this.setState({
         [name]: 0
       })
     }
 
+    //if the user presses delete or backspace, handle empty field
+    else if(stock.target.value === ''){
+      this.setState({
+        [name]: ''
+      })
+    }
+
     //update stock of current item and update running total of stock items
     else{
-      var runningStockTotal = 0;
-      runningStockTotal = this.state.small + this.state.medium + this.state.large + this.state.xsmall + this.state.xlarge;
+      //update stock value for current size
+      //after updating current stock, update running total of stock for all sizes
+      //callback function called after setState
       this.setState({
-        stock: String(runningStockTotal),
-        [name]: stock.target.value
+        [name]: Number(stock.target.value)
+      }, () => {
+        //add running total of stocks when value is changed, callback function after state was updated
+        var runningStockTotal = 0;
+        runningStockTotal = Number(this.state.small) + Number(this.state.medium) + Number(this.state.large) + Number(this.state.xsmall) + Number(this.state.xlarge);
+        //update stock with running total
+        this.setState({
+          stock: String(runningStockTotal)
+        })
       })
     }
   };
@@ -227,8 +242,17 @@ class AddProduct extends Component {
                 label="Product Info"
                 required="true"
                 multiline={true}
-                rows={4}
+                rows={2}
                 onChange={(event) => this.setState({ productInfo: event.target.value })}
+                style={style.field}
+              />
+            </div>
+
+            <div className = "textForm" id="row">
+              <TextField
+                label="Pickup Location (Enter location and date/time)"
+                required="true"
+                onChange={(event) => this.setState({ pickupLocation: event.target.value })}
                 style={style.field}
               />
             </div>
@@ -242,11 +266,15 @@ class AddProduct extends Component {
               />
             </div>
 
-            <div className = "textForm" id="row">
+            {/* toggle visibility of product stock
+            if user is adding regular item, allow user to enter input
+            calculate running total if item is an apparel */}
+            <div className = {this.state.itemShowStock} id="row">
               <TextField
                 label="Product Stock"
                 required="true"
                 type="number"
+                value = {this.state.stock}
                 onChange={(event) => this.setState({ stock: event.target.value })}
               />
             </div>
@@ -259,35 +287,46 @@ class AddProduct extends Component {
                 value={this.state.value}
                 onChange={this.handleChange}
               >
+                {/* if user selects item, hide apparel selections, toggle css */}
                 <FormControlLabel
                   control={<Radio color="primary" />}
                   value = "item"
                   label="Item"
                   labelPlacement="start"
-                  onChange={() => this.setState({ isApparel: false, apparelCSS: 'hideApparelSizes'})}
+                  onChange={() => this.setState({ isApparel: false, apparelCSS: 'hideApparelSizes', itemShowStock: 'showItemStock'})}
                 />
 
+                {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
                 <FormControlLabel
-                  control={<Radio color="primary" />}
-                  value = "apparel"
-                  label="Apparel"
-                  labelPlacement="start"
-                  onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes'})}
+                    control={<Radio color="primary" />}
+                    value = "apparel"
+                    label="Apparel"
+                    labelPlacement="start"
+                    onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock'})}
                 />
               </RadioGroup>
             </FormControl>
 
             {/* add quantity for apparel sizes, toggel visibility if selected */}
             <div className = {this.state.apparelCSS}>
-
+              <div className = "textForm" id="row">
+                <TextField
+                  label="Product Stock"
+                  type="number"
+                  value = {this.state.stock}
+                  disabled
+                />
+              </div>
+              
               <div className = "textForm" id="row">
                 <TextField
                   label="Small Stock"
                   required="false"
                   type="number"
                   value={this.state.small}
-                  onChange={(event) => this.setState({ small: event.target.value })}
-                  // onChange={handleChange("small")}
+                  onChange={
+                    this.handleStockChangeApparel("small")
+                  }
                 />
               </div>
 
@@ -297,7 +336,9 @@ class AddProduct extends Component {
                   required="false"
                   type="number"
                   value={this.state.medium}
-                  onChange={(event) => this.setState({ medium: event.target.value })}
+                  onChange={
+                    this.handleStockChangeApparel("medium")
+                  }
                 />
               </div>
 
@@ -307,18 +348,21 @@ class AddProduct extends Component {
                   required="false"
                   type="number"
                   value={this.state.large}
-                  onChange={(event) =>
-                    this.handleStockChangeApparel(event)
+                  onChange={
+                    this.handleStockChangeApparel("large")
                   }
                 />
               </div>
+
               <div className = "textForm" id="row">
                 <TextField
                   label="X-Small Stock"
                   required="false"
                   type="number"
                   value={this.state.xsmall}
-                  onChange={(event) => this.setState({ xsmall: event.target.value })}
+                  onChange={                    
+                    this.handleStockChangeApparel("xsmall")
+                  }
                 />
               </div>
 
@@ -328,13 +372,16 @@ class AddProduct extends Component {
                   required="false"
                   value={this.state.xlarge}
                   type="number"
-                  onChange={(event) => this.setState({ xlarge: event.target.value })}
+                  onChange={
+                    this.handleStockChangeApparel("xlarge")
+                  }
                 />
               </div>
             </div>
 
             <div className = "textForm" id = "row">
-              <h5 id = "uploadImageText"> Upload Images </h5>
+              <h5 className = "uploadImageText"> Upload Images </h5>
+              <h6 className = "uploadImageText"> *(First image uploaded on the left is default image displayed on shop. Remaining images used in detailed view) </h6>
 
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
