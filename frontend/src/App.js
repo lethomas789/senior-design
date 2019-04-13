@@ -16,9 +16,8 @@ import OrderHistory from './components/OrderHistory/OrderHistory';
 import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
 import EditItemView from './components/EditItemView/EditItemView';
 
-
-import { createBrowserHistory } from 'history';
-import AboutClub from './components/AboutClub/AboutClub';
+import { createBrowserHistory } from "history";
+import AboutClub from "./components/AboutClub/AboutClub";
 const history = createBrowserHistory();
 
 class App extends Component {

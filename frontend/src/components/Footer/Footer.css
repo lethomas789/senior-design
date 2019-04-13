@@ -1,0 +1,25 @@
+.footer-container {
+  /* position: absolute;
+  bottom: 0;
+  width: 100%; */
+  display: grid;
+  margin-top: 100px;
+  /* min-height: 200px; TODO remove for testing */
+  background-color: var(--color-primary-light);
+  grid-template-columns: 1fr 1fr 1fr;
+  justify-content: space-around;
+  border-radius: 3px;
+}
+
+.footer-col {
+  margin: 20px;
+}
+
+.footer-col-list ul {
+  padding: 0;
+  list-style-type: none;
+}
+
+.footer-link {
+  margin: 10px 0;
+}
