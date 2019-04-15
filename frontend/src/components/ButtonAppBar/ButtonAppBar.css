@@ -1,3 +1,6 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
 .root {
     flex-grow: 1;
 }
@@ -11,12 +14,10 @@
     margin-right: 20;
 }
 
-
 #navLink{
   display: flex;
   justify-content: flex-end;
 }
-
 
 .badge{
   top: 50%;
@@ -37,8 +38,4 @@
 .club-select {
   width: 200px;
   border-left: 20px;
-}
-
-.colorDefault {
-    color: green;
 }
