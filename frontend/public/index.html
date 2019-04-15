@@ -21,8 +21,10 @@
 
       <script>
         function on SignIn(googleUser) {
+	  console.log("THIS WORKS");
 	  var profile = googleUser.getBasicProfile();
-	  console.log("ID: " + profile.getId());
+	  console.log("Email: ", profile.getEmail());
+	  
 	}
       </script>
   </body>

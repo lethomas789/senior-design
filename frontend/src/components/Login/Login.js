@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GoogleLogin from 'react-google-login';
 import {connect} from 'react-redux';
 import actions from '../../store/actions';
 import './Login.css';
@@ -163,7 +164,9 @@ class Login extends Component{
         }
     }
 
-
+    responseGoogle = (response) => {
+        console.log(response);
+    }
     render(){
         const { classes } = this.props;
         return(
@@ -194,7 +197,12 @@ class Login extends Component{
                         <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
 			<div className = "pushDown2">
-				<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>	
+				<GoogleLogin clientId="409029968816-1bf8e3qtt6jb2ivj9udb1qata3q0bdrc.apps.googleusercontent.com"
+				buttononText="Login"
+				onSuccess={this.responseGoogle}
+				onFailure={this.responseGoogle}
+				cookiePolicy={'single_host_origin'}
+				/>
 			</div>
                     </Paper>
                  
