@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GoogleLogin from 'react-google-login';
 import {connect} from 'react-redux';
 import actions from '../../store/actions';
 import './Login.css';
@@ -14,7 +15,6 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
 import {withRouter} from 'react-router-dom';
-
 
 const styles = theme => ({
     progress: {
@@ -129,11 +129,11 @@ class Login extends Component{
                 .catch(err => {
                     alert(err);
                 })
-            }
+            }     
             //display error message with logging in
             else{
                 this.setState({
-                    open: true,
+     		    open: true,
                     progressValue: 0,
                     progressVariant: "determinate",
                     responseMessage: res.data.message
@@ -164,6 +164,9 @@ class Login extends Component{
         }
     }
 
+    responseGoogle = (response) => {
+        console.log(response);
+    }
     render(){
         const { classes } = this.props;
         return(
@@ -189,11 +192,20 @@ class Login extends Component{
                             onKeyDown = {this.handleEnter}
                             />
                         </div>
+
                         <div className = "pushDown">
                         <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
+			<div className = "pushDown2">
+				<GoogleLogin clientId="409029968816-1bf8e3qtt6jb2ivj9udb1qata3q0bdrc.apps.googleusercontent.com"
+				buttononText="Login"
+				onSuccess={this.responseGoogle}
+				onFailure={this.responseGoogle}
+				cookiePolicy={'single_host_origin'}
+				/>
+			</div>
                     </Paper>
-                    
+                 
                     <div className = "progressContainer">
                         <div className = "circle">
                             <CircularProgress className = "loadingCircle" size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
