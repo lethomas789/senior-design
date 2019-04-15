@@ -29,7 +29,16 @@
     color:white
 }
 
+.testClass {
+    background-color: green;
+    color: yellow;
+}
+
 .club-select {
   width: 200px;
   border-left: 20px;
+}
+
+.colorDefault {
+    color: green;
 }

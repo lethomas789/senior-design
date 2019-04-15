@@ -23,6 +23,8 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { createMuiTheme } from '@material-ui/core/styles';
+
 
 //variables to store routes to redirect to with Link component
 const homeRoute = "/";
@@ -35,6 +37,9 @@ const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
 const editItemRoute = "/editItem";
 
+
+
+
 //style for cart to display number of items
 const styles = theme => ({
   badge: {
@@ -43,11 +48,15 @@ const styles = theme => ({
     // The border color match the background color.
     border: `2px solid ${
       theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[900]
+        // ? theme.palette.grey[200]
+        // : theme.palette.grey[900]
     }`
   }
 });
+
+
+
+
 
 //navbar component
 class ButtonAppBar extends Component {
@@ -187,7 +196,7 @@ class ButtonAppBar extends Component {
 
     return (
       <nav className="root">
-        <AppBar position="static">
+        <AppBar position="static"  style={{ background: 'green', boxShadow: 'none'}}>
           <Toolbar>
             {/* MENU BUTTON */}
             {/* currently doesnt do anything so hide it */}
@@ -254,7 +263,7 @@ class ButtonAppBar extends Component {
               {/* ADMIN BUTTONS */}
               {this.props.isAdmin ? (
                 <Fragment>
-                  <Button
+                  <Button 
                     aria-owns={anchorEl ? "admin-menu" : undefined}
                     aria-haspopup="true"
                     onClick={this.handleAdminClick}
