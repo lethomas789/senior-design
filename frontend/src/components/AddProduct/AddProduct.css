@@ -10,6 +10,14 @@
   display:block;
 }
 
-#uploadImageText{
+.hideItemStock{
+  display:none;
+}
+
+.showItemStock{
+  display:block;
+}
+
+.uploadImageText{
   text-align: center;
 }

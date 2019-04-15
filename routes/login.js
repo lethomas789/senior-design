@@ -8,7 +8,6 @@ const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
 const jwtKey = require('../config/jwt.json');
 
-
 router.post('/', (req, res) =>{
   //extract email and password from request
   if (req.body.params) {
@@ -38,7 +37,7 @@ router.post('/', (req, res) =>{
 
   // check to see if an account exists with given email
 
-  let userRef = db.collection('users').doc(email);
+  const userRef = db.collection('users').doc(email);
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('No such account for given email:', email);
@@ -73,18 +72,16 @@ router.post('/', (req, res) =>{
             }
             vendors = doc.data().vendors;
 
-            // console.log('Vendors are:', vendors);
-
             //info that JWT stores
-            const payload = { email: email };
+            const payload = { email };
 
             jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
               return res.status(200).json({
                 success: true,
                 message: "Login Successful!",
                 token: 'Bearer ' + token,
-                email: email,
-                vendors: vendors
+                email,
+                vendors
               });
             });
 
@@ -108,9 +105,9 @@ router.post('/', (req, res) =>{
             return res.status(200).json({
               success: true,
               message: "Login Successful!",
-              email: email,
               token: 'Bearer ' + token,
-              vendors: vendors
+              email,
+              vendors
             });
           });
         }
@@ -134,72 +131,98 @@ router.post('/', (req, res) =>{
       message: 'Error in getting userRef: ' + err
     });
   });
-
-
-  /*
-  //check to see if email exists
-  else {
-    var ref = db.collection('users').where('email', '==', email);
-    ref.get()
-      .then(snapshot => {
-        //needs to equal to 1
-        //user with email was found
-        if(snapshot.size === 1){
-          snapshot.forEach(doc => {
-            if(doc.data().email === email){
-              //compare passwords
-              bcrypt.compare(password, doc.data().password, (err, validPassword)=> {
-                if(err){
-                  return res.json({
-                    success: false,
-                    message: "Server error comparing passwords"
-                  });
-                }
-
-                //if passwords match, send JWT to authenticate login
-                if(validPassword){
-                  //info that JWT stores
-                  const payload = {email: email};
-
-                  jwt.sign(payload, jwtKey.JWTSecret, {expiresIn: 3600}, (err, token) => {
-                    return res.status(200).json({
-                      success: true,
-                      message: "Login Successful!",
-                      email: email,
-                      token: 'Bearer ' + token
-                    });
-                  });
-                }
-
-                //if passwords don't match
-                else{
-                  return res.json({
-                    success:false,
-                    message: "Incorrect Password"
-                  });
-                }
-              })
-            }
-
-            else{
-              return res.json({
-                success:false,
-                message: "Invalid Email"
-              });
-            }
-          })
-        }
-
-        else{
-          return res.json({
-            success:false,
-            message: "Email does not exist, please make an account"
-          });
-        }
-      })
-  }
-  */
 })
+
+//extract email parameter from google oauth
+router.post('/gmail', (req,res) => {
+  var paramsBody = req.body.params;
+  var body = req.body;
+  var email = "";
+  var firstName = "";
+  var lastName = "";
+  var vendors = [];
+
+  //extract email from body
+  if(paramsBody){
+    email = paramsBody.email;
+    firstName = paramsBody.firstName;
+    lastName = paramsBody.lastName;
+  }
+
+  else{
+    email = body.email;
+    firstName = body.firstName;
+    lastName = body.lastName;
+  }
+
+  //find email 
+  const userRef = db.collection('users').doc(email);
+  userRef.get().then(doc => {
+    //if the gmail for the user does not exist
+    if(!doc.exists()){
+      // no matching results, create new user
+      // create object to store into database
+      const newUser = {
+        name: {
+          firstName,
+          lastName,
+        },
+        email,
+        isAdmin: false
+      }
+
+      //create new user in database with parameters passed from google login oauth
+      db.collection('users').doc(email).set(newUser);
+      return res.status(200).json({
+        success: true,
+        message: "Login Successful!",
+        email
+      });
+    }
+
+    //sign in user
+    else{
+      if(doc.data().isAdmin) {
+        // we assume they will exist in admin collection
+        db.collection('admins').doc(email).get().then(doc => {
+          if (!doc.exists) {
+            console.log('Server error in getting admin info');
+            return res.status(200).json({
+              success: false,
+              message: 'Server error in getting admin info' 
+            });
+          }
+          vendors = doc.data().vendors;
+
+          return res.status(200).json({
+            success: true,
+            message: "Login Successful!",
+            email,
+            vendors
+          });
+        })
+        .catch(err => {
+          console.log('Server error in getting admin info:', err);
+          return res.status(200).json({
+            success: false,
+            message: 'Server error in getting admin info: ' + err
+          });
+        });
+      }
+
+      // else not admin, send empty array
+      else {
+        return res.status(200).json({
+          success: true,
+          message: "Login Successful!",
+          email,
+          vendors
+        });
+      }
+    }
+  });
+})
+
 
 module.exports = router;
 

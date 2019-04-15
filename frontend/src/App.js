@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {BrowserRouter as Router, Route} from 'react-router-dom';
+import {BrowserRouter as Router, Route, Link} from 'react-router-dom';
 import './App.css';
 import About from './components/About/About';
 import Signup from './components/Signup/Signup';
@@ -14,9 +14,11 @@ import EditClubInfo from './components/EditClubInfo/EditClubInfo';
 import AddProduct from './components/AddProduct/AddProduct';
 import OrderHistory from './components/OrderHistory/OrderHistory';
 import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
+import EditItemView from './components/EditItemView/EditItemView';
 
 
 import { createBrowserHistory } from 'history';
+import AboutClub from './components/AboutClub/AboutClub';
 const history = createBrowserHistory();
 
 class App extends Component {
@@ -31,12 +33,14 @@ class App extends Component {
           <Route exact path = "/signup" component = {Signup} />
           <Route exact path = "/login" component = {Login} /> 
           <Route exact path = "/cart" component = {Cart}/>
-          <Route exact path = "/vendorProducts" component = {VendorView}/>
+          <Route path = "/vendorProducts/:vid" component = {VendorView}/>
           <Route exact path = "/abcdefg/vendorSignup" component = {VendorSignup}/>
           <Route exact path = "/editClubInfo" component = {EditClubInfo}/>
           <Route exact path = "/addProduct" component = {AddProduct}/>
           <Route exact path = "/orderHistory" component = {OrderHistory}/>
-          <Route exact path = "/itemDetails" component = {ShopItemDetailed}/>
+          <Route path = "/itemDetails/:vid/:pid" component = {ShopItemDetailed}/>
+          <Route path="/aboutClub/:vid" component = {AboutClub}/>
+          <Route exact path="/editItem" component = {EditItemView}/>
         </div>
       </Router>
     );

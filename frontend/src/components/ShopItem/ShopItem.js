@@ -92,9 +92,20 @@ class ShopItem extends Component {
 
   //show detailed info of item, reroute
   showDetailed(){
-    //update which item was selected for detialed view
+    //update which item was selected for detailed view in Redux
     this.props.updateSelectedItem(this.state.pid);
-    this.props.history.push('/itemDetails');
+    this.props.updateVendor(this.state.vendorID);
+
+    //add vendorID and pid to url as parameters
+    //allows user to access shop info via URL instead of only being allowed click
+
+    //construct URL with pathname, /itemDetails/vid/pid
+    var pathName = '/itemDetails';
+    pathName = pathName + '/' + this.state.vendorID;
+    pathName = pathName + '/' + this.state.pid;
+
+    //redirect to url with vendor id and pid
+    this.props.history.push(pathName);
   }
 
   render() {
@@ -118,7 +129,7 @@ class ShopItem extends Component {
               </Button>
 
               <Button size="small" color="primary" onClick = {this.updateVendor}>
-              <Link to = "/vendorProducts"> More From Vendor </Link>
+                <Link to = {`/vendorProducts/${this.state.vendorID}`}> More From Vendor </Link>
               </Button>
             </p>
           </div>

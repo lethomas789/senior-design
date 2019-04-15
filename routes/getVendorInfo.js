@@ -11,25 +11,25 @@ const db = admin.firestore();
  */
 router.get('/', (req, res) => {
 
-  let vendorsRef = db.collection('vendors');
+  const vendorsRef = db.collection('vendors');
 
   vendorsRef.get().then(snapshot => {
-    let vendors = [];
+    const vendors = [];
 
     // NOTE: will send all data; the date will not be converted here.
     snapshot.forEach(doc => {
       let vendorData = {
-        bio: doc.data().bio,
-        vendorName: doc.data().vendorName,
-        vid: doc.data().vid
-      };
+        bio,
+        vendorName,
+        vid
+      } = doc.data();
       vendors.push(vendorData);
     });
     console.log('Successfully retrieved all vendor info.');
     return res.status(200).json({
       success: true,
       message: 'Successfully retrieved all vendor info.',
-      vendors: vendors
+      vendors
     });
   })
   .catch(err => {
@@ -41,6 +41,54 @@ router.get('/', (req, res) => {
   });
 
 });
+
+
+router.get('/aboutClub', (req, res) => {
+  if (req.query.params) {
+    var { vid } = req.query.params;
+  }
+  else {
+    var { vid } = req.query;
+  }
+
+  if (!vid) {
+    console.log('Error, missing params for route.');
+    return res.json({
+      success: false,
+      message: 'Missing params for vendor route.'
+    });
+  }
+
+  const vendorRef = db.collection('vendors').doc(vid);
+
+  vendorRef.get().then(doc => {
+    if (!doc.exists) {
+      console.log('No such vendor for given vid', vid);
+      return res.json({
+        success: false,
+        message: "No such vendor for given vid: " + vid
+      });
+    }
+
+    console.log('Retrieved vendor about info');
+
+    const { bio, vendorName } = doc.data();
+
+    return res.json({
+      success: true,
+      message: "Successfully obtained info.",
+      bio,
+      vendorName
+    });
+  })
+  .catch(err => {
+    console.log('Error in retrieving vendor info,', err);
+    return res.json({
+      success: false,
+      message: "Server error in retrieving info: " + err
+    });
+  })
+})
 
 
 module.exports = router;

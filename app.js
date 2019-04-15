@@ -48,6 +48,7 @@ const getVendorInfo = require('./routes/getVendorInfo');
 const paypalSandbox = require('./routes/paypalSandbox');
 const orders = require('./routes/orders');
 const getProductInfo = require('./routes/getProductInfo');
+const stock = require('./routes/stock');
 
 app.use('/api/users', users);
 app.use('/api/signup', signup);
@@ -62,6 +63,7 @@ app.use('/api/getVendorInfo', getVendorInfo);
 app.use('/api/paypalSandbox', paypalSandbox);
 app.use('/api/orders', orders);
 app.use('/api/getProductInfo', getProductInfo);
+app.use('/api/stock', stock);
 
 //fix react app crashing on refresh
 app.get('*', (req,res) => {
