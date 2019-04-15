@@ -341,58 +341,47 @@ class ShopItemDetailed extends Component {
     //check if user is logged in
     if (this.state.login === false) {
       alert("please login to add to cart");
-    } else if (this.state.amtPurchased <= 0) {
+    } 
+    
+    else if (this.state.amtPurchased <= 0) {
       alert("Sorry, cannot add a quantity of 0.");
+    }
+
+    else if (this.state.amtPurchased > Number(this.state.productStock) && this.state.isApparel === false){
+      alert("Quantity selected exceeds stock");
     }
 
     //add to user's cart
     else {
-      //check stock in database before adding to user's cart
-      var stockURL = "/api/stock";
-
-      axios.get(stockURL, {
-        params:{
-          pid: this.state.pid,
-          isApparel: this.state.isApparel,
-          size: this.state.size,
-          amt: Number(this.state.amtPurchased)
-        }
-      })
-      .then(res => {
-        console.log(res);
-        //successful stock check, amount being purchased is less than stock
-        if(res.data.availableStock === true){
-          console.log("adding items, stock doesn't exceed");
-          //add item to cart
-          //update user's cart on server
-          var apiURL = "/api/getUserCart/addItems";
-          //item added to user's cart is not an apparel
-          if (this.state.isApparel === false) {
-            console.log("adding item");
-            axios
-              .post(apiURL, {
-                params: {
-                  user: this.props.user,
-                  pid: this.props.pid,
-                  amtPurchased: this.state.amtPurchased,
-                  vendorID: this.state.vid,
-                  imageLink: this.state.imageLink,
-                  isApparel: this.state.isApparel
-                }
-              })
-              .then(res => {
-                if (res.data.success === true) {
-                  //after adding to item, get updated cart
-                  const getCartURL = "/api/getUserCart";
-                  axios
-                    .get(getCartURL, {
-                      params: {
-                        user: this.props.user
-                      }
-                    })
-                    .then(res => {
-                      //after getting cart info, update redux store container
-                      this.props.updateItems(res.data.data);
+        //update user's cart on server
+        var apiURL = "/api/getUserCart/addItems";
+        //item added to user's cart is not an apparel
+        if (this.state.isApparel === false) {
+          console.log("adding item");
+          axios
+            .post(apiURL, {
+              params: {
+                user: this.props.user,
+                pid: this.props.pid,
+                amtPurchased: this.state.amtPurchased,
+                vendorID: this.state.vid,
+                imageLink: this.state.imageLink,
+                isApparel: this.state.isApparel
+              }
+            })
+            .then(res => {
+              if (res.data.success === true) {
+                //after adding to item, get updated cart
+                const getCartURL = "/api/getUserCart";
+                axios
+                  .get(getCartURL, {
+                    params: {
+                      user: this.props.user
+                    }
+                  })
+                  .then(res => {
+                    //after getting cart info, update redux store container
+                    this.props.updateItems(res.data.data);
                       alert("Item added to cart!");
                     })
                     .catch(err => {
@@ -435,31 +424,21 @@ class ShopItemDetailed extends Component {
                         user: this.props.user
                       }
                     })
-                    .then(res => {
-                      //after getting cart info, update redux store container
-                      this.props.updateItems(res.data.data);
-                      alert("Item added to cart!");
-                    })
-                    .catch(err => {
-                      alert(err);
-                    });
-                }
-              })
-              .catch(err => {
-                alert(err);
-              });
-          } //end of else statement for isApparel
-        }//end of adding item to cart
-
-        //display error, amount purchased exceeds stock in database
-        else{
-          alert(res.data.message);
-        }
-      })
-      .catch(err => {
-        alert(err);
-      })
-    } //end of else statement for adding to user's cart
+                  .then(res => {
+                    //after getting cart info, update redux store container
+                    this.props.updateItems(res.data.data);
+                    alert("Item added to cart!");
+                  })
+                  .catch(err => {
+                    alert(err);
+                  });
+              }
+            })
+            .catch(err => {
+              alert(err);
+            });
+        } //end of else statement for isApparel
+      }//end of adding item to cart
   }; //end of addItem function
 
   //increase number of quantity to add to user's cart
@@ -565,7 +544,7 @@ class ShopItemDetailed extends Component {
                     productName: res.data.product.productName,
                     productPrice: res.data.product.productPrice,
                     imageLink: res.data.product.productPicture,
-                    productStock: res.data.product.productStock,
+                    productStock: res.data.product.stock,
                     vendor: vendorName,
                     isApparel: true,
                     s_stock: res.data.product.s_stock,
@@ -580,7 +559,7 @@ class ShopItemDetailed extends Component {
                     productName: res.data.product.productName,
                     productPrice: res.data.product.productPrice,
                     imageLink: res.data.product.productPicture,
-                    productStock: res.data.product.productStock,
+                    productStock: res.data.product.stock,
                     vendor: vendorName
                   });
                 }
