@@ -23,6 +23,10 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { createMuiTheme } from '@material-ui/core/styles';
+
+// export const prime = '#89BBFE';
+
 
 //variables to store routes to redirect to with Link component
 const homeRoute = "/";
@@ -34,6 +38,10 @@ const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
 const editItemRoute = "/editItem";
+const primary = "#6F8AB7";
+
+
+
 
 //style for cart to display number of items
 const styles = theme => ({
@@ -43,11 +51,15 @@ const styles = theme => ({
     // The border color match the background color.
     border: `2px solid ${
       theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[900]
+        // ? theme.palette.grey[200]
+        // : theme.palette.grey[900]
     }`
   }
 });
+
+
+
+
 
 //navbar component
 class ButtonAppBar extends Component {
@@ -187,7 +199,7 @@ class ButtonAppBar extends Component {
 
     return (
       <nav className="root">
-        <AppBar position="static">
+        <AppBar position="static"  style={{ background: `${primary}`, boxShadow: 'none'}}>
           <Toolbar>
             {/* MENU BUTTON */}
             {/* currently doesnt do anything so hide it */}
@@ -201,6 +213,7 @@ class ButtonAppBar extends Component {
 
             {/* HOME LABEL */}
             <Typography
+            style={{ textDecoration: 'none', fontFamily: 'Comfortaa'}}
               component={Link}
               to={homeRoute}
               variant="h6"
@@ -210,7 +223,9 @@ class ButtonAppBar extends Component {
               ECS193 ECommerce
             </Typography>
 
-            <Typography variant="h6" color="inherit">
+            <Typography 
+            style={{ textDecoration: 'none', fontFamily: 'Raleway'}}
+            variant="h6" color="inherit">
               Select Club:
             </Typography>
 
@@ -254,11 +269,11 @@ class ButtonAppBar extends Component {
               {/* ADMIN BUTTONS */}
               {this.props.isAdmin ? (
                 <Fragment>
-                  <Button
+                  <Button 
                     aria-owns={anchorEl ? "admin-menu" : undefined}
                     aria-haspopup="true"
                     onClick={this.handleAdminClick}
-                    style={{ color: "white" }}
+                    style={{ color: "white", fontFamily: 'Raleway' }}
                   >
                     Admin Menu
                   </Button>
@@ -303,14 +318,14 @@ class ButtonAppBar extends Component {
               )}
 
               {/* BUTTONS FOR ALL USERS */}
-              <Button component={Link} to={aboutRoute} color="inherit">
+              <Button component={Link} to={aboutRoute} color="inherit"  style={{fontFamily: 'Raleway' }}>
                 {" "}
                 About{" "}
               </Button>
 
               {/* display signup if not logged in */}
               {!this.props.loginValue ? (
-                <Button component={Link} to={signupRoute} color="inherit">
+                <Button component={Link} to={signupRoute} color="inherit" style={{fontFamily: 'Raleway' }}>
                   {" "}
                   Sign Up{" "}
                 </Button>
@@ -322,6 +337,7 @@ class ButtonAppBar extends Component {
 
               {/*LOGIN/LOGOUT BUTTON*/}
               <Button
+                style={{fontFamily: 'Raleway' }}
                 component={Link}
                 to={loginRoute}
                 color="inherit"
@@ -331,7 +347,7 @@ class ButtonAppBar extends Component {
                 {this.props.loginText}{" "}
               </Button>
 
-              <Button component={Link} to={shopRoute} color="inherit">
+              <Button component={Link} to={shopRoute} color="inherit" style={{fontFamily: 'Raleway' }}>
                 {" "}
                 Shop{" "}
               </Button>
