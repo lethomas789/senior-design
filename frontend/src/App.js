@@ -15,6 +15,7 @@ import AddProduct from './components/AddProduct/AddProduct';
 import OrderHistory from './components/OrderHistory/OrderHistory';
 import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
 import EditItemView from './components/EditItemView/EditItemView';
+import Footer from './components/Footer/Footer';
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -40,6 +41,7 @@ class App extends Component {
           <Route path = "/itemDetails/:vid/:pid" component = {ShopItemDetailed}/>
           <Route path="/aboutClub/:vid" component = {AboutClub}/>
           <Route exact path="/editItem" component = {EditItemView}/>
+          <Footer />
         </div>
       </Router>
     );
