@@ -209,31 +209,31 @@ const mapStateToProps = state => {
 //redux
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
-  return {
-    updateItems: response =>
-      dispatch({
-        type: actions.GET_CART,
-        cart: response
-      }),
+  return{
+    updateItems: (response) => dispatch({
+      type: actions.GET_CART,
+      cart: response
+    }),
 
-    updateSelectedVendor: currentVendor =>
-      dispatch({
-        type: actions.GET_VENDOR_PRODUCTS,
-        vendor: currentVendor
-      }),
+    updateSelectedVendor: (currentVendor) => dispatch({
+      type: actions.GET_VENDOR_PRODUCTS,
+      vendor: currentVendor
+    }),
 
-    emptyCartOnPayment: () =>
-      dispatch({
-        type: actions.EMPTY_CART
-      }),
+    emptyCartOnPayment: () => dispatch({
+      type: actions.EMPTY_CART
+    }),
 
-    clearTotalOnPayment: value =>
-      dispatch({
-        type: actions.UPDATE_TOTAL,
-        total: value
-      })
-  };
-};
+    clearTotalOnPayment: (value) => dispatch({
+      type: actions.UPDATE_TOTAL,
+      total: value
+    })
+  }
+}
+
+/*Checkout.PropTypes = {
+  classes: PropTypes.object.isRequired
+};*/
 
 // Checkout.PropTypes = {
 //   classes: PropTypes.object.isRequired
