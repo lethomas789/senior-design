@@ -134,32 +134,27 @@ router.post('/', (req, res) =>{
 })
 
 //extract email parameter from google oauth
-router.post('/gmail', (req,res) => {
-  var paramsBody = req.body.params;
-  var body = req.body;
+router.get('/gmail', (req,res) => {
+
+  //database parameters are passed through query
+  var query = req.query;
   var email = "";
   var firstName = "";
   var lastName = "";
   var vendors = [];
 
-  //extract email from body
-  if(paramsBody){
-    email = paramsBody.email;
-    firstName = paramsBody.firstName;
-    lastName = paramsBody.lastName;
-  }
-
-  else{
-    email = body.email;
-    firstName = body.firstName;
-    lastName = body.lastName;
-  }
-
-  //find email 
+  //trim for white spaces from parameter
+  email = query.email.trim();
+  firstName = query.firstName.trim();
+  lastName = query.lastName.trim();
+  
+  //find email, similar logic as regular login
+  //main difference is extracting login credentials using gmail params
   const userRef = db.collection('users').doc(email);
   userRef.get().then(doc => {
-    //if the gmail for the user does not exist
-    if(!doc.exists()){
+    //if the gmail for the user does not exist, create a new user in firestore database with gmail as identifier
+    //combo of signup + login code
+    if(!doc.exists){
       // no matching results, create new user
       // create object to store into database
       const newUser = {

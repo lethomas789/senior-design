@@ -164,8 +164,90 @@ class Login extends Component{
         }
     }
 
+    //response values after oauth returns with email login and password
     responseGoogle = (response) => {
-        console.log(response);
+        //after getting response from google, proceed with login process of redux state
+        //send login parameters to backend
+        var email = response.w3.U3;
+        var firstName = response.w3.ofa;
+        var lastName = response.w3.wea;
+
+        //update email of user logged in by modifying state
+        this.setState({
+            email: email,
+        });
+
+        //make api call to login with gmail
+        axios.get('/api/login/gmail', {
+            params:{
+                email: email,
+                firstName: firstName,
+                lastName: lastName
+            }
+        })
+        .then(res => {
+            //check for login success status
+            if(res.data.success === true && res.data.vendors.length === 0){
+                //dispatch update login action to update login state
+                this.props.updateLogin(email);
+
+                //after updating login, get cart info
+                this.getCart();
+
+                //display dialog for login successful
+                this.setState({
+                    open: true,
+                    progressValue: 0,
+                    progressVariant: "determinate",
+                    responseMessage: "Login Succesful!"
+                });
+            }
+
+            else if (res.data.success === true && res.data.vendors.length > 0){
+                const vendorURL = "/api/adminUser";
+                axios.get(vendorURL, {
+                    params:{
+                        user: this.state.email
+                    }
+                })
+                .then(res => {
+                    let currentVendorID = res.data.vendors[0].vid;
+                    let email = this.state.email;
+                    let currentVendors = res.data.vendors;
+                    let currentVendorName = res.data.vendors[0].vendorName;
+
+                    //update redux store state
+                    this.props.updateAdminLogin(email, currentVendorID, currentVendors, currentVendorName);
+
+                    //after updating login, get cart info
+                    this.getCart();
+                
+                    //display dialog for login successful
+                    this.setState({
+                        open: true,
+                        progressValue: 0,
+                        progressVariant: "determinate",
+                        responseMessage: "Login Succesful!"
+                    });
+
+                })
+                .catch(err => {
+                    alert(err);
+                })
+            }// end of admin login
+
+            else{
+                this.setState({
+                    open: true,
+                    progressValue: 0,
+                    progressVariant: "determinate",
+                    responseMessage: res.data.message
+                });
+            }
+        })
+        .catch(err => {
+            alert(err);
+        })
     }
     render(){
         const { classes } = this.props;
