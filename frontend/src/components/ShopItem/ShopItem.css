@@ -37,8 +37,8 @@ h5 {
 
 .box {
   background-color: white;
-  width: 400px;
-  min-height: 400px;
+  width: 300px;
+  min-height: 300px;
   box-sizing: content-box;
   padding: 25px;
   margin: 25px;
