@@ -118,6 +118,7 @@ class Signup extends Component {
   render() {
     const { classes } = this.props;
     return (
+      <div id = "overlay">
       <div id = "signupContainer" style={{backgroundImage: `url(${wine})`, backgroundSize: 'cover' }}>
         <div id = "signupForms">
           <Paper className = "signupPaperContainer">
@@ -187,6 +188,7 @@ class Signup extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+        </div>
         </div>
       </div>
     )
