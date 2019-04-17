@@ -74,7 +74,13 @@
   display: grid;
   width: 95vw;
   /* grid-template-columns: 1fr 1fr 1fr; */
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
   grid-row-gap: 15px;
   grid-column-gap: 10px;
+}
+
+@media screen and (min-device-width: 1400px) {
+  #shopview-item-container {
+    grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
+  }
 }
