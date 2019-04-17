@@ -10,6 +10,7 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import { DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles'; 
 import CircularProgress from '@material-ui/core/CircularProgress';
+import wine from '../../images/wine.jpg';
 import PropTypes from 'prop-types';
 
 const styles = theme => ({
@@ -117,7 +118,7 @@ class Signup extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div id = "signupContainer">
+      <div id = "signupContainer" style={{backgroundImage: `url(${wine})`, backgroundSize: 'cover' }}>
         <div id = "signupForms">
           <Paper className = "signupPaperContainer">
             <h1> Sign Up </h1>

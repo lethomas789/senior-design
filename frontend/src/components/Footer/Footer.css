@@ -6,7 +6,6 @@
   bottom: 0;
   width: 100%; */
   display: grid;
-  margin-top: 100px;
   /* min-height: 200px; TODO remove for testing */
   /* background-color: var(--color-primary-light); */
   background-color: #6F8AB7;

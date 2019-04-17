@@ -23,6 +23,7 @@ export default class Footer extends Component {
           {/* TEST FOOTER WITH TEST COLORS 2 */}
           <div className="footer-col-list">
             <ul>
+
               <li className="footer-link">About Clubs</li>
               <li className="footer-link">Privacy Policy</li>
               {/* <li className="footer-link">Link 3</li>
