@@ -241,7 +241,7 @@ class ButtonAppBar extends Component {
                 <Fragment>
                   {/* SELECT CLUB */}
                   <FormControl variant="filled" className="club-select" style={{marginRight: "10px"}}>
-                    <InputLabel htmlFor="club-select">
+                    <InputLabel htmlFor="club-select" style={{color: 'white'}}>
                       {this.props.currentVendor}
                     </InputLabel>
 
