@@ -7,29 +7,32 @@ export default class Footer extends Component {
     return (
       <footer className='footer-container'>
         <div className="footer-col">
-          TEST FOOTER WITH TEST COLORS 1 
+        <h1>
+          193 ECOMMERCE
+          </h1>
           <div className="footer-col-list">
             <ul>
-              <li className="footer-link">Link 1</li>
-              <li className="footer-link">Link 2</li>
-              <li className="footer-link">Link 3</li>
-              <li className="footer-link">Link 4</li>
+              <li className="footer-link">About</li>
+              <li className="footer-link">Contact</li>
+              {/* <li className="footer-link">Link 3</li>
+              <li className="footer-link">Link 4</li> */}
             </ul>
           </div>
         </div>
         <div className="footer-col">
-          TEST FOOTER WITH TEST COLORS 2
+          {/* TEST FOOTER WITH TEST COLORS 2 */}
           <div className="footer-col-list">
             <ul>
-              <li className="footer-link">Link 1</li>
-              <li className="footer-link">Link 2</li>
-              <li className="footer-link">Link 3</li>
-              <li className="footer-link">Link 4</li>
+
+              <li className="footer-link">About Clubs</li>
+              <li className="footer-link">Privacy Policy</li>
+              {/* <li className="footer-link">Link 3</li>
+              <li className="footer-link">Link 4</li> */}
             </ul>
           </div>
         </div>
         <div className="footer-col">
-          info box
+          Terms and Services
         </div>
       </footer>
     )

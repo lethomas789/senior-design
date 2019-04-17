@@ -1,18 +1,23 @@
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
 .footer-container {
   /* position: absolute;
   bottom: 0;
   width: 100%; */
   display: grid;
-  margin-top: 100px;
   /* min-height: 200px; TODO remove for testing */
-  background-color: var(--color-primary-light);
+  /* background-color: var(--color-primary-light); */
+  background-color: #6F8AB7;
   grid-template-columns: 1fr 1fr 1fr;
   justify-content: space-around;
   border-radius: 3px;
+ 
 }
 
 .footer-col {
   margin: 20px;
+  color: white;
 }
 
 .footer-col-list ul {
