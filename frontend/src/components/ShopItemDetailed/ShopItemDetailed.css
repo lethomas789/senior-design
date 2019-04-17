@@ -1,3 +1,8 @@
+.centered {
+  display: block;
+  align-items: center;
+}
+
 .item-detailed-container {
   display: grid;
   box-sizing: border-box;
@@ -5,6 +10,10 @@
   grid-template-rows: auto;
   justify-content: center;
   margin-top: 50px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 50px;
+
 }
 
 .item-image {
@@ -53,22 +62,23 @@
 
 .carousel-container {
   display: flex;
+  align-items: center;
   justify-content: space-around;
   width: 600px;
   margin-top: 30px;
 }
 
 .carousel-img {
-  width: 150px;
-  height: 150px;
+  width: 30%;
+  height: 30%;
   cursor: pointer;
   border: 1px solid black;
   border-radius: 3px;
 }
 
 .selected-carousel-img {
-  width: 150px;
-  height: 150px;
+  width: 30%;
+  height: 30%;
   cursor: pointer;
   border: 1px solid black;
   border-radius: 3px;
