@@ -4,13 +4,21 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa');
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
+*
+{
+  margin: 0;
+  padding: 0;
+} 
+
 html {
   font-family: 'Roboto', sans-serif;
+  height: 95vh;
 }
 
 body {
   /* background-color: #E8E8E8; */
   font-family: 'Muli', sans-serif;
+  height: 100%;
 }
 
 h1 {

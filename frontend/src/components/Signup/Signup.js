@@ -117,9 +117,7 @@ class Signup extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <div
-        id="signupContainer"
-      >
+      <div id="signupContainer">
         <div id="signupForms">
           <Paper className="signupPaperContainer">
             <h1> Sign Up </h1>
@@ -213,6 +211,7 @@ class Signup extends Component {
               </Button>
             </DialogActions>
           </Dialog>
+        </div>
         </div>
       </div>
     );

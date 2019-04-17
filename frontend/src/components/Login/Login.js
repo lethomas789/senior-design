@@ -13,6 +13,7 @@ import { DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles'; 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
+import painting from '../../images/painting.jpg';
 import {withRouter} from 'react-router-dom';
 
 
@@ -167,7 +168,7 @@ class Login extends Component{
     render(){
         const { classes } = this.props;
         return(
-            <div id = "loginContainer">
+            <div id = "loginContainer" style={{backgroundImage: `url(${painting})`, backgroundSize: 'cover' }} >
                 <div id = "loginForms">
                     <Paper className = "paperContainer">
                         <h1> Login </h1>
