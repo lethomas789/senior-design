@@ -1,15 +1,12 @@
-import React, { Component } from 'react'
-import './Footer.css';
+import React, { Component } from "react";
+import "./Footer.css";
 
 export default class Footer extends Component {
-
   render() {
     return (
-      <footer className='footer-container'>
-        <div className="footer-col">
-        <h1>
-          193 ECOMMERCE
-          </h1>
+      <footer className="footer-container">
+          <h1 className="footer-header">193 ECOMMERCE</h1>
+        <div className="footer-col footer-col--1">
           <div className="footer-col-list">
             <ul>
               <li className="footer-link">About</li>
@@ -23,7 +20,6 @@ export default class Footer extends Component {
           {/* TEST FOOTER WITH TEST COLORS 2 */}
           <div className="footer-col-list">
             <ul>
-
               <li className="footer-link">About Clubs</li>
               <li className="footer-link">Privacy Policy</li>
               {/* <li className="footer-link">Link 3</li>
@@ -31,11 +27,8 @@ export default class Footer extends Component {
             </ul>
           </div>
         </div>
-        <div className="footer-col">
-          Terms and Services
-        </div>
+        <div className="footer-col">Terms and Services</div>
       </footer>
-    )
+    );
   }
 }
-

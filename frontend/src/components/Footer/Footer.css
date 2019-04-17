@@ -10,14 +10,25 @@
   /* background-color: var(--color-primary-light); */
   background-color: #6F8AB7;
   grid-template-columns: 1fr 1fr 1fr;
+  /* grid-template-rows: 50px 1fr 1fr; */
   justify-content: space-around;
   border-radius: 3px;
  
 }
 
+.footer-header {
+  margin: 20px;
+  color: white;
+}
+
 .footer-col {
   margin: 20px;
   color: white;
+  grid-row-start: 2;
+}
+
+.footer-col--1 {
+  grid-row-start: 2;
 }
 
 .footer-col-list ul {

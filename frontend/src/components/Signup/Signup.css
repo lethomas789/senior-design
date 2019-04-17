@@ -1,62 +1,60 @@
-#signupContainer{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+#signupContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(
+      to right,
+      /* rgba(111, 138, 183, 0.3),
+      rgba(97, 93, 108, 0.3) */
+      rgba(202, 229, 255, 0.2),
+      rgba(172, 237, 255, 0.2)
+    ),
+    url(../../images/wine.jpg);
+  z-index: 1000;
+  height: 95vh;
+  background-size: cover;
 }
 
-#signupForms{
-    display:flex;
-    flex-direction: column;
-    align-self: center;
-    
+#signupForms {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
 }
 
-.signupPaperContainer{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    height: 500px;
-    width: 500px;
-    margin-top: 50px;
+.signupPaperContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 500px;
+  width: 500px;
+  margin-top: 50px;
 }
 
-.textForm{
-    padding: 10px;
+.textForm {
+  padding: 10px;
 }
 
-#signupForms{
-    display:flex;
-    flex-direction: column;
-    align-self: center;
-    padding: 10px;
+#signupForms {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  padding: 10px;
 }
 
-#signupButton{
-    align-self: center;
+#signupButton {
+  align-self: center;
 }
 
-.progressContainer{
-    display:flex;
+.progressContainer {
+  display: flex;
 }
 
-.loadingCircle{
-    align-self: center;
+.loadingCircle {
+  align-self: center;
 }
 
 .pushDown {
-    padding-top: 50px;
+  padding-top: 50px;
 }
 
-.overlay {
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 100%;
-    width: 100%;
-    opacity: 0.5;
-    /* transition: .3s ease; */
-    background-color: red;
-  }
 
