@@ -10,7 +10,6 @@
       rgba(172, 237, 255, 0.2)
     ),
     url(../../images/wine.jpg);
-  z-index: 1000;
   height: 95vh;
   background-size: cover;
 }
@@ -28,6 +27,7 @@
   height: 500px;
   width: 500px;
   margin-top: 50px;
+  opacity: 0.90;
 }
 
 .textForm {

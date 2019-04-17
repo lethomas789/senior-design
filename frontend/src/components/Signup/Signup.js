@@ -212,7 +212,6 @@ class Signup extends Component {
             </DialogActions>
           </Dialog>
         </div>
-        </div>
       </div>
     );
   }

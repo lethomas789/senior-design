@@ -168,7 +168,7 @@ class Login extends Component{
     render(){
         const { classes } = this.props;
         return(
-            <div id = "loginContainer" style={{backgroundImage: `url(${painting})`, backgroundSize: 'cover' }} >
+            <div id = "loginContainer">
                 <div id = "loginForms">
                     <Paper className = "paperContainer">
                         <h1> Login </h1>
