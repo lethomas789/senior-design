@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css?family=Comfortaa');
 @import url('https://fonts.googleapis.com/css?family=Raleway');
 
+/* .breathing-room {
+  padding-top: 20px;
+} */
+
 .footer-container {
   /* position: absolute;
   bottom: 0;
@@ -19,6 +23,7 @@
 .footer-header {
   margin: 20px;
   color: white;
+  font-size: 25px;
 }
 
 .footer-col {
