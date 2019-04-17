@@ -37,7 +37,7 @@ export default class Home extends Component {
           <div id="carouselContainer">
             <AliceCarousel
               autoPlay={true}
-              autoPlayInterval={2000}
+              autoPlayInterval={3000}
               buttonsDisabled={true}
             >
               <img className="slideImage" src={image1} />
