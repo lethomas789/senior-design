@@ -7,12 +7,14 @@
   margin: 0 auto;
   margin-top: 50px;
   width: 85vw;
+  height: 95vh;
 }
 
 .item-image-container {
   margin: 0 auto;
   justify-self: center;
   display: flex;
+  max-height: 60vh;
 }
 
 .item-info h2 {
