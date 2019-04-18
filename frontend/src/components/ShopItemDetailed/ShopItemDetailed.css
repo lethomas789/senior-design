@@ -1,15 +1,18 @@
 .item-detailed-container {
   display: grid;
   box-sizing: border-box;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1.5fr 1fr;
   grid-template-rows: auto;
   justify-content: center;
+  margin: 0 auto;
   margin-top: 50px;
+  width: 85vw;
 }
 
-.item-image {
+.item-image-container {
   margin: 0 auto;
   justify-self: center;
+  display: flex;
 }
 
 .item-info h2 {
@@ -53,22 +56,22 @@
 
 .carousel-container {
   display: flex;
+  flex-direction: column;
   justify-content: space-around;
-  width: 600px;
   margin-top: 30px;
 }
 
 .carousel-img {
-  width: 150px;
-  height: 150px;
+  max-width: 100px;
+  max-height: 100px;
   cursor: pointer;
   border: 1px solid black;
   border-radius: 3px;
 }
 
 .selected-carousel-img {
-  width: 150px;
-  height: 150px;
+  max-width: 100px;
+  max-height: 100px;
   cursor: pointer;
   border: 1px solid black;
   border-radius: 3px;
@@ -93,6 +96,16 @@
     /* margin: 20px 0 20px 20px; */
   }
 
+  .carousel-img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+  
+  .selected-carousel-img {
+    max-width: 100px;
+    max-height: 100px;
+  }
+
 }
 
 
@@ -110,7 +123,17 @@
   }
 
   .item-info {
-    margin-right: 100px;
+    /* margin-right: 100px; */
+  }
+
+  .carousel-img {
+    max-width: 150px;
+    max-height: 150px;
+  }
+  
+  .selected-carousel-img {
+    max-width: 150px;
+    max-height: 150px;
   }
 
 }

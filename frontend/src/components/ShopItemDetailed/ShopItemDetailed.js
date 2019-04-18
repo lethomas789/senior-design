@@ -76,7 +76,19 @@ class ItemImageViewer extends Component {
   render() {
     const { imageLink } = this.props;
     return (
-      <section className="item-image">
+      <section className="item-image-container">
+        <div className="carousel-container">
+          {imageLink.map((src, index) => (
+            <CarouselImage
+              key={index}
+              index={index}
+              src={src}
+              isActive={this.state.currentImage === index}
+              onClick={this.changeImage}
+            />
+          ))}
+        </div>
+
         <div className="magnify-container">
           <ReactImageMagnify
             {...{
@@ -96,29 +108,6 @@ class ItemImageViewer extends Component {
               }
             }}
           />
-
-          {/* <div className="imageButtons">
-            <button onClick={this.prevImage} id="prevImage">
-              {" "}
-              Previous{" "}
-            </button>
-            <button onClick={this.nextImage} id="nextImage">
-              {" "}
-              Next{" "}
-            </button>
-          </div> */}
-        </div>
-
-        <div className="carousel-container">
-          {imageLink.map((src, index) => (
-            <CarouselImage
-              key={index}
-              index={index}
-              src={src}
-              isActive={this.state.currentImage === index}
-              onClick={this.changeImage}
-            />
-          ))}
         </div>
       </section>
     );
