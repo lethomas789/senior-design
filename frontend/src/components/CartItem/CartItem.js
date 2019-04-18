@@ -13,7 +13,9 @@ class CartItem extends Component {
     pid: this.props.pid,
     vid: this.props.vendorID,
     size: this.props.size,
-    amtPurchased: 0
+    amtPurchased: 0,
+    price: this.props.productPrice,
+    total: this.props.totalPrice
   };
 
   componentDidMount() {
@@ -25,11 +27,19 @@ class CartItem extends Component {
   };
 
   // TODO figure out how we want to handle 0 change here
+  //want to update total value of both item in cart and total sum
   handleQuantityChange = event => {
     if (event.target.value < 0) {
       this.setState({ amtPurchased: 1 });
     } else {
-      this.setState({ amtPurchased: event.target.value });
+      var newTotal = event.target.value * this.state.price;
+      this.setState({ 
+        amtPurchased: event.target.value,
+        total: newTotal
+      }, () => {
+        //update total in cart
+        this.props.updateItemTotal(this.state.pid, newTotal);
+      });
     }
   };
 
@@ -89,8 +99,11 @@ class CartItem extends Component {
 
     const { amtPurchased } = this.state;
 
-    const productPrice = this.props.productPrice.toFixed(2);
-    const totalPrice = this.props.totalPrice.toFixed(2);
+    // const productPrice = this.props.productPrice.toFixed(2);
+    // const totalPrice = this.props.totalPrice.toFixed(2);
+
+    const productPrice = this.state.price;
+    const totalPrice = this.state.total;
 
     return (
       <div className="cart-row-container">
@@ -127,81 +140,6 @@ class CartItem extends Component {
         <div>${totalPrice}</div>
       </div>
     );
-
-    /* 
-    if(this.props.size === undefined){
-      return (
-        <Grid item xs>
-          <Card className= "card">
-            <CardActionArea>
-              <img src={this.props.imageSrc} width="100%" height="100%"/>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {this.props.productName}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Amount: {this.props.amtPurchased}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Price: ${this.props.productPrice}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Total Price: ${this.props.totalPrice}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small" color="primary" onClick = {this.removeItem}>
-                Remove Item
-              </Button>
-              <Button size="small" color="primary">
-                Add Item
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-      )
-    }
-
-    //return cart item description for apparel
-    else{
-
-      return (
-        <Grid item xs>
-          <Card className= "card">
-            <CardActionArea>
-              <img src={this.props.imageSrc} width="100%" height="100%"/>
-              <CardContent>
-                <Typography gutterBottom variant="h5" component="h2">
-                  {this.props.productName}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Amount: {this.props.amtPurchased}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Size: {this.props.size}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Price: ${this.props.productPrice}
-                </Typography>
-                <Typography gutterBottom variant="h5" component="h2">
-                  Total Price: ${this.props.totalPrice}
-                </Typography>
-              </CardContent>
-            </CardActionArea>
-            <CardActions>
-              <Button size="small" color="primary" onClick = {this.removeItem}>
-                Remove Item
-              </Button>
-              <Button size="small" color="primary">
-                Add Item
-              </Button>
-            </CardActions>
-          </Card>
-        </Grid>
-      )
-    }
-    */
   }
 }
 
