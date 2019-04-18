@@ -25,6 +25,10 @@ const styles = theme => ({
   dividerInset: {
     margin: '5px 0 0 ${theme.spacing.unit * 9}px',
   },
+  flexContainer: {
+    display: 'flex',
+    flexDirection: 'row',
+  }
 });
 
 
@@ -32,7 +36,7 @@ class OrderHistoryItem extends Component {
   render() {
     const { classes } = this.props;
     return (
-      <List className={classes.root}>
+      <List className={classes.flexContainer}>
   
         <ListItem>
           <ListItemText primary="Date" secondary= {this.props.orderDate} />
@@ -67,9 +71,9 @@ class OrderHistoryItem extends Component {
           </Typography>
         </li>
   
-        <ListItem>
+        {/* <ListItem>
           <ListItemText primary="Paid" secondary= {this.props.paid} />
-        </ListItem>
+        </ListItem> */}
   
         <Divider component="li" />
   
@@ -92,6 +96,8 @@ class OrderHistoryItem extends Component {
         <ListItem>
           <ListItemText primary="Total Price" secondary= {this.props.totalPrice} />
         </ListItem>
+
+
   
   
   
