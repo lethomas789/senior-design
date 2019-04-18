@@ -530,5 +530,4 @@ router.delete('/clearCart', (req, res) => {
   });
 });
 
-
 module.exports = router;

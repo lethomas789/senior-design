@@ -343,12 +343,43 @@ class ShopItemDetailed extends Component {
       alert("please login to add to cart");
     } 
     
+    //check if 0 products were purchased
     else if (this.state.amtPurchased <= 0) {
       alert("Sorry, cannot add a quantity of 0.");
     }
 
+    //check stock check for non apparel
     else if (this.state.amtPurchased > Number(this.state.productStock) && this.state.isApparel === false){
       alert("Quantity selected exceeds stock");
+    }
+
+    //check apparel stock
+    if (this.state.isApparel === true){
+      switch(this.state.size) {
+        case 'Small':
+          if(this.state.amtPurchased > Number(this.state.s_stock)){
+            alert("Quantity exceeds stock");
+          }
+        case 'Medium':
+          if(this.state.amtPurchased > Number(this.state.m_stock)){
+            alert("Quantity exceeds stock");
+          }
+
+        case 'Large':
+          if(this.state.amtPurchased > Number(this.state.l_stock)){
+            alert("Quantity exceeds stock");
+          }
+
+        case 'X-Small':
+          if(this.state.amtPurchased > Number(this.state.xs_stock)){
+            alert("Quantity exceeds stock");
+          }
+
+        case 'X-Large':
+          if(this.state.amtPurchased > Number(this.state.xl_stock)){
+            alert("Quantity exceeds stock");
+          }
+      }
     }
 
     //add to user's cart

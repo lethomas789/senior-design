@@ -97,11 +97,18 @@ class Checkout extends Component {
     );
   }
 
+  checkStock = () => {
+    alert("testing onclick");
+  }
+
   onSuccess = payment => {
     console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cart[0].vid);
 
     const apiURL = "/api/orders";
+    
+    // check for stock in database before payment
+
 
     //make post request to orders
     axios
@@ -177,19 +184,21 @@ class Checkout extends Component {
     const { classes } = this.props;
 
     return (
-      <Fragment>
-        <PaypalExpressBtn
-          env={this.state.env}
-          client={this.state.client}
-          currency={this.state.currency}
-          total={Number(this.props.total)}
-          onError={this.onError}
-          onSuccess={this.onSuccess}
-          onCancel={this.onCancel}
-          shipping={1}
-          paymentOptions={this.state.paymentOptions}
-        />
-      </Fragment>
+      <div onClick = {this.checkStock}>
+        <Fragment>
+          <PaypalExpressBtn
+            env={this.state.env}
+            client={this.state.client}
+            currency={this.state.currency}
+            total={Number(this.props.total)}
+            onError={this.onError}
+            onSuccess={this.onSuccess}
+            onCancel={this.onCancel}
+            shipping={1}
+            paymentOptions={this.state.paymentOptions}
+          />
+        </Fragment>
+      </div>
     );
   }
 }
