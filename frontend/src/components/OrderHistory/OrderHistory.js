@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import "./OrderHistory.css";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
@@ -72,16 +72,20 @@ class OrderHistory extends Component {
         timeOfDay;
 
       return (
-        <OrderHistoryItem
-          orderDate={actualDate}
-          email={order.email}
-          firstName={order.firstName}
-          lastName={order.lastName}
-          oid={order.oid}
-          paid={String(order.paid)}
-          pickedUp={String(order.pickedUp)}
-          totalPrice={order.totalPrice}
-        />
+        <Fragment key={order.oid}>
+          <OrderHistoryItem
+            orderDate={actualDate}
+            email={order.email}
+            firstName={order.firstName}
+            lastName={order.lastName}
+            oid={order.oid}
+            paid={String(order.paid)}
+            pickedUp={String(order.pickedUp)}
+            totalPrice={order.totalPrice}
+            clubHistory={false} // TODO figure out how to pass admin club version
+            items={order.items}
+          />
+        </Fragment>
       );
     });
 
