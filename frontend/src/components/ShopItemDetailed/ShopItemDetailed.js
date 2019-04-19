@@ -349,25 +349,34 @@ class ShopItemDetailed extends Component {
           if(this.state.amtPurchased > Number(this.state.s_stock)){
             alert("Quantity exceeds stock");
           }
+          break;
+
         case 'Medium':
           if(this.state.amtPurchased > Number(this.state.m_stock)){
             alert("Quantity exceeds stock");
           }
+          break;
 
         case 'Large':
           if(this.state.amtPurchased > Number(this.state.l_stock)){
             alert("Quantity exceeds stock");
           }
+          break;
 
         case 'X-Small':
           if(this.state.amtPurchased > Number(this.state.xs_stock)){
             alert("Quantity exceeds stock");
           }
+          break;
 
         case 'X-Large':
           if(this.state.amtPurchased > Number(this.state.xl_stock)){
             alert("Quantity exceeds stock");
           }
+          break;
+        
+        default:
+          break;
       }
     }
 
