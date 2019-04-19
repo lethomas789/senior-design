@@ -10,7 +10,7 @@ import DialogContentText from "@material-ui/core/DialogContentText";
 import { DialogActions } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
-import wine from "../../images/wine.jpg";
+import coffee from "../../images/coffee.jpg";
 import PropTypes from "prop-types";
 
 const styles = theme => ({
