@@ -455,12 +455,13 @@ router.patch('/editProduct', (req, res) => {
       //made edit, uploading name of image files to construct image url for product, requires image name
       //made edit, extract file name from image name array
       else {
+        console.log(productPicture);
         for(let i = 0; i < productPicture.length; ++i) {
           let link =
           `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${pid}%2F${productPicture[i].name}?alt=media`;
-
           // TODO, figure out order of push, in terms of what order vendors want
           // to show their pics
+          console.log(link);
           pictures.push(link);
         }
       }

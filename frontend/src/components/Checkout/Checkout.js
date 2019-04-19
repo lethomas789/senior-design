@@ -97,8 +97,29 @@ class Checkout extends Component {
     );
   }
 
-  checkStock = () => {
+  checkStock = (items) => {
     alert("testing onclick");
+
+    //started onclick for checking stock before purchase
+    //check stock for each item
+    for(let i =0; i < items.length; i++){
+      axios.get('/api/stock/', {
+        params:{
+          pid: items[i].pid,
+          isApparel: items[i].isApparel,
+          size: items[i].size,
+          amt: items[i].amtPurchased
+        }
+      })
+      .then(res => {
+        if(res.data.availableStock === false){
+          alert("not enough stock on purchase");
+        }
+      })
+      .catch(err => {
+        alert(err);
+      })
+    }
   }
 
   onSuccess = payment => {
