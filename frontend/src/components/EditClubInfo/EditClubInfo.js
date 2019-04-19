@@ -8,24 +8,16 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 class EditClubInfo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      bio: "",
-      lastUpdate: "",
-      lastUpdateUser: "",
-      vendorName: "",
-      emailSchedule: ""
-    };
-
-    this.getClubInfo = this.getClubInfo.bind(this);
-    this.sendEdit = this.sendEdit.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.updateEmailPreferences = this.updateEmailPreferences.bind(this);
-  }
+  state = {
+    bio: "",
+    lastUpdate: "",
+    lastUpdateUser: "",
+    vendorName: "",
+    emailSchedule: "",
+  };
 
   //get club info
-  getClubInfo() {
+  getClubInfo = () => {
     const apiURL = "/api/adminVendor";
     axios
       .get(apiURL, {
@@ -49,15 +41,15 @@ class EditClubInfo extends Component {
       .catch(err => {
         alert(err);
       });
-  }
+  };
 
   //handle select when user chooses email preference
-  handleSelect() {
+  handleSelect = () => {
     //update email preference
     this.setState({
       emailSchedule: this.selectedPreference.value
     });
-  }
+  };
 
   //when component loads, get club info from server
   componentDidMount() {
@@ -65,7 +57,7 @@ class EditClubInfo extends Component {
   }
 
   //update email preferences
-  updateEmailPreferences() {
+  updateEmailPreferences = () => {
     const apiURL = "/api/adminVendor/emailSchedule";
     axios
       .patch(apiURL, {
@@ -85,10 +77,10 @@ class EditClubInfo extends Component {
       .catch(err => {
         alert(err);
       });
-  }
+  };
 
   //update club info on server
-  sendEdit() {
+  sendEdit = () => {
     const apiURL = "/api/adminVendor/editVendorInfo";
     axios
       .patch(apiURL, {
@@ -109,7 +101,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         alert(err);
       });
-  }
+  };
 
   render() {
     return (
@@ -138,7 +130,7 @@ class EditClubInfo extends Component {
             rows={4}
           />
         </form>
-        
+
         <div className="btn-update-info">
           <Button variant="contained" color="primary" onClick={this.sendEdit}>
             Update Club Info

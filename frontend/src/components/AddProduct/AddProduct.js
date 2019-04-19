@@ -226,7 +226,7 @@ class AddProduct extends Component {
   render() {
     return (
       <div>
-        <Grid container direction = "column" justify = "center" alignItems = "center">
+      
             <h1> Add Product </h1>
             <div className = "textForm" id="row">
               <TextField
@@ -383,23 +383,29 @@ class AddProduct extends Component {
               <h5 className = "uploadImageText"> Upload Images </h5>
               <h6 className = "uploadImageText"> *(First image uploaded on the left is default image displayed on shop. Remaining images used in detailed view) </h6>
 
+              <div id = "column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
                 onUploadError={(error) => {console.log(error)}} 
               />
+              </div>
 
+              <div id = "column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
                 onUploadError={(error) => {console.log(error)}} 
               />
+              </div>
 
+              <div id = "column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
                 onUploadError={(error) => {console.log(error)}} 
               />
+              </div>
 
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
@@ -409,7 +415,6 @@ class AddProduct extends Component {
             </div>
 
             <Button variant = "contained" color = "primary" onClick = {this.addProduct}> Add Product  </Button>
-        </Grid>
       </div>
     )
   }

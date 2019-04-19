@@ -14,6 +14,7 @@ import { DialogActions } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles'; 
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
+import painting from '../../images/painting.jpg';
 import {withRouter} from 'react-router-dom';
 
 const styles = theme => ({

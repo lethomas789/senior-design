@@ -15,10 +15,11 @@ import AddProduct from './components/AddProduct/AddProduct';
 import OrderHistory from './components/OrderHistory/OrderHistory';
 import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
 import EditItemView from './components/EditItemView/EditItemView';
+import Footer from './components/Footer/Footer';
 
-
-import { createBrowserHistory } from 'history';
-import AboutClub from './components/AboutClub/AboutClub';
+import { createBrowserHistory } from "history";
+import AboutClub from "./components/AboutClub/AboutClub";
+import Clubs from './components/Clubs/Clubs';
 const history = createBrowserHistory();
 
 class App extends Component {
@@ -41,6 +42,8 @@ class App extends Component {
           <Route path = "/itemDetails/:vid/:pid" component = {ShopItemDetailed}/>
           <Route path="/aboutClub/:vid" component = {AboutClub}/>
           <Route exact path="/editItem" component = {EditItemView}/>
+          <Route exact path="/clubs" component={Clubs} />
+          <Footer />
         </div>
       </Router>
     );

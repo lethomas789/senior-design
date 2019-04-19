@@ -21,7 +21,8 @@ router.get('/', (req, res) => {
       let vendorData = {
         bio,
         vendorName,
-        vid
+        vid,
+        bioPictures
       } = doc.data();
       vendors.push(vendorData);
     });
@@ -72,13 +73,14 @@ router.get('/aboutClub', (req, res) => {
 
     console.log('Retrieved vendor about info');
 
-    const { bio, vendorName } = doc.data();
+    const { bio, vendorName, bioPictures} = doc.data();
 
     return res.json({
       success: true,
       message: "Successfully obtained info.",
       bio,
-      vendorName
+      vendorName,
+      bioPictures,
     });
   })
   .catch(err => {

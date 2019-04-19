@@ -1,10 +1,33 @@
-import React, { Component } from 'react';
-import Grid from '@material-ui/core/Grid';
-import './About.css';
+import React, { Component } from "react";
+import "./About.css";
 
 export default class About extends Component {
   render() {
     return (
+      <div className="about-container">
+        <header className="about-header">
+          <div>HEADER HERE</div>
+          <div>SOME SORT OF TAGLINE HERE</div>
+        </header>
+        <div className="about-main-image">
+          IMAGE TEXT HERE
+        </div>
+        <section className="about-info">
+          ABOUT INFO Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+          Iure dolorum neque dolore! Tempora iste in aliquam non illo nihil ut
+          eligendi nam praesentium earum. Facere dolorum praesentium adipisci
+          alias dolore.
+        </section>
+        <section className="about-link-box about-link-box-1">BOX 1</section>
+        <section className="about-link-box about-link-box-2">BOX 2</section>
+        <section className="about-contact-box">
+          BOX TO HOLD CONTACT US INFO?
+        </section>
+        <div className="about-bottom-image">
+          BOTTOM IMAGE ------------------------------------------------------
+        </div>
+      </div>
+      /*
       <div>
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
         <div className = "aboutBox">
@@ -32,6 +55,7 @@ export default class About extends Component {
           
         </Grid>
       </div>
+      */
     );
   }
 }

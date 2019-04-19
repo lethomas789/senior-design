@@ -19,5 +19,12 @@
 }
 
 .uploadImageText{
-  text-align: center;
+  /* text-align: center; */
+  padding-top: 5px;
+  padding-bottom: 10px;
+}
+
+.additem-info-container {
+  display: flex;
+  /* align-self: center; */
 }

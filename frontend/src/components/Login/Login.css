@@ -1,51 +1,57 @@
-#loginContainer{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
+#loginContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(
+      to right,
+      /* rgba(111, 138, 183, 0.3),
+      rgba(97, 93, 108, 0.3) */
+    rgba(202, 229, 255, 0.2),
+    rgba(172, 237, 255, 0.2)
+    ),
+    url(../../images/painting.jpg);
+  height: 95vh;
+  background-size: cover;
 }
 
-#loginForms{
-    display:flex;
-    flex-direction: column;
-    align-self: center;
+#loginForms {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  opacity: 0.90;
 }
 
-#loginButton{
-    align-self: center;
+#loginButton {
+  align-self: center;
 }
 
-.textForm{
-    padding: 10px;
+.textForm {
+  padding: 10px;
 }
 
-.paperContainer{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    height: 360px;
-    width: 410px;
-    margin-top: 50px;
+
+.paperContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 300px;
+  width: 410px;
+  margin-top: 50px;
 }
 
-.progressContainer{
-    display:flex;
-    flex-direction: column;
+.progressContainer {
+  display: flex;
+  flex-direction: column;
 }
 
-.loadingCircle{
-    align-self: center;
+.loadingCircle {
+  align-self: center;
 }
 
-.circle{
-    align-self: center;
+.circle {
+  align-self: center;
 }
 
 .pushDown {
-    padding-top: 25px;
+  padding-top: 25px;
 }
-
-.pushDown2 { 
-    padding-top: 20px;
-    height: 100px;
-}
-
