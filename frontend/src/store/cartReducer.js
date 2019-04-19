@@ -43,6 +43,12 @@ const reducer = (state = initialState, action) => {
         total: action.total
       }
 
+    case actions.UPDATE_CART:
+      return{
+        ...state,
+        items: action.cart
+      }
+
     default:
       return state;
   }

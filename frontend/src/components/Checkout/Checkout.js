@@ -180,6 +180,10 @@ class Checkout extends Component {
     // => sometimes it may take about 0.5 second for everything to get set, or for the button to appear
   };
 
+  //TODO bugs
+  //saved quantity selectors, update redux and server for cart
+  //pass correct total to paypal checkout
+  //check quantity of stock in database before proceeding with payment
   render() {
     const { classes } = this.props;
 
@@ -190,7 +194,7 @@ class Checkout extends Component {
             env={this.state.env}
             client={this.state.client}
             currency={this.state.currency}
-            total={Number(this.props.total)}
+            total={Number(this.props.totalValue)}
             onError={this.onError}
             onSuccess={this.onSuccess}
             onCancel={this.onCancel}

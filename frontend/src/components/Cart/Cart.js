@@ -47,40 +47,24 @@ class Cart extends Component {
   }
 
   //update total price based on quantity 
-  updateItemTotal = (pid, newTotal) => {
+  updateItemTotal = (pid, newTotal, amt) => {
     for(let i = 0; i < this.state.cart.length; i++){
       if(this.state.cart[i].pid === pid){
         this.state.cart[i].totalPrice = newTotal;
+        this.state.cart[i].amtPurchased = amt;
       }
     }
 
+    console.log("checking state of cart ", this.state.cart);
+
+    //update cart and total of cart
+    //this.props.updateCart(this.state.cart);
     this.updateTotal();
   }
 
   //get cart from server for user
   componentDidMount() {
     this.updateTotal();
-    // //get total from items
-    // var currentCart = this.props.items;
-    // var priceTotal = 0;
-
-    // //if cart is empty, total price is $0
-    // if (currentCart.length === 0) {
-    //   this.props.updateTotal(priceTotal);
-    // }
-
-    // //if there are items, calculate total price
-    // else {
-    //   //go through each item in cart and sum up price
-    //   for (let i = 0; i < currentCart.length; i++) {
-    //     priceTotal += Number(currentCart[i].totalPrice);
-    //   }
-    //   priceTotal = priceTotal.toFixed(2);
-    //   this.setState({
-    //     total: priceTotal
-    //   });
-    //   this.props.updateTotal(priceTotal);
-    // }
   }
 
   //render cart items to cart view
@@ -144,7 +128,7 @@ class Cart extends Component {
         <div id="total-text">Total</div>
         <div id="total-price">${this.state.total}</div>
         <div id="btn-paypal">
-          <Checkout total={this.state.total} />
+          <Checkout cartItems = {this.state.cart} totalValue={this.state.total} />
         </div>
       </div>
     );
@@ -166,6 +150,13 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.UPDATE_TOTAL,
         total: sum
+      }),
+
+    //update cart
+    updateCart: cart => 
+      dispatch({
+        type: actions.UPDATE_CART,
+        items: cart
       })
   };
 };

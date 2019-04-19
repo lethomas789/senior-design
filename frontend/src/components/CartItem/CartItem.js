@@ -29,16 +29,19 @@ class CartItem extends Component {
   // TODO figure out how we want to handle 0 change here
   //want to update total value of both item in cart and total sum
   handleQuantityChange = event => {
+    var newAmount = event.target.value;
     if (event.target.value < 0) {
       this.setState({ amtPurchased: 1 });
     } else {
+      //calculate new total of specific item, where total = value * price
       var newTotal = event.target.value * this.state.price;
       this.setState({ 
         amtPurchased: event.target.value,
         total: newTotal
       }, () => {
         //update total in cart
-        this.props.updateItemTotal(this.state.pid, newTotal);
+        //update total and amount based on pid
+        this.props.updateItemTotal(this.state.pid, newTotal, newAmount);
       });
     }
   };
