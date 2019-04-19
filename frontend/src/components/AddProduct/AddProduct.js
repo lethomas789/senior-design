@@ -280,6 +280,7 @@ class AddProduct extends Component {
             </div>
 
             <FormControl component="fieldset">
+            <div className = "textForm">
               <FormLabel component="legend">Select Product Type </FormLabel>
               <RadioGroup
                 aria-label="gender"
@@ -287,6 +288,7 @@ class AddProduct extends Component {
                 value={this.state.value}
                 onChange={this.handleChange}
               >
+            
                 {/* if user selects item, hide apparel selections, toggle css */}
                 <FormControlLabel
                   control={<Radio color="primary" />}
@@ -305,6 +307,7 @@ class AddProduct extends Component {
                     onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock'})}
                 />
               </RadioGroup>
+              </div>
             </FormControl>
 
             {/* add quantity for apparel sizes, toggel visibility if selected */}

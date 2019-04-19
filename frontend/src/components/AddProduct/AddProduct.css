@@ -16,6 +16,8 @@
 
 .showItemStock{
   display:block;
+  padding: 10px;
+  padding-bottom: 50px;
 }
 
 .uploadImageText{
@@ -27,4 +29,8 @@
 .additem-info-container {
   display: flex;
   /* align-self: center; */
+}
+
+.smaller {
+  padding-top: 10px;
 }
