@@ -85,10 +85,6 @@ router.get('/', (req,res) => {
  * @param amtPurchased - num items purchased
  */
 router.post('/addItems', (req, res) => {
-
-  console.log(req.body.params);
-  console.log(req.body);
-
   if (req.body.params) {
     var {
       user,
@@ -529,6 +525,5 @@ router.delete('/clearCart', (req, res) => {
     });
   });
 });
-
 
 module.exports = router;

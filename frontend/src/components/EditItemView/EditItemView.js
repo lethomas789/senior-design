@@ -7,6 +7,20 @@ import actions from "../../store/actions";
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import FileUploader from 'react-firebase-file-uploader';
+
+import firebase from 'firebase';
+// import firebaseConfig from '../../config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json';
+
+//config file for firebase
+// const config = {
+//   apiKey: firebaseConfig.private_key,
+//   authDomain: "ecs193-ecommerce.firebaseapp.com",
+//   databaseURL: "https://ecs193-ecommerce.firebaseio.com",
+//   storageBucket: "ecs193-ecommerce.appspot.com"
+// };
+
+// firebase.initializeApp(config);
 
 const style = {
   field: { width: "500px" }
@@ -36,7 +50,9 @@ class EditItemView extends Component {
       xsmall: 0,
       xlarge: 0,
       apparelCSS: "hideApparelSizes",
-      itemStockCSS: 'showItemStock'
+      itemStockCSS: 'showItemStock',
+      images: [],
+      imageNames:[]
     };
   }
 
@@ -149,9 +165,67 @@ class EditItemView extends Component {
     }
   };
 
+  //upload images to database
+  //upload each image in array to database
+  uploadFiles = () => {
+    //for each file in images array, upload to database
+    const files = this.state.images;
+    files.forEach(file => {
+      this.fileUploader.startUpload(file);
+    });
+  }
+
+  //detects when an image is uploaded from user
+  //change number of files to upload
+  //same function from AddProduct
+  handleFileChange = (event) => {
+    //extract file from upload component
+    const { target: { files } } = event;
+
+    //store image names
+    // const filesToStore = [];
+    const filesToStore = this.state.imageNames;
+
+    //store actual image files
+    // const actualImages = [];
+    const actualImages = this.state.images;
+
+    //store image name as an object
+    let imageName = {};
+    imageName.name = files[0].name;
+
+    //push values to arrays
+    filesToStore.push(imageName);
+    actualImages.push(files[0]);
+    
+    //set state of component
+    this.setState({
+      images: actualImages,
+      imageNames: filesToStore
+    });
+  };
+
   //update item info, update information about item in database
   updateItemInfo = () => {
     const apiURL = '/api/adminProducts/editProduct';
+    var imagesToUpload;
+
+    console.log("old images", this.state.productPicture);
+    console.log("new images", this.state.images);
+    console.log("image names", this.state.imageNames);
+
+    //if the admin did not upload anymore pictures, use old array
+    if(this.state.imageNames.length === 0){
+      imagesToUpload = this.state.productPicture;
+      console.log("uploading old pictures");
+    }
+
+    //if admin updated new pictures, send new array
+    else{
+      alert("uploading new pictures");
+      imagesToUpload = this.state.imageNames;
+      console.log("array of new pictures", imagesToUpload);
+    }
 
     //params for editing item
     axios.patch(apiURL, {
@@ -163,7 +237,7 @@ class EditItemView extends Component {
         productName: this.state.name,
         productPrice: this.state.price,
         stock: this.state.stock,
-        productPicture: this.state.productPicture,
+        productPicture: imagesToUpload,
         isApparel: this.state.isApparel,
         pickupLocation: this.state.pickupLocation,
         pickupTime: this.state.pickupTime,
@@ -175,7 +249,12 @@ class EditItemView extends Component {
       }
     })
     .then(res => {
-      if(res.data.success === true){
+
+      if(res.data.success === true && this.state.imageNames.length != 0){
+        this.uploadFiles();
+      }
+
+      else if(res.data.success === true){
         alert(res.data.message);
       }
 
@@ -198,6 +277,7 @@ class EditItemView extends Component {
       <div>
         <Grid container direction = "column" display = "flex" justifyContent = "center" alignItems = "center" >
           <h1> Select Item To Edit </h1>
+          <h5> (If uploading new pictures, old pictures will be discarded/replaced) </h5>
           <Grid container direction = "row" display = "flex" alignItems = "center" spacing = {24} justify = "space-evenly">
             {products}
           </Grid>
@@ -327,6 +407,30 @@ class EditItemView extends Component {
                     />
                   </div>
                 </div>
+
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}} 
+                />
+
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}} 
+                />
+
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}} 
+                />
+
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}} 
+                />
 
                 <Button 
                   variant="contained"

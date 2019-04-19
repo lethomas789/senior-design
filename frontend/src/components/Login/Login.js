@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import GoogleLogin from 'react-google-login';
 import {connect} from 'react-redux';
 import actions from '../../store/actions';
 import './Login.css';
@@ -15,7 +16,6 @@ import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
 import painting from '../../images/painting.jpg';
 import {withRouter} from 'react-router-dom';
-
 
 const styles = theme => ({
     progress: {
@@ -130,11 +130,11 @@ class Login extends Component{
                 .catch(err => {
                     alert(err);
                 })
-            }
+            }     
             //display error message with logging in
             else{
                 this.setState({
-                    open: true,
+     		    open: true,
                     progressValue: 0,
                     progressVariant: "determinate",
                     responseMessage: res.data.message
@@ -165,6 +165,91 @@ class Login extends Component{
         }
     }
 
+    //response values after oauth returns with email login and password
+    responseGoogle = (response) => {
+        //after getting response from google, proceed with login process of redux state
+        //send login parameters to backend
+        var email = response.w3.U3;
+        var firstName = response.w3.ofa;
+        var lastName = response.w3.wea;
+
+        //update email of user logged in by modifying state
+        this.setState({
+            email: email,
+        });
+
+        //make api call to login with gmail
+        axios.get('/api/login/gmail', {
+            params:{
+                email: email,
+                firstName: firstName,
+                lastName: lastName
+            }
+        })
+        .then(res => {
+            //check for login success status
+            if(res.data.success === true && res.data.vendors.length === 0){
+                //dispatch update login action to update login state
+                this.props.updateLogin(email);
+
+                //after updating login, get cart info
+                this.getCart();
+
+                //display dialog for login successful
+                this.setState({
+                    open: true,
+                    progressValue: 0,
+                    progressVariant: "determinate",
+                    responseMessage: "Login Succesful!"
+                });
+            }
+
+            else if (res.data.success === true && res.data.vendors.length > 0){
+                const vendorURL = "/api/adminUser";
+                axios.get(vendorURL, {
+                    params:{
+                        user: this.state.email
+                    }
+                })
+                .then(res => {
+                    let currentVendorID = res.data.vendors[0].vid;
+                    let email = this.state.email;
+                    let currentVendors = res.data.vendors;
+                    let currentVendorName = res.data.vendors[0].vendorName;
+
+                    //update redux store state
+                    this.props.updateAdminLogin(email, currentVendorID, currentVendors, currentVendorName);
+
+                    //after updating login, get cart info
+                    this.getCart();
+                
+                    //display dialog for login successful
+                    this.setState({
+                        open: true,
+                        progressValue: 0,
+                        progressVariant: "determinate",
+                        responseMessage: "Login Succesful!"
+                    });
+
+                })
+                .catch(err => {
+                    alert(err);
+                })
+            }// end of admin login
+
+            else{
+                this.setState({
+                    open: true,
+                    progressValue: 0,
+                    progressVariant: "determinate",
+                    responseMessage: res.data.message
+                });
+            }
+        })
+        .catch(err => {
+            alert(err);
+        })
+    }
     render(){
         const { classes } = this.props;
         return(
@@ -190,11 +275,20 @@ class Login extends Component{
                             onKeyDown = {this.handleEnter}
                             />
                         </div>
+
                         <div className = "pushDown">
                         <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
+			<div className = "pushDown2">
+				<GoogleLogin clientId="409029968816-1bf8e3qtt6jb2ivj9udb1qata3q0bdrc.apps.googleusercontent.com"
+				buttononText="Login"
+				onSuccess={this.responseGoogle}
+				onFailure={this.responseGoogle}
+				cookiePolicy={'single_host_origin'}
+				/>
+			</div>
                     </Paper>
-                    
+                 
                     <div className = "progressContainer">
                         <div className = "circle">
                             <CircularProgress className = "loadingCircle" size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>

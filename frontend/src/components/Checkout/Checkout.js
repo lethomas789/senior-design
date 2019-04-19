@@ -97,11 +97,39 @@ class Checkout extends Component {
     );
   }
 
+  checkStock = (items) => {
+    alert("testing onclick");
+
+    //started onclick for checking stock before purchase
+    //check stock for each item
+    for(let i =0; i < items.length; i++){
+      axios.get('/api/stock/', {
+        params:{
+          pid: items[i].pid,
+          isApparel: items[i].isApparel,
+          size: items[i].size,
+          amt: items[i].amtPurchased
+        }
+      })
+      .then(res => {
+        if(res.data.availableStock === false){
+          alert("not enough stock on purchase");
+        }
+      })
+      .catch(err => {
+        alert(err);
+      })
+    }
+  }
+
   onSuccess = payment => {
     console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cart[0].vid);
 
     const apiURL = "/api/orders";
+    
+    // check for stock in database before payment
+
 
     //make post request to orders
     axios
@@ -173,23 +201,29 @@ class Checkout extends Component {
     // => sometimes it may take about 0.5 second for everything to get set, or for the button to appear
   };
 
+  //TODO bugs
+  //saved quantity selectors, update redux and server for cart
+  //pass correct total to paypal checkout
+  //check quantity of stock in database before proceeding with payment
   render() {
     const { classes } = this.props;
 
     return (
-      <Fragment>
-        <PaypalExpressBtn
-          env={this.state.env}
-          client={this.state.client}
-          currency={this.state.currency}
-          total={Number(this.props.total)}
-          onError={this.onError}
-          onSuccess={this.onSuccess}
-          onCancel={this.onCancel}
-          shipping={1}
-          paymentOptions={this.state.paymentOptions}
-        />
-      </Fragment>
+      <div onClick = {this.checkStock}>
+        <Fragment>
+          <PaypalExpressBtn
+            env={this.state.env}
+            client={this.state.client}
+            currency={this.state.currency}
+            total={Number(this.props.totalValue)}
+            onError={this.onError}
+            onSuccess={this.onSuccess}
+            onCancel={this.onCancel}
+            shipping={1}
+            paymentOptions={this.state.paymentOptions}
+          />
+        </Fragment>
+      </div>
     );
   }
 }
@@ -209,31 +243,31 @@ const mapStateToProps = state => {
 //redux
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
-  return {
-    updateItems: response =>
-      dispatch({
-        type: actions.GET_CART,
-        cart: response
-      }),
+  return{
+    updateItems: (response) => dispatch({
+      type: actions.GET_CART,
+      cart: response
+    }),
 
-    updateSelectedVendor: currentVendor =>
-      dispatch({
-        type: actions.GET_VENDOR_PRODUCTS,
-        vendor: currentVendor
-      }),
+    updateSelectedVendor: (currentVendor) => dispatch({
+      type: actions.GET_VENDOR_PRODUCTS,
+      vendor: currentVendor
+    }),
 
-    emptyCartOnPayment: () =>
-      dispatch({
-        type: actions.EMPTY_CART
-      }),
+    emptyCartOnPayment: () => dispatch({
+      type: actions.EMPTY_CART
+    }),
 
-    clearTotalOnPayment: value =>
-      dispatch({
-        type: actions.UPDATE_TOTAL,
-        total: value
-      })
-  };
-};
+    clearTotalOnPayment: (value) => dispatch({
+      type: actions.UPDATE_TOTAL,
+      total: value
+    })
+  }
+}
+
+/*Checkout.PropTypes = {
+  classes: PropTypes.object.isRequired
+};*/
 
 // Checkout.PropTypes = {
 //   classes: PropTypes.object.isRequired
