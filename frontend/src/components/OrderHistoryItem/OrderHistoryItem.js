@@ -27,7 +27,7 @@ const styles = theme => ({
   },
   flexContainer: {
     display: "flex",
-    flexDirection: "row",
+    flexDirection: "row"
   }
 });
 
@@ -41,13 +41,12 @@ class OrderHistoryItem extends Component {
     paid: PropTypes.string.isRequired,
     pickedUp: PropTypes.string.isRequired,
     totalPrice: PropTypes.string.isRequired,
-    clubHistory: PropTypes.bool.isRequired,  // viewing club history true/false
-    items: PropTypes.array.isRequired,
+    clubHistory: PropTypes.bool.isRequired, // viewing club history true/false
+    items: PropTypes.array.isRequired
   };
 
   render() {
     const { classes, items, oid } = this.props;
-    console.log('ITEMS:', this.props.items);
     return (
       <div className="order-history-item-container">
         <List className={classes.flexContainer}>
@@ -121,15 +120,38 @@ class OrderHistoryItem extends Component {
           </li>
 
           <ListItem>
-            <ListItemText primary="Total" secondary={this.props.totalPrice} />
+            <ListItemText primary="Total" secondary={'$'+ this.props.totalPrice} />
           </ListItem>
         </List>
 
         <div className="order-summary-container">
-          {/* {items.map(item => (
-            
-          ))} */}
-          ORDER SUMMARY BOX
+          <div className="order-summary-row-title order-summary-row">
+            <div><b>Item</b></div>
+            <div><b>Price</b></div>
+            <div><b>Quantity</b></div>
+            <div><b>Total</b></div>
+          </div>
+          {items.map(item => (
+            <div className="order-summary-row">
+              <div className="order-summary-item">
+                <div>
+                  <b>{`${item.name}`}</b>
+                </div>
+
+                {item.size && (
+                  <div>
+                    <b>Size</b>: {`${item.size}`}
+                  </div>
+                )}
+              </div>
+
+              <div>${item.price}</div>
+
+              <div>{item.quantity}</div>
+
+              <div>${Number(Number(item.price) * Number(item.quantity)).toFixed(2)}</div>
+            </div>
+          ))}
         </div>
       </div>
     );
