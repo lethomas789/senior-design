@@ -15,6 +15,7 @@
     "react-firebase-file-uploader": "^2.4.2",
     "react-google-login": "^5.0.4",
     "react-image-magnify": "^2.7.4",
+    "react-notifications-component": "^1.1.1",
     "react-paypal-express-checkout": "^1.0.5",
     "react-redux": "^6.0.0",
     "react-router-dom": "^4.3.1",
