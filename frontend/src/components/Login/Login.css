@@ -6,8 +6,8 @@
       to right,
       /* rgba(111, 138, 183, 0.3),
       rgba(97, 93, 108, 0.3) */
-    rgba(202, 229, 255, 0.2),
-    rgba(172, 237, 255, 0.2)
+    rgba(202, 229, 255, 0.4),
+    rgba(172, 237, 255, 0.4)
     ),
     url(../../images/painting.jpg);
   height: 95vh;
@@ -28,7 +28,6 @@
 .textForm {
   padding: 10px;
 }
-
 
 .paperContainer {
   display: flex;
