@@ -37,6 +37,8 @@ const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
 const editItemRoute = "/editItem";
+const orderHistoryRoute = "/orderHistory";
+const accountInfoRoute = "/accountInfo";
 const primary = "#6F8AB7";
 
 //style for cart to display number of items
@@ -62,7 +64,8 @@ class ButtonAppBar extends Component {
     adminsOf: this.props.adminsOf,
     openSelect: false,
     currentVendor: "",
-    anchorEl: null
+    anchorEl: null,
+    anchorElAccount: null
   };
 
   //when navbar loads, get list of all vendors in database
@@ -85,8 +88,18 @@ class ButtonAppBar extends Component {
     this.setState({ anchorEl: null });
   };
 
+  // handle menu
+  handleMenuCloseAccount = () => {
+    this.setState({ anchorElAccount: null });
+  };
+
   handleAdminClick = event => {
     this.setState({ anchorEl: event.currentTarget });
+  };
+
+  //handle account click, same logic as handle admin click
+  handleAccountClick = event => {
+    this.setState({ anchorElAccount: event.currentTarget });
   };
 
   //handle dialog closing
@@ -176,7 +189,7 @@ class ButtonAppBar extends Component {
 
   render() {
     const { classes } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, anchorElAccount } = this.state;
 
     if (this.props.isAdmin) {
       var vendorList = this.props.adminsOf.map(result => {
@@ -330,8 +343,41 @@ class ButtonAppBar extends Component {
               ) : (
                 <Fragment />
               )}
-
+              
               {/* ACCOUNT BUTTON? */}
+              <Button
+                aria-haspopup="true"
+                onClick={this.handleAccountClick}
+                style={{ color: "white", fontFamily: "Raleway" }}
+              >
+                Account
+              </Button>
+                
+              <Menu
+                anchorEl={anchorElAccount}
+                open={Boolean(anchorElAccount)}
+                onClose={this.handleMenuCloseAccount}
+              >
+                <MenuItem
+                  component={Link}
+                  to={orderHistoryRoute}
+                  color="inherit"
+                  onClick={this.handleMenuCloseAccount}
+                >
+                  {" "}
+                  Order History{" "}
+                </MenuItem>
+
+                <MenuItem
+                  component={Link}
+                  to={accountInfoRoute}
+                  color="inherit"
+                  onClick={this.handleMenuCloseAccount}
+                >
+                  {" "}
+                  Account Info {" "}
+                </MenuItem>
+              </Menu>
 
               {/*LOGIN/LOGOUT BUTTON*/}
               <Button
