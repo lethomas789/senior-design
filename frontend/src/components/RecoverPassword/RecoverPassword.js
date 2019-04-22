@@ -8,7 +8,9 @@ class RecoverPassword extends Component {
   constructor(props){
     super(props);
     this.state = {
-      email: ''
+      email: '',
+      password: '',
+      confirmPassword: ''
     }
   }
 
@@ -19,14 +21,37 @@ class RecoverPassword extends Component {
     })
   }
 
+  //change password on input
+  handlePasswordField = (event) => {
+    this.setState({
+      password: event.target.value
+    })
+  }
+
+  //change confirm password on input change
+  handleConfirmPasswordField = (event) => {
+    this.setState({
+      confirmPassword: event.target.value
+    })
+  }
+
   //function called when clicking recover password
   recoverPassword = () => {
     //get request to send email with password
-    const apiURL = '/api/recoverPassword';
+
+    if(this.state.password != this.state.confirmPassword){
+      alert("Passwords do not match");
+      return;
+    }
+
+    const apiURL = 'http://localhost:4000/api/recoverPassword';
     console.log("this is the input of the user's email", this.state.email);
-    axios.get(apiURL, {
+    alert("Sending email to user, check your inbox for verification link!");
+    axios.patch(apiURL, {
       params:{
-        email: this.state.email
+        email: this.state.email,
+        password: this.state.password,
+        confirmPassword: this.state.confirmPassword
       }
     })
     .then(res => {
@@ -51,9 +76,11 @@ class RecoverPassword extends Component {
       <div>
         <div id = "enterEmailForm">
           <h1 id = "passwordTitle"> Password Recovery </h1>
-          <h3> Enter email: </h3>
+          <h3> Enter email and new password: </h3>
           <form id = "emailForm">
-            <input onChange = {this.handleEmailField}/> 
+            Email: <input onChange = {this.handleEmailField}/> 
+            Password: <input label = "Password" type = "password" onChange = {this.handlePasswordField}/> 
+            Confirm Password: <input label = "Confirm Password" type = "password" onChange = {this.handleConfirmPasswordField}/> 
           </form>
           <Button color = "primary" onClick = {this.recoverPassword}> Recover Password </Button>
         </div>
