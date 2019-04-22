@@ -226,7 +226,7 @@ class AddProduct extends Component {
   render() {
     return (
       <div className = "addProductContainer">
-      <Paper className="addProductPaperContainer">
+      {/* <Paper className="addProductPaperContainer"> */}
             <h1> Add Product </h1>
             <div className = "textForm" id="row">
               <TextField
@@ -412,7 +412,7 @@ class AddProduct extends Component {
                 onUploadError={(error) => {console.log(error)}} 
               />
               </div>
-
+          
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
@@ -421,7 +421,7 @@ class AddProduct extends Component {
             </div>
 
             <Button variant = "contained" color = "primary" onClick = {this.addProduct}> Add Product  </Button>
-            </Paper>
+            {/* </Paper> */}
       </div>
     )
   }

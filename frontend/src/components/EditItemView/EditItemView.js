@@ -248,8 +248,8 @@ class EditItemView extends Component {
         xl_stock: Number(this.state.xlarge)
       }
     })
-    .then(res => {
 
+    .then(res => {
       if(res.data.success === true && this.state.imageNames.length != 0){
         this.uploadFiles();
       }
@@ -275,15 +275,14 @@ class EditItemView extends Component {
     
     return (
       <div>
-        <Grid container direction = "column" display = "flex" justifyContent = "center" alignItems = "center" >
+      <div className = "editItemContainer">
+        
           <h1> Select Item To Edit </h1>
           <h5> (If uploading new pictures, old pictures will be discarded/replaced) </h5>
-          <Grid container direction = "row" display = "flex" alignItems = "center" spacing = {24} justify = "space-evenly">
+          <div className = "textForm">
             {products}
-          </Grid>
+            </div>
 
-          <Grid container direction = "column" display = "flex" alignItems = "center">
-            <div>
               <div className = "textForm" id="row">
                 <TextField
                     label="Product Name"
@@ -299,7 +298,7 @@ class EditItemView extends Component {
                     label="Product Info"
                     required="true"
                     multiline={true}
-                    rows={2}
+                    // rows={2}
                     value = {this.state.info}
                     onChange={(event) => this.setState({ info: event.target.value })}
                     style={style.field}
@@ -407,30 +406,42 @@ class EditItemView extends Component {
                     />
                   </div>
                 </div>
-
+                
+                <div id ="column">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
                   onUploadError={(error) => {console.log(error)}} 
+                  // style={style.field}
                 />
-
+                </div>
+               
+              <div id ="column">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
                   onUploadError={(error) => {console.log(error)}} 
+                  // style={style.field}
                 />
+                </div>  
 
+                <div id ="column">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
                   onUploadError={(error) => {console.log(error)}} 
+                  // style={style.field}
                 />
+                </div>
 
+                <div id ="column">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
-                  onUploadError={(error) => {console.log(error)}} 
+                  onUploadError={(error) => {console.log(error)}}
+                  // style={style.field} 
                 />
+                </div>
 
                 <Button 
                   variant="contained"
@@ -438,10 +449,8 @@ class EditItemView extends Component {
                   color="primary"
                   onClick = {this.updateItemInfo}> 
                   Update Item 
-                </Button>
-            </div>
-          </Grid>
-        </Grid>
+                </Button>   
+                </div>    
       </div>
     )
   }
