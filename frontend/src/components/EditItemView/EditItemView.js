@@ -322,6 +322,7 @@ class EditItemView extends Component {
                     type="number"
                     value = {this.state.price}
                     onChange={(event) => this.setState({ price: event.target.value })}
+                    style={style.field}
                   />
                 </div>
 
@@ -332,6 +333,7 @@ class EditItemView extends Component {
                     type="number"
                     value = {this.state.stock}
                     onChange={(event) => this.setState({ stock: event.target.value })}
+                    style={style.field}
                   />
                 </div>
 
@@ -412,7 +414,7 @@ class EditItemView extends Component {
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
                   onUploadError={(error) => {console.log(error)}} 
-                  // style={style.field}
+                  style={style.field}
                 />
                 </div>
                
@@ -421,7 +423,7 @@ class EditItemView extends Component {
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
                   onUploadError={(error) => {console.log(error)}} 
-                  // style={style.field}
+                  style={style.field}
                 />
                 </div>  
 
@@ -430,7 +432,7 @@ class EditItemView extends Component {
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
                   onUploadError={(error) => {console.log(error)}} 
-                  // style={style.field}
+                  style={style.field}
                 />
                 </div>
 
@@ -439,7 +441,7 @@ class EditItemView extends Component {
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
                   onUploadError={(error) => {console.log(error)}}
-                  // style={style.field} 
+                  style={style.field} 
                 />
                 </div>
 
