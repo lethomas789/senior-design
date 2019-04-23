@@ -331,6 +331,7 @@ class ShopItemDetailed extends Component {
 
   //add item to user's cart
   addItem = () => {
+    console.log('BUTTON CLICKED');
     //check if user is logged in
     if (this.state.login === false) {
       alert("please login to add to cart");
@@ -370,6 +371,10 @@ class ShopItemDetailed extends Component {
               message: "Sorry, not enough stock.",
               type: "warning"
             });
+          }
+          else {
+            // TODO add item
+
           }
           break;
 
@@ -658,7 +663,7 @@ class ShopItemDetailed extends Component {
             handleQuantityChange={this.handleQuantityChange}
             addItem={this.addItem}
             displayStock={this.displayStock}
-            amtPurchased={Number(this.state.amtPurchased)}
+            amtPurchased={this.state.amtPurchased}
             clubName={this.state.vendor}
             vendorID={this.props.vendorID}
           />
@@ -676,7 +681,7 @@ class ShopItemDetailed extends Component {
             handleChange={this.handleChange}
             addItem={this.addItem}
             displayApparelStock={this.displayApparelStock}
-            amtPurchased={Number(this.state.amtPurchased)}
+            amtPurchased={this.state.amtPurchased}
             size={this.state.size}
             clubName={this.state.vendor}
             vendorID={this.props.vendorID}
