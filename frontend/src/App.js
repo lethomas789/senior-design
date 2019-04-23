@@ -62,7 +62,7 @@ class App extends Component {
           {/* <Route exact path = "/login" component = {Login} />  */}
           <Route 
             exact path="/login" 
-            render={() => <Login notifier={this.addNotification}/>}
+            render={(props) => <Login {...props} notifier={this.addNotification}/>}
           /> 
 
           <Route exact path = "/cart" component = {Cart}/>

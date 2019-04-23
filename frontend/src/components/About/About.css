@@ -16,24 +16,37 @@
 .about-main-image {
   background-image: url(../../images/ourgroup.png);
   grid-column: 1 / span 3;
-  background-size: contain;
+  background-size: cover;
   /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
-  min-height: 800px; 
+  min-height: 600px; 
+  min-width: 1100px;
 }
 
 .about-info {
   grid-column: 1 / span 2;
   grid-row: span 2;
+  width: 60ch;
+  line-height: 1.5;
+  align-self: center;
+  justify-self: center;
 }
 
 .about-link-box {
 }
 
 .about-link-box-1 {
+  background-image: url(../../images/desk.jpg);
+  width: 1fr;
+  min-height: 200px;
+  background-size: cover;
 }
 
 .about-link-box-2 {
   grid-column: 3 / span 1;
+  background-image: url(../../images/Davis-2.jpg);
+  width: 1fr;
+  min-height: 200px;
+  background-size: cover;
 }
 
 .about-contact-box {
