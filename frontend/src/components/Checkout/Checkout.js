@@ -97,28 +97,28 @@ class Checkout extends Component {
     );
   }
 
-  checkStock = (items) => {
-    alert("testing onclick");
-
+  checkStock = () => {
     //started onclick for checking stock before purchase
     //check stock for each item
+    var items = this.props.items;
     for(let i =0; i < items.length; i++){
-      axios.get('/api/stock/', {
-        params:{
-          pid: items[i].pid,
-          isApparel: items[i].isApparel,
-          size: items[i].size,
-          amt: items[i].amtPurchased
-        }
-      })
-      .then(res => {
-        if(res.data.availableStock === false){
-          alert("not enough stock on purchase");
-        }
-      })
-      .catch(err => {
-        alert(err);
-      })
+        console.log("checking stock");
+        axios.get('/api/stock/', {
+          params:{
+            pid: items[i].pid,
+            isApparel: items[i].isApparel,
+            size: items[i].size,
+            amt: items[i].amtPurchased
+          }
+        })
+        .then(res => {
+          if(res.data.availableStock === false){
+            alert("not enough stock on purchase");
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
     }
   }
 
@@ -209,7 +209,8 @@ class Checkout extends Component {
     const { classes } = this.props;
 
     return (
-      <div onClick = {this.checkStock}>
+      <div>
+        <button onClick = {this.checkStock(this.props.items)}> Check Stock </button>
         <Fragment>
           <PaypalExpressBtn
             env={this.state.env}

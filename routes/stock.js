@@ -12,6 +12,7 @@ const db = admin.firestore();
  * @param amt - amt user trying to purchase 
  */
 router.get('/', (req, res) => {
+  console.log("checking stock");
   if (req.query.params) {
     var { pid, isApparel, size, amt } = req.query.params;
   }

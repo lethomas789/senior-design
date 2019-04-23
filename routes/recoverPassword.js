@@ -11,7 +11,7 @@ const async = require('async');
 const saltRounds = 10;
 
 //route to indicate a password needs to be changed
-//references: 
+//references for old version of code: 
 // http://sahatyalkabov.com/how-to-implement-password-reset-in-nodejs/ and Thomas's code in orders.js
 // https://blog.cloudboost.io/execute-asynchronous-tasks-in-series-942b74697f9c
 // https://nodemailer.com/smtp/
@@ -51,84 +51,133 @@ router.patch('/', (req, res) => {
 
     //if the email was found, need to send an email to user to verify new password
     else{
-      //reset password
+      //send email with verification link
+      //email configurations for sending password
+      const emailConfig = nodemailer.createTransport({
+        service: 'gmail',
+        secure: false,
+        auth: {
+          user: 'ecs193.ecommerce@gmail.com',
+          pass: '193ecommerce'
+        },
+        tls: {
+          rejectUnauthorized: false
+        }
+      });
+
+      //generate random text, same idea to generate random pid
+      let randomURL = '';
+      const possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+
+      for (let i = 0; i < 10; i++) {
+        randomURL += possible.charAt(Math.floor(Math.random() * possible.length));
+      }
+
+      const contactOptions = {
+        from: 'ecs193.ecommerce@gmail.com',
+        to: email,
+        subject: 'Password Recovery',
+        text: 'You have requested to reset/recover your password. Please click the following link to proceed to password change:' + 'http://' + 'localhost:3000' + '/inputNewPassword/' + randomURL 
+      }
+
+      //send email to user with link to verify password change
+      emailConfig.sendMail(contactOptions, function(err, res){
+        if(err){
+          console.log("error occurred ", err);
+          return res.status(200).json({
+            success: false,
+            message: "Error sending email"
+          })
+        }
+
+        else{
+          console.log("email sent!");
+          return res.status(200).json({
+            success: true,
+            message: "Password recovery email sent! Click link in email to proceed with password change!"
+          })
+        }
+      });
+
+      //old code
       //async.waterfall, array of functions to execute in order
       //first function is to hash new password
       //second function is to email user to verify hashed password
-      async.waterfall([
-        function(callback){
-          //hash new password with bcrypt
-          bcrypt.genSalt(saltRounds, (err, salt) => {
-            bcrypt.hash(password, salt, null, (err, hash) => {
-              if (err) {
-                return callback(error);
-              }
-              console.log("new password hashed successfully");
-              //this function is complete, move onto next function in waterfall array of functions
-              return callback(null, hash);
-            }) //end of hash
-          })  // end bcrypt.genSalt
-        },
-        function(hash, callback){
-          //email configuration
-          console.log("in email sending function, checking param", hash);
+      // async.waterfall([
+      //   function(callback){
+      //     //hash new password with bcrypt
 
-          //using nodemailer to send basic email
+      //     bcrypt.genSalt(saltRounds, (err, salt) => {
+      //       bcrypt.hash(password, salt, null, (err, hash) => {
+      //         if (err) {
+      //           return callback(error);
+      //         }
+      //         console.log("new password hashed successfully");
+      //         //this function is complete, move onto next function in waterfall array of functions
+      //         return callback(null, hash);
+      //       }) //end of hash
+      //     })  // end bcrypt.genSalt
+      //   },
+      //   function(hash, callback){
+      //     //email configuration
+      //     console.log("in email sending function, checking param", hash);
 
-          //email configurations for sending password
-          const emailConfig = nodemailer.createTransport({
-            service: 'gmail',
-            secure: false,
-            auth: {
-              user: 'ecs193.ecommerce@gmail.com',
-              pass: '193ecommerce'
-            },
-            tls: {
-              rejectUnauthorized: false
-            }
-          });
+      //     //using nodemailer to send basic email
 
-          //contact options include sender/receiver, subject, and text containing link to verify password
-          //using query params in url to store email and new hashed password of user
-          //when user clinks URL, redirects them to /api/setNewPassword/params route to update firestore database
-          const contactOptions = {
-            from: 'ecs193.ecommerce@gmail.com',
-            to: email,
-            subject: 'Password Recovery',
-            text: 'You have requested to reset/recover your password. Please click the following link to confirm password:' + 'http://' + host + '/api/setNewPassword/?'+ 'email=' + email + '&hash=' + hash
-          }
+      //     //email configurations for sending password
+      //     const emailConfig = nodemailer.createTransport({
+      //       service: 'gmail',
+      //       secure: false,
+      //       auth: {
+      //         user: 'ecs193.ecommerce@gmail.com',
+      //         pass: '193ecommerce'
+      //       },
+      //       tls: {
+      //         rejectUnauthorized: false
+      //       }
+      //     });
 
-          //send email to user with link to verify password change
-          emailConfig.sendMail(contactOptions, function(err, res){
-            if(err){
-              console.log("error occurred ", err);
-              return res.status(200).json({
-                success: false,
-                message: "Error sending email"
-              })
-            }
+      //     //contact options include sender/receiver, subject, and text containing link to verify password
+      //     //using query params in url to store email and new hashed password of user
+      //     //when user clinks URL, redirects them to /api/setNewPassword/params route to update firestore database
+      //     const contactOptions = {
+      //       from: 'ecs193.ecommerce@gmail.com',
+      //       to: email,
+      //       subject: 'Password Recovery',
+      //       text: 'You have requested to reset/recover your password. Please click the following link to confirm password:' + 'http://' + host + '/api/setNewPassword/?'+ 'email=' + email + '&hash=' + hash
+      //     }
 
-            else{
-              console.log("email sent!");
-              return res.status(200).json({
-                success: true,
-                message: "Password recovery email sent! Click link in email to confirm password change!"
-              });
-            }
-          });
-        }
-      ], function(err, result){
-        if(err){
-          console.log("error", err);
-        }
-        else{
-          console.log("result", result);
-          return res.status(200).json({
-            success: true,
-            message: "Password recovery email sent! Click link in email to confirm password change!"
-          });
-        }
-      }); //end of async waterfall
+      //     //send email to user with link to verify password change
+      //     emailConfig.sendMail(contactOptions, function(err, res){
+      //       if(err){
+      //         console.log("error occurred ", err);
+      //         return res.status(200).json({
+      //           success: false,
+      //           message: "Error sending email"
+      //         })
+      //       }
+
+      //       else{
+      //         console.log("email sent!");
+      //         return res.status(200).json({
+      //           success: true,
+      //           message: "Password recovery email sent! Click link in email to confirm password change!"
+      //         });
+      //       }
+      //     });
+      //   }
+      // ], function(err, result){
+      //   if(err){
+      //     console.log("error", err);
+      //   }
+      //   else{
+      //     console.log("result", result);
+      //     return res.status(200).json({
+      //       success: true,
+      //       message: "Password recovery email sent! Click link in email to confirm password change!"
+      //     });
+      //   }
+      // }); //end of async waterfall
     }
   })
 })
