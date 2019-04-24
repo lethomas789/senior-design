@@ -1,5 +1,6 @@
 .order-history-item-container {
   display: flex;
+  font-family: 'Muli';
   flex-direction: column;
   margin: 0 auto;
   width: 80vw;
@@ -9,6 +10,7 @@
   display: flex;
   flex-direction: column;
   border: 1px solid grey;
+  margin-bottom: 60px;
 }
 
 .order-summary-row {
@@ -19,6 +21,7 @@
   padding-top: 10px;
   padding-bottom: 20px;
   border-bottom: 1px solid grey;
+  padding-left: 15px;
 }
 
 .order-summary-row-title {

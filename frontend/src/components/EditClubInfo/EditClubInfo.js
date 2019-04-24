@@ -107,8 +107,9 @@ class EditClubInfo extends Component {
     return (
       <div id="edit-club-info-container">
         <h1> Edit Club Info </h1>
+        
         <h6> Last Updated: {this.state.lastUpdate} </h6>
-        <h6> Last Edited By: {this.state.lastUpdateUser} </h6>
+        <h6 id="goDown"> Last Edited By: {this.state.lastUpdateUser} </h6>
 
         <form id="editClubForm">
           <TextField

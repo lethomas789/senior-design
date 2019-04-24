@@ -225,8 +225,8 @@ class AddProduct extends Component {
 
   render() {
     return (
-      <div>
-      
+      <div className = "addProductContainer">
+      {/* <Paper className="addProductPaperContainer"> */}
             <h1> Add Product </h1>
             <div className = "textForm" id="row">
               <TextField
@@ -263,6 +263,7 @@ class AddProduct extends Component {
                 required="true"
                 type="number"
                 onChange={(event) => this.setState({ productPrice: event.target.value })}
+                style={style.field}
               />
             </div>
 
@@ -276,24 +277,28 @@ class AddProduct extends Component {
                 type="number"
                 value = {this.state.stock}
                 onChange={(event) => this.setState({ stock: event.target.value })}
+                style={style.field}
               />
             </div>
 
             <FormControl component="fieldset">
-              <FormLabel component="legend">Select Product Type </FormLabel>
+            <div className = "textForm">
+              <FormLabel component="legend" style={style.field}>Select Product Type </FormLabel>
               <RadioGroup
                 aria-label="gender"
                 name="gender2"
                 value={this.state.value}
                 onChange={this.handleChange}
               >
+            
                 {/* if user selects item, hide apparel selections, toggle css */}
                 <FormControlLabel
                   control={<Radio color="primary" />}
                   value = "item"
                   label="Item"
-                  labelPlacement="start"
+                  // labelPlacement="start"
                   onChange={() => this.setState({ isApparel: false, apparelCSS: 'hideApparelSizes', itemShowStock: 'showItemStock'})}
+                  style={style.field}
                 />
 
                 {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
@@ -301,10 +306,11 @@ class AddProduct extends Component {
                     control={<Radio color="primary" />}
                     value = "apparel"
                     label="Apparel"
-                    labelPlacement="start"
+                    // labelPlacement="start"
                     onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock'})}
                 />
               </RadioGroup>
+              </div>
             </FormControl>
 
             {/* add quantity for apparel sizes, toggel visibility if selected */}
@@ -406,7 +412,7 @@ class AddProduct extends Component {
                 onUploadError={(error) => {console.log(error)}} 
               />
               </div>
-
+          
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
@@ -415,6 +421,7 @@ class AddProduct extends Component {
             </div>
 
             <Button variant = "contained" color = "primary" onClick = {this.addProduct}> Add Product  </Button>
+            {/* </Paper> */}
       </div>
     )
   }

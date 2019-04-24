@@ -1,3 +1,8 @@
+.clubHeader {
+  padding-top: 20px;
+  font-family: Comfortaa;
+}
+
 #display-clubs-container {
   height: 95vh;
   width: 80vw;
@@ -30,5 +35,5 @@
 
 .display-club-box img {
   max-width: 90%;
-  max-height: 90%;
+  /* max-height: 90%; */
 }
