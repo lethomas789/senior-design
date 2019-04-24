@@ -55,12 +55,19 @@
   min-width: 0;
 }
 
-.club-bio, .club-links, .club-meetings {
+.club-links, .club-meetings {
   width: 50ch;
   padding: 20px
 }
 
 .club-bio {
+  text-align: center;
+  vertical-align: middle;
+  grid-column: 1 / span 2;
+  grid-row: span 2;
+  padding: 65px;
+  background-color: #386FA4;
+  color: white;
 
 }
 
