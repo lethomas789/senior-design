@@ -121,6 +121,76 @@ router.post('/', (req, res) => {
         message: "Error with server"
       });
     })
-})
+});
+
+router.post('/googleSignup', (req, res) => {
+  if (req.body.params) {
+    var {
+      email,
+      firstName,
+      lastName,
+    } = req.body.params;
+
+  }
+  else {
+    var {
+      email,
+      firstName,
+      lastName,
+    } = req.body;
+  }
+
+  if (!email || !firstName || !lastName) {
+    console.log("Missing params for route.");
+    return res.json({
+      success: false,
+      message: "Missing params for route."
+    });
+  }
+
+  const userRef = db.collection('users').doc(email);
+
+  userRef.get().then(doc => {
+    if(doc.exists) {
+      console.log('Email already exists');
+      return res.json({
+        success: false,
+        message: 'Sorry, an acount with this email already exists.'
+      });
+    }
+
+    // else, email does not exist, make account
+    userRef.set({
+      name: {
+        firstName,
+        lastName
+      },
+      email,
+      isAdmin: false,
+    }, { merge: true })  // merge just in casej
+    .then(() => {
+      console.log('New account successfully made: ', email);
+      return res.json({
+        success: true,
+        message: 'Successfully made new account.',
+        email
+      });
+    })
+    .catch(err => {
+      console.log('Server error for googleSignup route:', err);
+      return res.json({
+        success: false,
+        message: 'Sorry there was a server error. Please try again later.'
+      });
+    })
+  })
+  .catch(err => {
+    console.log('Server error in google signup route:', err);
+    return res.json({
+      success: false,
+      message: 'Sorry there was a server error. Please try again later.'
+    });
+  });
+});
 
 module.exports = router;

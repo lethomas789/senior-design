@@ -133,6 +133,88 @@ router.post('/', (req, res) =>{
   });
 })
 
+router.get('/googleLogin', (req, res) => {
+  if (req.query.params) {
+    var {
+      email,
+      firstName,
+      lastName
+    } = req.query.params;
+  }
+  else {
+    var {
+      email,
+      firstName,
+      lastName
+    } = req.query;
+  }
+
+  if (!email || !firstName || !lastName) {
+    console.log("Missing params for route.");
+    return res.json({
+      success: false,
+      message: "Missing params for route."
+    });
+  }
+
+  const userRef = db.collection('users').doc(email);
+
+  userRef.get().then(doc => {
+    if(!doc.exists) {
+      console.log('No such account for provided email:', email);
+      return res.json({
+        success: false,
+        message: 'Sorry, no such account for this email.'
+      });
+    }
+
+    if(doc.data().isAdmin) {
+      db.collection('admins').doc(email).get().then(adoc => {
+        if (!adoc.exists) {
+          console.log('Server error in getting admin info');
+          return res.status(200).json({
+            success: false,
+            message: 'Server error in getting admin info' 
+          });
+        }
+        const vendors = adoc.data().vendors;
+
+        return res.status(200).json({
+          success: true,
+          message: "Login Successful!",
+          email,
+          vendors
+        });
+      })
+      .catch(err => {
+        console.log('Server error in getting admin info:', err);
+        return res.status(200).json({
+          success: false,
+          message: 'Server error in getting admin info: ' + err
+        });
+      });
+    }
+    else {
+      return res.json({
+        success: true,
+        message: 'Login successful.',
+        email
+      })
+    }
+  })
+  .catch(err => {
+    console.log('Server error in google signup route:', err);
+    return res.json({
+      success: false,
+      message: 'Sorry there was a server error. Please try again later.'
+    });
+  });
+
+
+
+
+});
+
 //extract email parameter from google oauth
 router.get('/gmail', (req,res) => {
 
