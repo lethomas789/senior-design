@@ -12,7 +12,7 @@
 #about-club-container {
   display: grid;
   /* grid-template-columns: 1.5fr 2fr; */
-  grid-template-columns: 1fr 1fr;
+  /* grid-template-columns: 1fr 1fr; */
   /* grid-template-rows: auto 80vh auto; */
   grid-template-rows: auto auto auto;
   justify-content: center;
@@ -20,6 +20,9 @@
   margin-top: 50px;
   width: 80vw;
   /* height: 95vh; */
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-row-gap: 15px;
+  grid-column-gap: 10px;
 }
 
 .club-header {
@@ -55,9 +58,9 @@
   min-width: 0;
 }
 
-.club-links, .club-meetings {
-  width: 50ch;
-  padding: 20px
+.club-meetings {
+  /* width: 50ch;
+  padding: 20px */
 }
 
 .club-bio {
@@ -72,10 +75,19 @@
 }
 
 .club-links {
+ 
+  grid-column: 3 / span 1;
+  text-align: center;
+  vertical-align: middle;
 
 }
 
 .club-meetings {
+
+  grid-column: 3 / span 1;
+  text-align: center;
+  vertical-align: middle;
+
 }
 
 /*

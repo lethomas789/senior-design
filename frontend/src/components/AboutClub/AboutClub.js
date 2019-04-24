@@ -18,7 +18,8 @@ class ClubInfo extends Component {
       <Fragment>
         <div className="club-header">{vendorName}</div>
         {/* <div className="club-bio">{bio}</div> */}
-        <ClubImages bioPictures={bioPictures} />
+        <div className = "about-club-header">
+        <ClubImages bioPictures={bioPictures} /></div>
 
         <div className="club-bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique alias libero quia!</div>
         {/* <div className="club-links">LINKS BOX</div> */}
