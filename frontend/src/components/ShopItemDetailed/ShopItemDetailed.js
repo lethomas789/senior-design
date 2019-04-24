@@ -156,7 +156,6 @@ class ApparelItemInfo extends Component {
         <p className="description">{productInfo}</p>
 
         <div className="select-container">
-          {/* TODO fix selector */}
           <form autoComplete="off">
             <FormControl className="select-size">
               <InputLabel htmlFor="select-size">Select Size</InputLabel>
@@ -333,12 +332,20 @@ class ShopItemDetailed extends Component {
   addItem = () => {
     //check if user is logged in
     if (this.state.login === false) {
-      alert("please login to add to cart");
+      this.props.notifier({
+        title: "Warning",
+        message: "Please login to add to cart.",
+        type: "warning"
+      });
     }
 
     //check if 0 products were purchased
     else if (this.state.amtPurchased <= 0) {
-      alert("Sorry, cannot add a quantity of 0.");
+      this.props.notifier({
+        title: "Warning",
+        message: "Sorry, cannot add a quantity of 0.",
+        type: "warning"
+      });
     }
 
     //check stock check for non apparel
@@ -346,7 +353,11 @@ class ShopItemDetailed extends Component {
       this.state.amtPurchased > Number(this.state.productStock) &&
       this.state.isApparel === false
     ) {
-      alert("Quantity selected exceeds stock");
+      this.props.notifier({
+        title: "Warning",
+        message: "Sorry, not enough stock.",
+        type: "warning"
+      });
     }
 
     //check apparel stock
@@ -354,9 +365,8 @@ class ShopItemDetailed extends Component {
       switch (this.state.size) {
         case "Small":
           if (this.state.amtPurchased > Number(this.state.s_stock)) {
-            // alert("Quantity exceeds stock");
             this.props.notifier({
-              title: "Error",
+              title: "Warning",
               message: "Sorry, not enough stock.",
               type: "warning"
             });
@@ -366,7 +376,7 @@ class ShopItemDetailed extends Component {
         case "Medium":
           if (this.state.amtPurchased > Number(this.state.m_stock)) {
             this.props.notifier({
-              title: "Error",
+              title: "Warning",
               message: "Sorry, not enough stock.",
               type: "warning"
             });
@@ -376,7 +386,7 @@ class ShopItemDetailed extends Component {
         case "Large":
           if (this.state.amtPurchased > Number(this.state.l_stock)) {
             this.props.notifier({
-              title: "Error",
+              title: "Warning",
               message: "Sorry, not enough stock.",
               type: "warning"
             });
@@ -396,7 +406,7 @@ class ShopItemDetailed extends Component {
         case "X-Large":
           if (this.state.amtPurchased > Number(this.state.xl_stock)) {
             this.props.notifier({
-              title: "Error",
+              title: "Warning",
               message: "Sorry, not enough stock.",
               type: "warning"
             });
@@ -496,15 +506,27 @@ class ShopItemDetailed extends Component {
                 .then(res => {
                   //after getting cart info, update redux store container
                   this.props.updateItems(res.data.data);
-                  alert("Item added to cart!");
+                  this.props.notifier({
+                    title: "Success",
+                    message: "Item added to cart.",
+                    type: "success"
+                  });
                 })
                 .catch(err => {
-                  alert(err);
+                  this.props.notifier({
+                    title: "Error",
+                    message: err,
+                    type: "danger"
+                  });
                 });
             }
           })
           .catch(err => {
-            alert(err);
+            this.props.notifier({
+              title: "Error",
+              message: err,
+              type: "danger"
+            });
           });
       } //end of else statement for isApparel
     } //end of adding item to cart
