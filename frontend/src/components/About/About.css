@@ -1,6 +1,13 @@
+.greater-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
 .about-container {
   display: grid;
-  width: 60vw;
+  width: 70vw;
   margin: 0 auto;
   grid-template-columns: 1fr 1fr 1fr;
   grid-row-gap: 15px;
@@ -19,15 +26,20 @@
 .about-main-image {
   background-image: url(../../images/ourgroup.png);
   grid-column: 1 / span 3;
-  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  /* width: 60vw; */
   /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
-  min-height: 500px; 
+  height: 500px; 
 }
 
 .about-info {
-  padding: 50px;
+  
   grid-column: 1 / span 2;
   grid-row: span 2;
+  padding: 50px;
   background-color: #386FA4;
   color: white;
 }

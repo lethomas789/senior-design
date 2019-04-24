@@ -4,6 +4,7 @@ import "./About.css";
 export default class About extends Component {
   render() {
     return (
+      <div className = "greater-container">
       <div className="about-container">
         <header className="about-header">
           <div>About Us</div>
@@ -13,7 +14,7 @@ export default class About extends Component {
           IMAGE TEXT HERE
         </div>
         <section className="about-info">
-        We are a group of Computer Science seniors and this website is our senior design final project.
+            We are a group of Computer Science seniors and this website is our senior design final project.
             From a technical standpoint, our goal was to make a site with secure end to end transactions using
             modern technologies such as React, Node, Firebase, and Google Cloud Services. 
         </section>
@@ -25,6 +26,7 @@ export default class About extends Component {
         <div className="about-bottom-image">
           BOTTOM IMAGE ------------------------------------------------------
         </div>
+      </div>
       </div>
       /*
       <div>
