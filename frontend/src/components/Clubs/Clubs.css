@@ -13,6 +13,12 @@
   margin: 0 auto;
 }
 
+.moreColls {
+  float: left;
+  width: 50%;
+  padding: 20px;
+}
+
 .clubResize {
   display: block;
   margin-left: auto;
@@ -37,10 +43,10 @@
   flex-direction: column;
   align-items: center;
   /* max-width: 400px; */
-  height: 300px;
-  margin: 80px;
+  /* height: 300px; */
+  /* margin: 80px; */
   background-color: white;
-  width: 300px;
+  /* width: 300px; */
   box-sizing: content-box;
   /* margin-bottom: 0; */
   display: -webkit-flex; /* Safari */

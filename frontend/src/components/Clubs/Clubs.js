@@ -7,7 +7,7 @@ function DisplayClub(props) {
   const { bio, vendorName, bioPicture } = props;
 
   return (
-    <div className="colls">
+    <div className="moreColls">
     <div className="roww">
     <div className="moreContainer">
    
