@@ -1,11 +1,11 @@
 .clubHeader {
-  padding-top: 20px;
+  /* padding-top: 20px; */
   font-family: 'Comfortaa';
   text-align: center;
 }
 
 #display-clubs-container {
-  padding-top: 20px;
+  
   height: 95vh;
   width: 80vw;
   display: flex;
