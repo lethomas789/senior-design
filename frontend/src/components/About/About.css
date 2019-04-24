@@ -33,25 +33,40 @@
   /* width: 60vw; */
   /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
   height: 500px; 
+  margin-bottom: 20px;
 }
 
 .about-info {
-  
+  text-align: center;
+  vertical-align: middle;
   grid-column: 1 / span 2;
   grid-row: span 2;
-  padding: 50px;
+  padding: 65px;
   background-color: #386FA4;
   color: white;
 }
+
+
 
 .about-link-box {
 }
 
 .about-link-box-1 {
+  margin-left: 20px;
+  grid-column: 3 / span 1;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #386FA4;
+  color: white;
 }
 
 .about-link-box-2 {
+  margin-left: 20px;
   grid-column: 3 / span 1;
+  text-align: center;
+  vertical-align: middle;
+  background-color: #386FA4;
+  color: white;
 }
 
 .about-contact-box {
