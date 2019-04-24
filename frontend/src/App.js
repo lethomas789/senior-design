@@ -50,7 +50,7 @@ class App extends Component {
       <Router>
         <ScrollToTop>
           <div>
-          <ButtonAppBar />
+          <ButtonAppBar notifier={this.addNotification}/>
           <Route exact path="/" component={Home} />
           <Route exact path="/about" component={About} />
           <Route exact path="/shop" component={Shop} />
