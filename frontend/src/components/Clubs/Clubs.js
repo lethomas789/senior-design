@@ -41,7 +41,7 @@ export default class Clubs extends Component {
     const { vendors } = this.state;
     return (
       <div id="display-clubs-container">
-        <h2>CLUBS</h2>
+        <h2 className = "clubHeader">CLUBS</h2>
         <div id="display-club-boxes">
           {vendors.map(vendor => (
             <DisplayClub
