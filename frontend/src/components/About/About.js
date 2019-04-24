@@ -6,17 +6,16 @@ export default class About extends Component {
     return (
       <div className="about-container">
         <header className="about-header">
-          <div>HEADER HERE</div>
-          <div>SOME SORT OF TAGLINE HERE</div>
+          <div>About Us</div>
+          {/* <div>4 students trying to inspire</div> */}
         </header>
         <div className="about-main-image">
           IMAGE TEXT HERE
         </div>
         <section className="about-info">
-          ABOUT INFO Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-          Iure dolorum neque dolore! Tempora iste in aliquam non illo nihil ut
-          eligendi nam praesentium earum. Facere dolorum praesentium adipisci
-          alias dolore.
+        We are a group of Computer Science seniors and this website is our senior design final project.
+            From a technical standpoint, our goal was to make a site with secure end to end transactions using
+            modern technologies such as React, Node, Firebase, and Google Cloud Services. 
         </section>
         <section className="about-link-box about-link-box-1">BOX 1</section>
         <section className="about-link-box about-link-box-2">BOX 2</section>

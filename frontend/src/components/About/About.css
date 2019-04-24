@@ -8,9 +8,12 @@
 }
 
 .about-header {
+  padding-top: 20px;
+  font-size: 36px;
   grid-column: 1 / span 3;
   justify-self: center;
   justify-items: center;
+  font-family: 'Comfortaa', sans-serif;
 }
 
 .about-main-image {
@@ -18,12 +21,15 @@
   grid-column: 1 / span 3;
   background-size: contain;
   /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
-  min-height: 800px; 
+  min-height: 500px; 
 }
 
 .about-info {
+  padding: 50px;
   grid-column: 1 / span 2;
   grid-row: span 2;
+  background-color: #386FA4;
+  color: white;
 }
 
 .about-link-box {
@@ -42,8 +48,6 @@
 .about-bottom-image {
   grid-column: 2 / span 2;
 }
-
-
 
 /*
 .aboutBox {
