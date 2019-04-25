@@ -116,7 +116,7 @@ router.get("/checkToken", (req, res) => {
     console.log("Missing params for route.");
     return res.json({
       success: false,
-      message: "Missing parmas for route"
+      message: "Missing params for route"
     });
   }
 
@@ -141,12 +141,12 @@ router.get("/checkToken", (req, res) => {
         });
       }
 
-      let email = '';
+      let email = "";
 
       // should only be one doc in snapshot
       snapshot.forEach(doc => {
         email = doc.data().email;
-      })
+      });
       // token link found
       return res.json({
         success: true,
@@ -193,21 +193,29 @@ router.post("/updatePass", (req, res) => {
       bcrypt
         .hash(newPassword, saltRounds)
         .then(hashedPassword => {
-          userRef.update({
-            password: hashedPassword,
-            resetPassToken: null,
-            resetPassExpires: null
-          });
-        })
-        .then(() => {
-          console.log("Successfully updated password.");
-          return res.json({
-            success: true,
-            message: "Successfully updated password."
-          });
+          userRef
+            .update({
+              password: hashedPassword,
+              resetPassToken: null,
+              resetPassExpires: null
+            })
+            .then(() => {
+              console.log("Successfully updated password.");
+              return res.json({
+                success: true,
+                message: "Successfully updated password."
+              });
+            })
+            .catch(err => {
+              console.log('Server error in updating DB:', err);
+              return res.json({
+                success: false,
+                message: 'Server error in updating DB: ' + err
+              });
+            });
         })
         .catch(err => {
-          console.log("Error in hashing password.");
+          console.log("Error in hashing password:", err);
           return res.json({
             success: false,
             message: "Server error in hashing password."
