@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt-nodejs");
 const saltRounds = 10;
 const Email = require("email-templates");
+require('dotenv').config();
 
 router.post("/", (req, res) => {
   if (req.body.params) {
@@ -77,8 +78,8 @@ router.post("/", (req, res) => {
           // uncomment when actually sending emails
           service: "gmail",
           auth: {
-            user: "ecs193.ecommerce@gmail.com",
-            pass: "193ecommerce"
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS,
           }
         }
       });
