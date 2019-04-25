@@ -11,8 +11,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
-import {Link, withRouter} from 'react-router-dom';
-
+import { Link, withRouter } from "react-router-dom";
 
 class CarouselImage extends Component {
   handleClick = () => {
@@ -26,9 +25,7 @@ class CarouselImage extends Component {
       <img
         key={index}
         data-index={index}
-        className={
-          isActive ? "selected-carousel-img" : "carousel-img"
-        }
+        className={isActive ? "selected-carousel-img" : "carousel-img"}
         src={src}
         alt={`Product Img${index}`}
         onClick={this.handleClick}
@@ -125,7 +122,7 @@ class ApparelItemInfo extends Component {
     addItem: PropTypes.func.isRequired,
     displayApparelStock: PropTypes.func.isRequired,
     size: PropTypes.string.isRequired,
-    clubName: PropTypes.func.isRequired
+    clubName: PropTypes.string.isRequired
   };
 
   render() {
@@ -149,7 +146,11 @@ class ApparelItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayApparelStock()}
           <p>
-            <b>Club</b>: <Link to = {`/vendorProducts/${this.props.vendorID}`}> {clubName} </Link>
+            <b>Club</b>:{" "}
+            <Link to={`/vendorProducts/${this.props.vendorID}`}>
+              {" "}
+              {clubName}{" "}
+            </Link>
           </p>
         </div>
         <p className="description">{productInfo}</p>
@@ -200,7 +201,6 @@ class ApparelItemInfo extends Component {
 }
 
 class ItemInfo extends Component {
-
   //props for ItemInfo
   static propTypes = {
     productName: PropTypes.string.isRequired,
@@ -210,7 +210,7 @@ class ItemInfo extends Component {
     handleQuantityChange: PropTypes.func.isRequired,
     addItem: PropTypes.func.isRequired,
     displayStock: PropTypes.func.isRequired,
-    clubName: PropTypes.func.isRequired
+    clubName: PropTypes.string.isRequired
   };
 
   render() {
@@ -232,7 +232,11 @@ class ItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayStock()}
           <p>
-            <b>Club</b>: <Link to = {`/vendorProducts/${this.props.vendorID}`}> {clubName} </Link>
+            <b>Club</b>:{" "}
+            <Link to={`/vendorProducts/${this.props.vendorID}`}>
+              {" "}
+              {clubName}{" "}
+            </Link>
           </p>
         </div>
         <p className="description">{productInfo}</p>
@@ -285,8 +289,8 @@ class ShopItemDetailed extends Component {
     size: "None",
     currentImage: 0,
     vendorNames: [],
-    vid: '',
-    pid: ''
+    vid: "",
+    pid: ""
   };
 
   // TODO make this smarter
@@ -327,138 +331,188 @@ class ShopItemDetailed extends Component {
 
   //add item to user's cart
   addItem = () => {
+    console.log('BUTTON CLICKED');
     //check if user is logged in
     if (this.state.login === false) {
       alert("please login to add to cart");
-    } 
-    
+    }
+
     //check if 0 products were purchased
     else if (this.state.amtPurchased <= 0) {
       alert("Sorry, cannot add a quantity of 0.");
     }
 
     //check stock check for non apparel
-    else if (this.state.amtPurchased > Number(this.state.productStock) && this.state.isApparel === false){
+    else if (
+      this.state.amtPurchased > Number(this.state.productStock) &&
+      this.state.isApparel === false
+    ) {
       alert("Quantity selected exceeds stock");
     }
 
     //check apparel stock
-    if (this.state.isApparel === true){
-      switch(this.state.size) {
-        case 'Small':
-          if(this.state.amtPurchased > Number(this.state.s_stock)){
-            alert("Quantity exceeds stock");
+    if (this.state.isApparel === true) {
+      switch (this.state.size) {
+        case "Small":
+          if (this.state.amtPurchased > Number(this.state.s_stock)) {
+            // alert("Quantity exceeds stock");
+            this.props.notifier({
+              title: "Error",
+              message: "Sorry, not enough stock.",
+              type: "warning"
+            });
           }
-        case 'Medium':
-          if(this.state.amtPurchased > Number(this.state.m_stock)){
-            alert("Quantity exceeds stock");
-          }
+          break;
 
-        case 'Large':
-          if(this.state.amtPurchased > Number(this.state.l_stock)){
-            alert("Quantity exceeds stock");
+        case "Medium":
+          if (this.state.amtPurchased > Number(this.state.m_stock)) {
+            this.props.notifier({
+              title: "Error",
+              message: "Sorry, not enough stock.",
+              type: "warning"
+            });
           }
+          else {
+            // TODO add item
 
-        case 'X-Small':
-          if(this.state.amtPurchased > Number(this.state.xs_stock)){
-            alert("Quantity exceeds stock");
           }
+          break;
 
-        case 'X-Large':
-          if(this.state.amtPurchased > Number(this.state.xl_stock)){
-            alert("Quantity exceeds stock");
+        case "Large":
+          if (this.state.amtPurchased > Number(this.state.l_stock)) {
+            this.props.notifier({
+              title: "Error",
+              message: "Sorry, not enough stock.",
+              type: "warning"
+            });
           }
+          break;
+
+        case "X-Small":
+          if (this.state.amtPurchased > Number(this.state.xs_stock)) {
+            this.props.notifier({
+              title: "Error",
+              message: "Sorry, not enough stock.",
+              type: "warning"
+            });
+          }
+          break;
+
+        case "X-Large":
+          if (this.state.amtPurchased > Number(this.state.xl_stock)) {
+            this.props.notifier({
+              title: "Error",
+              message: "Sorry, not enough stock.",
+              type: "warning"
+            });
+          }
+          break;
+
+        default:
+          break;
       }
     }
 
     //add to user's cart
     else {
-        //update user's cart on server
-        var apiURL = "/api/getUserCart/addItems";
-        //item added to user's cart is not an apparel
-        if (this.state.isApparel === false) {
-          console.log("adding item");
-          axios
-            .post(apiURL, {
-              params: {
-                user: this.props.user,
-                pid: this.props.pid,
-                amtPurchased: this.state.amtPurchased,
-                vendorID: this.state.vid,
-                imageLink: this.state.imageLink,
-                isApparel: this.state.isApparel
-              }
-            })
-            .then(res => {
-              if (res.data.success === true) {
-                //after adding to item, get updated cart
-                const getCartURL = "/api/getUserCart";
-                axios
-                  .get(getCartURL, {
-                    params: {
-                      user: this.props.user
-                    }
-                  })
-                  .then(res => {
-                    //after getting cart info, update redux store container
-                    this.props.updateItems(res.data.data);
-                      alert("Item added to cart!");
-                    })
-                    .catch(err => {
-                      alert(err);
-                    });
-                }
-              })
-              .catch(err => {
-                alert(err);
-              });
-          }
-
-          //item added to user's cart is an apparel
-          else {
-            console.log("checking shirt size", this.state.size);
-            axios
-              .post(apiURL, {
-                params: {
-                  user: this.props.user,
-                  pid: this.props.pid,
-                  amtPurchased: this.state.amtPurchased,
-                  vendorID: this.state.vid,
-                  imageLink: this.state.imageLink,
-                  isApparel: this.state.isApparel,
-                  s_stock: this.state.s_stock,
-                  m_stock: this.state.m_stock,
-                  l_stock: this.state.l_stock,
-                  xs_stock: this.state.xs_stock,
-                  xl_stock: this.state.xl_stock,
-                  size: this.state.size
-                }
-              })
-              .then(res => {
-                if (res.data.success === true) {
-                  //after adding to item, get updated cart
-                  const getCartURL = "/api/getUserCart";
-                  axios
-                    .get(getCartURL, {
-                      params: {
-                        user: this.props.user
-                      }
-                    })
-                  .then(res => {
-                    //after getting cart info, update redux store container
-                    this.props.updateItems(res.data.data);
-                    alert("Item added to cart!");
-                  })
-                  .catch(err => {
-                    alert(err);
+      //update user's cart on server
+      var apiURL = "/api/getUserCart/addItems";
+      //item added to user's cart is not an apparel
+      if (this.state.isApparel === false) {
+        console.log("adding item");
+        axios
+          .post(apiURL, {
+            params: {
+              user: this.props.user,
+              pid: this.props.pid,
+              amtPurchased: this.state.amtPurchased,
+              vendorID: this.state.vid,
+              imageLink: this.state.imageLink,
+              isApparel: this.state.isApparel
+            }
+          })
+          .then(res => {
+            if (res.data.success === true) {
+              //after adding to item, get updated cart
+              const getCartURL = "/api/getUserCart";
+              axios
+                .get(getCartURL, {
+                  params: {
+                    user: this.props.user
+                  }
+                })
+                .then(res => {
+                  //after getting cart info, update redux store container
+                  this.props.updateItems(res.data.data);
+                  this.props.notifier({
+                    title: "Success",
+                    message: "Item added to cart.",
+                    type: "success"
                   });
-              }
-            })
-            .catch(err => {
-              alert(err);
+                })
+                .catch(err => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: err,
+                    type: "danger"
+                  });
+                });
+            }
+          })
+          .catch(err => {
+            this.props.notifier({
+              title: "Error",
+              message: err,
+              type: "danger"
             });
-        } //end of else statement for isApparel
-      }//end of adding item to cart
+          });
+      }
+
+      //item added to user's cart is an apparel
+      else {
+        console.log("checking shirt size", this.state.size);
+        axios
+          .post(apiURL, {
+            params: {
+              user: this.props.user,
+              pid: this.props.pid,
+              amtPurchased: this.state.amtPurchased,
+              vendorID: this.state.vid,
+              imageLink: this.state.imageLink,
+              isApparel: this.state.isApparel,
+              s_stock: this.state.s_stock,
+              m_stock: this.state.m_stock,
+              l_stock: this.state.l_stock,
+              xs_stock: this.state.xs_stock,
+              xl_stock: this.state.xl_stock,
+              size: this.state.size
+            }
+          })
+          .then(res => {
+            if (res.data.success === true) {
+              //after adding to item, get updated cart
+              const getCartURL = "/api/getUserCart";
+              axios
+                .get(getCartURL, {
+                  params: {
+                    user: this.props.user
+                  }
+                })
+                .then(res => {
+                  //after getting cart info, update redux store container
+                  this.props.updateItems(res.data.data);
+                  alert("Item added to cart!");
+                })
+                .catch(err => {
+                  alert(err);
+                });
+            }
+          })
+          .catch(err => {
+            alert(err);
+          });
+      } //end of else statement for isApparel
+    } //end of adding item to cart
   }; //end of addItem function
 
   //increase number of quantity to add to user's cart
@@ -505,14 +559,14 @@ class ShopItemDetailed extends Component {
 
   //load item info by calling getProductInfo api and render to screen
   componentDidMount() {
-
     //get list of vendor names
     const vendorAPI = "/api/getVendorInfo";
 
     //update state of vendors
-    axios.get(vendorAPI)
+    axios
+      .get(vendorAPI)
       .then(res => {
-        if(res.data.success === true){
+        if (res.data.success === true) {
           //update list of vendors
           this.setState({
             vendorNames: res.data.vendors
@@ -531,7 +585,7 @@ class ShopItemDetailed extends Component {
           this.setState({
             vid: handle.vid,
             pid: handle.pid
-          })
+          });
 
           //obtain item info from server based on matching pid
           //pid extracted from handle match object params
@@ -545,14 +599,13 @@ class ShopItemDetailed extends Component {
             .then(res => {
               //if successfully got product info, update component
               if (res.data.success === true) {
-                
                 //get club name for this product
                 var vendorName = "";
 
                 //go through each vendor and check if vid matches item vid
-                for(let i = 0; i < this.state.vendorNames.length; i++){
+                for (let i = 0; i < this.state.vendorNames.length; i++) {
                   //extract matching vid
-                  if(this.state.vendorNames[i].vid === res.data.product.vid){
+                  if (this.state.vendorNames[i].vid === res.data.product.vid) {
                     vendorName = this.state.vendorNames[i].vendorName;
                   }
                 }
@@ -590,12 +643,12 @@ class ShopItemDetailed extends Component {
             .catch(err => {
               alert(err);
             });
-              }
-            })
-            //catch error for getting vendors
-            .catch(err => {
-              alert(err);
-            })    
+        }
+      })
+      //catch error for getting vendors
+      .catch(err => {
+        alert(err);
+      });
   }
 
   render() {
@@ -611,8 +664,8 @@ class ShopItemDetailed extends Component {
             addItem={this.addItem}
             displayStock={this.displayStock}
             amtPurchased={this.state.amtPurchased}
-            clubName = {this.state.vendor}
-            vendorID = {this.props.vendorID}
+            clubName={this.state.vendor}
+            vendorID={this.props.vendorID}
           />
         </section>
       );
@@ -631,7 +684,7 @@ class ShopItemDetailed extends Component {
             amtPurchased={this.state.amtPurchased}
             size={this.state.size}
             clubName={this.state.vendor}
-            vendorID = {this.props.vendorID}
+            vendorID={this.props.vendorID}
           />
         </section>
       );
@@ -661,11 +714,11 @@ const mapDispatchToProps = dispatch => {
         cart: response
       }),
 
-    updateVendor: newVendor => 
+    updateVendor: newVendor =>
       dispatch({
         type: actions.GET_VENDOR_PRODUCTS,
         vendor: newVendor
-      }),
+      })
   };
 };
 

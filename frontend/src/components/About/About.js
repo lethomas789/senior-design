@@ -10,7 +10,7 @@ export default class About extends Component {
           <div>SOME SORT OF TAGLINE HERE</div>
         </header>
         <div className="about-main-image">
-          IMAGE TEXT HERE
+          CROP THE IMAGE LATER
         </div>
         <section className="about-info">
           ABOUT INFO Lorem ipsum dolor sit amet, consectetur adipisicing elit.
