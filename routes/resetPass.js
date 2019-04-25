@@ -57,8 +57,8 @@ router.post("/", (req, res) => {
         `You are receiving this email because you (or someone else) has
         request the reset of the password for your account.\n` +
         `Please click on the following link within one hour of receiving it: ` +
-        // TODO LINK
-        'http://localhost:3000/inputNewPassword/' + token + '\n' + 
+        // TODO LINK, right now set to localhost but need to change to host from req.headers.host
+        'http://localhost:3000/inputNewPassword/?token=' + token + '\n' + 
         `If you did not request this, please ignore this email and your
         password will remain unchanged.\n`;
 
