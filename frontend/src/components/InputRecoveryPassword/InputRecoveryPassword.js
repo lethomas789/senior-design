@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Button from '@material-ui/core/Button';
 import axios from 'axios';
+import queryString from 'query-string';
 
 class InputRecoveryPassword extends Component {
 
@@ -15,9 +16,20 @@ class InputRecoveryPassword extends Component {
 
   componentDidMount() {
     //check token from query param in url
-    console.log("checking token");
+
+    //extract query string param for token
+    var queryParseParams = queryString.parse(this.props.location.search);
+
+    console.log(queryParseParams);
+    var token = queryParseParams.token;
+    
+
     const apiURL = '/api/resetPass/checkToken';
-    axios.get(apiURL)
+    axios.get(apiURL, {
+      params:{
+        resetPassToken: token
+      }
+    })
       .then(res => {
         //get email from matching token in database
         if(res.data.success === true){
@@ -34,6 +46,7 @@ class InputRecoveryPassword extends Component {
 
   //check reset token 
   updatePassword = () => {
+    console.log("updating password");
     //input checks for matching passwords and min/max length
     if(this.state.password != this.state.confirmPassword){
       alert("Passwords do not match");
@@ -47,7 +60,7 @@ class InputRecoveryPassword extends Component {
 
     //check token from query param in url
     //after getting email from database and user inputs new password, update new password
-    axios.get('/api/resetPass/updatePass', {
+    axios.post('/api/resetPass/updatePass', {
       params:{
         email: this.state.email,
         newPassword: this.state.password

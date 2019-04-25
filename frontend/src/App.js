@@ -85,7 +85,7 @@ class App extends Component {
           <Route exact path="/clubs" component={Clubs} />
           <Route exact path="/accountInfo" component = {AccountInfo}/>
           <Route exact path="/recoverPassword" component = {RecoverPassword}/>
-          <Route path = "/inputNewPassword" component = {InputRecoveryPassword}/>
+          <Route path = "/inputNewPassword/" component = {InputRecoveryPassword}/>
           <Footer />
         <ReactNotification ref={this.notificationDOMRef} />
         </div>

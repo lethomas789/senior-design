@@ -114,7 +114,6 @@ router.post("/", (req, res) => {
 });
 
 router.get("/checkToken", (req, res) => {
-  console.log(req);
   if (req.query.params) {
     var { resetPassToken } = req.query.params;
   } else {
