@@ -53,7 +53,7 @@ router.post("/", (req, res) => {
       const emailSubject = "ECS 193 Ecommerce Reset Password";
       const body =
         `You are receiving this email because you (or someone else) has
-        request the reset of the password for your account.\n` +
+        requested a password reset for your account.\n` +
         `Please click on the following link within one hour of receiving it: ` +
         // TODO LINK
         `If you did not request this, please ignore this email and your
@@ -67,7 +67,7 @@ router.post("/", (req, res) => {
           to: email
         },
         send: true, // set send to true when not testing
-        preview: false, // TODO turn off preview before production
+        // preview: false, // TODO turn off preview before production
 
         transport: {
           // uncomment when actually sending emails
@@ -82,7 +82,7 @@ router.post("/", (req, res) => {
       resetPassEmail
         .send({
           // TODO template, and hide email info
-          template: "ordersNotification",
+          template: "resetPass",
           locals: {
             body: body
           }
@@ -190,9 +190,15 @@ router.post("/updatePass", (req, res) => {
         });
       }
 
-      bcrypt
-        .hash(newPassword, saltRounds)
-        .then(hashedPassword => {
+      // password hashing
+      bcrypt.genSalt(saltRounds, (err, salt) => {
+        bcrypt.hash(newPassword, salt, null, (err, hashedPassword) => {
+          if (err) {
+            return res.json({
+              success: false,
+              message: "Server error hashing password"
+            });
+          }
           userRef
             .update({
               password: hashedPassword,
@@ -207,20 +213,14 @@ router.post("/updatePass", (req, res) => {
               });
             })
             .catch(err => {
-              console.log('Server error in updating DB:', err);
+              console.log("Server error in updating DB:", err);
               return res.json({
                 success: false,
-                message: 'Server error in updating DB: ' + err
+                message: "Server error in updating DB: " + err
               });
             });
-        })
-        .catch(err => {
-          console.log("Error in hashing password:", err);
-          return res.json({
-            success: false,
-            message: "Server error in hashing password."
-          });
         });
+      }); // end bcrypt.genSalt
     })
     .catch(err => {
       console.log("Error in reset pass route:", err);
