@@ -51,11 +51,15 @@ router.post("/", (req, res) => {
 
       // once obtained the orders
       const emailSubject = "ECS 193 Ecommerce Reset Password";
-      const body =
+      const intro =
         `You are receiving this email because you (or someone else) has
         requested a password reset for your account.\n` +
-        `Please click on the following link within one hour of receiving it: ` +
-        // TODO LINK
+        `Please click on the following link within one hour of receiving it: `;
+      
+      const link = 
+        `http://localhost:3000/inputNewPassword/?token=${token} \n\n`;
+
+      const introEnd = 
         `If you did not request this, please ignore this email and your
         password will remain unchanged.\n`;
 
@@ -84,7 +88,9 @@ router.post("/", (req, res) => {
           // TODO template, and hide email info
           template: "resetPass",
           locals: {
-            body: body
+            intro,
+            link,
+            introEnd,
           }
         })
         .then(() => {
