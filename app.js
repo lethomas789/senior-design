@@ -49,6 +49,7 @@ const paypalSandbox = require('./routes/paypalSandbox');
 const orders = require('./routes/orders');
 const getProductInfo = require('./routes/getProductInfo');
 const stock = require('./routes/stock');
+const resetPass = require('./routes/resetPass');
 
 app.use('/api/users', users);
 app.use('/api/signup', signup);
@@ -64,6 +65,7 @@ app.use('/api/paypalSandbox', paypalSandbox);
 app.use('/api/orders', orders);
 app.use('/api/getProductInfo', getProductInfo);
 app.use('/api/stock', stock);
+app.use('/api/resetPass', resetPass);
 
 //fix react app crashing on refresh
 app.get('*', (req,res) => {
