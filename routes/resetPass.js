@@ -8,6 +8,7 @@ const crypto = require("crypto");
 const bcrypt = require("bcrypt-nodejs");
 const saltRounds = 10;
 const Email = require("email-templates");
+require('dotenv').config();
 
 router.post("/", (req, res) => {
   // var host = req.headers.host;
@@ -53,12 +54,15 @@ router.post("/", (req, res) => {
 
       // once obtained the orders
       const emailSubject = "ECS 193 Ecommerce Reset Password";
-      const body =
+      const intro =
         `You are receiving this email because you (or someone else) has
-        request the reset of the password for your account.\n` +
-        `Please click on the following link within one hour of receiving it: ` +
-        // TODO LINK, right now set to localhost but need to change to host from req.headers.host
-        'http://localhost:3000/inputNewPassword/?token=' + token + '\n' + 
+        requested a password reset for your account.\n` +
+        `Please click on the following link within one hour of receiving it: `;
+      
+      const link = 
+        `http://localhost:3000/inputNewPassword/?token=${token} \n\n`;
+
+      const introEnd = 
         `If you did not request this, please ignore this email and your
         password will remain unchanged.\n`;
 
@@ -70,8 +74,8 @@ router.post("/", (req, res) => {
           to: email
         },
         send: true, // set send to true when not testing
-        preview: false, // TODO turn off preview before production
- 
+        // preview: false, // TODO turn off preview before production
+
 
         transport: {
           tls: {
@@ -81,8 +85,8 @@ router.post("/", (req, res) => {
           // uncomment when actually sending emails
           service: "gmail",
           auth: {
-            user: "ecs193.ecommerce@gmail.com",
-            pass: "193ecommerce"
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS,
           }
         }
       });
@@ -90,9 +94,11 @@ router.post("/", (req, res) => {
       resetPassEmail
         .send({
           // TODO template, and hide email info
-          template: "ordersNotification",
+          template: "resetPass",
           locals: {
-            body: body
+            intro,
+            link,
+            introEnd,
           }
         })
         .then(() => {
@@ -124,7 +130,7 @@ router.get("/checkToken", (req, res) => {
     console.log("Missing params for route.");
     return res.json({
       success: false,
-      message: "Missing parmas for route"
+      message: "Missing params for route"
     });
   }
 
@@ -149,12 +155,12 @@ router.get("/checkToken", (req, res) => {
         });
       }
 
-      let email = '';
+      let email = "";
 
       // should only be one doc in snapshot
       snapshot.forEach(doc => {
         email = doc.data().email;
-      })
+      });
       // token link found
       return res.json({
         success: true,
@@ -198,29 +204,37 @@ router.post("/updatePass", (req, res) => {
         });
       }
 
-      bcrypt
-        .hash(newPassword, saltRounds)
-        .then(hashedPassword => {
-          userRef.update({
-            password: hashedPassword,
-            resetPassToken: null,
-            resetPassExpires: null
-          });
-        })
-        .then(() => {
-          console.log("Successfully updated password.");
-          return res.json({
-            success: true,
-            message: "Successfully updated password."
-          });
-        })
-        .catch(err => {
-          console.log("Error in hashing password.");
-          return res.json({
-            success: false,
-            message: "Server error in hashing password."
-          });
+      // password hashing
+      bcrypt.genSalt(saltRounds, (err, salt) => {
+        bcrypt.hash(newPassword, salt, null, (err, hashedPassword) => {
+          if (err) {
+            return res.json({
+              success: false,
+              message: "Server error hashing password"
+            });
+          }
+          userRef
+            .update({
+              password: hashedPassword,
+              resetPassToken: null,
+              resetPassExpires: null
+            })
+            .then(() => {
+              console.log("Successfully updated password.");
+              return res.json({
+                success: true,
+                message: "Successfully updated password."
+              });
+            })
+            .catch(err => {
+              console.log("Server error in updating DB:", err);
+              return res.json({
+                success: false,
+                message: "Server error in updating DB: " + err
+              });
+            });
         });
+      }); // end bcrypt.genSalt
     })
     .catch(err => {
       console.log("Error in reset pass route:", err);
