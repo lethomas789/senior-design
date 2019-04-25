@@ -345,40 +345,46 @@ class ButtonAppBar extends Component {
               )}
               
               {/* ACCOUNT BUTTON? */}
-              <Button
-                aria-haspopup="true"
-                onClick={this.handleAccountClick}
-                style={{ color: "white", fontFamily: "Raleway" }}
-              >
-                Account
-              </Button>
-                
-              <Menu
-                anchorEl={anchorElAccount}
-                open={Boolean(anchorElAccount)}
-                onClose={this.handleMenuCloseAccount}
-              >
-                <MenuItem
-                  component={Link}
-                  to={orderHistoryRoute}
-                  color="inherit"
-                  onClick={this.handleMenuCloseAccount}
+              {this.props.loginValue ? (
+                <Fragment>
+                  <Button
+                  aria-haspopup="true"
+                  onClick={this.handleAccountClick}
+                  style={{ color: "white", fontFamily: "Raleway" }}
+                  >
+                  Account
+                </Button>
+                  
+                <Menu
+                  anchorEl={anchorElAccount}
+                  open={Boolean(anchorElAccount)}
+                  onClose={this.handleMenuCloseAccount}
                 >
-                  {" "}
-                  Order History{" "}
-                </MenuItem>
+                  <MenuItem
+                    component={Link}
+                    to={orderHistoryRoute}
+                    color="inherit"
+                    onClick={this.handleMenuCloseAccount}
+                  >
+                    {" "}
+                    Order History{" "}
+                  </MenuItem>
 
-                <MenuItem
-                  component={Link}
-                  to={accountInfoRoute}
-                  color="inherit"
-                  onClick={this.handleMenuCloseAccount}
-                >
-                  {" "}
-                  Account Info {" "}
-                </MenuItem>
-              </Menu>
-
+                  <MenuItem
+                    component={Link}
+                    to={accountInfoRoute}
+                    color="inherit"
+                    onClick={this.handleMenuCloseAccount}
+                  >
+                    {" "}
+                    Account Info {" "}
+                  </MenuItem>
+                </Menu>
+              </Fragment>
+              ) : (
+                <Fragment/>
+              )}
+              
               {/*LOGIN/LOGOUT BUTTON*/}
               <Button
                 style={{ fontFamily: "Raleway" }}

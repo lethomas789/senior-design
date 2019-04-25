@@ -17,6 +17,8 @@ import ShopItemDetailed from './components/ShopItemDetailed/ShopItemDetailed';
 import EditItemView from './components/EditItemView/EditItemView';
 import Footer from './components/Footer/Footer';
 import AccountInfo from './components/AccountInfo/AccountInfo';
+import RecoverPassword from './components/RecoverPassword/RecoverPassword';
+import InputRecoveryPassword from './components/InputRecoveryPassword/InputRecoveryPassword';
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -82,6 +84,8 @@ class App extends Component {
           <Route exact path="/editItem" component = {EditItemView}/>
           <Route exact path="/clubs" component={Clubs} />
           <Route exact path="/accountInfo" component = {AccountInfo}/>
+          <Route exact path="/recoverPassword" component = {RecoverPassword}/>
+          <Route path = "/inputNewPassword/:id" component = {InputRecoveryPassword}/>
           <Footer />
         <ReactNotification ref={this.notificationDOMRef} />
         </div>

@@ -15,7 +15,7 @@ import { withStyles } from '@material-ui/core/styles';
 import CircularProgress from '@material-ui/core/CircularProgress';
 import PropTypes from 'prop-types';
 import painting from '../../images/painting.jpg';
-import {withRouter} from 'react-router-dom';
+import {Link, withRouter} from 'react-router-dom';
 
 const styles = theme => ({
     progress: {
@@ -274,26 +274,29 @@ class Login extends Component{
                             onChange={(event) => this.setState({ password: event.target.value })}
                             onKeyDown = {this.handleEnter}
                             />
+                            <Link to = "/recoverPassword"> <h6> Recover Password </h6> </Link>
                         </div>
 
                         <div className = "pushDown">
-                        <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
+                            <Button variant = "contained" color = "primary" onClick = {this.sendLogin}> Login  </Button>
                         </div>
-			<div className = "pushDown2">
-				<GoogleLogin clientId="409029968816-1bf8e3qtt6jb2ivj9udb1qata3q0bdrc.apps.googleusercontent.com"
-				buttononText="Login"
-				onSuccess={this.responseGoogle}
-				onFailure={this.responseGoogle}
-				cookiePolicy={'single_host_origin'}
-				/>
-			</div>
+                        
+
+                        <div className = "pushDown2">
+                            <GoogleLogin clientId="409029968816-1bf8e3qtt6jb2ivj9udb1qata3q0bdrc.apps.googleusercontent.com"
+                            buttononText="Login"
+                            onSuccess={this.responseGoogle}
+                            onFailure={this.responseGoogle}
+                            cookiePolicy={'single_host_origin'}
+                            />
+                        </div>
                     </Paper>
                  
-                    <div className = "progressContainer">
+                    {/* <div className = "progressContainer">
                         <div className = "circle">
                             <CircularProgress className = "loadingCircle" size = {80} variant = {this.state.progressVariant} value = {this.state.progressValue} className = {classes.progress}/>
                         </div>
-                    </div>
+                    </div> */}
 
                     <Dialog open = {this.state.open} onClose = {this.handleClose} aria-describedby = "alert-dialog-description">
                         <DialogContent>
