@@ -11,6 +11,8 @@ const Email = require("email-templates");
 require('dotenv').config();
 
 router.post("/", (req, res) => {
+  // var host = req.headers.host;
+  var host = 'localhost:3000'
   if (req.body.params) {
     var { email } = req.body.params;
   } else {
@@ -42,7 +44,7 @@ router.post("/", (req, res) => {
       const time = new Date(now + 3600000);
       // console.log('time is:', time.toString());
 
-      // console.log("Reset token is:", token);
+      console.log("Reset token is:", token);
       console.log("Time is:", time);
       userRef.update({
         resetPassToken: token,
@@ -74,7 +76,12 @@ router.post("/", (req, res) => {
         send: true, // set send to true when not testing
         // preview: false, // TODO turn off preview before production
 
+
         transport: {
+          tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
+          },
           // uncomment when actually sending emails
           service: "gmail",
           auth: {

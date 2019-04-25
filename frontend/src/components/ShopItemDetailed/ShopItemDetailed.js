@@ -329,6 +329,51 @@ class ShopItemDetailed extends Component {
     return <span className="stock">{text}</span>;
   };
 
+  addApparelToCart = () => {
+    const apiURL = '/api/getUserCart/addItems';
+    console.log("checking shirt size", this.state.size);
+    axios
+      .post(apiURL, {
+        params: {
+          user: this.props.user,
+          pid: this.props.pid,
+          amtPurchased: this.state.amtPurchased,
+          vendorID: this.state.vid,
+          imageLink: this.state.imageLink,
+          isApparel: this.state.isApparel,
+          s_stock: this.state.s_stock,
+          m_stock: this.state.m_stock,
+          l_stock: this.state.l_stock,
+          xs_stock: this.state.xs_stock,
+          xl_stock: this.state.xl_stock,
+          size: this.state.size
+        }
+      })
+      .then(res => {
+        if (res.data.success === true) {
+          //after adding to item, get updated cart
+          const getCartURL = "/api/getUserCart";
+          axios
+            .get(getCartURL, {
+              params: {
+                user: this.props.user
+              }
+            })
+            .then(res => {
+              //after getting cart info, update redux store container
+              this.props.updateItems(res.data.data);
+              alert("Item added to cart!");
+            })
+            .catch(err => {
+              alert(err);
+            });
+          }
+        })
+        .catch(err => {
+          alert(err);
+        });
+  }
+
   //add item to user's cart
   addItem = () => {
     console.log('BUTTON CLICKED');
@@ -362,6 +407,10 @@ class ShopItemDetailed extends Component {
               type: "warning"
             });
           }
+          //add item to cart
+          else{
+            this.addApparelToCart();
+          }
           break;
 
         case "Medium":
@@ -374,7 +423,7 @@ class ShopItemDetailed extends Component {
           }
           else {
             // TODO add item
-
+            this.addApparelToCart();
           }
           break;
 
@@ -386,6 +435,10 @@ class ShopItemDetailed extends Component {
               type: "warning"
             });
           }
+
+          else{
+            this.addApparelToCart();
+          }
           break;
 
         case "X-Small":
@@ -396,6 +449,10 @@ class ShopItemDetailed extends Component {
               type: "warning"
             });
           }
+
+          else{
+            this.addApparelToCart();
+          }
           break;
 
         case "X-Large":
@@ -405,6 +462,10 @@ class ShopItemDetailed extends Component {
               message: "Sorry, not enough stock.",
               type: "warning"
             });
+          }
+
+          else{
+            this.addApparelToCart();
           }
           break;
 
