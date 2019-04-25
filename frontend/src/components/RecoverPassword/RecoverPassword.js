@@ -24,15 +24,16 @@ class RecoverPassword extends Component {
   //function called when clicking recover password
   sendRecoverEmail = () => {
     //get request to send email with password
-    const apiURL = '/api/recoverPassword';
+    const apiURL = '/api/resetPass';
     console.log("this is the input of the user's email", this.state.email);
     alert("Sending email to user, check your inbox for verification link!");
-    axios.patch(apiURL, {
+    axios.post(apiURL, {
       params:{
         email: this.state.email
       }
     })
     .then(res => {
+      console.log(res.data);
       if(res.data.success === true){
         alert(res.data.message);
       }

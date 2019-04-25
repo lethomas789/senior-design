@@ -10,6 +10,8 @@ const saltRounds = 10;
 const Email = require("email-templates");
 
 router.post("/", (req, res) => {
+  // var host = req.headers.host;
+  var host = 'localhost:3000'
   if (req.body.params) {
     var { email } = req.body.params;
   } else {
@@ -41,7 +43,7 @@ router.post("/", (req, res) => {
       const time = new Date(now + 3600000);
       // console.log('time is:', time.toString());
 
-      // console.log("Reset token is:", token);
+      console.log("Reset token is:", token);
       console.log("Time is:", time);
       userRef.update({
         resetPassToken: token,
@@ -56,6 +58,7 @@ router.post("/", (req, res) => {
         request the reset of the password for your account.\n` +
         `Please click on the following link within one hour of receiving it: ` +
         // TODO LINK
+        'http://localhost:3000/inputNewPassword/' + token + '\n' + 
         `If you did not request this, please ignore this email and your
         password will remain unchanged.\n`;
 
@@ -68,8 +71,13 @@ router.post("/", (req, res) => {
         },
         send: true, // set send to true when not testing
         preview: false, // TODO turn off preview before production
+ 
 
         transport: {
+          tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
+          },
           // uncomment when actually sending emails
           service: "gmail",
           auth: {
@@ -106,6 +114,7 @@ router.post("/", (req, res) => {
 });
 
 router.get("/checkToken", (req, res) => {
+  console.log(req);
   if (req.query.params) {
     var { resetPassToken } = req.query.params;
   } else {
