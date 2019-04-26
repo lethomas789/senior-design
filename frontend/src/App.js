@@ -20,6 +20,7 @@ import Footer from "./components/Footer/Footer";
 import AccountInfo from "./components/AccountInfo/AccountInfo";
 import RecoverPassword from "./components/RecoverPassword/RecoverPassword";
 import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecoveryPassword";
+import CartView from "./components/CartView/CartView";
 
 
 import { createBrowserHistory } from "history";
@@ -70,7 +71,7 @@ class App extends Component {
           />
 
 
-          <Route exact path="/cart" component={Cart} />
+          <Route exact path="/cart" component={CartView} />
           <Route path="/vendorProducts/:vid" component={VendorView} />
           <Route exact path="/abcdefg/vendorSignup" component={VendorSignup} />
           <Route
