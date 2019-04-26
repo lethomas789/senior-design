@@ -60,11 +60,18 @@ class Signup extends Component {
     });
 
     if (this.state.password != this.state.confirmPassword) {
+      /*
       this.setState({
         open: true,
         progressValue: 0,
         progressVariant: "determinate",
         responseMessage: "Passwords do not match!"
+      });
+      */
+      this.props.notifier({
+        title: "Error",
+        message: "Passwords do not match.",
+        type: "warning"
       });
     } else {
       const apiURL = "/api/signup";
@@ -81,27 +88,43 @@ class Signup extends Component {
         .then(res => {
           //if signup is successful, display success message
           if (res.data.success === true) {
-            this.setState({
-              open: true,
-              progressValue: 0,
-              progressVariant: "determinate",
-              responseMessage: "Signup successful! Please login!",
-              success: true
+            // this.setState({
+            //   open: true,
+            //   progressValue: 0,
+            //   progressVariant: "determinate",
+            //   responseMessage: "Signup successful! Please login!",
+            //   success: true
+            // });
+            this.props.notifier({
+              title: "Success",
+              message: "Signup successful, please login.",
+              type: "success"
             });
           }
 
           //display error message
           else {
+            /*
             this.setState({
               open: true,
               progressValue: 0,
               progressVariant: "determinate",
               responseMessage: res.data.message
             });
+            */
+            this.props.notifier({
+              title: "Error",
+              message: res.data.message + " Please try again.",
+              type: "warning"
+            });
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err,
+            type: "danger"
+          });
         });
     }
   }
@@ -183,19 +206,18 @@ class Signup extends Component {
             </div>
           </Paper>
 
-          <div className="progressContainer">
+          {/* <div className="progressContainer">
             <div className="circle">
               <CircularProgress
                 className="loadingCircle"
                 size={80}
                 variant={this.state.progressVariant}
                 value={this.state.progressValue}
-                className={classes.progress}
               />
             </div>
-          </div>
+          </div> */}
 
-          <Dialog
+          {/* <Dialog
             open={this.state.open}
             onClose={this.handleClose}
             aria-describedby="alert-dialog-description"
@@ -210,7 +232,7 @@ class Signup extends Component {
                 Ok
               </Button>
             </DialogActions>
-          </Dialog>
+          </Dialog> */}
         </div>
       </div>
     );

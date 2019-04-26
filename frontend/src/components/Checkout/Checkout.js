@@ -22,11 +22,15 @@ const styles = theme => ({
 //calculate total price of user's cart and allow user to checkout
 //get user's cart info from state
 //state consists of information needed for paypal checkout
+
+//modified component to account for each vendor
+//old code takes total cart items and price
+//difference is that each vendor has its own list of items and total price of items
 class Checkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      total: this.props.total,
+      total: this.props.totalValue,
       env: "sandbox",
       currency: "USD",
       client: {
@@ -51,7 +55,8 @@ class Checkout extends Component {
         transactions: [],
         note_to_payer: "Pickup the sale at this location:" // does a popup, not incuded in transaction on paypal
       },
-      cartTotal: this.props.total
+      // cartTotal: this.props.total
+      cartTotal: this.props.totalValue
     };
   }
 
@@ -67,14 +72,14 @@ class Checkout extends Component {
     var paypalItems = [];
 
     //go through each item in redux store
-    for (let i = 0; i < this.props.cart.length; i++) {
+    for (let i = 0; i < this.props.cartItems.length; i++) {
       let paypalItem = {};
 
       //construct new paypal object based on each item in Redux store container
-      paypalItem.name = this.props.cart[i].productName;
-      paypalItem.price = String(this.props.cart[i].productPrice.toFixed(2));
+      paypalItem.name = this.props.cartItems[i].productName;
+      paypalItem.price = String(this.props.cartItems[i].productPrice.toFixed(2));
       paypalItem.currency = this.state.currency;
-      paypalItem.quantity = String(this.props.cart[i].amtPurchased);
+      paypalItem.quantity = String(this.props.cartItems[i].amtPurchased);
 
       //store
       paypalItems.push(paypalItem);
@@ -87,44 +92,50 @@ class Checkout extends Component {
     //update payment options to be list of paypal items
     paypalTransactionsArray.push(paypalTransactions);
     this.state.paymentOptions.transactions = paypalTransactionsArray;
-  }
 
-  //update payment option on update
-  componentDidUpdate() {
-    this.state.paymentOptions.transactions[0].amount.total = this.props.total;
+    //update transaction total based on total summed from items for each vendor
+    this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
     this.state.paymentOptions.transactions[0].amount.total = String(
-      this.props.total
+      this.props.totalValue
     );
   }
 
-  checkStock = (items) => {
-    alert("testing onclick");
+  // //update payment option on update
+  // componentDidUpdate() {
+  //   this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
+  //   this.state.paymentOptions.transactions[0].amount.total = String(
+  //     this.props.totalValue
+  //   );
+  // }
 
+  checkStock = () => {
     //started onclick for checking stock before purchase
     //check stock for each item
+    var items = this.props.cartItems;
     for(let i =0; i < items.length; i++){
-      axios.get('/api/stock/', {
-        params:{
-          pid: items[i].pid,
-          isApparel: items[i].isApparel,
-          size: items[i].size,
-          amt: items[i].amtPurchased
-        }
-      })
-      .then(res => {
-        if(res.data.availableStock === false){
-          alert("not enough stock on purchase");
-        }
-      })
-      .catch(err => {
-        alert(err);
-      })
+        console.log("checking stock");
+        axios.get('/api/stock/', {
+          params:{
+            pid: items[i].pid,
+            isApparel: items[i].isApparel,
+            size: items[i].size,
+            amt: items[i].amtPurchased
+          }
+        })
+        .then(res => {
+          if(res.data.availableStock === false){
+            alert("not enough stock on purchase");
+          }
+        })
+        .catch(err => {
+          alert(err);
+        })
     }
   }
 
   onSuccess = payment => {
     console.log("Payment successful!", payment);
-    this.props.updateSelectedVendor(this.props.cart[0].vid);
+    this.props.updateSelectedVendor(this.props.cartItems[0].vid);
 
     const apiURL = "/api/orders";
     
@@ -137,7 +148,7 @@ class Checkout extends Component {
         params: {
           items: this.state.paymentOptions.transactions[0].item_list.items,
           totalPrice: String(this.props.total),
-          vid: this.props.cart[0].vid,
+          vid: this.props.cartItems[0].vid,
           user: this.props.user,
           paymentID: payment.paymentID,
           payerID: payment.payerID
@@ -209,7 +220,8 @@ class Checkout extends Component {
     const { classes } = this.props;
 
     return (
-      <div onClick = {this.checkStock}>
+      <div>
+        <button onClick = {this.checkStock(this.props.items)}> Check Stock </button>
         <Fragment>
           <PaypalExpressBtn
             env={this.state.env}

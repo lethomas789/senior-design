@@ -52,7 +52,8 @@ class EditItemView extends Component {
       apparelCSS: "hideApparelSizes",
       itemStockCSS: 'showItemStock',
       images: [],
-      imageNames:[]
+      imageNames:[],
+      newImages: false
     };
   }
 
@@ -197,6 +198,9 @@ class EditItemView extends Component {
     //push values to arrays
     filesToStore.push(imageName);
     actualImages.push(files[0]);
+
+    console.log("files to store", imageName);
+    console.log("actual images", actualImages);
     
     //set state of component
     this.setState({
@@ -209,10 +213,7 @@ class EditItemView extends Component {
   updateItemInfo = () => {
     const apiURL = '/api/adminProducts/editProduct';
     var imagesToUpload;
-
-    console.log("old images", this.state.productPicture);
-    console.log("new images", this.state.images);
-    console.log("image names", this.state.imageNames);
+    var newImages = false;
 
     //if the admin did not upload anymore pictures, use old array
     if(this.state.imageNames.length === 0){
@@ -224,7 +225,7 @@ class EditItemView extends Component {
     else{
       alert("uploading new pictures");
       imagesToUpload = this.state.imageNames;
-      console.log("array of new pictures", imagesToUpload);
+      newImages = true;
     }
 
     //params for editing item
@@ -245,13 +246,15 @@ class EditItemView extends Component {
         m_stock: Number(this.state.medium),
         l_stock: Number(this.state.large),
         xs_stock: Number(this.state.xsmall),
-        xl_stock: Number(this.state.xlarge)
+        xl_stock: Number(this.state.xlarge),
+        newImages: newImages
       }
     })
 
     .then(res => {
       if(res.data.success === true && this.state.imageNames.length != 0){
         this.uploadFiles();
+        alert(res.data.message);
       }
 
       else if(res.data.success === true){
