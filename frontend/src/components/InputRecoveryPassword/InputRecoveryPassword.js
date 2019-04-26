@@ -1,6 +1,10 @@
 import React, { Component } from "react";
 import Button from "@material-ui/core/Button";
 import axios from "axios";
+import queryString from "query-string";
+import Paper from "@material-ui/core/Paper";
+import TextField from "@material-ui/core/TextField";
+import "./InputRecoveryPassword.css";
 
 class InputRecoveryPassword extends Component {
   constructor(props) {
@@ -12,11 +16,88 @@ class InputRecoveryPassword extends Component {
     };
   }
 
-  //function to handle email change on input
-  handleEmailField = event => {
-    this.setState({
-      email: event.target.value
-    });
+  componentDidMount() {
+    //check token from query param in url
+
+    //extract query string param for token
+    var queryParseParams = queryString.parse(this.props.location.search);
+
+    console.log(queryParseParams);
+    var token = queryParseParams.token;
+
+    const apiURL = "/api/resetPass/checkToken";
+    axios
+      .get(apiURL, {
+        params: {
+          resetPassToken: token
+        }
+      })
+      .then(res => {
+        //get email from matching token in database
+        if (res.data.success === true) {
+          this.setState({
+            email: res.data.email
+          });
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  }
+
+  //check reset token
+  updatePassword = () => {
+    console.log("updating password");
+    //input checks for matching passwords and min/max length
+    if (this.state.password != this.state.confirmPassword) {
+      this.props.notifier({
+        title: "Warning",
+        message: "Passwords do not match.",
+        type: "warning"
+      });
+      return;
+    } else if (
+      this.state.password.length < 8 ||
+      this.state.password.length > 20
+    ) {
+      this.props.notifier({
+        title: "Warning",
+        message:
+          "Minimum password length is 8 characters and max length is 20 characters.",
+        type: "warning"
+      });
+      return;
+    }
+
+    //check token from query param in url
+    //after getting email from database and user inputs new password, update new password
+    axios
+      .post("/api/resetPass/updatePass", {
+        params: {
+          email: this.state.email,
+          newPassword: this.state.password
+        }
+      })
+      .then(res => {
+        if (res.data.success === true) {
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
+      });
   };
 
   //change password on input
@@ -33,59 +114,38 @@ class InputRecoveryPassword extends Component {
     });
   };
 
-  //recoverPassword
-  recoverPassword = () => {
-    if (this.state.password != this.state.confirmPassword) {
-      alert("Passwords do not match");
-      return;
-    }
-
-    const apiURL = "/api/setNewPassword";
-    axios
-      .patch(apiURL, {
-        params: {
-          email: this.state.email,
-          password: this.state.password,
-          confirmPassword: this.state.confirmPassword
-        }
-      })
-      .then(res => {
-        if (res.data.success === true) {
-          alert(res.data.message);
-          this.props.history.push("/login");
-        }
-      })
-      .catch(err => {
-        alert(err);
-      });
-  };
-
   render() {
     return (
-      <div>
-        <div id="enterEmailForm">
-          <h1 id="passwordTitle"> Password Recovery </h1>
+      <div id="new-password-container">
+        <Paper className="password-paper-container">
+          <h2> Password Recovery </h2>
           <h3> Enter email and new password: </h3>
-          <form id="emailForm">
-            Email: <input onChange={this.handleEmailField} />
-            Password:{" "}
-            <input
+          <form>
+            <TextField
               label="Password"
-              type="password"
+              required="true"
               onChange={this.handlePasswordField}
-            />
-            Confirm Password:{" "}
-            <input
-              label="Confirm Password"
-              type="password"
-              onChange={this.handleConfirmPasswordField}
+              style={{ marginBottom: "20px" }}
             />
           </form>
-          <Button color="primary" onClick={this.recoverPassword}>
-            {" "}
-            Recover Password{" "}
+
+          <form>
+            <TextField
+              label="Confirm Password"
+              required="true"
+              onChange={this.handleConfirmPasswordField}
+              style={{ marginBottom: "20px" }}
+            />
+          </form>
+
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={this.updatePassword}
+          >
+            Change Password
           </Button>
-        </div>
+        </Paper>
       </div>
     );
   }

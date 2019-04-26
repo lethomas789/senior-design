@@ -25,24 +25,44 @@ class RecoverPassword extends Component {
   //function called when clicking recover password
   sendRecoverEmail = () => {
     //get request to send email with password
-    const apiURL = "/api/recoverPassword";
+    const apiURL = "/api/resetPass";
     console.log("this is the input of the user's email", this.state.email);
-    alert("Sending email to user, check your inbox for verification link!");
+    this.props.notifier({
+      title: "Success",
+      message:
+        "A password reset link has been sent to your email. Please check your inbox.",
+      type: "success"
+    });
     axios
-      .patch(apiURL, {
+      .post(apiURL, {
         params: {
           email: this.state.email
         }
       })
       .then(res => {
+        console.log(res.data);
         if (res.data.success === true) {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
         } else {
-          alert("no password for user that signed in with google");
+          // alert("no password for user that signed in with google");
+          // TODO UPDATE BACKEND TO CHECK FOR GMAIL
+          this.props.notifier({
+            title: "Warning",
+            message: "Sorry, no such account for given email.",
+            type: "warning"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
       });
   };
 
@@ -66,7 +86,7 @@ class RecoverPassword extends Component {
             color="primary"
             onClick={this.sendRecoverEmail}
             style={{
-              marginTop: "20px",
+              marginTop: "20px"
             }}
           >
             Recover Password
