@@ -51,7 +51,6 @@ router.post("/", (req, res) => {
         resetPassExpires: time
         // testTimeNow: admin.firestore.Timestamp.now()
       });
-
       // once obtained the orders
       const emailSubject = "ECS 193 Ecommerce Reset Password";
       const intro =
@@ -74,8 +73,7 @@ router.post("/", (req, res) => {
           to: email
         },
         send: true, // set send to true when not testing
-        // preview: false, // TODO turn off preview before production
-
+        preview: false, // TODO turn off preview before production
 
         transport: {
           tls: {

@@ -1,3 +1,4 @@
+
 import React, { Component } from "react";
 import { BrowserRouter as Router, Route, Link } from "react-router-dom";
 import "./App.css";
@@ -19,6 +20,7 @@ import Footer from "./components/Footer/Footer";
 import AccountInfo from "./components/AccountInfo/AccountInfo";
 import RecoverPassword from "./components/RecoverPassword/RecoverPassword";
 import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecoveryPassword";
+
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -66,6 +68,7 @@ class App extends Component {
               <Login {...props} notifier={this.addNotification} />
             )}
           />
+
 
           <Route exact path="/cart" component={Cart} />
           <Route path="/vendorProducts/:vid" component={VendorView} />

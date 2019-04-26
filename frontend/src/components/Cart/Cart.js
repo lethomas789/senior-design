@@ -16,9 +16,10 @@ class Cart extends Component {
 
     this.state = {
       total: 0,
-      cart: this.props.items,
+      cart: this.props.passedItems,
       allVendors: [],
-      vendorItemsSeparated: []
+      vendorItemsSeparated: [],
+      vendor: this.props.passedVendor
     };
   }
 
@@ -31,7 +32,10 @@ class Cart extends Component {
 
     //if cart is empty, total price is $0
     if (currentCart.length === 0) {
-      this.props.updateTotal(priceTotal);
+      this.setState({
+        total: 0
+      })
+      // this.props.updateTotal(priceTotal);
     }
 
     //if there are items, calculate total price
@@ -44,93 +48,40 @@ class Cart extends Component {
       this.setState({
         total: priceTotal
       });
-      this.props.updateTotal(priceTotal);
-      this.separateVendors();
+      // this.props.updateTotal(priceTotal);
+      // this.separateVendors();
     }
   }
 
   //update total price based on quantity 
   updateItemTotal = (pid, newTotal, amt) => {
-    for(let i = 0; i < this.state.cart.length; i++){
-      if(this.state.cart[i].pid === pid){
-        this.state.cart[i].totalPrice = newTotal;
-        this.state.cart[i].amtPurchased = amt;
+    var currentCart = this.state.cart;
+    for(let i = 0; i < currentCart.length; i++){
+      if(currentCart[i].pid === pid){
+        currentCart[i].totalPrice = newTotal;
+        currentCart[i].amtPurchased = amt;
       }
     }
 
     console.log("checking state of cart ", this.state.cart);
-
-    //update cart and total of cart
-    //this.props.updateCart(this.state.cart);
-    this.updateTotal();
-  }
-
-  //function to separate items by vendors
-  separateVendors = () => {
-    //separate payment by vid
-    //find which vendors exist, array to keep track existing vendors
-    var currentVendorArray = [];
-
-    //go through each item in user's cart, extract vid to determine how many vendors to create buttons for
-    for(let i = 0; i < this.props.items.length; i++){
-      const currentVid = this.props.items[i].vid;
-      if(currentVendorArray.includes(currentVid) === false){
-        currentVendorArray.push(currentVid);
-      }
-    }
-
-    //store result of array of vendors available
     this.setState({
-      allVendors: currentVendorArray
+      cart: currentCart
     }, () => {
-      console.log("determine which vids were found ", this.state.allVendors);
-    });
-
-    //call function to separate items based on vendor
-    this.separateItems(currentVendorArray);
-  }
-
-  //pass list of vendors to function to categorize items 
-  separateItems = (vendorList) => {
-    //array that consists of arrays of items
-    //array that holds arrays
-    var itemsArray = [];
-
-    //for each vendor in the vendor list, determine which items have matching vid and push to temp array
-    for(let i = 0; i < vendorList.length; i++){
-      //current vendor to check, temp array
-      const currentVendor = vendorList[i];
-      var currentItems = new Array();
-
-      //for each item in cart, determine which vid matches current vendor that is being checked
-      for(let j = 0; j < this.props.items.length; j++){
-        if(this.props.items[j].vid === currentVendor){
-          currentItems.push(this.props.items[j]);
-        }
-      }
-
-      //push current array of items to array of arrays
-      itemsArray.push(currentItems);
-    }
-    
-    //update state
-    this.setState({
-      vendorItemsSeparated: itemsArray
+      //update cart and total of cart
+      this.updateTotal();
     })
   }
 
   //get cart from server for user
   componentDidMount() {
-    //call function to separate vendors when component loads
-    this.separateVendors();
-
-    //for each vid create an array to 
+    //calculate running total of items
     this.updateTotal();
   }
 
   //render cart items to cart view
   render() {
-    const cart = this.props.items.map(result => {
+    //render each item in the cart
+    const cart = this.state.cart.map(result => {
       console.log("result in cart:", result);
       if (result.size === undefined) {
         return (
@@ -164,29 +115,12 @@ class Cart extends Component {
       }
     });
 
-    //render multiple checkout buttons based on 
-    const checkoutButtons = this.state.vendorItemsSeparated.map(result => {
-      console.log("checking result rendering", result);
-
-      //calculate sum of price for all items
-      var currentVendorTotal = 0;
-      for(let i = 0; i < result.length; i++){
-        currentVendorTotal += result[i].totalPrice;
-      }
-
-      //pass array of items and total price as props to each checkout component
-      return(
-        <Checkout cartItems = {result} totalValue = {currentVendorTotal}/>
-      );
-
-    })
-
     return (
       <div className="cart-table-container">
         {/* TABLE HEADERS */}
         <span className="table-header table-row">
           <span>
-            <strong>My Cart ({this.props.items.length})</strong>
+            <strong>My Cart ({this.state.cart.length})</strong>
           </span>
           <span>
             <strong>Price</strong>
@@ -206,8 +140,8 @@ class Cart extends Component {
         <div id="total-text">Total</div>
         <div id="total-price">${this.state.total}</div>
         <div id="btn-paypal">
-          {checkoutButtons}
-          {/* <Checkout cartItems = {this.state.cart} totalValue={this.state.total} /> */}
+          {/* {checkoutButtons} */}
+          <Checkout cartItems = {this.state.cart} totalValue={this.state.total} />
         </div>
       </div>
     );
