@@ -4,6 +4,13 @@
   flex-direction: column;
 }
 
+.editItemContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
 #editItemForms{
   display: none
 }
@@ -13,7 +20,8 @@
 }
 
 .textFormEdit{
-  width: 250px;
+  /* width: 250px; */
+  padding: 10px;
 }
 
 #selectEditItem{

@@ -254,256 +254,203 @@ class AddProduct extends Component {
 
   render() {
     return (
-      <div>
-        <h1> Add Product </h1>
-        <div className="textForm" id="row">
-          <TextField
-            label="Product Name"
-            required="true"
-            onChange={event =>
-              this.setState({ productName: event.target.value })
-            }
-            style={style.field}
-          />
-        </div>
+      <div className = "addProductContainer">
+      {/* <Paper className="addProductPaperContainer"> */}
+            <h1> Add Product </h1>
+            <div className = "textForm" id="row">
+              <TextField
+                label="Product Name"
+                required="true"
+                onChange={(event) => this.setState({ productName: event.target.value })}
+                style={style.field}
+              />
+            </div>
 
-        <div className="textForm" id="row">
-          <TextField
-            label="Product Info"
-            required="true"
-            multiline={true}
-            rows={2}
-            onChange={event =>
-              this.setState({ productInfo: event.target.value })
-            }
-            style={style.field}
-          />
-        </div>
+            <div className = "textForm" id="row">
+              <TextField
+                label="Product Info"
+                required="true"
+                multiline={true}
+                rows={2}
+                onChange={(event) => this.setState({ productInfo: event.target.value })}
+                style={style.field}
+              />
+            </div>
 
-        <div className="textForm" id="row">
-          <TextField
-            label="Pickup Location (Enter location and date/time)"
-            required="true"
-            onChange={event =>
-              this.setState({ pickupLocation: event.target.value })
-            }
-            style={style.field}
-          />
-        </div>
+            <div className = "textForm" id="row">
+              <TextField
+                label="Pickup Location (Enter location and date/time)"
+                required="true"
+                onChange={(event) => this.setState({ pickupLocation: event.target.value })}
+                style={style.field}
+              />
+            </div>
 
-        <div className="textForm" id="row">
-          <TextField
-            label="Product Price"
-            required="true"
-            type="number"
-            onChange={event =>
-              this.setState({ productPrice: event.target.value })
-            }
-          />
-        </div>
+            <div className = "textForm" id="row">
+              <TextField
+                label="Product Price"
+                required="true"
+                type="number"
+                onChange={(event) => this.setState({ productPrice: event.target.value })}
+                style={style.field}
+              />
+            </div>
 
-        {/* toggle visibility of product stock
+            {/* toggle visibility of product stock
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
-        <div className={this.state.itemShowStock} id="row">
-          <TextField
-            label="Product Stock"
-            required="true"
-            type="number"
-            value={this.state.stock}
-            onChange={event => this.setState({ stock: event.target.value })}
-          />
-        </div>
+            <div className = {this.state.itemShowStock} id="row">
+              <TextField
+                label="Product Stock"
+                required="true"
+                type="number"
+                value = {this.state.stock}
+                onChange={(event) => this.setState({ stock: event.target.value })}
+                style={style.field}
+              />
+            </div>
 
-        <FormControl component="fieldset">
-          <FormLabel component="legend">Select Product Type </FormLabel>
-          <RadioGroup
-            aria-label="gender"
-            name="gender2"
-            value={this.state.value}
-            onChange={this.handleChange}
-          >
-            {/* if user selects item, hide apparel selections, toggle css */}
-            <FormControlLabel
-              control={<Radio color="primary" />}
-              value="item"
-              label="Item"
-              labelPlacement="start"
-              onChange={() =>
-                this.setState({
-                  isApparel: false,
-                  apparelCSS: "hideApparelSizes",
-                  itemShowStock: "showItemStock"
-                })
-              }
-            />
+            <FormControl component="fieldset">
+            <div className = "textForm">
+              <FormLabel component="legend" style={style.field}>Select Product Type </FormLabel>
+              <RadioGroup
+                aria-label="gender"
+                name="gender2"
+                value={this.state.value}
+                onChange={this.handleChange}
+              >
+            
+                {/* if user selects item, hide apparel selections, toggle css */}
+                <FormControlLabel
+                  control={<Radio color="primary" />}
+                  value = "item"
+                  label="Item"
+                  // labelPlacement="start"
+                  onChange={() => this.setState({ isApparel: false, apparelCSS: 'hideApparelSizes', itemShowStock: 'showItemStock'})}
+                  style={style.field}
+                />
 
-            {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
-            <FormControlLabel
-              control={<Radio color="primary" />}
-              value="apparel"
-              label="Apparel"
-              labelPlacement="start"
-              onChange={() =>
-                this.setState({
-                  isApparel: true,
-                  apparelCSS: "showApparelSizes",
-                  itemShowStock: "hideItemStock"
-                })
-              }
-            />
-          </RadioGroup>
-        </FormControl>
+                {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
+                <FormControlLabel
+                    control={<Radio color="primary" />}
+                    value = "apparel"
+                    label="Apparel"
+                    // labelPlacement="start"
+                    onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock'})}
+                />
+              </RadioGroup>
+              </div>
+            </FormControl>
 
-        {/* add quantity for apparel sizes, toggel visibility if selected */}
-        <div className={this.state.apparelCSS}>
-          <div className="textForm" id="row">
-            <TextField
-              label="Product Stock"
-              type="number"
-              value={this.state.stock}
-              disabled
-            />
-          </div>
+            {/* add quantity for apparel sizes, toggel visibility if selected */}
+            <div className = {this.state.apparelCSS}>
+              <div className = "textForm" id="row">
+                <TextField
+                  label="Product Stock"
+                  type="number"
+                  value = {this.state.stock}
+                  disabled
+                />
+              </div>
+              
+              <div className = "textForm" id="row">
+                <TextField
+                  label="Small Stock"
+                  required="false"
+                  type="number"
+                  value={this.state.small}
+                  onChange={
+                    this.handleStockChangeApparel("small")
+                  }
+                />
+              </div>
 
-          <div className="textForm" id="row">
-            <TextField
-              label="Small Stock"
-              required="false"
-              type="number"
-              value={this.state.small}
-              onChange={this.handleStockChangeApparel("small")}
-            />
-          </div>
+              <div className = "textForm" id="row">
+                <TextField
+                  label="Medium Stock"
+                  required="false"
+                  type="number"
+                  value={this.state.medium}
+                  onChange={
+                    this.handleStockChangeApparel("medium")
+                  }
+                />
+              </div>
 
-          <div className="textForm" id="row">
-            <TextField
-              label="Medium Stock"
-              required="false"
-              type="number"
-              value={this.state.medium}
-              onChange={this.handleStockChangeApparel("medium")}
-            />
-          </div>
+              <div className = "textForm" id="row">
+                <TextField
+                  label="Large Stock"
+                  required="false"
+                  type="number"
+                  value={this.state.large}
+                  onChange={
+                    this.handleStockChangeApparel("large")
+                  }
+                />
+              </div>
 
-          <div className="textForm" id="row">
-            <TextField
-              label="Large Stock"
-              required="false"
-              type="number"
-              value={this.state.large}
-              onChange={this.handleStockChangeApparel("large")}
-            />
-          </div>
+              <div className = "textForm" id="row">
+                <TextField
+                  label="X-Small Stock"
+                  required="false"
+                  type="number"
+                  value={this.state.xsmall}
+                  onChange={                    
+                    this.handleStockChangeApparel("xsmall")
+                  }
+                />
+              </div>
 
-          <div className="textForm" id="row">
-            <TextField
-              label="X-Small Stock"
-              required="false"
-              type="number"
-              value={this.state.xsmall}
-              onChange={this.handleStockChangeApparel("xsmall")}
-            />
-          </div>
+              <div className = "textForm" id="row">
+                <TextField
+                  label="X-Large Stock"
+                  required="false"
+                  value={this.state.xlarge}
+                  type="number"
+                  onChange={
+                    this.handleStockChangeApparel("xlarge")
+                  }
+                />
+              </div>
+            </div>
 
-          <div className="textForm" id="row">
-            <TextField
-              label="X-Large Stock"
-              required="false"
-              value={this.state.xlarge}
-              type="number"
-              onChange={this.handleStockChangeApparel("xlarge")}
-            />
-          </div>
-        </div>
+            <div className = "textForm" id = "row">
+              <h5 className = "uploadImageText"> Upload Images </h5>
+              <h6 className = "uploadImageText"> *(First image uploaded on the left is default image displayed on shop. Remaining images used in detailed view) </h6>
 
-        <div className="textForm" id="row">
-          <h5 className="uploadImageText"> Upload Images </h5>
-          <h6 className="uploadImageText">
-            {" "}
-            *(First image uploaded on the left is default image displayed on
-            shop. Remaining images used in detailed view){" "}
-          </h6>
+              <div id = "column">
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
+              </div>
 
-          <div id="column">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                console.log(error);
-              }}
-            />
-          </div>
+              <div id = "column">
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
+              </div>
 
-          <div id="column">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                console.log(error);
-              }}
-            />
-          </div>
+              <div id = "column">
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
+              </div>
+          
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {console.log(error)}} 
+              />
+            </div>
 
-          <div id="column">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                console.log(error);
-              }}
-            />
-          </div>
-
-          <FileUploader
-            accept="image/*"
-            onChange={this.handleFileChange}
-            storageRef={firebase
-              .storage()
-              .ref(
-                "/images" + "/" + this.props.vid + "/" + this.state.productID
-              )}
-            ref={instance => {
-              this.fileUploader = instance;
-            }}
-            multiple
-            onUploadError={error => {
-              console.log(error);
-            }}
-          />
-        </div>
-
-        <Button variant="contained" color="primary" onClick={this.addProduct}>
-          {" "}
-          Add Product{" "}
-        </Button>
+            <Button variant = "contained" color = "primary" onClick = {this.addProduct}> Add Product  </Button>
+            {/* </Paper> */}
       </div>
     );
   }
