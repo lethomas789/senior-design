@@ -11,7 +11,7 @@ export default class About extends Component {
           {/* <div>4 students trying to inspire</div> */}
         </header>
         <div className="about-main-image">
-          IMAGE TEXT HERE
+         
         </div>
         <section className="about-info">
         <div className = "about-info-text">
