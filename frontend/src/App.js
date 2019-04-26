@@ -49,18 +49,16 @@ class App extends Component {
     return (
       <Router>
         <div>
-          <ButtonAppBar />
+          <ButtonAppBar notifier={this.addNotification}/>
           <Route exact path="/" component={Home} />
           <Route exact path="/about" component={About} />
           <Route exact path="/shop" component={Shop} />
-          {/* <Route exact path = "/signup" component = {Signup} /> */}
           <Route
             exact
             path="/signup"
             render={() => <Signup notifier={this.addNotification} />}
           />
 
-          {/* <Route exact path = "/login" component = {Login} />  */}
           <Route
             exact
             path="/login"
@@ -72,10 +70,27 @@ class App extends Component {
           <Route exact path="/cart" component={Cart} />
           <Route path="/vendorProducts/:vid" component={VendorView} />
           <Route exact path="/abcdefg/vendorSignup" component={VendorSignup} />
-          <Route exact path="/editClubInfo" component={EditClubInfo} />
-          <Route exact path="/addProduct" component={AddProduct} />
+          <Route
+            exact
+            path="/editClubInfo"
+            render={props => (
+              <EditClubInfo
+                {...props}
+                notifier={this.addNotification}
+              />
+            )}
+          />
+          <Route
+            exact
+            path="/addProduct"
+            render={props => (
+              <AddProduct
+                {...props}
+                notifier={this.addNotification}
+              />
+            )}
+          />
           <Route exact path="/orderHistory" component={OrderHistory} />
-          {/* <Route path = "/itemDetails/:vid/:pid" component = {ShopItemDetailed}/> */}
           <Route
             path="/itemDetails/:vid/:pid"
             render={props => (

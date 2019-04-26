@@ -79,7 +79,11 @@ class ButtonAppBar extends Component {
         this.props.updateVendors(res.data.vendors);
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   }
 
@@ -158,9 +162,14 @@ class ButtonAppBar extends Component {
   viewCartCheck = () => {
     //prevent user from using cart until logged in
     if (this.props.loginValue === false) {
-      this.setState({
-        open: true,
-        alertMessage: "Please login to view cart"
+      // this.setState({
+      //   open: true,
+      //   alertMessage: "Please login to view cart"
+      // });
+      this.props.notifier({
+        title: "Info",
+        message: "Please login to view cart.",
+        type: "info"
       });
     }
 
@@ -177,11 +186,19 @@ class ButtonAppBar extends Component {
           })
           .then(res => {
             //after getting cart from server, update user's items in redux state
-            alert("updating store with new items");
+            this.props.notifier({
+              title: "Info",
+              message: "Updating store with new items.",
+              type: "info"
+            });
             this.props.updateItems(res.data.data);
           })
           .catch(err => {
-            alert(err);
+            this.props.notifier({
+              title: "Error",
+              message: err,
+              type: "danger"
+            });
           });
       }
     }
@@ -253,8 +270,15 @@ class ButtonAppBar extends Component {
               {this.props.isAdmin ? (
                 <Fragment>
                   {/* SELECT CLUB */}
-                  <FormControl variant="filled" className="club-select" style={{marginRight: "10px"}}>
-                    <InputLabel htmlFor="club-select" style={{color: 'white'}}>
+                  <FormControl
+                    variant="filled"
+                    className="club-select"
+                    style={{ marginRight: "10px" }}
+                  >
+                    <InputLabel
+                      htmlFor="club-select"
+                      style={{ color: "white" }}
+                    >
                       {this.props.currentVendor}
                     </InputLabel>
 
@@ -343,48 +367,48 @@ class ButtonAppBar extends Component {
               ) : (
                 <Fragment />
               )}
-              
+
               {/* ACCOUNT BUTTON? */}
               {this.props.loginValue ? (
                 <Fragment>
                   <Button
-                  aria-haspopup="true"
-                  onClick={this.handleAccountClick}
-                  style={{ color: "white", fontFamily: "Raleway" }}
+                    aria-haspopup="true"
+                    onClick={this.handleAccountClick}
+                    style={{ color: "white", fontFamily: "Raleway" }}
                   >
-                  Account
-                </Button>
-                  
-                <Menu
-                  anchorEl={anchorElAccount}
-                  open={Boolean(anchorElAccount)}
-                  onClose={this.handleMenuCloseAccount}
-                >
-                  <MenuItem
-                    component={Link}
-                    to={orderHistoryRoute}
-                    color="inherit"
-                    onClick={this.handleMenuCloseAccount}
-                  >
-                    {" "}
-                    Order History{" "}
-                  </MenuItem>
+                    Account
+                  </Button>
 
-                  <MenuItem
-                    component={Link}
-                    to={accountInfoRoute}
-                    color="inherit"
-                    onClick={this.handleMenuCloseAccount}
+                  <Menu
+                    anchorEl={anchorElAccount}
+                    open={Boolean(anchorElAccount)}
+                    onClose={this.handleMenuCloseAccount}
                   >
-                    {" "}
-                    Account Info {" "}
-                  </MenuItem>
-                </Menu>
-              </Fragment>
+                    <MenuItem
+                      component={Link}
+                      to={orderHistoryRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Order History{" "}
+                    </MenuItem>
+
+                    <MenuItem
+                      component={Link}
+                      to={accountInfoRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Account Info{" "}
+                    </MenuItem>
+                  </Menu>
+                </Fragment>
               ) : (
-                <Fragment/>
+                <Fragment />
               )}
-              
+
               {/*LOGIN/LOGOUT BUTTON*/}
               <Button
                 style={{ fontFamily: "Raleway" }}
@@ -426,7 +450,7 @@ class ButtonAppBar extends Component {
                 </Button>
               ) : (
                 // else not logged in, display generic cart icon
-                <Button color="inherit" onClick={this.props.viewCartCheck}>
+                <Button color="inherit" onClick={this.viewCartCheck}>
                   <CartIcon />
                 </Button>
               )}

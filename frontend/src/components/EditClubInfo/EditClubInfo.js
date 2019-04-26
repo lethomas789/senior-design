@@ -13,7 +13,7 @@ class EditClubInfo extends Component {
     lastUpdate: "",
     lastUpdateUser: "",
     vendorName: "",
-    emailSchedule: "",
+    emailSchedule: ""
   };
 
   //get club info
@@ -35,11 +35,19 @@ class EditClubInfo extends Component {
             vendorName: res.data.vendorName
           });
         } else {
-          alert("Error getting club info");
+          this.props.notifier({
+            title: "Error",
+            message: "Error in getting club info.",
+            type: "danger"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
       });
   };
 
@@ -69,13 +77,25 @@ class EditClubInfo extends Component {
       })
       .then(res => {
         if (res.data.success === true) {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
         } else {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message,
+            type: "warning"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
       });
   };
 
@@ -94,12 +114,20 @@ class EditClubInfo extends Component {
       .then(res => {
         //if edit was successful, get new info for edited club
         if (res.data.success === true) {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
           this.getClubInfo();
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
       });
   };
 
@@ -157,8 +185,7 @@ class EditClubInfo extends Component {
             color="primary"
             onClick={this.updateEmailPreferences}
           >
-            {" "}
-            Update Email Preferences{" "}
+            Update Email Preferences
           </Button>
         </div>
       </div>
