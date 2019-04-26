@@ -98,7 +98,7 @@ class OrderHistory extends Component {
     } else {
       return (
         <div>
-          <h1> Orders: </h1>
+          <h1 className = "centerHeader"> Orders </h1>
           {/**
            * TODO
            * take out paid,
@@ -107,7 +107,7 @@ class OrderHistory extends Component {
            * filter/search order history
            */}
           <div id="order-history-container">{orders}</div>
-        </div>
+          </div>
       );
     }
   }
