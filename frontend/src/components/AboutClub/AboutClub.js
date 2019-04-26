@@ -114,9 +114,9 @@ export default class AboutClub extends Component {
     const { vendorName, bio, bioPictures } = this.state;
 
     return (
-      <div id="about-club-container">
+      // <div id="about-club-container">
         <ClubInfo vendorName={vendorName} bio={bio} bioPictures={bioPictures} />
-      </div>
+      // </div>
     );
   }
 }
