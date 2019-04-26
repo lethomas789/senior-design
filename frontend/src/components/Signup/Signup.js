@@ -114,13 +114,17 @@ class Signup extends Component {
             */
             this.props.notifier({
               title: "Error",
-              message: res.data.message + ' Please try again.',
-              type: "warning",
+              message: res.data.message + " Please try again.",
+              type: "warning"
             });
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err,
+            type: "danger"
+          });
         });
     }
   }
