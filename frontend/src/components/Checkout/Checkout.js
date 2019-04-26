@@ -61,7 +61,7 @@ class Checkout extends Component {
   }
 
   //convert items in cart to array of paypal objects for payment option
-  componentDidMount() {
+  updateCheckoutParams() {
     //array to store as payment option
     var paypalTransactionsArray = [];
     var paypalTransactions = {};
@@ -87,7 +87,7 @@ class Checkout extends Component {
 
     paypalTransactions.item_list.items = paypalItems;
     paypalTransactions.amount.currency = this.state.currency;
-    paypalTransactions.amount.total = String(this.props.total);
+    paypalTransactions.amount.total = String(this.props.totalValue);
 
     //update payment options to be list of paypal items
     paypalTransactionsArray.push(paypalTransactions);
@@ -100,38 +100,44 @@ class Checkout extends Component {
     );
   }
 
-  // //update payment option on update
-  // componentDidUpdate() {
-  //   this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
-  //   this.state.paymentOptions.transactions[0].amount.total = String(
-  //     this.props.totalValue
-  //   );
-  // }
-
-  checkStock = () => {
-    //started onclick for checking stock before purchase
-    //check stock for each item
-    var items = this.props.cartItems;
-    for(let i =0; i < items.length; i++){
-        console.log("checking stock");
-        axios.get('/api/stock/', {
-          params:{
-            pid: items[i].pid,
-            isApparel: items[i].isApparel,
-            size: items[i].size,
-            amt: items[i].amtPurchased
-          }
-        })
-        .then(res => {
-          if(res.data.availableStock === false){
-            alert("not enough stock on purchase");
-          }
-        })
-        .catch(err => {
-          alert(err);
-        })
-    }
+  componentDidMount() {
+    this.updateCheckoutParams();
   }
+  
+
+  // //update payment option on update
+  componentDidUpdate() {
+    this.updateCheckoutParams();
+    // this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
+    // this.state.paymentOptions.transactions[0].amount.total = String(
+    //   this.props.totalValue
+    // );
+  }
+
+  // checkStock = () => {
+  //   //started onclick for checking stock before purchase
+  //   //check stock for each item
+  //   var items = this.props.cartItems;
+  //   for(let i =0; i < items.length; i++){
+  //       console.log("checking stock");
+  //       axios.get('/api/stock/', {
+  //         params:{
+  //           pid: items[i].pid,
+  //           isApparel: items[i].isApparel,
+  //           size: items[i].size,
+  //           amt: items[i].amtPurchased
+  //         }
+  //       })
+  //       .then(res => {
+  //         if(res.data.availableStock === false){
+  //           alert("not enough stock on purchase");
+  //         }
+  //       })
+  //       .catch(err => {
+  //         alert(err);
+  //       })
+  //   }
+  // }
 
   onSuccess = payment => {
     console.log("Payment successful!", payment);
@@ -147,7 +153,7 @@ class Checkout extends Component {
       .post(apiURL, {
         params: {
           items: this.state.paymentOptions.transactions[0].item_list.items,
-          totalPrice: String(this.props.total),
+          totalPrice: String(this.props.totalValue),
           vid: this.props.cartItems[0].vid,
           user: this.props.user,
           paymentID: payment.paymentID,
@@ -221,7 +227,7 @@ class Checkout extends Component {
 
     return (
       <div>
-        <button onClick = {this.checkStock(this.props.items)}> Check Stock </button>
+        {/* <button onClick = {this.checkStock(this.props.items)}> Check Stock </button> */}
         <Fragment>
           <PaypalExpressBtn
             env={this.state.env}
@@ -247,7 +253,6 @@ const mapStateToProps = state => {
     items: state.cart.items,
     login: state.auth.login,
     user: state.auth.user,
-    total: state.cart.total,
     cart: state.cart.items
   };
 };
