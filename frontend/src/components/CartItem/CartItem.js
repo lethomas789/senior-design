@@ -67,26 +67,11 @@ class CartItem extends Component {
           })
           .then(res => {
             //after removing item from cart, update cart on server
+            console.log("updating cartview cart", res.data);
             this.props.updateItems(res.data.data);
-            //get total from items
-            var currentCart = res.data.data;
-            var priceTotal = 0;
 
-            //if cart is empty, total price is $0
-            if (currentCart.length === 0) {
-              console.log("cart is empty");
-              this.props.updateTotal(priceTotal);
-            }
-
-            //if there are items, calculate total price
-            else {
-              console.log("cart is not empty");
-              for (let i = 0; i < currentCart.length; i++) {
-                priceTotal += Number(currentCart[i].totalPrice);
-              }
-              console.log(priceTotal);
-              this.props.updateTotal(priceTotal);
-            }
+            //reload the page after deleting items to update carts of each vendor
+            window.location.reload();
           })
           .catch(err => {
             alert(err);

@@ -11,7 +11,6 @@ class CartView extends Component {
   constructor(props){
     super(props);
     this.state = {
-      allItems: this.props.items,
       allVendors: [],
       vendorItemsSeparated: []
     }
@@ -40,7 +39,7 @@ class CartView extends Component {
       itemsArray.push(currentItems);
     }
       
-    //update state
+    //update state of array of items separated based on vid
     this.setState({
       vendorItemsSeparated: itemsArray
     }, () => {
@@ -73,25 +72,20 @@ class CartView extends Component {
     this.separateItems(currentVendorArray);
   }
 
-  //
+  //separate items by vendors when component loads to page
   componentDidMount() {
     this.separateVendors();
   }
-
-  componentDidUpdate(){
-
-  }
   
-
   render() {
     //render carts for each vendor
-    const renderCarts = this.state.allVendors.map(cart => {
+    const renderCarts = this.state.allVendors.map(vendor => {
       //for each vendor, want to render a cart
       for(let i = 0; i<this.state.vendorItemsSeparated.length; i++){
         var currentListItems = this.state.vendorItemsSeparated[i];
-        if(currentListItems[0].vid === cart){
+        if(currentListItems[0].vid === vendor){
           return(
-            <Cart passedItems = {currentListItems} passedVendor = {cart}/>
+            <Cart passedItems = {currentListItems} passedVendor = {vendor}/>
           )
         }
       }

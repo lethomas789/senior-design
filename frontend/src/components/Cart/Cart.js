@@ -48,8 +48,6 @@ class Cart extends Component {
       this.setState({
         total: priceTotal
       });
-      // this.props.updateTotal(priceTotal);
-      // this.separateVendors();
     }
   }
 
