@@ -7,9 +7,16 @@ function DisplayClub(props) {
   const { bio, vendorName, bioPicture } = props;
 
   return (
-    <div className="display-club-box">
-      <img src={bioPicture} alt="Display Club" />
-      TEXT
+    <div className="moreColls">
+    <div className="roww">
+    <div className="moreContainer">
+   
+      <img src={bioPicture} alt="Display Club" width="100%"/>
+      <div className ="hero-textt">
+      CLUB
+      </div>
+    </div>
+    </div>
     </div>
   );
 }
@@ -41,7 +48,7 @@ export default class Clubs extends Component {
     const { vendors } = this.state;
     return (
       <div id="display-clubs-container">
-        <h2>CLUBS</h2>
+        <h1 className = "clubHeader">CLUBS</h1>
         <div id="display-club-boxes">
           {vendors.map(vendor => (
             <DisplayClub
