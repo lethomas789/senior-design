@@ -6,7 +6,8 @@ import { connect } from "react-redux";
 import actions from "../../store/actions";
 import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
-import PaypalExpressBtn from "react-paypal-express-checkout";
+// import PaypalExpressBtn from "react-paypal-express-checkout";
+import PaypalButton from "../PaypalButton/PaypalButton";
 import axios from "axios";
 
 //styles for checkout button
@@ -210,6 +211,12 @@ class Checkout extends Component {
     // You can bind the "data" object's value to your state or props or whatever here, please see below for sample returned data
   };
 
+  onNotEnoughStock = itemName => {
+    console.log('Payment canceled because there was not enough stock for:', itemName);
+
+    alert(`Sorry, ${itemName} has run out of stock.`);
+  }
+
   onError = err => {
     // The main Paypal script could not be loaded or something blocked the script from loading
     console.log("Error!", err);
@@ -229,7 +236,8 @@ class Checkout extends Component {
       <div>
         {/* <button onClick = {this.checkStock(this.props.items)}> Check Stock </button> */}
         <Fragment>
-          <PaypalExpressBtn
+          {/* <PaypalExpressBtn */}
+          <PaypalButton
             env={this.state.env}
             client={this.state.client}
             currency={this.state.currency}
@@ -239,6 +247,8 @@ class Checkout extends Component {
             onCancel={this.onCancel}
             shipping={1}
             paymentOptions={this.state.paymentOptions}
+            items={this.props.items}
+            onNotEnoughStock={this.onNotEnoughStock}
           />
         </Fragment>
       </div>
