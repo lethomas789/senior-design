@@ -101,6 +101,19 @@
 
 }
 
+.about-main-imagee {
+  /* background-image: url(../../images/ourgroup.png); */
+  grid-column: 1 / span 3;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  /* width: 60vw; */
+  /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
+  height: 500px; 
+  margin-bottom: 20px;
+}
+
 /*
 .about-club-header {
   height: 95vh;

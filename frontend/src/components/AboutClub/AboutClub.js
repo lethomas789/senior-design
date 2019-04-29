@@ -19,7 +19,7 @@ class ClubInfo extends Component {
         <div className = "about-container">
         <header className = "about-header">{vendorName}</header>
         {/* <div className="club-bio">{bio}</div> */}
-        <div className = "about-main-image">
+        <div className = "about-main-imagee">
         <ClubImages bioPictures={bioPictures} /></div>
 
         <div className="club-bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique alias libero quia!</div>
