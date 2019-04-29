@@ -15,10 +15,11 @@ class ClubInfo extends Component {
   render() {
     const { vendorName, bio, bioPictures } = this.props;
     return (
-      <Fragment>
-        <div className="club-header">{vendorName}</div>
+        <div className = "greater-container">
+        <div className = "about-container">
+        <header className = "about-header">{vendorName}</header>
         {/* <div className="club-bio">{bio}</div> */}
-        <div className = "about-club-header">
+        <div className = "about-main-image">
         <ClubImages bioPictures={bioPictures} /></div>
 
         <div className="club-bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique alias libero quia!</div>
@@ -28,7 +29,8 @@ class ClubInfo extends Component {
         {/* <div className="club-meetings">CLUB MEETINGS/PICKUP INFO BOX</div> */}
 
         <div className="club-meetings">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, esse itaque tempora harum et ipsum ex inventore cupiditate, incidunt aut perspiciatis! Voluptates repudiandae tenetur exercitationem harum temporibus laudantium optio labore!</div>
-      </Fragment>
+        </div>
+        </div>
     );
   }
 }
