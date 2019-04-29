@@ -362,7 +362,12 @@ class ShopItemDetailed extends Component {
             .then(res => {
               //after getting cart info, update redux store container
               this.props.updateItems(res.data.data);
-              alert("Item added to cart!");
+              //switch from alert to notifier
+              this.props.notifier({
+                title: "Success",
+                message: "Item added to cart!",
+                type: "success"
+              });
             })
             .catch(err => {
               alert(err);
@@ -376,15 +381,26 @@ class ShopItemDetailed extends Component {
 
   //add item to user's cart
   addItem = () => {
-    console.log('BUTTON CLICKED');
     //check if user is logged in
     if (this.state.login === false) {
-      alert("please login to add to cart");
+      // alert("please login to add to cart");
+      //switch from alert to notifier
+      this.props.notifier({
+        title: "Error",
+        message: "Please login to add to cart.",
+        type: "danger"
+      });
     }
 
     //check if 0 products were purchased
     else if (this.state.amtPurchased <= 0) {
-      alert("Sorry, cannot add a quantity of 0.");
+      // alert("Sorry, cannot add a quantity of 0.");
+      //switch from alert to notifier
+      this.props.notifier({
+        title: "Error",
+        message: "Cannot add a quantity of 0 to cart.",
+        type: "warning"
+      });
     }
 
     //check stock check for non apparel
@@ -392,7 +408,15 @@ class ShopItemDetailed extends Component {
       this.state.amtPurchased > Number(this.state.productStock) &&
       this.state.isApparel === false
     ) {
-      alert("Quantity selected exceeds stock");
+      // alert("Quantity selected exceeds stock");
+      //switch from alert to notifier
+      this.props.notifier({
+        title: "Error",
+        message: "Quantity selected exceeds stock.",
+        type: "warning"
+      });
+
+      //bug fix, when stock exceeds break from function execution
       return;
     }
 
@@ -563,7 +587,12 @@ class ShopItemDetailed extends Component {
                 .then(res => {
                   //after getting cart info, update redux store container
                   this.props.updateItems(res.data.data);
-                  alert("Item added to cart!");
+                  //switch from alert to notifier
+                  this.props.notifier({
+                    title: "Success",
+                    message: "Item added to cart!",
+                    type: "success"
+                  });
                 })
                 .catch(err => {
                   alert(err);
@@ -591,7 +620,12 @@ class ShopItemDetailed extends Component {
     var currentQuantity = this.state.amtPurchased;
     //can't have negative amount of items selected
     if (currentQuantity <= 1) {
-      alert("Must have at least one item");
+      //switch from alert to notifier
+      this.props.notifier({
+        title: "Error",
+        message: "Can't remove, must have at least one item",
+        type: "warning"
+      });
     } else {
       currentQuantity -= 1;
       this.setState({

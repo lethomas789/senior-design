@@ -13,13 +13,30 @@ class CartItem extends Component {
     pid: this.props.pid,
     vid: this.props.vendorID,
     size: this.props.size,
-    amtPurchased: 0,
+    amtPurchased: this.props.amtPurchased,
     price: this.props.productPrice,
-    total: this.props.totalPrice
+    total: this.props.totalPrice,
+    stock: 0
   };
 
+  //when a CartItem renders, store the state of the stock
+  //local stock checking used to quantity selector check
   componentDidMount() {
-    this.setState({ amtPurchased: this.props.amtPurchased });
+    const apiURL = '/api/getProductInfo';
+    axios.get(apiURL, {
+      params:{
+        pid: this.props.pid
+      }
+    })
+    .then(res => {
+      //extract stock info and store , check local stock
+      this.setState({
+        stock: res.data.product.stock
+      })
+    })
+    .catch(err => {
+      alert(err);
+    })
   }
 
   handleChange = name => event => {
@@ -29,6 +46,12 @@ class CartItem extends Component {
   // TODO figure out how we want to handle 0 change here
   //want to update total value of both item in cart and total sum
   handleQuantityChange = event => {
+    //if the user wants to change quantity selector, check if value exceeds current stock
+    if(event.target.value > this.state.stock){
+      alert("Quantity exceeds stock");
+      return;
+    } 
+
     var newAmount = event.target.value;
     if (event.target.value < 0) {
       this.setState({ amtPurchased: 1 });

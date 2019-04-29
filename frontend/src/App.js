@@ -70,8 +70,8 @@ class App extends Component {
             )}
           />
 
-
           <Route exact path="/cart" component={CartView} />
+          
           <Route path="/vendorProducts/:vid" component={VendorView} />
           <Route exact path="/abcdefg/vendorSignup" component={VendorSignup} />
           <Route
