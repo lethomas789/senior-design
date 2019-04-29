@@ -393,10 +393,11 @@ class ShopItemDetailed extends Component {
       this.state.isApparel === false
     ) {
       alert("Quantity selected exceeds stock");
+      return;
     }
 
     //check apparel stock
-    if (this.state.isApparel === true) {
+    else if (this.state.isApparel === true) {
       switch (this.state.size) {
         case "Small":
           if (this.state.amtPurchased > Number(this.state.s_stock)) {
