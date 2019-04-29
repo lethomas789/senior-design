@@ -85,7 +85,7 @@ class CartView extends Component {
         var currentListItems = this.state.vendorItemsSeparated[i];
         if(currentListItems[0].vid === vendor){
           return(
-            <Cart passedItems = {currentListItems} passedVendor = {vendor}/>
+            <Cart passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier}/>
           )
         }
       }

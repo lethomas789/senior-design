@@ -22,7 +22,6 @@ import RecoverPassword from "./components/RecoverPassword/RecoverPassword";
 import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecoveryPassword";
 import CartView from "./components/CartView/CartView";
 
-
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
 import Clubs from "./components/Clubs/Clubs";
@@ -69,9 +68,16 @@ class App extends Component {
               <Login {...props} notifier={this.addNotification} />
             )}
           />
-
-          <Route exact path="/cart" component={CartView} />
           
+          <Route
+            exact
+            path="/cart"
+            render={props => (
+              <CartView {...props} notifier={this.addNotification} />
+            )}
+          />
+
+          {/* <Route exact path="/cart" component = {CartView}/>           */}
           <Route path="/vendorProducts/:vid" component={VendorView} />
           <Route exact path="/abcdefg/vendorSignup" component={VendorSignup} />
           <Route

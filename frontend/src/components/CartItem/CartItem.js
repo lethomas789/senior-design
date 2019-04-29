@@ -48,12 +48,20 @@ class CartItem extends Component {
   handleQuantityChange = event => {
     //if the user wants to change quantity selector, check if value exceeds current stock
     if(event.target.value > this.state.stock){
-      alert("Quantity exceeds stock");
+      //added notifier to indicate if user is exceeding stock of item based on quantity selector
+      this.props.notifier({
+        title: "Warning",
+        message: "Quantity exceeds stock",
+        type: "warning"
+      });
+      //if exceeded, return
       return;
     } 
 
+    //if not exceeded, proceed with updating new total/amount in cart
+    //user cannot select 0 or negative items to purchase, need at least 1
     var newAmount = event.target.value;
-    if (event.target.value < 0) {
+    if (event.target.value < 1) {
       this.setState({ amtPurchased: 1 });
     } else {
       //calculate new total of specific item, where total = value * price

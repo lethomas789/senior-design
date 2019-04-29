@@ -399,7 +399,7 @@ class ShopItemDetailed extends Component {
       this.props.notifier({
         title: "Error",
         message: "Cannot add a quantity of 0 to cart.",
-        type: "warning"
+        type: "danger"
       });
     }
 
@@ -413,7 +413,7 @@ class ShopItemDetailed extends Component {
       this.props.notifier({
         title: "Error",
         message: "Quantity selected exceeds stock.",
-        type: "warning"
+        type: "danger"
       });
 
       //bug fix, when stock exceeds break from function execution
@@ -429,7 +429,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "warning"
+              type: "danger"
             });
           }
           //add item to cart
@@ -443,7 +443,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "warning"
+              type: "danger"
             });
           }
           else {
@@ -457,7 +457,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "warning"
+              type: "danger"
             });
           }
 
@@ -471,7 +471,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "warning"
+              type: "danger"
             });
           }
 
@@ -485,7 +485,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "warning"
+              type: "danger"
             });
           }
 
@@ -624,7 +624,7 @@ class ShopItemDetailed extends Component {
       this.props.notifier({
         title: "Error",
         message: "Can't remove, must have at least one item",
-        type: "warning"
+        type: "danger"
       });
     } else {
       currentQuantity -= 1;
@@ -645,9 +645,10 @@ class ShopItemDetailed extends Component {
     this.setState({ [name]: event.target.value });
   };
 
+  //user needs to purchase at least one item, can't have 0 or negative selected items
   handleQuantityChange = event => {
-    if (event.target.value < 0) {
-      this.setState({ amtPurchased: 0 });
+    if (event.target.value < 1) {
+      this.setState({ amtPurchased: 1 });
     } else {
       this.setState({ amtPurchased: event.target.value });
     }
