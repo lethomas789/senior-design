@@ -16,6 +16,12 @@
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
+  border-left: 30px;
+  border-right: 30px;
+  background-color: white;
+  /* width: 60vw; */
+  /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
+  /* height: 500px;  */
 }
 
 .hero-text {
