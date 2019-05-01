@@ -11,6 +11,7 @@ class PaypalButton extends React.Component {
     showButton: false,
     errorItem: ""
   };
+
   asyncItemStockCheck = item => {
     return new Promise((resolve, reject) => {
       axios
@@ -24,11 +25,11 @@ class PaypalButton extends React.Component {
         })
         .then(res => {
           if (res.data.availableStock === false) {
-            this.setState({ errorItem: item.productName }, () =>
-              reject(item.productName)
-            );
+            reject(item.productName)
           }
-          resolve("Stock available");
+          else {
+            resolve("Stock available");
+          }
         })
         .catch(err => {
           console.log(err);
@@ -50,6 +51,8 @@ class PaypalButton extends React.Component {
       })
       .catch(errorItem => {
         console.log("Not enough stock for:", errorItem);
+        // this.setState({ errorItem: errorItem });
+        this.props.onNotEnoughStock(errorItem);
         return false;
       });
   };
@@ -124,7 +127,7 @@ class PaypalButton extends React.Component {
       } else {
         onCancel(payment);
         // alert(`Sorry, ${this.state.errorItem} has run out of stock.`);
-        onNotEnoughStock(this.state.errorItem);
+        // onNotEnoughStock(this.state.errorItem);
       }
     };
 
@@ -141,7 +144,6 @@ class PaypalButton extends React.Component {
             onError={onError}
           />
         )}
-        SELF CREATED BUTTON TEST
       </div>
     );
   }

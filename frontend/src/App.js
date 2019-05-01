@@ -70,8 +70,16 @@ class App extends Component {
             )}
           />
 
-
-          <Route exact path="/cart" component={CartView} />
+          <Route
+            exact
+            path="/cart"
+            render={props => (
+              <CartView
+                {...props}
+                notifier={this.addNotification}
+              />
+            )}
+          />
           <Route path="/vendorProducts/:vid" component={VendorView} />
           <Route exact path="/abcdefg/vendorSignup" component={VendorSignup} />
           <Route
