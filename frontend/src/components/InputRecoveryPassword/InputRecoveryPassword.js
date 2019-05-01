@@ -119,7 +119,7 @@ class InputRecoveryPassword extends Component {
       <div id="new-password-container">
         <Paper className="password-paper-container">
           <h2> Password Recovery </h2>
-          <h3> Enter email and new password: </h3>
+          <h3> Enter your new password: </h3>
           <form>
             <TextField
               label="Password"
