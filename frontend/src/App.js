@@ -29,6 +29,8 @@ import Clubs from "./components/Clubs/Clubs";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
+require('dotenv').config();
+
 const history = createBrowserHistory();
 
 class App extends Component {

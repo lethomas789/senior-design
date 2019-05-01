@@ -32,11 +32,10 @@ class Checkout extends Component {
     super(props);
     this.state = {
       total: this.props.totalValue,
-      env: "sandbox",
+      env: process.env.REACT_APP_PAYPAL_ENV,
       currency: "USD",
       client: {
-        sandbox:
-          "AQRbJx9R02PGD4hvGRQlGL48Ri1mvf4c7qd6LzuNHqmbtothVDp-vI6K7qatzi3dgYcg4tkp5lpXHBye",
+        sandbox: process.env.REACT_APP_PAYPAL_SANDBOX,
         production: "YOUR-PRODUCTION-APP-ID"
       },
       paymentOptions: {
