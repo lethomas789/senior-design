@@ -23,6 +23,9 @@ import InputLabel from "@material-ui/core/InputLabel";
 import Select from "@material-ui/core/Select";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
+import { createMuiTheme } from "@material-ui/core/styles";
+
+// export const prime = '#89BBFE';
 
 //variables to store routes to redirect to with Link component
 const homeRoute = "/";
@@ -34,6 +37,9 @@ const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
 const editItemRoute = "/editItem";
+const orderHistoryRoute = "/orderHistory";
+const accountInfoRoute = "/accountInfo";
+const primary = "#6F8AB7";
 
 //style for cart to display number of items
 const styles = theme => ({
@@ -43,8 +49,8 @@ const styles = theme => ({
     // The border color match the background color.
     border: `2px solid ${
       theme.palette.type === "light"
-        ? theme.palette.grey[200]
-        : theme.palette.grey[900]
+      // ? theme.palette.grey[200]
+      // : theme.palette.grey[900]
     }`
   }
 });
@@ -58,7 +64,8 @@ class ButtonAppBar extends Component {
     adminsOf: this.props.adminsOf,
     openSelect: false,
     currentVendor: "",
-    anchorEl: null
+    anchorEl: null,
+    anchorElAccount: null
   };
 
   //when navbar loads, get list of all vendors in database
@@ -72,7 +79,11 @@ class ButtonAppBar extends Component {
         this.props.updateVendors(res.data.vendors);
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   }
 
@@ -81,8 +92,18 @@ class ButtonAppBar extends Component {
     this.setState({ anchorEl: null });
   };
 
+  // handle menu
+  handleMenuCloseAccount = () => {
+    this.setState({ anchorElAccount: null });
+  };
+
   handleAdminClick = event => {
     this.setState({ anchorEl: event.currentTarget });
+  };
+
+  //handle account click, same logic as handle admin click
+  handleAccountClick = event => {
+    this.setState({ anchorElAccount: event.currentTarget });
   };
 
   //handle dialog closing
@@ -113,10 +134,18 @@ class ButtonAppBar extends Component {
       this.props.updateLogout();
       this.props.emptyCart();
       //display dialog
+      /*
       this.setState({
         open: true,
         alertMessage: "Logout successful!"
       });
+      */
+      this.props.notifier({
+        title: "Success",
+        message: "Logout successful.",
+        type: "success"
+      });
+
     }
   };
 
@@ -141,9 +170,14 @@ class ButtonAppBar extends Component {
   viewCartCheck = () => {
     //prevent user from using cart until logged in
     if (this.props.loginValue === false) {
-      this.setState({
-        open: true,
-        alertMessage: "Please login to view cart"
+      // this.setState({
+      //   open: true,
+      //   alertMessage: "Please login to view cart"
+      // });
+      this.props.notifier({
+        title: "Info",
+        message: "Please login to view cart.",
+        type: "info"
       });
     }
 
@@ -160,11 +194,19 @@ class ButtonAppBar extends Component {
           })
           .then(res => {
             //after getting cart from server, update user's items in redux state
-            alert("updating store with new items");
+            this.props.notifier({
+              title: "Info",
+              message: "Updating store with new items.",
+              type: "info"
+            });
             this.props.updateItems(res.data.data);
           })
           .catch(err => {
-            alert(err);
+            this.props.notifier({
+              title: "Error",
+              message: err,
+              type: "danger"
+            });
           });
       }
     }
@@ -172,7 +214,7 @@ class ButtonAppBar extends Component {
 
   render() {
     const { classes } = this.props;
-    const { anchorEl } = this.state;
+    const { anchorEl, anchorElAccount } = this.state;
 
     if (this.props.isAdmin) {
       var vendorList = this.props.adminsOf.map(result => {
@@ -187,7 +229,10 @@ class ButtonAppBar extends Component {
 
     return (
       <nav className="root">
-        <AppBar position="static">
+        <AppBar
+          position="static"
+          style={{ background: `${primary}`, boxShadow: "none" }}
+        >
           <Toolbar>
             {/* MENU BUTTON */}
             {/* currently doesnt do anything so hide it */}
@@ -201,6 +246,7 @@ class ButtonAppBar extends Component {
 
             {/* HOME LABEL */}
             <Typography
+              style={{ textDecoration: "none", fontFamily: "Comfortaa" }}
               component={Link}
               to={homeRoute}
               variant="h6"
@@ -210,55 +256,57 @@ class ButtonAppBar extends Component {
               ECS193 ECommerce
             </Typography>
 
-            <Typography variant="h6" color="inherit">
-              Select Club:
-            </Typography>
+            {this.props.isAdmin ? (
+              <Typography
+                style={{
+                  textDecoration: "none",
+                  fontFamily: "Raleway",
+                  marginRight: "10px"
+                }}
+                variant="h6"
+                color="inherit"
+              >
+                Select Club:
+              </Typography>
+            ) : (
+              ""
+            )}
 
             {/* NAV BUTTONS */}
             <div id="navLink">
-              {/* SELECT CLUB */}
-              <FormControl variant="filled" className="club-select">
-                <InputLabel htmlFor="club-select">
-                  {this.props.currentVendor}
-                </InputLabel>
-
-                <Select
-                  value={this.props.currentvendor}
-                  open={this.state.openSelect}
-                  onClose={this.handleCloseSelect}
-                  onOpen={this.handleOpenSelect}
-                  onChange={this.handleSelect}
-                  input={<OutlinedInput name={this.props.currentVendor} />}
-                >
-                  {vendorList}
-                </Select>
-              </FormControl>
-
-              {/* <Button color="inherit">
-                <InputLabel className="navLabel" color="white">
-                  {" "}
-                  {this.props.currentVendor}{" "}
-                </InputLabel>
-                <Select
-                  color="inherit"
-                  value={this.props.vendorID}
-                  open={this.state.openSelect}
-                  onClose={this.handleCloseSelect}
-                  onOpen={this.handleOpenSelect}
-                  onChange={this.handleSelect}
-                >
-                  {vendorList}
-                </Select>
-              </Button> */}
-
               {/* ADMIN BUTTONS */}
               {this.props.isAdmin ? (
                 <Fragment>
+                  {/* SELECT CLUB */}
+                  <FormControl
+                    variant="filled"
+                    className="club-select"
+                    style={{ marginRight: "10px" }}
+                  >
+                    <InputLabel
+                      htmlFor="club-select"
+                      style={{ color: "white" }}
+                    >
+                      {this.props.currentVendor}
+                    </InputLabel>
+
+                    <Select
+                      value={this.props.currentvendor}
+                      open={this.state.openSelect}
+                      onClose={this.handleCloseSelect}
+                      onOpen={this.handleOpenSelect}
+                      onChange={this.handleSelect}
+                      input={<OutlinedInput name={this.props.currentVendor} />}
+                    >
+                      {vendorList}
+                    </Select>
+                  </FormControl>
+
                   <Button
                     aria-owns={anchorEl ? "admin-menu" : undefined}
                     aria-haspopup="true"
                     onClick={this.handleAdminClick}
-                    style={{ color: "white" }}
+                    style={{ color: "white", fontFamily: "Raleway" }}
                   >
                     Admin Menu
                   </Button>
@@ -303,14 +351,24 @@ class ButtonAppBar extends Component {
               )}
 
               {/* BUTTONS FOR ALL USERS */}
-              <Button component={Link} to={aboutRoute} color="inherit">
+              <Button
+                component={Link}
+                to={aboutRoute}
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
                 {" "}
                 About{" "}
               </Button>
 
               {/* display signup if not logged in */}
               {!this.props.loginValue ? (
-                <Button component={Link} to={signupRoute} color="inherit">
+                <Button
+                  component={Link}
+                  to={signupRoute}
+                  color="inherit"
+                  style={{ fontFamily: "Raleway" }}
+                >
                   {" "}
                   Sign Up{" "}
                 </Button>
@@ -319,9 +377,49 @@ class ButtonAppBar extends Component {
               )}
 
               {/* ACCOUNT BUTTON? */}
+              {this.props.loginValue ? (
+                <Fragment>
+                  <Button
+                    aria-haspopup="true"
+                    onClick={this.handleAccountClick}
+                    style={{ color: "white", fontFamily: "Raleway" }}
+                  >
+                    Account
+                  </Button>
+
+                  <Menu
+                    anchorEl={anchorElAccount}
+                    open={Boolean(anchorElAccount)}
+                    onClose={this.handleMenuCloseAccount}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={orderHistoryRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Order History{" "}
+                    </MenuItem>
+
+                    <MenuItem
+                      component={Link}
+                      to={accountInfoRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Account Info{" "}
+                    </MenuItem>
+                  </Menu>
+                </Fragment>
+              ) : (
+                <Fragment />
+              )}
 
               {/*LOGIN/LOGOUT BUTTON*/}
               <Button
+                style={{ fontFamily: "Raleway" }}
                 component={Link}
                 to={loginRoute}
                 color="inherit"
@@ -331,7 +429,12 @@ class ButtonAppBar extends Component {
                 {this.props.loginText}{" "}
               </Button>
 
-              <Button component={Link} to={shopRoute} color="inherit">
+              <Button
+                component={Link}
+                to={shopRoute}
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
                 {" "}
                 Shop{" "}
               </Button>
@@ -355,7 +458,7 @@ class ButtonAppBar extends Component {
                 </Button>
               ) : (
                 // else not logged in, display generic cart icon
-                <Button color="inherit" onClick={this.props.viewCartCheck}>
+                <Button color="inherit" onClick={this.viewCartCheck}>
                   <CartIcon />
                 </Button>
               )}

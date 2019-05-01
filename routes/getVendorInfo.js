@@ -21,7 +21,8 @@ router.get('/', (req, res) => {
       let vendorData = {
         bio,
         vendorName,
-        vid
+        vid,
+        bioPictures
       } = doc.data();
       vendors.push(vendorData);
     });

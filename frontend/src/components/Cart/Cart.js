@@ -15,19 +15,27 @@ class Cart extends Component {
     super(props);
 
     this.state = {
-      total: 0
+      total: 0,
+      cart: this.props.passedItems,
+      allVendors: [],
+      vendorItemsSeparated: [],
+      vendor: this.props.passedVendor
     };
   }
 
-  //get cart from server for user
-  componentDidMount() {
+  //update total price of cart
+  updateTotal = () => {
     //get total from items
-    var currentCart = this.props.items;
+    // var currentCart = this.props.items;
+    var currentCart = this.state.cart;
     var priceTotal = 0;
 
     //if cart is empty, total price is $0
     if (currentCart.length === 0) {
-      this.props.updateTotal(priceTotal);
+      this.setState({
+        total: 0
+      })
+      // this.props.updateTotal(priceTotal);
     }
 
     //if there are items, calculate total price
@@ -40,13 +48,40 @@ class Cart extends Component {
       this.setState({
         total: priceTotal
       });
-      this.props.updateTotal(priceTotal);
+      // this.props.updateTotal(priceTotal);
+      // this.separateVendors();
     }
+  }
+
+  //update total price based on quantity 
+  updateItemTotal = (pid, newTotal, amt) => {
+    var currentCart = this.state.cart;
+    for(let i = 0; i < currentCart.length; i++){
+      if(currentCart[i].pid === pid){
+        currentCart[i].totalPrice = newTotal;
+        currentCart[i].amtPurchased = amt;
+      }
+    }
+
+    console.log("checking state of cart ", this.state.cart);
+    this.setState({
+      cart: currentCart
+    }, () => {
+      //update cart and total of cart
+      this.updateTotal();
+    })
+  }
+
+  //get cart from server for user
+  componentDidMount() {
+    //calculate running total of items
+    this.updateTotal();
   }
 
   //render cart items to cart view
   render() {
-    const cart = this.props.items.map(result => {
+    //render each item in the cart
+    const cart = this.state.cart.map(result => {
       console.log("result in cart:", result);
       if (result.size === undefined) {
         return (
@@ -59,6 +94,7 @@ class Cart extends Component {
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
+            updateItemTotal = {this.updateItemTotal}
           />
         );
       } else {
@@ -73,6 +109,7 @@ class Cart extends Component {
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
+            updateItemTotal = {this.updateItemTotal}
           />
         );
       }
@@ -83,7 +120,7 @@ class Cart extends Component {
         {/* TABLE HEADERS */}
         <span className="table-header table-row">
           <span>
-            <strong>My Cart ({this.props.items.length})</strong>
+            <strong>My Cart ({this.state.cart.length})</strong>
           </span>
           <span>
             <strong>Price</strong>
@@ -103,55 +140,11 @@ class Cart extends Component {
         <div id="total-text">Total</div>
         <div id="total-price">${this.state.total}</div>
         <div id="btn-paypal">
-          <Checkout total={this.state.total} />
+          {/* {checkoutButtons} */}
+          <Checkout cartItems = {this.state.cart} totalValue={this.state.total} />
         </div>
       </div>
     );
-
-    /*
-    //render items in cart
-    if (this.props.items.length > 0){
-      //map each entry in item array to render a component
-      const cart = this.props.items.map(result => {
-        if (result.size === undefined){
-          return <CartItem key = {result.productName} imageSrc = {result.imageLink} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
-        }
-        else{
-          return <CartItem key = {result.productName} size  = {result.size} imageSrc = {result.imageLink} pid = {result.pid} vendorID = {result.vid} productName = {result.productName} amtPurchased = {result.amtPurchased} productPrice = {result.productPrice}  totalPrice = {result.totalPrice} />
-        }
-      });
-
-      return(
-        <div>
-          <Grid container direction="column">
-            <h1> <Link to = "/orderHistory"> Order History </Link> </h1>
-            <h1> Current Cart: </h1>
-          </Grid>
-  
-          <Grid container direction="column" justify-xs-space-evenly>
-            <Checkout total = {this.state.total}/>
-            {cart}
-          </Grid>
-        </div>
-      );
-    }
-
-    //empty cart case
-    else{
-      return(
-        <div>
-          <Grid container direction="column">
-            <h1> <Link to = "/orderHistory"> Order History </Link> </h1>
-            <h1> Current Cart: </h1>
-          </Grid>
-  
-          <Grid container direction="column" justify-xs-space-evenly>
-            <Checkout total = {this.state.total}/>
-          </Grid>
-        </div>
-      );
-    }
-    */
   }
 }
 
@@ -170,6 +163,13 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.UPDATE_TOTAL,
         total: sum
+      }),
+
+    //update cart
+    updateCart: cart => 
+      dispatch({
+        type: actions.UPDATE_CART,
+        items: cart
       })
   };
 };

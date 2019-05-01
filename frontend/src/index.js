@@ -20,6 +20,8 @@ import shopItemReducer from './store/shopItemReducer';
 
 import 'typeface-roboto';
 
+
+
 //create store for redux state management
 //store stores state of application
 const rootReducer = combineReducers({
@@ -40,6 +42,7 @@ const persistConfig = {
 const pReducer = persistReducer(persistConfig, rootReducer);
 const store = createStore(pReducer);
 const persistor = persistStore(store);
+const primary = "#6F8AB7";
 
 //Provider tag allows all components to have access to store
 ReactDOM.render(<Provider store = {store}> 

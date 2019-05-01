@@ -7,6 +7,20 @@ import actions from "../../store/actions";
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import FileUploader from 'react-firebase-file-uploader';
+
+import firebase from 'firebase';
+// import firebaseConfig from '../../config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json';
+
+//config file for firebase
+// const config = {
+//   apiKey: firebaseConfig.private_key,
+//   authDomain: "ecs193-ecommerce.firebaseapp.com",
+//   databaseURL: "https://ecs193-ecommerce.firebaseio.com",
+//   storageBucket: "ecs193-ecommerce.appspot.com"
+// };
+
+// firebase.initializeApp(config);
 
 const style = {
   field: { width: "500px" }
@@ -36,7 +50,10 @@ class EditItemView extends Component {
       xsmall: 0,
       xlarge: 0,
       apparelCSS: "hideApparelSizes",
-      itemStockCSS: 'showItemStock'
+      itemStockCSS: 'showItemStock',
+      images: [],
+      imageNames:[],
+      newImages: false
     };
   }
 
@@ -149,9 +166,67 @@ class EditItemView extends Component {
     }
   };
 
+  //upload images to database
+  //upload each image in array to database
+  uploadFiles = () => {
+    //for each file in images array, upload to database
+    const files = this.state.images;
+    files.forEach(file => {
+      this.fileUploader.startUpload(file);
+    });
+  }
+
+  //detects when an image is uploaded from user
+  //change number of files to upload
+  //same function from AddProduct
+  handleFileChange = (event) => {
+    //extract file from upload component
+    const { target: { files } } = event;
+
+    //store image names
+    // const filesToStore = [];
+    const filesToStore = this.state.imageNames;
+
+    //store actual image files
+    // const actualImages = [];
+    const actualImages = this.state.images;
+
+    //store image name as an object
+    let imageName = {};
+    imageName.name = files[0].name;
+
+    //push values to arrays
+    filesToStore.push(imageName);
+    actualImages.push(files[0]);
+
+    console.log("files to store", imageName);
+    console.log("actual images", actualImages);
+    
+    //set state of component
+    this.setState({
+      images: actualImages,
+      imageNames: filesToStore
+    });
+  };
+
   //update item info, update information about item in database
   updateItemInfo = () => {
     const apiURL = '/api/adminProducts/editProduct';
+    var imagesToUpload;
+    var newImages = false;
+
+    //if the admin did not upload anymore pictures, use old array
+    if(this.state.imageNames.length === 0){
+      imagesToUpload = this.state.productPicture;
+      console.log("uploading old pictures");
+    }
+
+    //if admin updated new pictures, send new array
+    else{
+      alert("uploading new pictures");
+      imagesToUpload = this.state.imageNames;
+      newImages = true;
+    }
 
     //params for editing item
     axios.patch(apiURL, {
@@ -163,7 +238,7 @@ class EditItemView extends Component {
         productName: this.state.name,
         productPrice: this.state.price,
         stock: this.state.stock,
-        productPicture: this.state.productPicture,
+        productPicture: imagesToUpload,
         isApparel: this.state.isApparel,
         pickupLocation: this.state.pickupLocation,
         pickupTime: this.state.pickupTime,
@@ -171,11 +246,18 @@ class EditItemView extends Component {
         m_stock: Number(this.state.medium),
         l_stock: Number(this.state.large),
         xs_stock: Number(this.state.xsmall),
-        xl_stock: Number(this.state.xlarge)
+        xl_stock: Number(this.state.xlarge),
+        newImages: newImages
       }
     })
+
     .then(res => {
-      if(res.data.success === true){
+      if(res.data.success === true && this.state.imageNames.length != 0){
+        this.uploadFiles();
+        alert(res.data.message);
+      }
+
+      else if(res.data.success === true){
         alert(res.data.message);
       }
 
@@ -196,14 +278,14 @@ class EditItemView extends Component {
     
     return (
       <div>
-        <Grid container direction = "column" display = "flex" justifyContent = "center" alignItems = "center" >
+      <div className = "editItemContainer">
+        
           <h1> Select Item To Edit </h1>
-          <Grid container direction = "row" display = "flex" alignItems = "center" spacing = {24} justify = "space-evenly">
+          <h5> (If uploading new pictures, old pictures will be discarded/replaced) </h5>
+          <div className = "textForm">
             {products}
-          </Grid>
+            </div>
 
-          <Grid container direction = "column" display = "flex" alignItems = "center">
-            <div>
               <div className = "textForm" id="row">
                 <TextField
                     label="Product Name"
@@ -219,7 +301,7 @@ class EditItemView extends Component {
                     label="Product Info"
                     required="true"
                     multiline={true}
-                    rows={2}
+                    // rows={2}
                     value = {this.state.info}
                     onChange={(event) => this.setState({ info: event.target.value })}
                     style={style.field}
@@ -243,6 +325,7 @@ class EditItemView extends Component {
                     type="number"
                     value = {this.state.price}
                     onChange={(event) => this.setState({ price: event.target.value })}
+                    style={style.field}
                   />
                 </div>
 
@@ -253,6 +336,7 @@ class EditItemView extends Component {
                     type="number"
                     value = {this.state.stock}
                     onChange={(event) => this.setState({ stock: event.target.value })}
+                    style={style.field}
                   />
                 </div>
 
@@ -327,6 +411,42 @@ class EditItemView extends Component {
                     />
                   </div>
                 </div>
+                
+                <div id ="column">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}} 
+                  style={style.field}
+                />
+                </div>
+               
+              <div id ="column">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}} 
+                  style={style.field}
+                />
+                </div>  
+
+                <div id ="column">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}} 
+                  style={style.field}
+                />
+                </div>
+
+                <div id ="column">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {console.log(error)}}
+                  style={style.field} 
+                />
+                </div>
 
                 <Button 
                   variant="contained"
@@ -334,10 +454,8 @@ class EditItemView extends Component {
                   color="primary"
                   onClick = {this.updateItemInfo}> 
                   Update Item 
-                </Button>
-            </div>
-          </Grid>
-        </Grid>
+                </Button>   
+                </div>    
       </div>
     )
   }

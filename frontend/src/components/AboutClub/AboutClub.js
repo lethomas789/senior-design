@@ -1,23 +1,36 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import "./AboutClub.css";
 import axios from "axios";
 import Slider from 'react-slick';
+import testPicture from "../../images/wics2.png";
 
 class ClubInfo extends Component {
   static propTypes = {
     vendorName: PropTypes.string.isRequired,
     bio: PropTypes.string.isRequired,
+    bioPictures: PropTypes.array.isRequired, 
   };
 
   render() {
-    const { vendorName, bio } = this.props;
+    const { vendorName, bio, bioPictures } = this.props;
     return (
-      <div id="club-info-container">
-        <div className="club-header">{vendorName}</div>
-        <div className="club-info">{bio}</div>
-        <div className="club-links">TODO</div>
-      </div>
+        <div className = "greater-container">
+        <div className = "about-container">
+        <header className = "about-header">{vendorName}</header>
+        {/* <div className="club-bio">{bio}</div> */}
+        <div className = "about-main-imagee">
+        <ClubImages bioPictures={bioPictures} /></div>
+
+        <div className="club-bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique alias libero quia!</div>
+        {/* <div className="club-links">LINKS BOX</div> */}
+
+        <div className="club-links">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore hic placeat, distinctio fugiat eos quam voluptates. Accusamus nostrum dicta, aut natus sequi, maxime deleniti quisquam voluptate a laborum, optio minus.</div>
+        {/* <div className="club-meetings">CLUB MEETINGS/PICKUP INFO BOX</div> */}
+
+        <div className="club-meetings">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, esse itaque tempora harum et ipsum ex inventore cupiditate, incidunt aut perspiciatis! Voluptates repudiandae tenetur exercitationem harum temporibus laudantium optio labore!</div>
+        </div>
+        </div>
     );
   }
 }
@@ -41,11 +54,12 @@ class ClubImages extends Component {
     }
     return (
       <div className="club-pictures-container">
-        <Slider {...settings } className="club-pictures-slider">
+        <img src={testPicture} alt="About Club"/>
+        {/* <Slider {...settings } className="club-pictures-slider">
           {bioPictures.map(img => 
             <img src={img} alt="Img" key={img} className="club-picture"/>
           )}
-        </Slider>
+        </Slider> */}
       </div>
     )
   }
@@ -102,10 +116,9 @@ export default class AboutClub extends Component {
     const { vendorName, bio, bioPictures } = this.state;
 
     return (
-      <div id="about-club-container">
-        <ClubImages bioPictures={bioPictures} />
+      // <div id="about-club-container">
         <ClubInfo vendorName={vendorName} bio={bio} bioPictures={bioPictures} />
-      </div>
+      // </div>
     );
   }
 }

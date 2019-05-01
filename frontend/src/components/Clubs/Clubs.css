@@ -1,0 +1,60 @@
+.clubHeader {
+  /* padding-top: 20px; */
+  font-family: 'Comfortaa';
+  text-align: center;
+}
+
+#display-clubs-container {
+  
+  height: 95vh;
+  width: 80vw;
+  display: flex;
+  flex-direction: column;
+  margin: 0 auto;
+}
+
+.moreColls {
+  float: left;
+  width: 50%;
+  padding: 20px;
+}
+
+.clubResize {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+}
+
+#display-clubs-container h2 {
+  margin-bottom: 30px;
+}
+
+#display-club-boxes {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-around;
+}
+
+
+.display-club-box {
+  border: 1px solid grey;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  /* max-width: 400px; */
+  /* height: 300px; */
+  /* margin: 80px; */
+  background-color: white;
+  /* width: 300px; */
+  box-sizing: content-box;
+  /* margin-bottom: 0; */
+  display: -webkit-flex; /* Safari */
+  -webkit-align-items: center; /* Safari 7.0+ */
+  cursor: pointer;
+}
+
+.display-club-box img {
+  max-width: 90%;
+  /* max-height: 90%; */
+}

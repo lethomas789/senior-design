@@ -161,7 +161,13 @@ router.post('/', (req, res) => {
       .then(() => {
         console.log('Finished Sending Email.');
       })
-      .catch(console.log);
+      .catch( err => {
+        console.log(err);
+        res.status(200).json({
+          success:false,
+          message: "error sending confirmation email"
+        })
+      });
 
 
       console.log('Finished saving new order:', oid);

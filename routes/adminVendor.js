@@ -3,6 +3,7 @@ const router = express.Router();
 const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
+require("dotenv").config();
 
 // const schedule = require('node-schedule');
 
@@ -284,8 +285,8 @@ router.patch('/emailSchedule', (req, res) => {
                 // uncomment when actually sending emails
                 service: 'gmail',
                 auth: {
-                  user: 'ecs193.ecommerce@gmail.com',
-                  pass: '193ecommerce'
+                  user: process.env.EMAIL,
+                  pass: process.env.EMAIL_PASS
                 }
               }
             });

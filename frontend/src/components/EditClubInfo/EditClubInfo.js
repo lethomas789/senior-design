@@ -8,24 +8,16 @@ import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 class EditClubInfo extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {
-      bio: "",
-      lastUpdate: "",
-      lastUpdateUser: "",
-      vendorName: "",
-      emailSchedule: ""
-    };
-
-    this.getClubInfo = this.getClubInfo.bind(this);
-    this.sendEdit = this.sendEdit.bind(this);
-    this.handleSelect = this.handleSelect.bind(this);
-    this.updateEmailPreferences = this.updateEmailPreferences.bind(this);
-  }
+  state = {
+    bio: "",
+    lastUpdate: "",
+    lastUpdateUser: "",
+    vendorName: "",
+    emailSchedule: ""
+  };
 
   //get club info
-  getClubInfo() {
+  getClubInfo = () => {
     const apiURL = "/api/adminVendor";
     axios
       .get(apiURL, {
@@ -43,21 +35,29 @@ class EditClubInfo extends Component {
             vendorName: res.data.vendorName
           });
         } else {
-          alert("Error getting club info");
+          this.props.notifier({
+            title: "Error",
+            message: "Error in getting club info.",
+            type: "danger"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
       });
-  }
+  };
 
   //handle select when user chooses email preference
-  handleSelect() {
+  handleSelect = () => {
     //update email preference
     this.setState({
       emailSchedule: this.selectedPreference.value
     });
-  }
+  };
 
   //when component loads, get club info from server
   componentDidMount() {
@@ -65,7 +65,7 @@ class EditClubInfo extends Component {
   }
 
   //update email preferences
-  updateEmailPreferences() {
+  updateEmailPreferences = () => {
     const apiURL = "/api/adminVendor/emailSchedule";
     axios
       .patch(apiURL, {
@@ -77,18 +77,30 @@ class EditClubInfo extends Component {
       })
       .then(res => {
         if (res.data.success === true) {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
         } else {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message,
+            type: "warning"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
       });
-  }
+  };
 
   //update club info on server
-  sendEdit() {
+  sendEdit = () => {
     const apiURL = "/api/adminVendor/editVendorInfo";
     axios
       .patch(apiURL, {
@@ -102,21 +114,30 @@ class EditClubInfo extends Component {
       .then(res => {
         //if edit was successful, get new info for edited club
         if (res.data.success === true) {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
           this.getClubInfo();
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err,
+          type: "danger"
+        });
       });
-  }
+  };
 
   render() {
     return (
       <div id="edit-club-info-container">
         <h1> Edit Club Info </h1>
+        
         <h6> Last Updated: {this.state.lastUpdate} </h6>
-        <h6> Last Edited By: {this.state.lastUpdateUser} </h6>
+        <h6 id="goDown"> Last Edited By: {this.state.lastUpdateUser} </h6>
 
         <form id="editClubForm">
           <TextField
@@ -138,7 +159,7 @@ class EditClubInfo extends Component {
             rows={4}
           />
         </form>
-        
+
         <div className="btn-update-info">
           <Button variant="contained" color="primary" onClick={this.sendEdit}>
             Update Club Info
@@ -165,8 +186,7 @@ class EditClubInfo extends Component {
             color="primary"
             onClick={this.updateEmailPreferences}
           >
-            {" "}
-            Update Email Preferences{" "}
+            Update Email Preferences
           </Button>
         </div>
       </div>

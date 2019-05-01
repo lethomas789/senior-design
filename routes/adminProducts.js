@@ -360,7 +360,8 @@ router.patch('/editProduct', (req, res) => {
       productPicture,  // TODO: ask how this is being sent again
       pid,
       pickupLocation,
-      pickupTime
+      pickupTime,
+      newImages
     } = req.body.params;
 
     var productPrice = Number(req.body.params.productPrice);
@@ -389,7 +390,8 @@ router.patch('/editProduct', (req, res) => {
       productPicture,
       pid,
       pickupLocation,
-      pickupTime
+      pickupTime,
+      newImages
     } = req.body;
 
     var productPrice = Number(req.body.productPrice);
@@ -445,6 +447,7 @@ router.patch('/editProduct', (req, res) => {
         });
       }
 
+      //pictures only exist when an item is edited
       var pictures = [];
 
       // if no pictures sent, make default image
@@ -455,13 +458,21 @@ router.patch('/editProduct', (req, res) => {
       //made edit, uploading name of image files to construct image url for product, requires image name
       //made edit, extract file name from image name array
       else {
+        console.log(productPicture);
         for(let i = 0; i < productPicture.length; ++i) {
           let link =
           `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${pid}%2F${productPicture[i].name}?alt=media`;
-
           // TODO, figure out order of push, in terms of what order vendors want
           // to show their pics
+          console.log(link);
           pictures.push(link);
+        }
+
+        //if user uploads new pictures, must assign productPictures to new array of picture links
+        //if user does not upload new pictures, assign old links
+        console.log(newImages);
+        if(newImages === true){
+          productPicture = pictures;
         }
       }
 
@@ -475,8 +486,8 @@ router.patch('/editProduct', (req, res) => {
           productName,
           productPrice,
           vid,
-          pictures,  // array of picture links
-
+          // pictures,  // array of picture links
+          productPicture,
           isApparel,
           stock,
           xs_stock,
@@ -496,12 +507,14 @@ router.patch('/editProduct', (req, res) => {
       }
       // else, just save stock
       else {
+        console.log("updating item with new links, checking links", pictures);
         var productData = {
           productInfo,
           productName,
           productPrice,
           vid,
-          pictures,  // array of picture links
+          // pictures,  // array of picture links
+          productPicture,
 
           isApparel,
           stock,
