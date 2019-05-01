@@ -68,7 +68,9 @@ class RecoverPassword extends Component {
 
   render() {
     return (
+      <div id="passwordForm">
       <div id="enter-email-container">
+      
         <Paper className="password-paper-container">
           <h2> Password Recovery </h2>
           <div>
@@ -92,6 +94,7 @@ class RecoverPassword extends Component {
             Recover Password
           </Button>
         </Paper>
+      </div>
       </div>
     );
   }

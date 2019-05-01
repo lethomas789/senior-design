@@ -150,7 +150,9 @@ class OrderHistoryItem extends Component {
               <div>{item.quantity}</div>
 
               <div>${Number(Number(item.price) * Number(item.quantity)).toFixed(2)}</div>
+
             </div>
+            
           ))}
         </div>
       </div>
