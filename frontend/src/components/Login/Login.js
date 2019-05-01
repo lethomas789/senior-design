@@ -345,8 +345,7 @@ class Login extends Component {
                 onKeyDown={this.handleEnter}
               />
               <Link to="/recoverPassword">
-                {" "}
-                <h6> Recover Password </h6>{" "}
+                <h6> Recover Password </h6>
               </Link>
             </div>
 
@@ -356,8 +355,7 @@ class Login extends Component {
                 color="primary"
                 onClick={this.sendLogin}
               >
-                {" "}
-                Login{" "}
+                Login
               </Button>
             </div>
 
