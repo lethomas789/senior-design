@@ -1,11 +1,14 @@
 import React, { Component } from "react";
 import "./Footer.css";
+import { Link } from "react-router-dom";
 
 export default class Footer extends Component {
   render() {
     return (
       <footer className="footer-container">
-          <h1 className="footer-header">193 ECOMMERCE</h1>
+        <Link to='/'>
+          <h1 className="footer-header">ECS193 ECOMMERCE</h1>
+        </Link>
         <div className="footer-col footer-col--1">
           <div className="footer-col-list">
             <ul>
