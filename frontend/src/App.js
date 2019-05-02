@@ -36,7 +36,7 @@ const history = createBrowserHistory();
 class App extends Component {
   notificationDOMRef = React.createRef();
 
-  addNotification = ({ title, message, type }) => {
+  addNotification = ({ title, message, type, duration=2500 }) => {
     this.notificationDOMRef.current.addNotification({
       title: title,
       message: message,
@@ -45,7 +45,7 @@ class App extends Component {
       container: "bottom-left",
       animationIn: ["animated", "fadeIn"],
       animationOut: ["animated", "fadeOut"],
-      dismiss: { duration: 2500 },
+      dismiss: { duration: duration },
       dismissable: { click: true }
     });
   };
