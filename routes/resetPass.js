@@ -39,6 +39,16 @@ router.post("/", (req, res) => {
         });
       }
 
+      // if oAuth, cannot resept password
+      if (doc.data().isOauth === true) {
+        console.log("Account given for reset pass is Oauth:", email);
+        return res.json({
+          success: false,
+          message: "Sorry, it seems you signed up your account through a third-party service like Google. You cannot reset the account's password through us."
+        });
+
+      }
+
       const token = crypto.randomBytes(20).toString("hex");
       const now = Date.now();
       const time = new Date(now + 3600000);
