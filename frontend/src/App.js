@@ -117,7 +117,7 @@ class App extends Component {
             exact
             path="/recoverPassword"
             render={props => (
-              <InputRecoveryPassword
+              <RecoverPassword
                 {...props}
                 notifier={this.addNotification}
               />
