@@ -8,6 +8,8 @@ const bcrypt = require('bcrypt-nodejs');
 const jwt = require('jsonwebtoken');
 const jwtKey = require('../config/jwt.json');
 const saltRounds = 10;
+const Email = require("email-templates");
+const crypto = require("crypto");
 
 // sign up user
 router.post('/', (req, res) => {
@@ -114,31 +116,37 @@ router.post('/', (req, res) => {
         });
       });
 
+      // user has one hour to activate their account
+      const token = crypto.randomBytes(20).toString("hex");
+      const now = Date.now();
+      const time = new Date(now + 3600000);
+
+      console.log("Reset token is:", token);
+      console.log("Time is:", time);
+      db.collection('users').doc(email).set({
+        emailToken: token,
+        emailResetToken: time
+        // testTimeNow: admin.firestore.Timestamp.now()
+      }, { merge: true });
+
       // send email confirmation email
-
-      /*
       const emailSubject = "ECS 193 Ecommerce Verification Email";
-      const intro =
-        `Hello, please activate your account to use our website.` + 
-        `Please click on the following link within one hour of receiving it: `;
+      const title = `Account Confirmation`
+      const intro = 
+        `Thanks for signing up!. Please click the following link to activate your account: \n\n`
       
-        // TODO
       const link = 
-        `http://localhost:3000/inputNewPassword/?token=${token} \n\n`;
+        `http://localhost:3000/emailConfirmation/${token} \n\n`;
 
-      const introEnd = 
-        `If you did not request this, please ignore this email and your
-        password will remain unchanged.\n`;
-
-      const resetPassEmail = new Email({
+      const confirmEmail = new Email({
         message: {
-          from: "ecs193.ecommerce@gmail.com",
+          from: process.env.EMAIL,
           // from: 'test@test.com',
           subject: emailSubject,
           to: email
         },
         send: true, // set send to true when not testing
-        preview: false, // TODO turn off preview before production
+        // preview: false, // TODO turn off preview before production
 
         transport: {
           tls: {
@@ -154,26 +162,25 @@ router.post('/', (req, res) => {
         }
       });
 
-      resetPassEmail
+      confirmEmail
         .send({
-          // TODO template, and hide email info
           template: "resetPass",
           locals: {
+            title,
             intro,
             link,
-            introEnd,
           }
         })
         .then(() => {
-          console.log("Finished sending reset email to:", email);
+          console.log("Finished signup email to:", email);
+          /*
           return res.json({
             success: true,
             message: "Successfully sent reset password email."
           });
+          */
         })
         .catch(console.log);
-        */
-
     })
     .catch(err => {  // catch for ref.get
       console.error(err);
@@ -229,6 +236,7 @@ router.post('/googleSignup', (req, res) => {
       email,
       isAdmin: false,
       isVerified: true,
+      isOauth: true,
     }, { merge: true })  // merge just in casej
     .then(() => {
       console.log('New account successfully made: ', email);

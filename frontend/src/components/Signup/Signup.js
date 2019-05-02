@@ -13,6 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import coffee from "../../images/coffee.jpg";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   progress: {
@@ -34,7 +35,8 @@ class Signup extends Component {
       progressValue: 0,
       progressVariant: "determinate",
       responseMessage: "",
-      success: false
+      success: false,
+      toLogin: false,
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -48,7 +50,7 @@ class Signup extends Component {
     });
 
     if (this.state.success === true) {
-      this.props.history.push("/shop");
+      this.props.history.push("/login");
     }
   }
 
@@ -101,6 +103,7 @@ class Signup extends Component {
               message: "Signup successful, please login.",
               type: "success"
             });
+            this.setState(() => ({ toLogin: true }));
           }
 
           //display error message
@@ -123,7 +126,7 @@ class Signup extends Component {
         .catch(err => {
           this.props.notifier({
             title: "Error",
-            message: err,
+            message: err.toString(),
             type: "danger"
           });
         });
@@ -189,6 +192,10 @@ class Signup extends Component {
   };
 
   render() {
+    if (this.state.toLogin === true) {
+      return <Redirect to='/login' />
+    }
+
     const { classes } = this.props;
     return (
       <div id="signupContainer">
