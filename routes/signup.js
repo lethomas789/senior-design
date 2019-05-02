@@ -82,7 +82,8 @@ router.post('/', (req, res) => {
         },
         email,
         password,
-        isAdmin: false
+        isAdmin: false,
+        isVerified: false,
       }
 
       // password hashing
@@ -105,13 +106,73 @@ router.post('/', (req, res) => {
       // generate JWT
       const payload = { email };
       jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
-        return res.status(200).json({
+        res.status(200).json({
           success: true,
           message: "Signup Successful!",
           email, 
           token: 'Bearer ' + token
         });
       });
+
+      // send email confirmation email
+
+      /*
+      const emailSubject = "ECS 193 Ecommerce Verification Email";
+      const intro =
+        `Hello, please activate your account to use our website.` + 
+        `Please click on the following link within one hour of receiving it: `;
+      
+        // TODO
+      const link = 
+        `http://localhost:3000/inputNewPassword/?token=${token} \n\n`;
+
+      const introEnd = 
+        `If you did not request this, please ignore this email and your
+        password will remain unchanged.\n`;
+
+      const resetPassEmail = new Email({
+        message: {
+          from: "ecs193.ecommerce@gmail.com",
+          // from: 'test@test.com',
+          subject: emailSubject,
+          to: email
+        },
+        send: true, // set send to true when not testing
+        preview: false, // TODO turn off preview before production
+
+        transport: {
+          tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
+          },
+          // uncomment when actually sending emails
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS,
+          }
+        }
+      });
+
+      resetPassEmail
+        .send({
+          // TODO template, and hide email info
+          template: "resetPass",
+          locals: {
+            intro,
+            link,
+            introEnd,
+          }
+        })
+        .then(() => {
+          console.log("Finished sending reset email to:", email);
+          return res.json({
+            success: true,
+            message: "Successfully sent reset password email."
+          });
+        })
+        .catch(console.log);
+        */
 
     })
     .catch(err => {  // catch for ref.get
@@ -167,6 +228,7 @@ router.post('/googleSignup', (req, res) => {
       },
       email,
       isAdmin: false,
+      isVerified: true,
     }, { merge: true })  // merge just in casej
     .then(() => {
       console.log('New account successfully made: ', email);
