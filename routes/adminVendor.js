@@ -272,7 +272,7 @@ router.patch('/emailSchedule', (req, res) => {
 
             const vendorEmail = new Email({
               message: {
-                from: 'ecs193.ecommerce@gmail.com',
+                from: process.env.EMAIL,
                 // from: 'test@test.com',
                 subject: emailSubject,
                 to: vdoc.data().email
