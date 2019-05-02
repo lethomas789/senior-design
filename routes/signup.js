@@ -224,7 +224,7 @@ router.get("/confirmEmail", (req, res) => {
       db.collection("users")
         .doc(email)
         .update({
-          isVerified: true
+          isVerified: true,
           emailToken: null,
           emailTokenExpires: null
         });
