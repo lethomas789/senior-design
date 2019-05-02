@@ -3,6 +3,8 @@ import Cart from "../Cart/Cart";
 import axios from "axios";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
+import "./CartView.css";
+import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
 
 //split cart into groups, grouped by vendors
 //each subcart has items, subtotal, and checkout button
@@ -87,8 +89,23 @@ class CartView extends Component {
   componentDidUpdate() {}
 
   render() {
+    console.log('HERE');
+    console.log(this.state.allVendors);
+
+    // if empty cart, display empty cart text
+    if (this.state.allVendors.length === 0) {
+      var renderCarts = (
+        <div id='empty-cart'>
+          No items in cart.
+          <AddShoppingCart style={{width: "400px", height: "400px"}}/>
+        </div>
+      )
+
+
+    }
+    else {
     //render carts for each vendor
-    const renderCarts = this.state.allVendors.map(cart => {
+    var renderCarts = this.state.allVendors.map(cart => {
       //for each vendor, want to render a cart
       for (let i = 0; i < this.state.vendorItemsSeparated.length; i++) {
         var currentListItems = this.state.vendorItemsSeparated[i];
@@ -103,6 +120,8 @@ class CartView extends Component {
         }
       }
     });
+
+    }
 
     return <div>{renderCarts}</div>;
   }

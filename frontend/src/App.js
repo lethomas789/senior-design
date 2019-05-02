@@ -21,6 +21,7 @@ import AccountInfo from "./components/AccountInfo/AccountInfo";
 import RecoverPassword from "./components/RecoverPassword/RecoverPassword";
 import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecoveryPassword";
 import CartView from "./components/CartView/CartView";
+import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 
 
 import { createBrowserHistory } from "history";
@@ -131,6 +132,15 @@ class App extends Component {
             path="/inputNewPassword"
             render={props => (
               <InputRecoveryPassword
+                {...props}
+                notifier={this.addNotification}
+              />
+            )}
+          />
+          <Route
+            path="/emailConfirmation/:token"
+            render={props => (
+              <EmailConfirmation
                 {...props}
                 notifier={this.addNotification}
               />
