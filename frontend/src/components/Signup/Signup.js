@@ -100,7 +100,7 @@ class Signup extends Component {
             // });
             this.props.notifier({
               title: "Success",
-              message: "Signup successful, please login.",
+              message: "Signup successful, please check your email to activate your account.",
               type: "success"
             });
             this.setState(() => ({ toLogin: true }));
@@ -168,9 +168,10 @@ class Signup extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: "Signup successful.",
+            message: "Signup successful. Please login.",
             type: "success"
           });
+          this.setState(() => ({ toLogin: true }));
         }
 
         //display error message
