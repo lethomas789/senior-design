@@ -63,6 +63,7 @@ router.post("/", (req, res) => {
       });
       // once obtained the orders
       const emailSubject = "ECS 193 Ecommerce Reset Password";
+      const title = "Password Reset";
       const intro =
         `You are receiving this email because you (or someone else) has
         requested a password reset for your account.\n` +
@@ -104,6 +105,7 @@ router.post("/", (req, res) => {
           // TODO template, and hide email info
           template: "resetPass",
           locals: {
+            title,
             intro,
             link,
             introEnd,
