@@ -47,6 +47,14 @@ router.post('/', (req, res) =>{
       });
     }
 
+    if (!doc.data().isVerified) {
+      console.log('Login denied for unverified account:', email);
+      return res.json({
+        success: false,
+        message: 'Please check your email to activate your account, before logging in.',
+      });
+    }
+
     bcrypt.compare(password, doc.data().password, (err, validPassword) => {
       if (err) {
         return res.status(200).json({
