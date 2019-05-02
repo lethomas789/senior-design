@@ -144,7 +144,6 @@ router.get("/checkToken", (req, res) => {
     });
   }
 
-  // const time = Date.now();
   const time = new Date();
   console.log(time);
 
@@ -158,7 +157,6 @@ router.get("/checkToken", (req, res) => {
     .then(snapshot => {
       if (snapshot.empty) {
         console.log("No such token or expired:", resetPassToken);
-        console.log("what");
         return res.json({
           success: false,
           message: "Sorry, password reset link is invalid or has expired."
