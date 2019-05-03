@@ -70,7 +70,7 @@ class ShopView extends Component {
                 alt="Shop Hero"
               />
             </div>
-            <div class="hero-text">UCD CLUBS</div>
+            <div className="hero-text">UCD CLUBS</div>
           </div>
           <div id="shopview-item-container">
             {items}
