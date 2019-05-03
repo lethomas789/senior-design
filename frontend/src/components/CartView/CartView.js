@@ -102,9 +102,9 @@ class CartView extends Component {
 
 
     }
-    else {
+   else {
     //render carts for each vendor
-    const renderCarts = this.state.allVendors.map(vendor => {
+    var renderCarts = this.state.allVendors.map(vendor => {
 
       //for each vendor, want to render a cart
       for (let i = 0; i < this.state.vendorItemsSeparated.length; i++) {
@@ -117,7 +117,7 @@ class CartView extends Component {
       }
     });
 
-    }
+   }
 
     return <div>{renderCarts}</div>;
   }
