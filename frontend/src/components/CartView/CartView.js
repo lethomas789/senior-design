@@ -97,7 +97,8 @@ class CartView extends Component {
       var renderCarts = (
         <div id='empty-cart'>
           No items in cart.
-          <AddShoppingCart style={{width: "400px", height: "400px"}}/>
+          TODO add empty cart icon and button to link to shop
+          {/* <AddShoppingCart style={{width: "400px", height: "400px"}}/> */}
         </div>
       )
 
