@@ -105,7 +105,16 @@ class App extends Component {
               />
             )}
           />
-          <Route exact path="/orderHistory" component={OrderHistory} />
+          <Route
+            exact
+            path="/orderHistory"
+            render={props => (
+              <OrderHistory
+                {...props}
+                notifier={this.addNotification}
+              />
+            )}
+          />
           <Route
             path="/itemDetails/:vid/:pid"
             render={props => (

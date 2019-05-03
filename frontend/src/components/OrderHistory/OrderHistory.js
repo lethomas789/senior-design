@@ -1,16 +1,18 @@
 import React, { Component, Fragment } from "react";
+import PropTypes from "prop-types";
 import "./OrderHistory.css";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
 import axios from "axios";
-import Grid from "@material-ui/core/Grid";
 import OrderHistoryItem from "../OrderHistoryItem/OrderHistoryItem.js";
+import Button from "@material-ui/core/Button";
 
 class OrderHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      orders: []
+      orders: [],
+      show: "user" // which order history to show
     };
   }
 
@@ -29,23 +31,31 @@ class OrderHistory extends Component {
             orders: res.data.orders
           });
         } else {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message.toString(),
+            type: "warning"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "warning"
+        });
       });
   }
 
   render() {
+    const { isAdmin, adminsOf } = this.props;
+
     const orders = this.state.orders.map(order => {
-      console.log(order.date);
 
       let convertDate = new Date(order.date);
       let hours = convertDate.getHours();
       let timeOfDay = "AM";
 
-      console.log("hours ", hours);
 
       if (hours > 12) {
         hours = hours - 12;
@@ -74,6 +84,7 @@ class OrderHistory extends Component {
       return (
         <Fragment key={order.oid}>
           <OrderHistoryItem
+            key={order.oid}
             orderDate={actualDate}
             email={order.email}
             firstName={order.firstName}
@@ -98,7 +109,7 @@ class OrderHistory extends Component {
     } else {
       return (
         <div>
-          <h1 className = "centerHeader"> Orders </h1>
+          <h1 className="centerHeader"> Orders </h1>
           {/**
            * TODO
            * take out paid,
@@ -106,10 +117,162 @@ class OrderHistory extends Component {
            * differentiate user orders vs club orders for admin
            * filter/search order history
            */}
-          <div id="order-history-container">{orders}</div>
-          </div>
+
+          {/* if admin, display button to switch to logged in user orders */}
+          {isAdmin ? (
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.setState({ show: "user" })}
+              key="user"
+            >
+              User Orders
+            </Button>
+          ) : (
+            ""
+          )}
+
+          {/* if admin, display buttons to switch to club orders */}
+          {isAdmin
+            ? adminsOf.map(vendor => (
+                <Button
+                  variant="contained"
+                  color="primary"
+                  onClick={() => this.setState({ show: vendor.vid })}
+                  key={vendor.vid}
+                >
+                  {vendor.vendorName} Orders
+                </Button>
+              ))
+            : ""}
+
+          {/* below displays the actual order histories */}
+          {isAdmin
+            ? adminsOf.map((vendor, index) => (
+                <ClubOrders
+                  key={index}
+                  vid={vendor.vid}
+                  vendorName={vendor.vendorName}
+                  notifier={this.props.notifier}
+                  show={this.state.show}
+                />
+              ))
+            : ""}
+
+          {/* this user orders */}
+          {this.state.show === "user" ? (
+            <div id="order-history-container" key="user-orders">{orders}</div>
+          ) : (
+            ""
+          )}
+        </div>
       );
     }
+  }
+}
+
+class ClubOrders extends Component {
+  static propTypes = {
+    // vendors: PropTypes.array.isRequired,
+    notifier: PropTypes.func.isRequired,
+    vid: PropTypes.string.isRequired,
+    vendorName: PropTypes.string.isRequired,
+    show: PropTypes.string
+  };
+
+  state = {
+    orders: [],
+    display: true
+  };
+
+  componentDidMount() {
+    const apiURL = "/api/orders/getVendorOrders";
+    axios
+      .post(apiURL, { params: { vid: this.props.vid } })
+      .then(res => {
+        if (res.data.success) {
+          this.setState({
+            orders: res.data.orders
+          });
+        } else {
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message.toString(),
+            type: "warning"
+          });
+        }
+      })
+      .catch(err => {
+        console.log("Error in ClubOrders:", err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  }
+
+  render() {
+    const { vendorName, show, vid } = this.props;
+
+    const orders = this.state.orders.map(order => {
+      let convertDate = new Date(order.date);
+      let hours = convertDate.getHours();
+      let timeOfDay = "AM";
+
+      if (hours > 12) {
+        hours = hours - 12;
+        timeOfDay = "PM";
+      }
+
+      hours = String(hours);
+
+      let minutes = String(convertDate.getMinutes());
+
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+
+      let seconds = String(convertDate.getSeconds());
+
+      let actualDate =
+        convertDate.toDateString() +
+        " " +
+        hours +
+        ":" +
+        minutes +
+        " " +
+        timeOfDay;
+
+      return (
+        <Fragment key={order.oid}>
+          <OrderHistoryItem
+            key={order.oid}
+            orderDate={actualDate}
+            email={order.email}
+            firstName={order.firstName}
+            lastName={order.lastName}
+            oid={order.oid}
+            paid={String(order.paid)}
+            pickedUp={String(order.pickedUp)}
+            totalPrice={order.totalPrice}
+            clubHistory={false} // TODO figure out how to pass admin club version
+            items={order.items}
+          />
+        </Fragment>
+      );
+    });
+
+    if (show === vid) {
+      return (
+        <div>
+          {vendorName}
+          {orders}
+        </div>
+      );
+    }
+
+    return null;
   }
 }
 
@@ -121,7 +284,9 @@ const mapStateToProps = state => {
     login: state.auth.login,
     user: state.auth.user,
     total: state.cart.total,
-    cart: state.cart.items
+    cart: state.cart.items,
+    isAdmin: state.auth.isAdmin,
+    adminsOf: state.auth.adminsOf
   };
 };
 
