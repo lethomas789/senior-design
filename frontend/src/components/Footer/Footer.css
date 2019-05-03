@@ -21,6 +21,7 @@
 
 .footer-container a {
   text-decoration: none;
+  color: inherit;
 }
 
 .footer-header {
