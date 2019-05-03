@@ -120,7 +120,7 @@ router.post('/', (req, res) => {
       let emailSubject = 'ECS193 E-commerce Order Recipt: ' + oid;
       let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
 
-      const testEmail = new Email({
+      const receiptEmail = new Email({
         message: {
           from: process.env.EMAIL,
           // from: 'test@test.com',
@@ -149,14 +149,15 @@ router.post('/', (req, res) => {
         }
       });
 
-      testEmail.send({
+      receiptEmail.send({
         template: 'receipt',
         locals: {
           items: newItems,
           totalPrice: totalPrice,
           location: 'Test club location here.', 
           emailIntro: emailIntro,
-          oid: oid
+          oid: oid,
+          vid: vid,
         }
       })
       .then(() => {
