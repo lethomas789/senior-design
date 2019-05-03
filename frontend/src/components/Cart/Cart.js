@@ -34,7 +34,7 @@ class Cart extends Component {
     if (currentCart.length === 0) {
       this.setState({
         total: 0
-      })
+      });
       // this.props.updateTotal(priceTotal);
     }
 
@@ -51,26 +51,29 @@ class Cart extends Component {
       // this.props.updateTotal(priceTotal);
       // this.separateVendors();
     }
-  }
+  };
 
-  //update total price based on quantity 
+  //update total price based on quantity
   updateItemTotal = (pid, newTotal, amt) => {
     var currentCart = this.state.cart;
-    for(let i = 0; i < currentCart.length; i++){
-      if(currentCart[i].pid === pid){
+    for (let i = 0; i < currentCart.length; i++) {
+      if (currentCart[i].pid === pid) {
         currentCart[i].totalPrice = newTotal;
         currentCart[i].amtPurchased = amt;
       }
     }
 
     console.log("checking state of cart ", this.state.cart);
-    this.setState({
-      cart: currentCart
-    }, () => {
-      //update cart and total of cart
-      this.updateTotal();
-    })
-  }
+    this.setState(
+      {
+        cart: currentCart
+      },
+      () => {
+        //update cart and total of cart
+        this.updateTotal();
+      }
+    );
+  };
 
   //get cart from server for user
   componentDidMount() {
@@ -94,7 +97,7 @@ class Cart extends Component {
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
-            updateItemTotal = {this.updateItemTotal}
+            updateItemTotal={this.updateItemTotal}
           />
         );
       } else {
@@ -109,7 +112,7 @@ class Cart extends Component {
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
-            updateItemTotal = {this.updateItemTotal}
+            updateItemTotal={this.updateItemTotal}
           />
         );
       }
@@ -141,7 +144,11 @@ class Cart extends Component {
         <div id="total-price">${this.state.total}</div>
         <div id="btn-paypal">
           {/* {checkoutButtons} */}
-          <Checkout cartItems = {this.state.cart} totalValue={this.state.total} />
+          <Checkout
+            cartItems={this.state.cart}
+            totalValue={this.state.total}
+            notifier={this.props.notifier}
+          />
         </div>
       </div>
     );
@@ -166,7 +173,7 @@ const mapDispatchToProps = dispatch => {
       }),
 
     //update cart
-    updateCart: cart => 
+    updateCart: cart =>
       dispatch({
         type: actions.UPDATE_CART,
         items: cart

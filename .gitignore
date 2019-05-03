@@ -3,3 +3,4 @@
 /gcloudMaster/
 package-lock.json
 .env
+/frontend/.env

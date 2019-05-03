@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import GoogleLogin from "react-google-login";
 import axios from "axios";
 import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
@@ -12,6 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import coffee from "../../images/coffee.jpg";
 import PropTypes from "prop-types";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   progress: {
@@ -33,7 +35,8 @@ class Signup extends Component {
       progressValue: 0,
       progressVariant: "determinate",
       responseMessage: "",
-      success: false
+      success: false,
+      toLogin: false,
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -47,7 +50,7 @@ class Signup extends Component {
     });
 
     if (this.state.success === true) {
-      this.props.history.push("/shop");
+      this.props.history.push("/login");
     }
   }
 
@@ -59,7 +62,7 @@ class Signup extends Component {
       progressVariant: "indeterminate"
     });
 
-    if (this.state.password != this.state.confirmPassword) {
+    if (this.state.password !== this.state.confirmPassword) {
       /*
       this.setState({
         open: true,
@@ -97,9 +100,10 @@ class Signup extends Component {
             // });
             this.props.notifier({
               title: "Success",
-              message: "Signup successful, please login.",
+              message: "Signup successful, please check your email to activate your account.",
               type: "success"
             });
+            this.setState(() => ({ toLogin: true }));
           }
 
           //display error message
@@ -122,7 +126,7 @@ class Signup extends Component {
         .catch(err => {
           this.props.notifier({
             title: "Error",
-            message: err,
+            message: err.toString(),
             type: "danger"
           });
         });
@@ -137,7 +141,62 @@ class Signup extends Component {
     }
   }
 
+  //response values after oauth returns with email login and password
+  responseGoogle = response => {
+    //after getting response from google, proceed with login process of redux state
+    //send login parameters to backend
+    var email = response.w3.U3;
+    var firstName = response.w3.ofa;
+    var lastName = response.w3.wea;
+
+    //update email of user logged in by modifying state
+    this.setState({
+      email: email
+    });
+
+    //make api call to login with gmail
+    axios
+      .post("/api/signup/googleSignup", {
+        params: {
+          email: email,
+          firstName: firstName,
+          lastName: lastName
+        }
+      })
+      .then(res => {
+        //if signup is successful, display success message
+        if (res.data.success === true) {
+          this.props.notifier({
+            title: "Success",
+            message: "Signup successful. Please login.",
+            type: "success"
+          });
+          this.setState(() => ({ toLogin: true }));
+        }
+
+        //display error message
+        else {
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message + " Please try again.",
+            type: "warning"
+          });
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  };
+
   render() {
+    if (this.state.toLogin === true) {
+      return <Redirect to='/login' />
+    }
+
     const { classes } = this.props;
     return (
       <div id="signupContainer">
@@ -200,9 +259,17 @@ class Signup extends Component {
                 color="primary"
                 onClick={this.sendSignup}
               >
-                {" "}
-                Sign Up{" "}
+                Sign Up
               </Button>
+            </div>
+            <div className="pushDown">
+              <GoogleLogin
+                clientId={process.env.REACT_APP_GOOGLE_ID}
+                buttononText="Login"
+                onSuccess={this.responseGoogle}
+                onFailure={this.responseGoogle}
+                cookiePolicy={"single_host_origin"}
+              />
             </div>
           </Paper>
 

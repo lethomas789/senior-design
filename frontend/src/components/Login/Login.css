@@ -1,3 +1,4 @@
+
 #loginContainer {
   display: flex;
   flex-direction: column;
@@ -12,6 +13,11 @@
     url(../../images/painting.jpg);
   height: 95vh;
   background-size: cover;
+}
+
+#loginContainer a {
+  /* see App.css for --color-link */
+  color: var(--color-link);
 }
 
 #loginForms {

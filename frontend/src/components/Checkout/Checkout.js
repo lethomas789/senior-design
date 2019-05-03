@@ -32,11 +32,10 @@ class Checkout extends Component {
     super(props);
     this.state = {
       total: this.props.totalValue,
-      env: "sandbox",
+      env: process.env.REACT_APP_PAYPAL_ENV,
       currency: "USD",
       client: {
-        sandbox:
-          "AQRbJx9R02PGD4hvGRQlGL48Ri1mvf4c7qd6LzuNHqmbtothVDp-vI6K7qatzi3dgYcg4tkp5lpXHBye",
+        sandbox: process.env.REACT_APP_PAYPAL_SANDBOX,
         production: "YOUR-PRODUCTION-APP-ID"
       },
       paymentOptions: {
@@ -78,7 +77,9 @@ class Checkout extends Component {
 
       //construct new paypal object based on each item in Redux store container
       paypalItem.name = this.props.cartItems[i].productName;
-      paypalItem.price = String(this.props.cartItems[i].productPrice.toFixed(2));
+      paypalItem.price = String(
+        this.props.cartItems[i].productPrice.toFixed(2)
+      );
       paypalItem.currency = this.state.currency;
       paypalItem.quantity = String(this.props.cartItems[i].amtPurchased);
 
@@ -104,7 +105,6 @@ class Checkout extends Component {
   componentDidMount() {
     this.updateCheckoutParams();
   }
-  
 
   // //update payment option on update
   componentDidUpdate() {
@@ -145,9 +145,8 @@ class Checkout extends Component {
     this.props.updateSelectedVendor(this.props.cartItems[0].vid);
 
     const apiURL = "/api/orders";
-    
-    // check for stock in database before payment
 
+    // check for stock in database before payment
 
     //make post request to orders
     axios
@@ -212,10 +211,17 @@ class Checkout extends Component {
   };
 
   onNotEnoughStock = itemName => {
-    console.log('Payment canceled because there was not enough stock for:', itemName);
+    console.log(
+      "Payment canceled because there was not enough stock for:",
+      itemName
+    );
 
-    alert(`Sorry, ${itemName} has run out of stock.`);
-  }
+    this.props.notifier({
+      title: "Error",
+      message: `Sorry, ${itemName} has run out of stock.`,
+      type: "danger"
+    });
+  };
 
   onError = err => {
     // The main Paypal script could not be loaded or something blocked the script from loading
@@ -270,27 +276,31 @@ const mapStateToProps = state => {
 //redux
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
-  return{
-    updateItems: (response) => dispatch({
-      type: actions.GET_CART,
-      cart: response
-    }),
+  return {
+    updateItems: response =>
+      dispatch({
+        type: actions.GET_CART,
+        cart: response
+      }),
 
-    updateSelectedVendor: (currentVendor) => dispatch({
-      type: actions.GET_VENDOR_PRODUCTS,
-      vendor: currentVendor
-    }),
+    updateSelectedVendor: currentVendor =>
+      dispatch({
+        type: actions.GET_VENDOR_PRODUCTS,
+        vendor: currentVendor
+      }),
 
-    emptyCartOnPayment: () => dispatch({
-      type: actions.EMPTY_CART
-    }),
+    emptyCartOnPayment: () =>
+      dispatch({
+        type: actions.EMPTY_CART
+      }),
 
-    clearTotalOnPayment: (value) => dispatch({
-      type: actions.UPDATE_TOTAL,
-      total: value
-    })
-  }
-}
+    clearTotalOnPayment: value =>
+      dispatch({
+        type: actions.UPDATE_TOTAL,
+        total: value
+      })
+  };
+};
 
 /*Checkout.PropTypes = {
   classes: PropTypes.object.isRequired

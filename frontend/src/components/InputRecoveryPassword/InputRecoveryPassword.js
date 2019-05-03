@@ -53,7 +53,7 @@ class InputRecoveryPassword extends Component {
   updatePassword = () => {
     console.log("updating password");
     //input checks for matching passwords and min/max length
-    if (this.state.password != this.state.confirmPassword) {
+    if (this.state.password !== this.state.confirmPassword) {
       this.props.notifier({
         title: "Warning",
         message: "Passwords do not match.",
