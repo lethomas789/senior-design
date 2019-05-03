@@ -5,6 +5,7 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 const nodemailer = require('nodemailer');
 const Email = require('email-templates');
+require("dotenv").config();
 
 /**
  * Creates a new order when a user checksout a purchase. Saves order to orders
@@ -121,7 +122,7 @@ router.post('/', (req, res) => {
 
       const testEmail = new Email({
         message: {
-          from: 'ecs193.ecommerce@gmail.com',
+          from: process.env.EMAIL,
           // from: 'test@test.com',
           subject: emailSubject,
           to: doc.data().email
@@ -141,8 +142,8 @@ router.post('/', (req, res) => {
           // uncomment when actually sending emails
           service: 'gmail',
           auth: {
-            user: 'ecs193.ecommerce@gmail.com',
-            pass: '193ecommerce'
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS,
           }
         
         }
@@ -196,17 +197,19 @@ router.post('/', (req, res) => {
 
 
 /**
- * GET vendor's order history
+ * POST vendor's order history
+ * Make it a POST for extra security
  * 
  * @param vid - vendor vid
  */
-router.get('/getVendorOrders', (req, res) => {
-  if (req.query.params) {
-    var vid = req.query.params.vid;
+router.post('/getVendorOrders', (req, res) => {
+  if (req.body.params) {
+    var vid = req.body.params.vid;
   }
   else {
-    var vid = req.query.vid
+    var vid = req.body.vid
   }
+
 
   if (!vid) {
     console.log('Error: missing request params in GET orders route.');
@@ -432,96 +435,94 @@ router.get('/getUserOrders', (req, res) => {
  });
 
 router.get('/testEmail', (req, res) => {
-  db.collection('vendors').get().then(snapshot => {
-    snapshot.forEach(vdoc => {
-      db.collection('orders').where('vid', '==', vdoc.id)
-        .where('seenByVendor', '==', false)
-        .orderBy('date', 'asc')
-        .get().then(ordersSnapshot => {
-          let orders = [];
-          let orderCount = 0;
-          ordersSnapshot.forEach(odoc => {
-            odoc.update({ seenByVendor: true });
+  // db.collection('vendors').get().then(snapshot => {
+  //   snapshot.forEach(vdoc => {
+  //     db.collection('orders').where('vid', '==', vdoc.id)
+  //       .where('seenByVendor', '==', false)
+  //       .orderBy('date', 'asc')
+  //       .get().then(ordersSnapshot => {
+  //         let orders = [];
+  //         let orderCount = 0;
+  //         ordersSnapshot.forEach(odoc => {
+  //           odoc.update({ seenByVendor: true });
 
-            /*
-            let orderData = {
-              // have to call toDate on firestore data or else errors
-              date: odoc.data().date.toDate(),
-              items: odoc.data().items,
-              totalPrice: odoc.data().totalPrice,
-              paid: odoc.data().paid,
-              firstName: odoc.data().name.firstName,
-              lastName: odoc.data().name.lastName,
-              oid: odoc.data().oid,
-              pickedUp: odoc.data().pickedUp,
-              email: odoc.data().email
-            };
-            orders.push(orderData);
-            */
+  //           let orderData = {
+  //             // have to call toDate on firestore data or else errors
+  //             date: odoc.data().date.toDate(),
+  //             items: odoc.data().items,
+  //             totalPrice: odoc.data().totalPrice,
+  //             paid: odoc.data().paid,
+  //             firstName: odoc.data().name.firstName,
+  //             lastName: odoc.data().name.lastName,
+  //             oid: odoc.data().oid,
+  //             pickedUp: odoc.data().pickedUp,
+  //             email: odoc.data().email
+  //           };
+  //           orders.push(orderData);
 
-            // NOTE: for our own sanity, we are just gonna send a count of items
-            // and a link to order history page.
-            orderCount += 1;
-          });
+  //           // NOTE: for our own sanity, we are just gonna send a count of items
+  //           // and a link to order history page.
+  //           orderCount += 1;
+  //         });
 
-          // once obtained the orders
-          let emailSubject = "You've got new orders from ECS193 E-commerce"
+  //         // once obtained the orders
+  //         let emailSubject = "You've got new orders from ECS193 E-commerce"
 
-          const vendorEmail = new Email({
-            message: {
-              // from: 'ecs193.ecommerce@gmail.com',
-              from: 'test@test.com',
-              subject: emailSubject,
-              to: 'test@test.com'
-            },
-            send: false,  // set send to true when not testing
-            // preview: false,  // TODO turn off preview before production
+  //         const vendorEmail = new Email({
+  //           message: {
+  //             // from: 'ecs193.ecommerce@gmail.com',
+  //             from: 'test@test.com',
+  //             subject: emailSubject,
+  //             to: 'test@test.com'
+  //           },
+  //           send: false,  // set send to true when not testing
+  //           // preview: false,  // TODO turn off preview before production
 
-            transport: {
-              host: 'localhost', // TODO update w/ website?
-              port: 465,
-              secure: true,
-              tls: {
-                // do not fail on invalid certs
-                rejectUnauthorized: false
-              },
-              /*
-              // uncomment when actually sending emails
-              service: 'gmail',
-              auth: {
-                user: 'ecs193.ecommerce@gmail.com',
-                pass: '193ecommerce'
-              }
-              */
-            }
-          });
+  //           transport: {
+  //             host: 'localhost', // TODO update w/ website?
+  //             port: 465,
+  //             secure: true,
+  //             tls: {
+  //               // do not fail on invalid certs
+  //               rejectUnauthorized: false
+  //             },
+  //             /*
+  //             // uncomment when actually sending emails
+  //             service: 'gmail',
+  //             auth: {
+  //               user: 'ecs193.ecommerce@gmail.com',
+  //               pass: '193ecommerce'
+  //             }
+  //             */
+  //           }
+  //         });
 
-          // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
-          let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
+  //         // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
+  //         let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
 
-          vendorEmail.send({
-            template: 'ordersNotification',
-            locals: {
-              emailIntro: emailIntro,
-            }
-          })
-            .then(() => {
-              console.log('Finished Sending Email.');
-            })
-            .catch(console.log);
+  //         vendorEmail.send({
+  //           template: 'ordersNotification',
+  //           locals: {
+  //             emailIntro: emailIntro,
+  //           }
+  //         })
+  //           .then(() => {
+  //             console.log('Finished Sending Email.');
+  //           })
+  //           .catch(console.log);
 
-        })
-        .catch(err => {
-          console.log('Error in getting user orders for emailing:', err);
-        });
+  //       })
+  //       .catch(err => {
+  //         console.log('Error in getting user orders for emailing:', err);
+  //       });
 
-    });  // end forEach vendor
+  //   });  // end forEach vendor
 
-  })
-    .catch(err => {
-      console.log('Server error in getting vendors for emailing:', err);
-    });
-  return res.sendStatus(200);
+  // })
+  //   .catch(err => {
+  //     console.log('Server error in getting vendors for emailing:', err);
+  //   });
+  // return res.sendStatus(200);
 
 });
 
