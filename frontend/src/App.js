@@ -53,6 +53,7 @@ class App extends Component {
   render() {
     return (
       <Router>
+
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />

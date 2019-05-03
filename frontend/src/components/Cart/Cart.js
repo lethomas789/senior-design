@@ -5,9 +5,11 @@ import { connect } from "react-redux";
 import actions from "../../store/actions";
 import Grid from "@material-ui/core/Grid";
 import CartItem from "../CartItem/CartItem";
-import Checkout from "../Checkout/Checkout";
+import Checkout from "../Checkout/Checkout";  
 import { Link } from "react-router-dom";
 import EmptyItem from "../EmptyItem/EmptyItem";
+import ReactNotification from "react-notifications-component";
+import "react-notifications-component/dist/theme.css";
 
 //component to display user's cart
 class Cart extends Component {
@@ -48,12 +50,11 @@ class Cart extends Component {
       this.setState({
         total: priceTotal
       });
-      // this.props.updateTotal(priceTotal);
-      // this.separateVendors();
     }
   };
 
   //update total price based on quantity
+  //if user changes quantity in selector, find the matching item via pid and update total price/amount purchased 
   updateItemTotal = (pid, newTotal, amt) => {
     var currentCart = this.state.cart;
     for (let i = 0; i < currentCart.length; i++) {
@@ -62,6 +63,7 @@ class Cart extends Component {
         currentCart[i].amtPurchased = amt;
       }
     }
+
 
     console.log("checking state of cart ", this.state.cart);
     this.setState(
@@ -97,7 +99,8 @@ class Cart extends Component {
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
-            updateItemTotal={this.updateItemTotal}
+            updateItemTotal = {this.updateItemTotal}
+            notifier = {this.props.notifier}
           />
         );
       } else {
@@ -112,7 +115,8 @@ class Cart extends Component {
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
-            updateItemTotal={this.updateItemTotal}
+            updateItemTotal = {this.updateItemTotal}
+            notifier = {this.props.notifier}
           />
         );
       }
@@ -144,6 +148,7 @@ class Cart extends Component {
         <div id="total-price">${this.state.total}</div>
         <div id="btn-paypal">
           {/* {checkoutButtons} */}
+
           <Checkout
             cartItems={this.state.cart}
             totalValue={this.state.total}

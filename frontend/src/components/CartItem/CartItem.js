@@ -13,13 +13,30 @@ class CartItem extends Component {
     pid: this.props.pid,
     vid: this.props.vendorID,
     size: this.props.size,
-    amtPurchased: 0,
+    amtPurchased: this.props.amtPurchased,
     price: this.props.productPrice,
-    total: this.props.totalPrice
+    total: this.props.totalPrice,
+    stock: 0
   };
 
+  //when a CartItem renders, store the state of the stock
+  //local stock checking used to quantity selector check
   componentDidMount() {
-    this.setState({ amtPurchased: this.props.amtPurchased });
+    const apiURL = '/api/getProductInfo';
+    axios.get(apiURL, {
+      params:{
+        pid: this.props.pid
+      }
+    })
+    .then(res => {
+      //extract stock info and store , check local stock
+      this.setState({
+        stock: res.data.product.stock
+      })
+    })
+    .catch(err => {
+      alert(err);
+    })
   }
 
   handleChange = name => event => {
@@ -29,8 +46,22 @@ class CartItem extends Component {
   // TODO figure out how we want to handle 0 change here
   //want to update total value of both item in cart and total sum
   handleQuantityChange = event => {
+    //if the user wants to change quantity selector, check if value exceeds current stock
+    if(event.target.value > this.state.stock){
+      //added notifier to indicate if user is exceeding stock of item based on quantity selector
+      this.props.notifier({
+        title: "Warning",
+        message: "Quantity exceeds stock",
+        type: "warning"
+      });
+      //if exceeded, return
+      return;
+    } 
+
+    //if not exceeded, proceed with updating new total/amount in cart
+    //user cannot select 0 or negative items to purchase, need at least 1
     var newAmount = event.target.value;
-    if (event.target.value < 0) {
+    if (event.target.value < 1) {
       this.setState({ amtPurchased: 1 });
     } else {
       //calculate new total of specific item, where total = value * price
@@ -67,26 +98,11 @@ class CartItem extends Component {
           })
           .then(res => {
             //after removing item from cart, update cart on server
+            console.log("updating cartview cart", res.data);
             this.props.updateItems(res.data.data);
-            //get total from items
-            var currentCart = res.data.data;
-            var priceTotal = 0;
 
-            //if cart is empty, total price is $0
-            if (currentCart.length === 0) {
-              console.log("cart is empty");
-              this.props.updateTotal(priceTotal);
-            }
-
-            //if there are items, calculate total price
-            else {
-              console.log("cart is not empty");
-              for (let i = 0; i < currentCart.length; i++) {
-                priceTotal += Number(currentCart[i].totalPrice);
-              }
-              console.log(priceTotal);
-              this.props.updateTotal(priceTotal);
-            }
+            //reload the page after deleting items to update carts of each vendor
+            window.location.reload();
           })
           .catch(err => {
             alert(err);
