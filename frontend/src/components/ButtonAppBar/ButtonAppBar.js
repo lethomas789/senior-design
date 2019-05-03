@@ -145,7 +145,6 @@ class ButtonAppBar extends Component {
         message: "Logout successful.",
         type: "success"
       });
-
     }
   };
 
@@ -322,8 +321,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuClose}
                     >
-                      {" "}
-                      Edit Club Info{" "}
+                      Edit Club Info
                     </MenuItem>
                     <MenuItem
                       component={Link}
@@ -331,8 +329,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuClose}
                     >
-                      {" "}
-                      Add Items{" "}
+                      Add Items
                     </MenuItem>
                     <MenuItem
                       component={Link}
@@ -340,8 +337,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuClose}
                     >
-                      {" "}
-                      Edit Items{" "}
+                      Edit Items
                     </MenuItem>
                   </Menu>
                 </Fragment>
@@ -357,8 +353,16 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 style={{ fontFamily: "Raleway" }}
               >
-                {" "}
-                About{" "}
+                About
+              </Button>
+
+              <Button
+                component={Link}
+                to="/clubs"
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
+                Clubs
               </Button>
 
               {/* display signup if not logged in */}
@@ -369,8 +373,7 @@ class ButtonAppBar extends Component {
                   color="inherit"
                   style={{ fontFamily: "Raleway" }}
                 >
-                  {" "}
-                  Sign Up{" "}
+                  Sign Up
                 </Button>
               ) : (
                 <Fragment />
