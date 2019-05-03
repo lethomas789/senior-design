@@ -219,8 +219,7 @@ class ButtonAppBar extends Component {
       var vendorList = this.props.adminsOf.map(result => {
         return (
           <MenuItem key={result.vid} value={result.vendorName}>
-            {" "}
-            {result.vendorName}{" "}
+            {result.vendorName}
           </MenuItem>
         );
       });
@@ -401,8 +400,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuCloseAccount}
                     >
-                      {" "}
-                      Order History{" "}
+                      Order History
                     </MenuItem>
 
                     <MenuItem
@@ -411,8 +409,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuCloseAccount}
                     >
-                      {" "}
-                      Account Info{" "}
+                      Account Info
                     </MenuItem>
                   </Menu>
                 </Fragment>
@@ -428,8 +425,7 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 onClick={this.logoutUser}
               >
-                {" "}
-                {this.props.loginText}{" "}
+                {this.props.loginText}
               </Button>
 
               <Button
@@ -438,8 +434,7 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 style={{ fontFamily: "Raleway" }}
               >
-                {" "}
-                Shop{" "}
+                Shop
               </Button>
 
               {/* CART BUTTON */}
