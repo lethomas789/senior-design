@@ -24,15 +24,16 @@ class RecoverPassword extends Component {
 
   //function called when clicking recover password
   sendRecoverEmail = () => {
+    if (this.state.email === "") {
+      this.props.notifier({
+        title: "Warning",
+        message: "Please enter an email.",
+        type: "warning"
+      });
+      return;
+    }
     //get request to send email with password
     const apiURL = "/api/resetPass";
-    console.log("this is the input of the user's email", this.state.email);
-    this.props.notifier({
-      title: "Success",
-      message:
-        "A password reset link has been sent to your email. Please check your inbox.",
-      type: "success"
-    });
     axios
       .post(apiURL, {
         params: {
@@ -49,11 +50,11 @@ class RecoverPassword extends Component {
           });
         } else {
           // alert("no password for user that signed in with google");
-          // TODO UPDATE BACKEND TO CHECK FOR GMAIL
           this.props.notifier({
             title: "Warning",
-            message: "Sorry, no such account for given email.",
-            type: "warning"
+            message: res.data.message,
+            type: "warning",
+            // duration: 5000  // make the notifier here last longer
           });
         }
       })
@@ -77,8 +78,16 @@ class RecoverPassword extends Component {
           <form>
             <TextField
               label="Email"
-              required="true"
+              required={true}
               onChange={this.handleEmailField}
+              onKeyPress={(ev) => {
+                if (ev.key === 'Enter') {
+                  // bug where pressing enter refreshes the page, so below is
+                  // done to force the enter key to call sendRecoverEmail()
+                  ev.preventDefault();
+                  this.sendRecoverEmail();
+                }
+              }}
             />
           </form>
           <Button

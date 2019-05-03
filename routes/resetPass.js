@@ -39,6 +39,16 @@ router.post("/", (req, res) => {
         });
       }
 
+      // if oAuth, cannot resept password
+      if (doc.data().isOauth === true) {
+        console.log("Account given for reset pass is Oauth:", email);
+        return res.json({
+          success: false,
+          message: "Sorry, it seems you signed up your account through a third-party service like Google. You cannot reset the account's password through us."
+        });
+
+      }
+
       const token = crypto.randomBytes(20).toString("hex");
       const now = Date.now();
       const time = new Date(now + 3600000);
@@ -53,6 +63,7 @@ router.post("/", (req, res) => {
       });
       // once obtained the orders
       const emailSubject = "ECS 193 Ecommerce Reset Password";
+      const title = "Password Reset";
       const intro =
         `You are receiving this email because you (or someone else) has
         requested a password reset for your account.\n` +
@@ -94,6 +105,7 @@ router.post("/", (req, res) => {
           // TODO template, and hide email info
           template: "resetPass",
           locals: {
+            title,
             intro,
             link,
             introEnd,
@@ -132,7 +144,6 @@ router.get("/checkToken", (req, res) => {
     });
   }
 
-  // const time = Date.now();
   const time = new Date();
   console.log(time);
 
@@ -146,7 +157,6 @@ router.get("/checkToken", (req, res) => {
     .then(snapshot => {
       if (snapshot.empty) {
         console.log("No such token or expired:", resetPassToken);
-        console.log("what");
         return res.json({
           success: false,
           message: "Sorry, password reset link is invalid or has expired."

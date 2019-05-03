@@ -1,3 +1,4 @@
+
 #loginContainer {
   display: flex;
   flex-direction: column;
@@ -14,11 +15,16 @@
   background-size: cover;
 }
 
+#loginContainer a {
+  /* see App.css for --color-link */
+  color: var(--color-link);
+}
+
 #loginForms {
   display: flex;
   flex-direction: column;
   align-self: center;
-  opacity: 0.90;
+  opacity: 0.95;
 }
 
 #loginButton {

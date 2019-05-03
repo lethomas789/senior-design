@@ -64,13 +64,13 @@ class ShopView extends Component {
           <div className="shop-hero-image-container">
             <div className="hero-image">
               <img
-                src={require("../../images/more_treats.jpg")}
+                src={require("../../images/farmersmarket.jpg")}
                 width="100%"
-                height="100%"
+                height="60%"
                 alt="Shop Hero"
               />
             </div>
-            <div class="hero-text">UCD CLUBS</div>
+            <div className="hero-text">UCD CLUBS</div>
           </div>
           <div id="shopview-item-container">
             {items}

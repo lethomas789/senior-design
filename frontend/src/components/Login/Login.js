@@ -15,7 +15,7 @@ import { withStyles } from "@material-ui/core/styles";
 import CircularProgress from "@material-ui/core/CircularProgress";
 import PropTypes from "prop-types";
 import painting from "../../images/painting.jpg";
-import { Link, withRouter } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const styles = theme => ({
   progress: {
@@ -34,7 +34,8 @@ class Login extends Component {
       open: false,
       progressValue: 0,
       progressVariant: "determinate",
-      responseMessage: ""
+      responseMessage: "",
+      toShop: false,
     };
     this.getCart = this.getCart.bind(this);
     this.sendLogin = this.sendLogin.bind(this);
@@ -55,6 +56,9 @@ class Login extends Component {
       .then(res => {
         //after getting cart info, update redux store container
         this.props.updateItems(res.data.data);
+
+        // switch to shop page
+        this.setState(() => ({ toShop: true}));
       })
       .catch(err => {
         this.props.notifier({
@@ -220,7 +224,7 @@ class Login extends Component {
 
     //make api call to login with gmail
     axios
-      .get("/api/login/gmail", {
+      .get("/api/login/googleLogin", {
         params: {
           email: email,
           firstName: firstName,
@@ -232,6 +236,12 @@ class Login extends Component {
         if (res.data.success === true && res.data.vendors.length === 0) {
           //dispatch update login action to update login state
           this.props.updateLogin(email);
+
+          this.props.notifier({
+            title: "Success",
+            message: "Login Successful",
+            type: "success"
+          });
 
           //after updating login, get cart info
           this.getCart();
@@ -289,7 +299,7 @@ class Login extends Component {
             .catch(err => {
               this.props.notifier({
                 title: "Error",
-                message: err,
+                message: err.toString(),
                 type: "danger"
               });
             });
@@ -305,7 +315,7 @@ class Login extends Component {
           */
           this.props.notifier({
             title: "Warning",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "warning"
           });
         }
@@ -313,13 +323,17 @@ class Login extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
   };
   render() {
     const { classes } = this.props;
+    if (this.state.toShop === true) {
+      return <Redirect to="/shop" />
+    }
+
     return (
       <div id="loginContainer">
         <div id="loginForms">
@@ -329,7 +343,7 @@ class Login extends Component {
               <TextField
                 id="outline-simple-start-adornment"
                 label="Email"
-                required="true"
+                required={true}
                 onChange={event => this.setState({ email: event.target.value })}
                 onKeyDown={this.handleEnter}
               />
@@ -338,15 +352,14 @@ class Login extends Component {
               <TextField
                 type="password"
                 label="Password"
-                required="true"
+                required={true}
                 onChange={event =>
                   this.setState({ password: event.target.value })
                 }
                 onKeyDown={this.handleEnter}
               />
               <Link to="/recoverPassword">
-                {" "}
-                <h6> Recover Password </h6>{" "}
+                <h6> Recover Password </h6>
               </Link>
             </div>
 
@@ -356,14 +369,13 @@ class Login extends Component {
                 color="primary"
                 onClick={this.sendLogin}
               >
-                {" "}
-                Login{" "}
+                Login
               </Button>
             </div>
 
             <div className="pushDown2">
               <GoogleLogin
-                clientId="409029968816-1bf8e3qtt6jb2ivj9udb1qata3q0bdrc.apps.googleusercontent.com"
+                clientId={process.env.REACT_APP_GOOGLE_ID}
                 buttononText="Login"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
@@ -372,7 +384,7 @@ class Login extends Component {
             </div>
           </Paper>
 
-          <div className="progressContainer">
+          {/* <div className="progressContainer">
             <div className="circle">
               <CircularProgress
                 className="loadingCircle"
@@ -399,7 +411,7 @@ class Login extends Component {
                 Ok
               </Button>
             </DialogActions>
-          </Dialog>
+          </Dialog> */}
         </div>
       </div>
     );

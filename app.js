@@ -113,7 +113,7 @@ var initSchedules = db
 
                 const vendorEmail = new Email({
                   message: {
-                    from: "ecs193.ecommerce@gmail.com",
+                    from: process.env.EMAIL,
                     // from: 'test@test.com',
                     subject: emailSubject,
                     to: vdoc.data().email
@@ -167,10 +167,10 @@ var initSchedules = db
 
     const errorEmail = new Email({
       message: {
-        from: "ecs193.ecommerce@gmail.com",
+        from: process.env.EMAIL,
         // from: 'test@test.com',
         subject: emailSubject,
-        to: "thele@ucdavis.edu"
+        to: process.env.ERROR_EMAIL,
       },
       send: true, // set send to true when not testing
       // preview: false,  // TODO turn off preview before production

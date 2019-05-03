@@ -19,14 +19,16 @@ export default class About extends Component {
             modern technologies such as React, Node, Firebase, and Google Cloud Services. 
             </div>
         </section>
-        <section className="about-link-box about-link-box-1">BOX 1</section>
-        <section className="about-link-box about-link-box-2">BOX 2</section>
-        <section className="about-contact-box">
+        
+        <section className="about-link-box about-link-box-1"><div className = "hero-texttt">CONTACT</div></section>
+ 
+        <section className="about-link-box about-link-box-2"><div className = "hero-texttt">FAQ</div></section>
+        {/* <section className="about-contact-box">
           BOX TO HOLD CONTACT US INFO?
         </section>
         <div className="about-bottom-image">
           BOTTOM IMAGE ------------------------------------------------------
-        </div>
+        </div> */}
       </div>
       </div>
       /*

@@ -47,6 +47,14 @@ router.post('/', (req, res) =>{
       });
     }
 
+    if (!doc.data().isVerified) {
+      console.log('Login denied for unverified account:', email);
+      return res.json({
+        success: false,
+        message: 'Please check your email to activate your account, before logging in.',
+      });
+    }
+
     bcrypt.compare(password, doc.data().password, (err, validPassword) => {
       if (err) {
         return res.status(200).json({
@@ -178,6 +186,7 @@ router.get('/googleLogin', (req, res) => {
           });
         }
         const vendors = adoc.data().vendors;
+        console.log('vendors here', vendors);
 
         return res.status(200).json({
           success: true,
@@ -198,8 +207,9 @@ router.get('/googleLogin', (req, res) => {
       return res.json({
         success: true,
         message: 'Login successful.',
-        email
-      })
+        email,
+        vendors: [],
+      });
     }
   })
   .catch(err => {
