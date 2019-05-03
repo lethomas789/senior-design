@@ -22,6 +22,7 @@ import RecoverPassword from "./components/RecoverPassword/RecoverPassword";
 import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecoveryPassword";
 import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
+import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 
 
 import { createBrowserHistory } from "history";
@@ -54,6 +55,8 @@ class App extends Component {
   render() {
     return (
       <Router>
+        <ScrollToTop>
+
         <div>
           <ButtonAppBar notifier={this.addNotification}/>
           <Route exact path="/" component={Home} />
@@ -158,9 +161,11 @@ class App extends Component {
           <Footer />
           <ReactNotification ref={this.notificationDOMRef} />
         </div>
+        </ScrollToTop>
       </Router>
     );
   }
 }
+
 
 export default App;
