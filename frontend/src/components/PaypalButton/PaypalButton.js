@@ -25,9 +25,8 @@ class PaypalButton extends React.Component {
         })
         .then(res => {
           if (res.data.availableStock === false) {
-            reject(item.productName)
-          }
-          else {
+            reject(item.productName);
+          } else {
             resolve("Stock available");
           }
         })
@@ -44,6 +43,8 @@ class PaypalButton extends React.Component {
     for (let i = 0; i < items.length; i++) {
       promises.push(this.asyncItemStockCheck(items[i]));
     }
+    return Promise.all(promises);
+    /*
     Promise.all(promises)
       .then(values => {
         console.log("All items stock available.");
@@ -55,6 +56,7 @@ class PaypalButton extends React.Component {
         this.props.onNotEnoughStock(errorItem);
         return false;
       });
+      */
   };
 
   componentDidMount() {
@@ -109,26 +111,68 @@ class PaypalButton extends React.Component {
 
     // onAuthorize occurs once the user authorizes the purchase by choosing payment type
     const onAuthorize = (data, actions) => {
-      let availableStock = this.checkStock(items);
-      console.log(availableStock);
-      if (availableStock === true) {
-        actions.payment.execute().then(() => {
-          const payment = {
-            paid: true,
-            cancelled: false,
-            payerID: data.payerID,
-            paymentID: data.paymentID,
-            paymentToken: data.paymentToken,
-            returnUrl: data.returnUrl
-          };
+      this.checkStock(items)
+        .then(res => {
+          // if all promises resovlve
+          console.log("Check Stock Successful, proceeding to execute payment.");
+          actions.payment
+            .execute()
+            .then(() => {
+              const payment = {
+                paid: true,
+                cancelled: false,
+                payerID: data.payerID,
+                paymentID: data.paymentID,
+                paymentToken: data.paymentToken,
+                returnUrl: data.returnUrl
+              };
 
-          onSuccess(payment);
+              onSuccess(payment);
+            })
+            .catch(err => {
+              console.log("Error in paypal payment execution:", err);
+              this.props.notifier({
+                title: 'Error',
+                message: 'Sorry, there was an error. Please contact the support email for help.',
+                type: 'danger',
+                duration: 5000,
+              });
+            });
+        })
+        // if any of the promises reject
+        .catch(errorItem => {
+          console.log("Not enough stock for:", errorItem);
+          // this.setState({ errorItem: errorItem });
+          onNotEnoughStock(errorItem);
+          onCancel(payment);
         });
-      } else {
-        onCancel(payment);
-        // alert(`Sorry, ${this.state.errorItem} has run out of stock.`);
-        // onNotEnoughStock(this.state.errorItem);
-      }
+      /*
+      const availableStock = await this.checkStock(items);
+      console.log(availableStock);
+      this.checkStock(items).then(res => {
+        console.log("DONE");
+        console.log(res);
+        if (res === true) {
+          console.log("success");
+          actions.payment.execute().then(() => {
+            const payment = {
+              paid: true,
+              cancelled: false,
+              payerID: data.payerID,
+              paymentID: data.paymentID,
+              paymentToken: data.paymentToken,
+              returnUrl: data.returnUrl
+            };
+
+            onSuccess(payment);
+          });
+        } else {
+          onCancel(payment);
+          // alert(`Sorry, ${this.state.errorItem} has run out of stock.`);
+          // onNotEnoughStock(this.state.errorItem);
+        }
+      });
+      */
     };
 
     return (
