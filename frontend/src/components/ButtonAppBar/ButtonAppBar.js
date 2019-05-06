@@ -198,7 +198,7 @@ class ButtonAppBar extends Component {
           .catch(err => {
             this.props.notifier({
               title: "Error",
-              message: err,
+              message: err.toString(),
               type: "danger"
             });
           });

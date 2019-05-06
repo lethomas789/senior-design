@@ -45,14 +45,14 @@ class RecoverPassword extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
         } else {
           // alert("no password for user that signed in with google");
           this.props.notifier({
             title: "Warning",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "warning",
             // duration: 5000  // make the notifier here last longer
           });
@@ -61,7 +61,7 @@ class RecoverPassword extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });

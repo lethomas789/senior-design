@@ -80,12 +80,20 @@ class ShopItem extends Component {
                 });
               })
               .catch(err => {
-                alert(err);
+                this.props.notifier({
+                  title: "Error",
+                  message: err.toString(),
+                  type: "danger"
+                });
               });
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
         });
     }
   } //end of add item

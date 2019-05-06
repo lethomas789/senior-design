@@ -45,7 +45,6 @@ class Login extends Component {
 
   //get logged in user's cart info
   getCart() {
-    //   const apiURL = "http://localhost:4000/api/getUserCart"
     const apiURL = "/api/getUserCart";
     axios
       .get(apiURL, {
@@ -63,7 +62,7 @@ class Login extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -76,7 +75,6 @@ class Login extends Component {
       progressValue: 50,
       progressVariant: "indeterminate"
     });
-    //const apiURL = "http://localhost:4000/api/login";
     const apiURL = "/api/login";
     axios
       .post(apiURL, {
@@ -159,7 +157,7 @@ class Login extends Component {
             .catch(err => {
               this.props.notifier({
                 title: "Error",
-                message: err,
+                message: err.toString(),
                 type: "danger"
               });
             });
@@ -184,7 +182,7 @@ class Login extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });

@@ -103,11 +103,19 @@ export default class AboutClub extends Component {
             bioPictures
           });
         } else {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message,
+            type: "danger"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   }
 

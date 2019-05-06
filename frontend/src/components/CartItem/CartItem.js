@@ -35,7 +35,11 @@ class CartItem extends Component {
       })
     })
     .catch(err => {
-      alert(err);
+      this.props.notifier({
+        title: "Error",
+        message: err.toString(),
+        type: "danger"
+      });
     })
   }
 
@@ -113,20 +117,25 @@ class CartItem extends Component {
               this.props.updateCartAfterDelete(newItemsAfterDeletion);
             }
 
-            //update list of vendor items after item removal
+            //update list of vendor items after item removal, no more items in vendor, empty
             else{
               this.props.updateCartAfterDelete(res.data.data);
             }
-        
-            //reload the page after deleting items to update carts of each vendor
-            // window.location.reload();
           })
           .catch(err => {
-            alert(err);
+            this.props.notifier({
+              title: "Error",
+              message: err.toString(),
+              type: "danger"
+            });
           });
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   };
 

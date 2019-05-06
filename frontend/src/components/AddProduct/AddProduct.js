@@ -200,7 +200,7 @@ class AddProduct extends Component {
             this.uploadFiles();
             this.props.notifier({
               title: "Success",
-              message: res.data.message,
+              message: res.data.message.toString(),
               type: "success"
             });
           }
@@ -208,7 +208,7 @@ class AddProduct extends Component {
         .catch(err => {
           this.props.notifier({
             title: "Error",
-            message: err,
+            message: err.toString(),
             type: "danger"
           });
         });
@@ -237,7 +237,7 @@ class AddProduct extends Component {
             this.uploadFiles();
             this.props.notifier({
               title: "Success",
-              message: res.data.message,
+              message: res.data.message.toString(),
               type: "success"
             });
           }
@@ -245,7 +245,7 @@ class AddProduct extends Component {
         .catch(err => {
           this.props.notifier({
             title: "Error",
-            message: err,
+            message: err.toString(),
             type: "danger"
           });
         });
@@ -422,7 +422,13 @@ class AddProduct extends Component {
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }} 
               />
               </div>
 
@@ -430,7 +436,13 @@ class AddProduct extends Component {
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}              
               />
               </div>
 
@@ -438,14 +450,26 @@ class AddProduct extends Component {
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}              
               />
               </div>
           
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}              
               />
             </div>
 

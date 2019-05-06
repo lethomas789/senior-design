@@ -14,7 +14,6 @@ class ShopView extends Component {
 
   //get products from server after mounting to screen
   componentDidMount() {
-    //const apiURL = "http://localhost:4000/api/getAllProducts";
     const apiURL = "/api/getAllProducts";
     //get all products from server
     //update state of view to obtain items
@@ -34,11 +33,19 @@ class ShopView extends Component {
             this.props.updateVendors(res.data.vendors);
           })
           .catch(err => {
-            alert("error getting vendors");
+            this.props.notifier({
+              title: "Error",
+              message: "Error getting vendors!",
+              type: "danger"
+            });
           });
       })
       .catch(err => {
-        alert("Server error retrieving items");
+        this.props.notifier({
+          title: "Error",
+          message: "Server error retrieving items",
+          type: "danger"
+        });
       });
   }
 

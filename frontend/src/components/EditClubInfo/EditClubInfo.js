@@ -45,7 +45,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -79,13 +79,13 @@ class EditClubInfo extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
         } else {
           this.props.notifier({
             title: "Error",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "warning"
           });
         }
@@ -93,7 +93,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -116,7 +116,7 @@ class EditClubInfo extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
           this.getClubInfo();
@@ -125,7 +125,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });

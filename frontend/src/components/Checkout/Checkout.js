@@ -219,7 +219,7 @@ class Checkout extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
 
@@ -305,7 +305,11 @@ class Checkout extends Component {
   onError = err => {
     // The main Paypal script could not be loaded or something blocked the script from loading
     console.log("Error!", err);
-    alert(err);
+    this.props.notifier({
+      title: "Error",
+      message: err.toString(),
+      type: "danger"
+    });
     // Because the Paypal's main script is loaded asynchronously from "https://www.paypalobjects.com/api/checkout.js"
     // => sometimes it may take about 0.5 second for everything to get set, or for the button to appear
   };

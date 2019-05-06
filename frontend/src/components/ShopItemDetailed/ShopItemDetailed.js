@@ -370,12 +370,20 @@ class ShopItemDetailed extends Component {
               });
             })
             .catch(err => {
-              alert(err);
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
             });
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
         });
   }
 
@@ -543,7 +551,7 @@ class ShopItemDetailed extends Component {
                 .catch(err => {
                   this.props.notifier({
                     title: "Error",
-                    message: err,
+                    message: err.toString(),
                     type: "danger"
                   });
                 });
@@ -552,7 +560,7 @@ class ShopItemDetailed extends Component {
           .catch(err => {
             this.props.notifier({
               title: "Error",
-              message: err,
+              message: err.toString(),
               type: "danger"
             });
           });
@@ -599,12 +607,20 @@ class ShopItemDetailed extends Component {
                   });
                 })
                 .catch(err => {
-                  alert(err);
+                  this.props.notifier({
+                    title: "Error",
+                    message: err.toString(),
+                    type: "danger"
+                  });
                 });
             }
           })
           .catch(err => {
-            alert(err);
+            this.props.notifier({
+              title: "Error",
+              message: err.toString(),
+              type: "danger"
+            });
           });
       } //end of else statement for isApparel
     } //end of adding item to cart
@@ -739,16 +755,29 @@ class ShopItemDetailed extends Component {
                 }
               } else {
                 alert(res.data.message);
+                this.props.notifier({
+                  title: "Success",
+                  message: res.data.message.toString(),
+                  type: "success"
+                });
               }
             })
             .catch(err => {
-              alert(err);
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
             });
         }
       })
       //catch error for getting vendors
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   }
 
