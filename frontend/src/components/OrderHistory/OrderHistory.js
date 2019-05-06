@@ -6,15 +6,24 @@ import actions from "../../store/actions";
 import axios from "axios";
 import OrderHistoryItem from "../OrderHistoryItem/OrderHistoryItem.js";
 import Button from "@material-ui/core/Button";
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
 
 class OrderHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
       orders: [],
-      show: "user" // which order history to show
+      show: "user",  // which order history to show
+      date: "asc",   // default date to ascending order
     };
   }
+
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
 
   componentDidMount() {
     const apiURL = "/api/orders/getUserOrders";
@@ -146,6 +155,19 @@ class OrderHistory extends Component {
               ))
             : ""}
 
+          {/* filter buttons */}
+          <form autoComplete="off">
+            <InputLabel htmlFor="date">Date</InputLabel>
+            <Select
+              value={this.state.date}
+              onChange={this.handleChange}
+              inputProps={{ name: 'date', id: 'date', }}
+            >
+              <MenuItem value="asc"> Ascending </MenuItem>
+              <MenuItem value="desc"> Descending </MenuItem>
+            </Select>
+          </form>
+
           {/* below displays the actual order histories */}
           {isAdmin
             ? adminsOf.map((vendor, index) => (
@@ -155,9 +177,11 @@ class OrderHistory extends Component {
                   vendorName={vendor.vendorName}
                   notifier={this.props.notifier}
                   show={this.state.show}
+                  date={this.state.date}
                 />
               ))
             : ""}
+
 
           {/* this user orders */}
           {this.state.show === "user" ? (
@@ -177,7 +201,8 @@ class ClubOrders extends Component {
     notifier: PropTypes.func.isRequired,
     vid: PropTypes.string.isRequired,
     vendorName: PropTypes.string.isRequired,
-    show: PropTypes.string
+    show: PropTypes.string,
+    date: PropTypes.string.isRequired,
   };
 
   state = {
@@ -213,9 +238,9 @@ class ClubOrders extends Component {
   }
 
   render() {
-    const { vendorName, show, vid } = this.props;
+    const { vendorName, show, vid, date } = this.props;
 
-    const orders = this.state.orders.map(order => {
+    let orders = this.state.orders.map(order => {
       let convertDate = new Date(order.date);
       let hours = convertDate.getHours();
       let timeOfDay = "AM";
@@ -262,6 +287,10 @@ class ClubOrders extends Component {
         </Fragment>
       );
     });
+
+    if (date === 'desc') {
+      orders = [...orders].reverse()
+    }
 
     if (show === vid) {
       return (
