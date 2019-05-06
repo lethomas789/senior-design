@@ -11,7 +11,6 @@ import PaypalButton from "../PaypalButton/PaypalButton";
 import axios from "axios";
 import { withRouter, Redirect } from 'react-router-dom';
 
-
 //styles for checkout button
 const styles = theme => ({
   margin: {
@@ -117,6 +116,87 @@ class Checkout extends Component {
     // );
   }
 
+  //remove each item from vendor after purchase
+  //create a promise for each item, call /api/getUserCart/deleteItems to delete each item
+  removeSingleItemFromVendor = (removeItem) => {
+    return new Promise( (resolve, reject) => {
+      const apiURL = "/api/getUserCart/deleteItems";
+
+      axios.post(apiURL, {
+        params:{
+          user: this.props.user,
+          pid: removeItem.pid
+        }
+      })
+      .then(res => {
+        //item was deleted on server, resolve promise
+        if(res.data.success === true){
+          resolve(1);
+        }
+        else{
+          //if item was not deleted, reject promise
+          reject(0);
+        }
+      })
+      .catch(err => {
+        reject(0);
+      })
+    }); 
+  }
+
+  //remove items from vendor after purchase
+  //wait for all promises to return, and then update user's cart
+  removeItemsFromVendor = () => {
+    var waitPromises = [];
+    var currentVendorItems = this.props.cartItems;
+
+    //create a promise for each item to be deleted and wait
+    for(let i = 0; i < currentVendorItems.length; i++){
+      waitPromises.push(this.removeSingleItemFromVendor(currentVendorItems[i]));
+    }
+
+    //wait until all promises have been resolved
+    Promise.all(waitPromises)
+      //when all promises have been resolved, proceed to get updated user's cart
+      .then(res => {  
+        //after removing items from user's cart with vendor item, get updated cart
+        const cartURL = '/api/getUserCart';
+        axios.get(cartURL, {
+          params:{
+            user: this.props.user
+          }
+        })
+        .then(res => {
+          if(res.data.success === true){
+            //update new items and redirect to successful payment page
+            this.props.updateItems(res.data.data);
+            window.location = '/successfulPayment';
+          }
+          else{
+            this.props.notifier({
+              title: "Error",
+              message: "Error with server, no cart.",
+              type: "danger"
+            });
+          }
+        })
+        .catch(err => {
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
+        })
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      })
+  }
+
   onSuccess = payment => {
     console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cartItems[0].vid);
@@ -143,35 +223,39 @@ class Checkout extends Component {
             type: "success"
           });
 
-          //clear cart on server
-          const clearcartURL = "/api/getUserCart/clearCart";
-          axios
-            .delete(clearcartURL, {
-              params: {
-                user: this.props.user
-              }
-            })
-            .then(res => {
-              if (res.data.success === true) {
-                //when payment is successfully processed, clear cart and set total to 0
-                this.props.emptyCartOnPayment();
-                this.props.clearTotalOnPayment(0);
-                window.location = '/successfulPayment';
-              } else {
-                this.props.notifier({
-                  title: "Error",
-                  message: "Error with server.",
-                  type: "danger"
-                });
-              }
-            })
-            .catch(err => {
-              this.props.notifier({
-                title: "Error",
-                message: err.toString(),
-                type: "danger"
-              });
-            });
+          //remove items that are based on vendor after purchase
+          //call api to delete item from cart on server
+          this.removeItemsFromVendor();
+
+          // //clear cart on server
+          // const clearcartURL = "/api/getUserCart/clearCart";
+          // axios
+          //   .delete(clearcartURL, {
+          //     params: {
+          //       user: this.props.user
+          //     }
+          //   })
+          //   .then(res => {
+          //     if (res.data.success === true) {
+          //       //when payment is successfully processed, clear cart and set total to 0
+          //       this.props.emptyCartOnPayment();
+          //       this.props.clearTotalOnPayment(0);
+          //       window.location = '/successfulPayment';
+          //     } else {
+          //       this.props.notifier({
+          //         title: "Error",
+          //         message: "Error with server.",
+          //         type: "danger"
+          //       });
+          //     }
+          //   })
+          //   .catch(err => {
+          //     this.props.notifier({
+          //       title: "Error",
+          //       message: err.toString(),
+          //       type: "danger"
+          //     });
+          //   });
         } else {
           this.props.notifier({
             title: "Error",

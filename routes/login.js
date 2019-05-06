@@ -101,7 +101,6 @@ router.post('/', (req, res) =>{
               message: 'Server error in getting admin info: ' + err
             });
           });
-
         }
 
         // else not admin, send empty array
