@@ -11,6 +11,13 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 
+/**
+ * Convert orders array to an array of OrderHistoryItem components 
+ * 
+ * @param orders - array of orders 
+ * @param filter - property of order item to be filtered by
+ * @param filterValue - filter value to be checked against
+ */
 function getOrders(orders, filter = null, filterValue = null) {
   var history;
 
@@ -225,7 +232,9 @@ class OrderHistory extends Component {
             ))
           : ""}
 
-        {/* filter buttons */}
+        {/********* filter buttons ********************/}
+
+        {/* filter by date: asc/desc */}
         <form autoComplete="off">
           <InputLabel htmlFor="date">Date</InputLabel>
           <Select
@@ -238,6 +247,7 @@ class OrderHistory extends Component {
           </Select>
         </form>
 
+        {/* filter by picked up true/false */}
         <form autoComplete="off">
           <InputLabel htmlFor="pickedUp">Picked Up</InputLabel>
           <Select
@@ -249,6 +259,8 @@ class OrderHistory extends Component {
             <MenuItem value={false}> False </MenuItem>
           </Select>
         </form>
+
+        {/* search by item name in order */}
 
         {/* below displays the actual order histories */}
         {isAdmin
