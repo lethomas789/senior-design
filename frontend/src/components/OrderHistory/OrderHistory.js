@@ -11,6 +11,112 @@ import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 
+function getOrders(orders, filter = null, filterValue = null) {
+  var history;
+
+  if (filter) {
+    history = orders.map(order => {
+      let convertDate = new Date(order.date);
+      let hours = convertDate.getHours();
+      let timeOfDay = "AM";
+
+      if (hours > 12) {
+        hours = hours - 12;
+        timeOfDay = "PM";
+      }
+
+      hours = String(hours);
+
+      let minutes = String(convertDate.getMinutes());
+
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+
+      let seconds = String(convertDate.getSeconds());
+
+      let actualDate =
+        convertDate.toDateString() +
+        " " +
+        hours +
+        ":" +
+        minutes +
+        " " +
+        timeOfDay;
+
+      if (order[filter] === filterValue) {
+        return (
+          <Fragment key={order.oid}>
+            <OrderHistoryItem
+              key={order.oid}
+              orderDate={actualDate}
+              email={order.email}
+              firstName={order.firstName}
+              lastName={order.lastName}
+              oid={order.oid}
+              paid={String(order.paid)}
+              pickedUp={String(order.pickedUp)}
+              totalPrice={order.totalPrice}
+              clubHistory={false} // TODO figure out how to pass admin club version
+              items={order.items}
+            />
+          </Fragment>
+        );
+      }
+    });
+  } else {
+    history = orders.map(order => {
+      let convertDate = new Date(order.date);
+      let hours = convertDate.getHours();
+      let timeOfDay = "AM";
+
+      if (hours > 12) {
+        hours = hours - 12;
+        timeOfDay = "PM";
+      }
+
+      hours = String(hours);
+
+      let minutes = String(convertDate.getMinutes());
+
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+
+      let seconds = String(convertDate.getSeconds());
+
+      let actualDate =
+        convertDate.toDateString() +
+        " " +
+        hours +
+        ":" +
+        minutes +
+        " " +
+        timeOfDay;
+
+      return (
+        <Fragment key={order.oid}>
+          <OrderHistoryItem
+            key={order.oid}
+            orderDate={actualDate}
+            email={order.email}
+            firstName={order.firstName}
+            lastName={order.lastName}
+            oid={order.oid}
+            paid={String(order.paid)}
+            pickedUp={String(order.pickedUp)}
+            totalPrice={order.totalPrice}
+            clubHistory={false} // TODO figure out how to pass admin club version
+            items={order.items}
+          />
+        </Fragment>
+      );
+    });
+  }
+
+  return history;
+}
+
 class OrderHistory extends Component {
   constructor(props) {
     super(props);
@@ -60,53 +166,7 @@ class OrderHistory extends Component {
   render() {
     const { isAdmin, adminsOf } = this.props;
 
-    const orders = this.state.orders.map(order => {
-      let convertDate = new Date(order.date);
-      let hours = convertDate.getHours();
-      let timeOfDay = "AM";
-
-      if (hours > 12) {
-        hours = hours - 12;
-        timeOfDay = "PM";
-      }
-
-      hours = String(hours);
-
-      let minutes = String(convertDate.getMinutes());
-
-      if (minutes.length === 1) {
-        minutes = "0" + minutes;
-      }
-
-      let seconds = String(convertDate.getSeconds());
-
-      let actualDate =
-        convertDate.toDateString() +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        " " +
-        timeOfDay;
-
-      return (
-        <Fragment key={order.oid}>
-          <OrderHistoryItem
-            key={order.oid}
-            orderDate={actualDate}
-            email={order.email}
-            firstName={order.firstName}
-            lastName={order.lastName}
-            oid={order.oid}
-            paid={String(order.paid)}
-            pickedUp={String(order.pickedUp)}
-            totalPrice={order.totalPrice}
-            clubHistory={false} // TODO figure out how to pass admin club version
-            items={order.items}
-          />
-        </Fragment>
-      );
-    });
+    const orders = getOrders(this.state.orders);
 
     let filteredOrders = orders;
 
@@ -119,55 +179,11 @@ class OrderHistory extends Component {
     }
 
     if (this.state.pickedUp === true) {
-      filteredOrders = this.state.orders.map(order => {
-        let convertDate = new Date(order.date);
-        let hours = convertDate.getHours();
-        let timeOfDay = "AM";
+      filteredOrders = getOrders(this.state.orders, 'pickedUp', true);
+    }
 
-        if (hours > 12) {
-          hours = hours - 12;
-          timeOfDay = "PM";
-        }
-
-        hours = String(hours);
-
-        let minutes = String(convertDate.getMinutes());
-
-        if (minutes.length === 1) {
-          minutes = "0" + minutes;
-        }
-
-        let seconds = String(convertDate.getSeconds());
-
-        let actualDate =
-          convertDate.toDateString() +
-          " " +
-          hours +
-          ":" +
-          minutes +
-          " " +
-          timeOfDay;
-
-        if (order.pickedUp === true) {
-          return (
-            <Fragment key={order.oid}>
-              <OrderHistoryItem
-                key={order.oid}
-                orderDate={actualDate}
-                email={order.email}
-                firstName={order.firstName}
-                lastName={order.lastName}
-                oid={order.oid}
-                paid={String(order.paid)}
-                pickedUp={String(order.pickedUp)}
-                totalPrice={order.totalPrice}
-                clubHistory={false} // TODO figure out how to pass admin club version
-                items={order.items}
-              />
-            </Fragment>
-          );
-        }
-      });
+    if (this.state.date === "desc") {
+      filteredOrders = [...filteredOrders].reverse();
     }
 
     return (
@@ -308,112 +324,17 @@ class ClubOrders extends Component {
   render() {
     const { vendorName, show, vid, date, pickedUp } = this.props;
 
-    let orders = this.state.orders.map(order => {
-      let convertDate = new Date(order.date);
-      let hours = convertDate.getHours();
-      let timeOfDay = "AM";
+    let orders = getOrders(this.state.orders);
 
-      if (hours > 12) {
-        hours = hours - 12;
-        timeOfDay = "PM";
-      }
+    let filteredOrders = orders;
 
-      hours = String(hours);
-
-      let minutes = String(convertDate.getMinutes());
-
-      if (minutes.length === 1) {
-        minutes = "0" + minutes;
-      }
-
-      let seconds = String(convertDate.getSeconds());
-
-      let actualDate =
-        convertDate.toDateString() +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        " " +
-        timeOfDay;
-
-      return (
-        <Fragment key={order.oid}>
-          <OrderHistoryItem
-            key={order.oid}
-            orderDate={actualDate}
-            email={order.email}
-            firstName={order.firstName}
-            lastName={order.lastName}
-            oid={order.oid}
-            paid={String(order.paid)}
-            pickedUp={String(order.pickedUp)}
-            totalPrice={order.totalPrice}
-            clubHistory={false} // TODO figure out how to pass admin club version
-            items={order.items}
-          />
-        </Fragment>
-      );
-    });
-
-    var filteredOrders = orders;
-
-    if (date === "desc") {
-      filteredOrders = [...orders].reverse();
-    }
 
     if (pickedUp === true) {
-      // filteredOrders = orders.filter((order) => {
-      // });
-      filteredOrders = this.state.orders.map(order => {
-        let convertDate = new Date(order.date);
-        let hours = convertDate.getHours();
-        let timeOfDay = "AM";
+      filteredOrders = getOrders(this.state.orders, 'pickedUp', true);
+    }
 
-        if (hours > 12) {
-          hours = hours - 12;
-          timeOfDay = "PM";
-        }
-
-        hours = String(hours);
-
-        let minutes = String(convertDate.getMinutes());
-
-        if (minutes.length === 1) {
-          minutes = "0" + minutes;
-        }
-
-        let seconds = String(convertDate.getSeconds());
-
-        let actualDate =
-          convertDate.toDateString() +
-          " " +
-          hours +
-          ":" +
-          minutes +
-          " " +
-          timeOfDay;
-
-        if (order.pickedUp === true) {
-          return (
-            <Fragment key={order.oid}>
-              <OrderHistoryItem
-                key={order.oid}
-                orderDate={actualDate}
-                email={order.email}
-                firstName={order.firstName}
-                lastName={order.lastName}
-                oid={order.oid}
-                paid={String(order.paid)}
-                pickedUp={String(order.pickedUp)}
-                totalPrice={order.totalPrice}
-                clubHistory={false} // TODO figure out how to pass admin club version
-                items={order.items}
-              />
-            </Fragment>
-          );
-        }
-      });
+    if (date === "desc") {
+      filteredOrders = [...filteredOrders].reverse();
     }
 
     if (show === vid) {
