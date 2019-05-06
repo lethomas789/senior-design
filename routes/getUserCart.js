@@ -143,15 +143,15 @@ router.post('/addItems', (req, res) => {
       // else, get data
       const productInfo = doc.data();
 
-      let itemId = pid;
+      let itemID = pid;
 
 
       // if item added is apparrel, the item id is pid-size
       if (isApparel === true) {
-        itemId = `${pid}-${size}`
+        itemID = `${pid}-${size}`
       }
 
-      const cartItemRef = cartRef.doc(itemId);
+      const cartItemRef = cartRef.doc(itemID);
 
       var transaction = db.runTransaction(t => {
         return t.get(cartItemRef).then(doc => {
@@ -171,7 +171,8 @@ router.post('/addItems', (req, res) => {
                 vid: vendorID,
                 image: imageLink,
                 size: size,
-                isApparel: isApparel
+                isApparel: isApparel,
+                itemID: itemID,
               }
 
               // console.log("checking is apparel data", data);
@@ -187,13 +188,14 @@ router.post('/addItems', (req, res) => {
                 totalPrice: totalItemPrice,
                 vid: vendorID,
                 image: imageLink,
-                isApparel: isApparel
+                isApparel: isApparel,
+                itemID: itemID,
               };
               // console.log("checking non apparel data", data);
             }
 
             // set new item(s) purchased into cart, with pid as doc identifier
-            cartRef.doc(itemId).set(data);
+            cartRef.doc(itemID).set(data);
             console.log('Succesfully added to cart of user: ' + user);
             return res.status(200).json({
               success: true,
@@ -218,7 +220,8 @@ router.post('/addItems', (req, res) => {
                 productPrice: productInfo.productPrice,
                 totalPrice: totalItemPrice,
                 vid: vendorID,
-                image: imageLink
+                image: imageLink,
+                itemID: itemID,
               };
             }
 
@@ -233,7 +236,8 @@ router.post('/addItems', (req, res) => {
                 vid: vendorID,
                 image: imageLink,
                 size: size,
-                isApparel: isApparel
+                isApparel: isApparel,
+                itemID: itemID,
               };
             }
 
@@ -309,14 +313,14 @@ router.post('/deleteItems', (req,res) => {
       });
     }
     
-    let itemId = pid;
+    let itemID = pid;
 
     // if item added is apparrel, the item id is pid-size
     if (isApparel === true) {
-      itemId = `${pid}-${size}`
+      itemID = `${pid}-${size}`
     }
 
-    const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemId);
+    const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemID);
 
     // check to make sure item exists for deltion
     cartItemRef.get().then(doc => {
@@ -384,16 +388,16 @@ router.post('/updateItems', (req, res) => {
     });
   }
 
-  let itemId = pid;
+  let itemID = pid;
 
   // if item added is apparrel, the item id is pid-size
   if (isApparel === true) {
-    itemId = `${pid}-${size}`
+    itemID = `${pid}-${size}`
   }
   
   const userRef = db.collection('users').doc(user);
 
-  const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemId);
+  const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemID);
 
   let transaction = db.runTransaction(t => {
     return t.get(cartItemRef).then(doc => {
