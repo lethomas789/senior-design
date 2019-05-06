@@ -495,7 +495,11 @@ class ShopItemDetailed extends Component {
           break;
 
         default:
-          break;
+          this.props.notifier({
+            title: "Error",
+            message: "Please select size!",
+            type: "danger"
+          });
       }
     }
 

@@ -14,7 +14,8 @@ class CartView extends Component {
     super(props);
     this.state = {
       allVendors: [],
-      vendorItemsSeparated: []
+      vendorItemsSeparated: [],
+      currentCartItems: this.props.items
     };
   }
 
@@ -81,15 +82,32 @@ class CartView extends Component {
     this.separateItems(currentVendorArray);
   };
 
+  //update list of items in user's cart after user removes item from cart
+  //this function is passed down as props to CartItem, when CartItem removes item calls parent function
+  updateAfterDelete = (newItems) => {
+    this.setState({
+      currentCartItems: newItems
+    }, () => {
+      console.log("separting vendors after delete");
+      this.separateVendors();
+      this.forceUpdate();
+    })
+  }
+
+  //update which vendors to render in CartView
+  //pass function down to child, let child update based on items in cart for vendor
+  updateVendorsView = (newVendors) => {
+    this.setState({
+      allVendors: newVendors
+    })
+  }
+
   //separate items by vendors when component loads to page
   componentDidMount() {
     this.separateVendors();
   }
 
   render() {
-    console.log('HERE');
-    console.log(this.state.allVendors);
-
     // if empty cart, display empty cart text
     if (this.state.allVendors.length === 0) {
       var renderCarts = (
@@ -99,24 +117,20 @@ class CartView extends Component {
           {/* <AddShoppingCart style={{width: "400px", height: "400px"}}/> */}
         </div>
       )
-
-
     }
    else {
     //render carts for each vendor
     var renderCarts = this.state.allVendors.map(vendor => {
-
       //for each vendor, want to render a cart
       for (let i = 0; i < this.state.vendorItemsSeparated.length; i++) {
         var currentListItems = this.state.vendorItemsSeparated[i];
         if(currentListItems[0].vid === vendor){
           return(
-            <Cart passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier}/>
+            <Cart key = {vendor} passedAllVendors = {this.state.allVendors} updateVendorsView = {this.updateVendorsView} passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier} updateAfterDelete = {this.updateAfterDelete}/>
           )
         }
       }
     });
-
    }
 
     return <div>{renderCarts}</div>;

@@ -98,11 +98,28 @@ class CartItem extends Component {
           })
           .then(res => {
             //after removing item from cart, update cart on server
-            console.log("updating cartview cart", res.data);
             this.props.updateItems(res.data.data);
 
+            //get all items related to this vendor and update vendor cart
+            var newItemsAfterDeletion = [];
+
+            //remove vendor from view if no more items
+            if(res.data.data.length != 0){
+              for(let i = 0; i < res.data.data.length; i++){
+                if (res.data.data[i].vid === this.state.vid){
+                  newItemsAfterDeletion.push(res.data.data[i]);
+                }
+              }
+              this.props.updateCartAfterDelete(newItemsAfterDeletion);
+            }
+
+            //update list of vendor items after item removal
+            else{
+              this.props.updateCartAfterDelete(res.data.data);
+            }
+        
             //reload the page after deleting items to update carts of each vendor
-            window.location.reload();
+            // window.location.reload();
           })
           .catch(err => {
             alert(err);

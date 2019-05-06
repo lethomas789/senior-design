@@ -19,16 +19,14 @@ class Cart extends Component {
     this.state = {
       total: 0,
       cart: this.props.passedItems,
-      allVendors: [],
-      vendorItemsSeparated: [],
-      vendor: this.props.passedVendor
+      vendor: this.props.passedVendor,
+      vendorsInView: this.props.passedAllVendors
     };
   }
 
   //update total price of cart
   updateTotal = () => {
     //get total from items
-    // var currentCart = this.props.items;
     var currentCart = this.state.cart;
     var priceTotal = 0;
 
@@ -37,7 +35,7 @@ class Cart extends Component {
       this.setState({
         total: 0
       });
-      // this.props.updateTotal(priceTotal);
+      this.props.updateTotal(priceTotal);
     }
 
     //if there are items, calculate total price
@@ -50,6 +48,7 @@ class Cart extends Component {
       this.setState({
         total: priceTotal
       });
+      this.props.updateTotal(priceTotal);
     }
   };
 
@@ -64,7 +63,6 @@ class Cart extends Component {
       }
     }
 
-
     console.log("checking state of cart ", this.state.cart);
     this.setState(
       {
@@ -77,6 +75,41 @@ class Cart extends Component {
     );
   };
 
+  //update cart of items in current vendor if an item is removed from CartItem
+  //function passed as prop to child, child calls parent function to update state of items in cart
+  updateCartAfterDelete = (newItems) => {
+    this.setState({
+      cart: newItems
+    }, () => {
+      //no more items for this vendor cart, update CartView to remove this cart
+      if(this.state.cart.length === 0){
+        window.location.reload();
+        // console.log("passed all vendors to view", this.state.vendorsInView);
+        // var currentVendorsView = this.state.vendorsInView;
+        // var vidIndex = 0;
+
+        // //find location of vid, remove from array of current vendors to render
+        // for(let i = 0; i < currentVendorsView.length; i++){
+        //   if(currentVendorsView[i] === this.state.vendor){
+        //     vidIndex = i;
+        //     break;
+        //   }
+        // }
+
+        // console.log("vid to remove", this.state.vendor);
+        // console.log("location of vid", vidIndex);
+
+        // currentVendorsView.splice(Number(vidIndex),1);
+        // console.log("new vendors", currentVendorsView);
+        // this.props.updateVendorsView(currentVendorsView);
+      }
+
+      else{
+        this.updateTotal();
+      }
+    })
+  }
+
   //get cart from server for user
   componentDidMount() {
     //calculate running total of items
@@ -87,7 +120,6 @@ class Cart extends Component {
   render() {
     //render each item in the cart
     const cart = this.state.cart.map(result => {
-      console.log("result in cart:", result);
       if (result.size === undefined) {
         return (
           <CartItem
@@ -101,6 +133,8 @@ class Cart extends Component {
             totalPrice={result.totalPrice}
             updateItemTotal = {this.updateItemTotal}
             notifier = {this.props.notifier}
+            updateAfterDelete = {this.props.updateAfterDelete}
+            updateCartAfterDelete = {this.updateCartAfterDelete}
           />
         );
       } else {
@@ -117,6 +151,8 @@ class Cart extends Component {
             totalPrice={result.totalPrice}
             updateItemTotal = {this.updateItemTotal}
             notifier = {this.props.notifier}
+            updateAfterDelete = {this.props.updateAfterDelete}
+            updateCartAfterDelete = {this.updateCartAfterDelete}
           />
         );
       }
