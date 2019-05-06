@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
@@ -79,7 +78,7 @@ router.get('/', (req,res) => {
  * @param user - user id
  * @param pid - product id
  * @param vendorID - vendor id
- * @param imageLink = TODO take out
+ * @param imageLink = take out
  * @param size - size of apparrel
  * @param isApparel - bool
  * @param amtPurchased - num items purchased
@@ -144,7 +143,15 @@ router.post('/addItems', (req, res) => {
       // else, get data
       const productInfo = doc.data();
 
-      const cartItemRef = cartRef.doc(pid);
+      let itemId = pid;
+
+
+      // if item added is apparrel, the item id is pid-size
+      if (isApparel === true) {
+        itemId = `${pid}-${size}`
+      }
+
+      const cartItemRef = cartRef.doc(itemId);
 
       var transaction = db.runTransaction(t => {
         return t.get(cartItemRef).then(doc => {
@@ -167,7 +174,7 @@ router.post('/addItems', (req, res) => {
                 isApparel: isApparel
               }
 
-              console.log("checking is apparel data", data);
+              // console.log("checking is apparel data", data);
             } 
 
             //if regular item, create data object with regular properties
@@ -182,11 +189,11 @@ router.post('/addItems', (req, res) => {
                 image: imageLink,
                 isApparel: isApparel
               };
-              console.log("checking non apparel data", data);
+              // console.log("checking non apparel data", data);
             }
 
             // set new item(s) purchased into cart, with pid as doc identifier
-            cartRef.doc(pid).set(data);
+            cartRef.doc(itemId).set(data);
             console.log('Succesfully added to cart of user: ' + user);
             return res.status(200).json({
               success: true,
@@ -194,7 +201,7 @@ router.post('/addItems', (req, res) => {
             });
           }
 
-          //if the item does not exist
+          //if the item does exist
           else {
             const oldItemAmt = doc.data().amtPurchased;
             const newAmt = oldItemAmt + amtPurchased;
@@ -272,14 +279,18 @@ router.post('/deleteItems', (req,res) => {
   if (req.body.params) {
     var user = req.body.params.user;
     var pid = req.body.params.pid;
+    var isApparel = req.body.params.isApparel;
+    var size = req.body.params.size;
   }
   else {
     var user = req.body.user;
     var pid = req.body.pid;
+    var isApparel = req.body.isApparel;
+    var size = req.body.size;
   }
 
   // return error if empty request
-  if (user === '' || pid === '') {
+  if (user === '' || pid === '' || isApparel === '') {
     return res.status(200).json({
       success: false,
       message: 'Invalid request params'
@@ -298,7 +309,14 @@ router.post('/deleteItems', (req,res) => {
       });
     }
     
-    const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(pid);
+    let itemId = pid;
+
+    // if item added is apparrel, the item id is pid-size
+    if (isApparel === true) {
+      itemId = `${pid}-${size}`
+    }
+
+    const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemId);
 
     // check to make sure item exists for deltion
     cartItemRef.get().then(doc => {
@@ -340,11 +358,15 @@ router.post('/updateItems', (req, res) => {
     var user = req.body.params.user;
     var pid = req.body.params.pid;
     var amtPurchased = Number(req.body.params.amtPurchased);
+    var isApparel = req.body.params.isApparel;
+    var size = req.body.params.size;
   }
   else {
     var user = req.body.user;
     var pid = req.body.pid;
     var amtPurchased = Number(req.body.amtPurchased);
+    var isApparel = req.body.isApparel;
+    var size = req.body.size;
   }
 
   // return error if empty request
@@ -362,7 +384,16 @@ router.post('/updateItems', (req, res) => {
     });
   }
 
-  const cartItemRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems').doc(pid);
+  let itemId = pid;
+
+  // if item added is apparrel, the item id is pid-size
+  if (isApparel === true) {
+    itemId = `${pid}-${size}`
+  }
+  
+  const userRef = db.collection('users').doc(user);
+
+  const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemId);
 
   let transaction = db.runTransaction(t => {
     return t.get(cartItemRef).then(doc => {
@@ -404,6 +435,7 @@ router.post('/updateItems', (req, res) => {
   });
 });
 
+// route not used
 router.post('/updateCart', (req,res) => {
   if (req.body.params) {
     var user = req.body.params.user;
