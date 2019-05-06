@@ -22,6 +22,7 @@ import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecov
 import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import SuccessfulPayment from './components/SuccesfulPayment/SuccessfulPayment';
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -142,6 +143,7 @@ class App extends Component {
                 <EmailConfirmation {...props} notifier={this.addNotification} />
               )}
             />
+            <Route exact path="/successfulPayment" component = {SuccessfulPayment}/>
             <Footer />
             <ReactNotification ref={this.notificationDOMRef} />
           </div>

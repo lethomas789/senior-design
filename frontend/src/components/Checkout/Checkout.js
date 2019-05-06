@@ -9,6 +9,8 @@ import { withStyles } from "@material-ui/core/styles";
 // import PaypalExpressBtn from "react-paypal-express-checkout";
 import PaypalButton from "../PaypalButton/PaypalButton";
 import axios from "axios";
+import { withRouter, Redirect } from 'react-router-dom';
+
 
 //styles for checkout button
 const styles = theme => ({
@@ -115,38 +117,10 @@ class Checkout extends Component {
     // );
   }
 
-  // checkStock = () => {
-  //   //started onclick for checking stock before purchase
-  //   //check stock for each item
-  //   var items = this.props.cartItems;
-  //   for(let i =0; i < items.length; i++){
-  //       console.log("checking stock");
-  //       axios.get('/api/stock/', {
-  //         params:{
-  //           pid: items[i].pid,
-  //           isApparel: items[i].isApparel,
-  //           size: items[i].size,
-  //           amt: items[i].amtPurchased
-  //         }
-  //       })
-  //       .then(res => {
-  //         if(res.data.availableStock === false){
-  //           alert("not enough stock on purchase");
-  //         }
-  //       })
-  //       .catch(err => {
-  //         alert(err);
-  //       })
-  //   }
-  // }
-
   onSuccess = payment => {
     console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cartItems[0].vid);
-
     const apiURL = "/api/orders";
-
-    // check for stock in database before payment
 
     //make post request to orders
     axios
@@ -163,7 +137,11 @@ class Checkout extends Component {
       .then(res => {
         //on successful payment
         if (res.data.success === true) {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
 
           //clear cart on server
           const clearcartURL = "/api/getUserCart/clearCart";
@@ -178,19 +156,36 @@ class Checkout extends Component {
                 //when payment is successfully processed, clear cart and set total to 0
                 this.props.emptyCartOnPayment();
                 this.props.clearTotalOnPayment(0);
+                window.location = '/successfulPayment';
               } else {
-                alert("error with server");
+                this.props.notifier({
+                  title: "Error",
+                  message: "Error with server.",
+                  type: "danger"
+                });
               }
             })
             .catch(err => {
-              alert(err);
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
             });
         } else {
-          alert("Error with sending order");
+          this.props.notifier({
+            title: "Error",
+            message: "Payment Unsuccessful",
+            type: "danger"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
 
     // You can bind the "payment" object's value to your state or props or whatever here, please see below for sample returned data
@@ -310,7 +305,7 @@ const mapDispatchToProps = dispatch => {
 //   classes: PropTypes.object.isRequired
 // };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Checkout));
+)(withStyles(styles)(Checkout)));

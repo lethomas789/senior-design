@@ -133,13 +133,8 @@ class ButtonAppBar extends Component {
     if (this.props.loginText === "Logout") {
       this.props.updateLogout();
       this.props.emptyCart();
+      
       //display dialog
-      /*
-      this.setState({
-        open: true,
-        alertMessage: "Logout successful!"
-      });
-      */
       this.props.notifier({
         title: "Success",
         message: "Logout successful.",

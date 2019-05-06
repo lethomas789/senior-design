@@ -34,7 +34,7 @@ const reducer = (state = initialState, action) => {
     case actions.EMPTY_CART:
       return{
         ...state,
-        items: state.items.length = 0
+        items: []
       }
 
     case actions.UPDATE_TOTAL:

@@ -4,6 +4,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
 import "./CartView.css";
+import { Link } from 'react-router-dom';
 import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
 
 //split cart into groups, grouped by vendors
@@ -112,8 +113,7 @@ class CartView extends Component {
     if (this.state.allVendors.length === 0) {
       var renderCarts = (
         <div id='empty-cart'>
-          No items in cart.
-          TODO add empty cart icon and button to link to shop
+          No items in cart. Click here to <Link to="/shop"> Shop </Link>
           {/* <AddShoppingCart style={{width: "400px", height: "400px"}}/> */}
         </div>
       )

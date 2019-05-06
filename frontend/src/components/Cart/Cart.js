@@ -83,7 +83,13 @@ class Cart extends Component {
     }, () => {
       //no more items for this vendor cart, update CartView to remove this cart
       if(this.state.cart.length === 0){
+        //reload page only if no more items in cart for a vendor
+        //work around for ppxo error, cleanup error for paypal when trying to unmount component?
         window.location.reload();
+
+        //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
+        //error window clean up?
+
         // console.log("passed all vendors to view", this.state.vendorsInView);
         // var currentVendorsView = this.state.vendorsInView;
         // var vidIndex = 0;
