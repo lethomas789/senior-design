@@ -11,12 +11,14 @@ class CartItem extends Component {
   // store product id PID to reference for item removal
   state = {
     pid: this.props.pid,
+    itemID: this.props.itemID,
     vid: this.props.vendorID,
     size: this.props.size,
     amtPurchased: this.props.amtPurchased,
     price: this.props.productPrice,
     total: this.props.totalPrice,
-    stock: 0
+    stock: 0,
+    isApparel: this.props.isApparel
   };
 
   //when a CartItem renders, store the state of the stock
@@ -76,7 +78,35 @@ class CartItem extends Component {
       }, () => {
         //update total in cart
         //update total and amount based on pid
-        this.props.updateItemTotal(this.state.pid, newTotal, newAmount);
+        this.props.updateItemTotal(this.state.itemID, newTotal, newAmount);
+        
+        //update cart on server with new amount 
+        var updateURL = '/api/getUserCart/updateItems';
+        axios.post(updateURL, {
+          params:{
+            user: this.props.user,
+            pid: this.state.pid,
+            amtPurchased: newAmount,
+            isApparel: this.state.isApparel,
+            size: this.state.size
+          }
+        })
+        .then(res => {
+          if(res.data.success === false){
+            this.props.notifier({
+              title: "Error",
+              message: res.data.message.toString(),
+              type: "danger"
+            });
+          }
+        })
+        .catch(err => {
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
+        })
       });
     }
   };
@@ -88,7 +118,9 @@ class CartItem extends Component {
       .post(apiURL, {
         params: {
           user: this.props.user,
-          pid: this.state.pid
+          pid: this.state.pid,
+          isApparel: this.state.isApparel,
+          size: this.state.size
         }
       })
       .then(res => {

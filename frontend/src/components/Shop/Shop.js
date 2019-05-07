@@ -6,7 +6,7 @@ export default class Shop extends Component{
     render(){
         return(
             <div>
-                <ShopView/>
+                <ShopView notifier = {this.props.notifier}/>
             </div>
         );
     }

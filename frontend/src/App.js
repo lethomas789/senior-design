@@ -60,7 +60,14 @@ class App extends Component {
             <ButtonAppBar notifier={this.addNotification} />
             <Route exact path="/" component={Home} />
             <Route exact path="/about" component={About} />
-            <Route exact path="/shop" component={Shop} />
+            
+            <Route
+              exact
+              path="/shop"
+              render={props => (
+                <Shop {...props} notifier={this.addNotification} />
+              )}
+            />
             
             <Route
               exact

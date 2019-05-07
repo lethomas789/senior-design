@@ -361,6 +361,7 @@ class ShopItemDetailed extends Component {
             })
             .then(res => {
               //after getting cart info, update redux store container
+              console.log("new cart after adding new apparel item", res.data.data);
               this.props.updateItems(res.data.data);
               //switch from alert to notifier
               this.props.notifier({

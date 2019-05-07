@@ -54,10 +54,10 @@ class Cart extends Component {
 
   //update total price based on quantity
   //if user changes quantity in selector, find the matching item via pid and update total price/amount purchased 
-  updateItemTotal = (pid, newTotal, amt) => {
+  updateItemTotal = (itemID, newTotal, amt) => {
     var currentCart = this.state.cart;
     for (let i = 0; i < currentCart.length; i++) {
-      if (currentCart[i].pid === pid) {
+      if (currentCart[i].itemID === itemID) {
         currentCart[i].totalPrice = newTotal;
         currentCart[i].amtPurchased = amt;
       }
@@ -129,14 +129,17 @@ class Cart extends Component {
       if (result.size === undefined) {
         return (
           <CartItem
-            key={result.productName}
+            key={result.itemID}
             imageSrc={result.image[0]}
             pid={result.pid}
+            itemID={result.itemID}
             vendorID={result.vid}
             productName={result.productName}
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
+            size={result.size}
+            isApparel={result.isApparel}
             updateItemTotal = {this.updateItemTotal}
             notifier = {this.props.notifier}
             updateAfterDelete = {this.props.updateAfterDelete}
@@ -146,15 +149,18 @@ class Cart extends Component {
       } else {
         return (
           <CartItem
-            key={result.productName}
+            key={result.itemID}
             size={result.size}
             imageSrc={result.image[0]}
             pid={result.pid}
+            itemID={result.itemID}
             vendorID={result.vid}
             productName={result.productName}
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
+            size={result.size}
+            isApparel={result.isApparel}
             updateItemTotal = {this.updateItemTotal}
             notifier = {this.props.notifier}
             updateAfterDelete = {this.props.updateAfterDelete}

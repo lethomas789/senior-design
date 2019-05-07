@@ -125,7 +125,9 @@ class Checkout extends Component {
       axios.post(apiURL, {
         params:{
           user: this.props.user,
-          pid: removeItem.pid
+          pid: removeItem.pid,
+          isApparel: removeItem.isApparel,
+          size: removeItem.size
         }
       })
       .then(res => {
