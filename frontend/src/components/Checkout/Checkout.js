@@ -116,6 +116,58 @@ class Checkout extends Component {
     // );
   }
 
+  //subtract stock for single item
+  subtractStockSingleItem = (item) => {
+    return new Promise( (resolve,reject) => {
+      const apiURL = '/api/stock/';
+
+      axios.patch(apiURL, {
+        params:{
+          pid: item.pid,
+          isApparel: item.isApparel,
+          size: item.size,
+          amt: item.amtPurchased
+        }
+      })
+      .then(res => {
+        if(res.data.success === true){
+          resolve(1);
+        }
+
+        else{
+          reject(0);
+        }
+      })
+      .catch(err => {
+        reject(0);
+      })
+    })
+  }
+
+  //wait for all items to complete stock subtraction
+  subtractStock = () => {
+    var waitPromises = [];
+    var currentVendorItems = this.props.cartItems;
+
+    for(let i = 0; i < currentVendorItems.length; i++){
+      waitPromises.push(this.subtractStockSingleItem(currentVendorItems[i]));
+    }
+
+    //subtract stock and then remove items from cart
+    Promise.all(waitPromises)
+      .then(res => {
+        //delete items from vendor in user's cart after successfully subtracting stock
+        this.removeItemsFromVendor();
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      })
+  }
+
   //remove each item from vendor after purchase
   //create a promise for each item, call /api/getUserCart/deleteItems to delete each item
   removeSingleItemFromVendor = (removeItem) => {
@@ -225,9 +277,14 @@ class Checkout extends Component {
             type: "success"
           });
 
+          //subtract stock from database after items have been processed for checkout
           //remove items that are based on vendor after purchase
           //call api to delete item from cart on server
-          this.removeItemsFromVendor();
+
+          //subtract stock removes stock from database and calls removeItemsFromVendor()
+          this.subtractStock();
+
+          // this.removeItemsFromVendor();
 
           // //clear cart on server
           // const clearcartURL = "/api/getUserCart/clearCart";
