@@ -1,10 +1,11 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import './SuccessfulPayment.css';
 
 class SuccessfulPayment extends Component {
   render() {
     return (
-      <div>
-        <h1> Payment Succesful! Check your e-mail inbox for purchase verification! </h1>
+      <div id = "payment-successful-container">
+        <h1 id = "payment-succesful-content"> Payment Succesful! Check your e-mail inbox for purchase verification! </h1>
       </div>
     )
   }

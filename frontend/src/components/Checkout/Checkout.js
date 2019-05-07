@@ -119,21 +119,51 @@ class Checkout extends Component {
   //subtract stock for single item
   subtractStockSingleItem = (item) => {
     return new Promise( (resolve,reject) => {
-      const apiURL = '/api/stock/';
+      const apiURL = '/api/stock';
 
+      //convert Size to apparel stock, eg. Small -> s_stock
+      var sizeStock = '';
+      switch(item.size){
+        case 'Small':
+          sizeStock = 's_stock';
+          break;
+    
+        case 'Medium':
+          sizeStock = 'm_stock';
+          break;
+    
+        case 'Large':
+          sizeStock = 'l_stock';
+          break;
+    
+        case 'X-Large':
+          sizeStock = 'xl_stock';
+          break;
+            
+        case 'X-Small':
+          sizeStock = 'xs_stock';
+          break;
+    
+        default:
+          sizeStock = '';
+          break;
+      }
+
+      //make request to subtract stock on server
       axios.patch(apiURL, {
         params:{
           pid: item.pid,
           isApparel: item.isApparel,
-          size: item.size,
+          size: sizeStock,
           amt: item.amtPurchased
         }
       })
       .then(res => {
+        //if subtraction successful, resolve promise
         if(res.data.success === true){
           resolve(1);
         }
-
+        //if error, reject promise
         else{
           reject(0);
         }
@@ -149,6 +179,7 @@ class Checkout extends Component {
     var waitPromises = [];
     var currentVendorItems = this.props.cartItems;
 
+    //for each item, subtract stock, create a promise for each
     for(let i = 0; i < currentVendorItems.length; i++){
       waitPromises.push(this.subtractStockSingleItem(currentVendorItems[i]));
     }
