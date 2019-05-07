@@ -36,7 +36,12 @@ const history = createBrowserHistory();
 class App extends Component {
   notificationDOMRef = React.createRef();
 
-  addNotification = ({ title, message, type, duration = 2500 }) => {
+  addNotification = ({
+    title = "Error",
+    message = "Sorry, an error occured.",
+    type = "danger",
+    duration = 2500
+  }) => {
     this.notificationDOMRef.current.addNotification({
       title: title,
       message: message,
