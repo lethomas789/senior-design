@@ -6,15 +6,138 @@ import actions from "../../store/actions";
 import axios from "axios";
 import OrderHistoryItem from "../OrderHistoryItem/OrderHistoryItem.js";
 import Button from "@material-ui/core/Button";
+import FormControl from "@material-ui/core/FormControl";
+import Select from "@material-ui/core/Select";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
+
+/**
+ * Convert orders array to an array of OrderHistoryItem components 
+ * 
+ * @param orders - array of orders 
+ * @param filter - property of order item to be filtered by
+ * @param filterValue - filter value to be checked against
+ */
+function getOrders(orders, filter = null, filterValue = null) {
+  var history;
+
+  if (filter) {
+    history = orders.map(order => {
+      let convertDate = new Date(order.date);
+      let hours = convertDate.getHours();
+      let timeOfDay = "AM";
+
+      if (hours > 12) {
+        hours = hours - 12;
+        timeOfDay = "PM";
+      }
+
+      hours = String(hours);
+
+      let minutes = String(convertDate.getMinutes());
+
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+
+      let seconds = String(convertDate.getSeconds());
+
+      let actualDate =
+        convertDate.toDateString() +
+        " " +
+        hours +
+        ":" +
+        minutes +
+        " " +
+        timeOfDay;
+
+      if (order[filter] === filterValue) {
+        return (
+          <Fragment key={order.oid}>
+            <OrderHistoryItem
+              key={order.oid}
+              orderDate={actualDate}
+              email={order.email}
+              firstName={order.firstName}
+              lastName={order.lastName}
+              oid={order.oid}
+              paid={String(order.paid)}
+              pickedUp={String(order.pickedUp)}
+              totalPrice={order.totalPrice}
+              clubHistory={false} // TODO figure out how to pass admin club version
+              items={order.items}
+            />
+          </Fragment>
+        );
+      }
+    });
+  } else {
+    history = orders.map(order => {
+      let convertDate = new Date(order.date);
+      let hours = convertDate.getHours();
+      let timeOfDay = "AM";
+
+      if (hours > 12) {
+        hours = hours - 12;
+        timeOfDay = "PM";
+      }
+
+      hours = String(hours);
+
+      let minutes = String(convertDate.getMinutes());
+
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+
+      let seconds = String(convertDate.getSeconds());
+
+      let actualDate =
+        convertDate.toDateString() +
+        " " +
+        hours +
+        ":" +
+        minutes +
+        " " +
+        timeOfDay;
+
+      return (
+        <Fragment key={order.oid}>
+          <OrderHistoryItem
+            key={order.oid}
+            orderDate={actualDate}
+            email={order.email}
+            firstName={order.firstName}
+            lastName={order.lastName}
+            oid={order.oid}
+            paid={String(order.paid)}
+            pickedUp={String(order.pickedUp)}
+            totalPrice={order.totalPrice}
+            clubHistory={false} // TODO figure out how to pass admin club version
+            items={order.items}
+          />
+        </Fragment>
+      );
+    });
+  }
+
+  return history;
+}
 
 class OrderHistory extends Component {
   constructor(props) {
     super(props);
     this.state = {
       orders: [],
-      show: "user" // which order history to show
+      show: "user", // which order history to show
+      date: "asc", // default date to ascending order
+      pickedUp: false
     };
   }
+
+  handleChange = event => {
+    this.setState({ [event.target.name]: event.target.value });
+  };
 
   componentDidMount() {
     const apiURL = "/api/orders/getUserOrders";
@@ -50,55 +173,9 @@ class OrderHistory extends Component {
   render() {
     const { isAdmin, adminsOf } = this.props;
 
-    const orders = this.state.orders.map(order => {
+    const orders = getOrders(this.state.orders);
 
-      let convertDate = new Date(order.date);
-      let hours = convertDate.getHours();
-      let timeOfDay = "AM";
-
-
-      if (hours > 12) {
-        hours = hours - 12;
-        timeOfDay = "PM";
-      }
-
-      hours = String(hours);
-
-      let minutes = String(convertDate.getMinutes());
-
-      if (minutes.length === 1) {
-        minutes = "0" + minutes;
-      }
-
-      let seconds = String(convertDate.getSeconds());
-
-      let actualDate =
-        convertDate.toDateString() +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        " " +
-        timeOfDay;
-
-      return (
-        <Fragment key={order.oid}>
-          <OrderHistoryItem
-            key={order.oid}
-            orderDate={actualDate}
-            email={order.email}
-            firstName={order.firstName}
-            lastName={order.lastName}
-            oid={order.oid}
-            paid={String(order.paid)}
-            pickedUp={String(order.pickedUp)}
-            totalPrice={order.totalPrice}
-            clubHistory={false} // TODO figure out how to pass admin club version
-            items={order.items}
-          />
-        </Fragment>
-      );
-    });
+    let filteredOrders = orders;
 
     if (this.state.orders.length === 0) {
       return (
@@ -106,68 +183,110 @@ class OrderHistory extends Component {
           <h1> No orders were made! </h1>
         </div>
       );
-    } else {
-      return (
-        <div>
-          <h1 className="centerHeader"> Orders </h1>
-          {/**
-           * TODO
-           * take out paid,
-           * put in email
-           * differentiate user orders vs club orders for admin
-           * filter/search order history
-           */}
-
-          {/* if admin, display button to switch to logged in user orders */}
-          {isAdmin ? (
-            <Button
-              variant="contained"
-              color="primary"
-              onClick={() => this.setState({ show: "user" })}
-              key="user"
-            >
-              User Orders
-            </Button>
-          ) : (
-            ""
-          )}
-
-          {/* if admin, display buttons to switch to club orders */}
-          {isAdmin
-            ? adminsOf.map(vendor => (
-                <Button
-                  variant="contained"
-                  color="primary"
-                  onClick={() => this.setState({ show: vendor.vid })}
-                  key={vendor.vid}
-                >
-                  {vendor.vendorName} Orders
-                </Button>
-              ))
-            : ""}
-
-          {/* below displays the actual order histories */}
-          {isAdmin
-            ? adminsOf.map((vendor, index) => (
-                <ClubOrders
-                  key={index}
-                  vid={vendor.vid}
-                  vendorName={vendor.vendorName}
-                  notifier={this.props.notifier}
-                  show={this.state.show}
-                />
-              ))
-            : ""}
-
-          {/* this user orders */}
-          {this.state.show === "user" ? (
-            <div id="order-history-container" key="user-orders">{orders}</div>
-          ) : (
-            ""
-          )}
-        </div>
-      );
     }
+
+    if (this.state.pickedUp === true) {
+      filteredOrders = getOrders(this.state.orders, 'pickedUp', true);
+    }
+
+    if (this.state.date === "desc") {
+      filteredOrders = [...filteredOrders].reverse();
+    }
+
+    return (
+      <div>
+        <h1 className="centerHeader"> Orders </h1>
+        {/**
+         * TODO
+         * take out paid,
+         * put in email
+         * differentiate user orders vs club orders for admin
+         * filter/search order history
+         */}
+
+        {/* if admin, display button to switch to logged in user orders */}
+        {isAdmin ? (
+          <Button
+            variant="contained"
+            color="primary"
+            onClick={() => this.setState({ show: "user" })}
+            key="user"
+          >
+            User Orders
+          </Button>
+        ) : (
+          ""
+        )}
+
+        {/* if admin, display buttons to switch to club orders */}
+        {isAdmin
+          ? adminsOf.map(vendor => (
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={() => this.setState({ show: vendor.vid })}
+                key={vendor.vid}
+              >
+                {vendor.vendorName} Orders
+              </Button>
+            ))
+          : ""}
+
+        {/********* filter buttons ********************/}
+
+        {/* filter by date: asc/desc */}
+        <form autoComplete="off">
+          <InputLabel htmlFor="date">Date</InputLabel>
+          <Select
+            value={this.state.date}
+            onChange={this.handleChange}
+            inputProps={{ name: "date", id: "date" }}
+          >
+            <MenuItem value="asc"> Ascending </MenuItem>
+            <MenuItem value="desc"> Descending </MenuItem>
+          </Select>
+        </form>
+
+        {/* filter by picked up true/false */}
+        <form autoComplete="off">
+          <InputLabel htmlFor="pickedUp">Picked Up</InputLabel>
+          <Select
+            value={this.state.pickedUp}
+            onChange={this.handleChange}
+            inputProps={{ name: "pickedUp", id: "pickedUp" }}
+          >
+            <MenuItem value={true}> True </MenuItem>
+            <MenuItem value={false}> False </MenuItem>
+          </Select>
+        </form>
+
+        {/* search by item name in order */}
+
+        {/* below displays the actual order histories */}
+        {isAdmin
+          ? adminsOf.map((vendor, index) => (
+              <ClubOrders
+                key={index}
+                vid={vendor.vid}
+                vendorName={vendor.vendorName}
+                notifier={this.props.notifier}
+                show={this.state.show}
+                date={this.state.date}
+                pickedUp={this.state.pickedUp}
+              />
+            ))
+          : ""}
+
+        {/* this user orders */}
+        {this.state.show === "user" ? (
+          <div id="order-history-container" key="user-orders">
+            {filteredOrders}
+          </div>
+        ) : (
+          ""
+        )}
+      </div>
+    );
   }
 }
 
@@ -177,7 +296,9 @@ class ClubOrders extends Component {
     notifier: PropTypes.func.isRequired,
     vid: PropTypes.string.isRequired,
     vendorName: PropTypes.string.isRequired,
-    show: PropTypes.string
+    show: PropTypes.string,
+    date: PropTypes.string.isRequired,
+    pickedUp: PropTypes.bool.isRequired
   };
 
   state = {
@@ -213,61 +334,26 @@ class ClubOrders extends Component {
   }
 
   render() {
-    const { vendorName, show, vid } = this.props;
+    const { vendorName, show, vid, date, pickedUp } = this.props;
 
-    const orders = this.state.orders.map(order => {
-      let convertDate = new Date(order.date);
-      let hours = convertDate.getHours();
-      let timeOfDay = "AM";
+    let orders = getOrders(this.state.orders);
 
-      if (hours > 12) {
-        hours = hours - 12;
-        timeOfDay = "PM";
-      }
+    let filteredOrders = orders;
 
-      hours = String(hours);
 
-      let minutes = String(convertDate.getMinutes());
+    if (pickedUp === true) {
+      filteredOrders = getOrders(this.state.orders, 'pickedUp', true);
+    }
 
-      if (minutes.length === 1) {
-        minutes = "0" + minutes;
-      }
-
-      let seconds = String(convertDate.getSeconds());
-
-      let actualDate =
-        convertDate.toDateString() +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        " " +
-        timeOfDay;
-
-      return (
-        <Fragment key={order.oid}>
-          <OrderHistoryItem
-            key={order.oid}
-            orderDate={actualDate}
-            email={order.email}
-            firstName={order.firstName}
-            lastName={order.lastName}
-            oid={order.oid}
-            paid={String(order.paid)}
-            pickedUp={String(order.pickedUp)}
-            totalPrice={order.totalPrice}
-            clubHistory={false} // TODO figure out how to pass admin club version
-            items={order.items}
-          />
-        </Fragment>
-      );
-    });
+    if (date === "desc") {
+      filteredOrders = [...filteredOrders].reverse();
+    }
 
     if (show === vid) {
       return (
         <div>
           {vendorName}
-          {orders}
+          {filteredOrders}
         </div>
       );
     }
