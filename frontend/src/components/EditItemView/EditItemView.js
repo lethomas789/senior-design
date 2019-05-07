@@ -207,8 +207,8 @@ class EditItemView extends Component {
     filesToStore.push(imageName);
     actualImages.push(files[0]);
 
-    console.log("files to store", imageName);
-    console.log("actual images", actualImages);
+    // console.log("files to store", imageName);
+    // console.log("actual images", actualImages);
     
     //set state of component
     this.setState({
@@ -226,12 +226,12 @@ class EditItemView extends Component {
     //if the admin did not upload anymore pictures, use old array
     if(this.state.imageNames.length === 0){
       imagesToUpload = this.state.productPicture;
-      console.log("uploading old pictures");
+      // console.log("uploading old pictures");
     }
 
     //if admin updated new pictures, send new array
     else{
-      console.log("updating new pictures");
+      // console.log("updating new pictures");
       imagesToUpload = this.state.imageNames;
       newImages = true;
     }
@@ -309,7 +309,7 @@ class EditItemView extends Component {
           <div className = "textForm">
             {products}
             </div>
-
+            
               <div className = "textForm" id="row">
                 <TextField
                     label="Product Name"

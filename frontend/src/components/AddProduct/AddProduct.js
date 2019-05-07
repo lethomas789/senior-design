@@ -36,6 +36,7 @@ const style = {
   field: { width: "500px" }
 };
 
+//component to allow admin to add products for purchase
 class AddProduct extends Component {
   constructor(props) {
     super(props);
@@ -68,8 +69,6 @@ class AddProduct extends Component {
       .storage()
       .ref("images")
       .child(filename);
-    // .getDownloadURL()
-    // .then(url => this.setState({ avatarURL: url }));
   };
 
   //handle stock change, update total stock values when user changes input
@@ -128,10 +127,9 @@ class AddProduct extends Component {
     const filesToStore = this.state.imageNames;
 
     //store actual image files
-    // const actualImages = [];
     const actualImages = this.state.images;
-    console.log(files);
-    console.log(files[0]);
+    // console.log(files);
+    // console.log(files[0]);
 
     //store image name as an object
     let imageName = {};

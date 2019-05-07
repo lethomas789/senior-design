@@ -283,7 +283,7 @@ class Checkout extends Component {
   }
 
   onSuccess = payment => {
-    console.log("Payment successful!", payment);
+    // console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cartItems[0].vid);
     const apiURL = "/api/orders";
 
@@ -375,15 +375,15 @@ class Checkout extends Component {
 
   onCancel = data => {
     // The user pressed "cancel" or closed the PayPal popup
-    console.log("Payment cancelled!", data);
+    // console.log("Payment cancelled!", data);
     // You can bind the "data" object's value to your state or props or whatever here, please see below for sample returned data
   };
 
   onNotEnoughStock = itemName => {
-    console.log(
-      "Payment canceled because there was not enough stock for:",
-      itemName
-    );
+    // console.log(
+    //   "Payment canceled because there was not enough stock for:",
+    //   itemName
+    // );
 
     this.props.notifier({
       title: "Error",
@@ -394,7 +394,7 @@ class Checkout extends Component {
 
   onError = err => {
     // The main Paypal script could not be loaded or something blocked the script from loading
-    console.log("Error!", err);
+    // console.log("Error!", err);
     this.props.notifier({
       title: "Error",
       message: err.toString(),

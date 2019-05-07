@@ -43,16 +43,10 @@ class CartView extends Component {
       itemsArray.push(currentItems);
     }
 
-
     //update state
-    this.setState(
-      {
-        vendorItemsSeparated: itemsArray
-      },
-      () => {
-        console.log("vendor items", this.state.vendorItemsSeparated);
-      }
-    );
+    this.setState({
+      vendorItemsSeparated: itemsArray
+    });
   };
 
   //function to separate items by vendors
@@ -70,14 +64,9 @@ class CartView extends Component {
     }
 
     //store result of array of vendors available
-    this.setState(
-      {
-        allVendors: currentVendorArray
-      },
-      () => {
-        console.log("determine which vids were found ", this.state.allVendors);
-      }
-    );
+    this.setState({
+      allVendors: currentVendorArray 
+    });
 
     //call function to separate items based on vendor
     this.separateItems(currentVendorArray);
@@ -89,7 +78,7 @@ class CartView extends Component {
     this.setState({
       currentCartItems: newItems
     }, () => {
-      console.log("separting vendors after delete");
+      // console.log("separting vendors after delete");
       this.separateVendors();
       this.forceUpdate();
     })

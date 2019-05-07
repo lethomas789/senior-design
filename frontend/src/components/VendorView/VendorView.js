@@ -38,8 +38,6 @@ class VendorView extends Component {
             }
           })
           .then(res => {
-            console.log("getting vendor products ", res.data);
-
             var currentVendorName = '';
             var currentVendorBio = '';
 

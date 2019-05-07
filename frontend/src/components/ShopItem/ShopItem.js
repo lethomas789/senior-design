@@ -34,7 +34,6 @@ class ShopItem extends Component {
   //update vendor in redux store
   updateVendor() {
     var viewVendor = this.state.vendorID;
-    console.log("trying to update vendor ", viewVendor);
     this.props.updateVendor(viewVendor);
   }
 

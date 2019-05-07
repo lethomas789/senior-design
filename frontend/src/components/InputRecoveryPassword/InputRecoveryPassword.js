@@ -21,8 +21,6 @@ class InputRecoveryPassword extends Component {
 
     //extract query string param for token
     var queryParseParams = queryString.parse(this.props.location.search);
-
-    console.log(queryParseParams);
     var token = queryParseParams.token;
 
     const apiURL = "/api/resetPass/checkToken";
@@ -51,7 +49,6 @@ class InputRecoveryPassword extends Component {
 
   //check reset token
   updatePassword = () => {
-    console.log("updating password");
     //input checks for matching passwords and min/max length
     if (this.state.password !== this.state.confirmPassword) {
       this.props.notifier({

@@ -41,7 +41,6 @@ class RecoverPassword extends Component {
         }
       })
       .then(res => {
-        console.log(res.data);
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
@@ -49,7 +48,6 @@ class RecoverPassword extends Component {
             type: "success"
           });
         } else {
-          // alert("no password for user that signed in with google");
           this.props.notifier({
             title: "Warning",
             message: res.data.message.toString(),

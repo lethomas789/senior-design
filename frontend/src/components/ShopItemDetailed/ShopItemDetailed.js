@@ -331,7 +331,6 @@ class ShopItemDetailed extends Component {
 
   addApparelToCart = () => {
     const apiURL = '/api/getUserCart/addItems';
-    console.log("checking shirt size", this.state.size);
     axios
       .post(apiURL, {
         params: {
@@ -361,7 +360,6 @@ class ShopItemDetailed extends Component {
             })
             .then(res => {
               //after getting cart info, update redux store container
-              console.log("new cart after adding new apparel item", res.data.data);
               this.props.updateItems(res.data.data);
               //switch from alert to notifier
               this.props.notifier({
@@ -518,7 +516,6 @@ class ShopItemDetailed extends Component {
       var apiURL = "/api/getUserCart/addItems";
       //item added to user's cart is not an apparel
       if (this.state.isApparel === false) {
-        console.log("adding item");
         axios
           .post(apiURL, {
             params: {
@@ -569,7 +566,6 @@ class ShopItemDetailed extends Component {
 
       //item added to user's cart is an apparel
       else {
-        console.log("checking shirt size", this.state.size);
         axios
           .post(apiURL, {
             params: {
@@ -695,9 +691,7 @@ class ShopItemDetailed extends Component {
           //extract param values from URL
           //match object contains parameter values
           const handle = this.props.match.params;
-
-          console.log(handle);
-
+          
           //update vid for redux, link to about page
           this.props.updateVendor(handle.vid);
           this.setState({

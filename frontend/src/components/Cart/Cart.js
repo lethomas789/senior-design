@@ -63,7 +63,7 @@ class Cart extends Component {
       }
     }
 
-    console.log("checking state of cart ", this.state.cart);
+    //update state of cart with new prices and amount purchased with new item
     this.setState(
       {
         cart: currentCart

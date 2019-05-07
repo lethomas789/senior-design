@@ -95,14 +95,6 @@ class Login extends Component {
           this.getCart();
 
           //display dialog for login successful
-          /*
-          this.setState({
-            open: true,
-            progressValue: 0,
-            progressVariant: "determinate",
-            responseMessage: "Login Succesful!"
-          });
-          */
           this.props.notifier({
             title: "Success",
             message: "Login Successful",
@@ -111,7 +103,7 @@ class Login extends Component {
           this.props.history.push("/shop");
         } else if (res.data.success === true && res.data.vendors.length > 0) {
           //after determining user is an admin, get object list of user's active vendors
-          console.log("admin login", res.data);
+          // console.log("admin login", res.data);
 
           const vendorURL = "/api/adminUser";
           axios
@@ -121,7 +113,7 @@ class Login extends Component {
               }
             })
             .then(res => {
-              console.log(res.data);
+              // console.log(res.data);
               let currentVendorID = res.data.vendors[0].vid;
               let email = this.state.email;
               let currentVendors = res.data.vendors;
@@ -139,14 +131,6 @@ class Login extends Component {
               this.getCart();
 
               //display dialog for login successful
-              /*
-              this.setState({
-                open: true,
-                progressValue: 0,
-                progressVariant: "determinate",
-                responseMessage: "Login Succesful!"
-              });
-              */
               this.props.notifier({
                 title: "Success",
                 message: "Login Successful",
@@ -164,14 +148,6 @@ class Login extends Component {
         }
         //display error message with logging in
         else {
-          /*
-          this.setState({
-            open: true,
-            progressValue: 0,
-            progressVariant: "determinate",
-            responseMessage: res.data.message
-          });
-          */
           this.props.notifier({
             title: "Warning",
             message: res.data.message,
@@ -245,14 +221,6 @@ class Login extends Component {
           this.getCart();
 
           //display dialog for login successful
-          /*
-          this.setState({
-            open: true,
-            progressValue: 0,
-            progressVariant: "determinate",
-            responseMessage: "Login Succesful!"
-          });
-          */
         } else if (res.data.success === true && res.data.vendors.length > 0) {
           const vendorURL = "/api/adminUser";
           axios
@@ -279,14 +247,6 @@ class Login extends Component {
               this.getCart();
 
               //display dialog for login successful
-              /*
-              this.setState({
-                open: true,
-                progressValue: 0,
-                progressVariant: "determinate",
-                responseMessage: "Login Succesful!"
-              });
-              */
               this.props.notifier({
                 title: "Success",
                 message: "Login Successful",
@@ -303,14 +263,6 @@ class Login extends Component {
             });
         } // end of admin login
         else {
-          /*
-          this.setState({
-            open: true,
-            progressValue: 0,
-            progressVariant: "determinate",
-            responseMessage: res.data.message
-          });
-          */
           this.props.notifier({
             title: "Warning",
             message: res.data.message.toString(),
@@ -381,35 +333,6 @@ class Login extends Component {
               />
             </div>
           </Paper>
-
-          {/* <div className="progressContainer">
-            <div className="circle">
-              <CircularProgress
-                className="loadingCircle"
-                size={80}
-                variant={this.state.progressVariant}
-                value={this.state.progressValue}
-                className={classes.progress}
-              />
-            </div>
-          </div>
-
-          <Dialog
-            open={this.state.open}
-            onClose={this.handleClose}
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                {this.state.responseMessage}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleClose} color="primary">
-                Ok
-              </Button>
-            </DialogActions>
-          </Dialog> */}
         </div>
       </div>
     );

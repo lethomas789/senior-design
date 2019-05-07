@@ -164,10 +164,6 @@ class ButtonAppBar extends Component {
   viewCartCheck = () => {
     //prevent user from using cart until logged in
     if (this.props.loginValue === false) {
-      // this.setState({
-      //   open: true,
-      //   alertMessage: "Please login to view cart"
-      // });
       this.props.notifier({
         title: "Info",
         message: "Please login to view cart.",

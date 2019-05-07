@@ -21,7 +21,6 @@ class ShopView extends Component {
       .get(apiURL)
       .then(res => {
         //update product state in redux store
-        console.log(res.data);
         this.props.updateProducts(res.data.data);
 
         //after getting products, get list of vendors
@@ -29,7 +28,6 @@ class ShopView extends Component {
         axios
           .get(vendorsURL)
           .then(res => {
-            console.log(res.data);
             this.props.updateVendors(res.data.vendors);
           })
           .catch(err => {
