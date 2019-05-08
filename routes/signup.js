@@ -11,6 +11,59 @@ const saltRounds = 10;
 const Email = require("email-templates");
 const crypto = require("crypto");
 
+function sendEmail(email, token) {
+  // send email confirmation email
+  const emailSubject = "ECS 193 Ecommerce Verification Email";
+  const title = `Account Confirmation`;
+  const intro = `Thanks for signing up!. Please click the following link to activate your account: \n\n`;
+
+  const link = `http://localhost:3000/emailConfirmation/${token} \n\n`;
+
+  const confirmEmail = new Email({
+    message: {
+      from: process.env.EMAIL,
+      // from: 'test@test.com',
+      subject: emailSubject,
+      to: email
+    },
+    send: true, // set send to true when not testing
+    // preview: false, // TODO turn off preview before production
+
+    transport: {
+      tls: {
+        // do not fail on invalid certs
+        rejectUnauthorized: false
+      },
+      // uncomment when actually sending emails
+      service: "gmail",
+      auth: {
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASS
+      }
+    }
+  });
+
+  confirmEmail
+    .send({
+      template: "resetPass",
+      locals: {
+        title,
+        intro,
+        link
+      }
+    })
+    .then(() => {
+      console.log("Finished signup email to:", email);
+      /*
+          return res.json({
+            success: true,
+            message: "Successfully sent reset password email."
+          });
+          */
+    })
+    .catch(console.log);
+}
+
 // sign up user
 router.post("/", (req, res) => {
   if (req.body.params) {
@@ -68,7 +121,6 @@ router.post("/", (req, res) => {
         });
       }
 
-
       // user has one hour to activate their account
       const token = crypto.randomBytes(20).toString("hex");
       const now = Date.now();
@@ -86,7 +138,7 @@ router.post("/", (req, res) => {
         isAdmin: false,
         isVerified: false,
         emailToken: token,
-        emailTokenExpires: time,
+        emailTokenExpires: time
       };
 
       // password hashing
@@ -119,56 +171,8 @@ router.post("/", (req, res) => {
         });
       });
 
-      // send email confirmation email
-      const emailSubject = "ECS 193 Ecommerce Verification Email";
-      const title = `Account Confirmation`;
-      const intro = `Thanks for signing up!. Please click the following link to activate your account: \n\n`;
+      sendEmail(email, token)
 
-      const link = `http://localhost:3000/emailConfirmation/${token} \n\n`;
-
-      const confirmEmail = new Email({
-        message: {
-          from: process.env.EMAIL,
-          // from: 'test@test.com',
-          subject: emailSubject,
-          to: email
-        },
-        send: true, // set send to true when not testing
-        // preview: false, // TODO turn off preview before production
-
-        transport: {
-          tls: {
-            // do not fail on invalid certs
-            rejectUnauthorized: false
-          },
-          // uncomment when actually sending emails
-          service: "gmail",
-          auth: {
-            user: process.env.EMAIL,
-            pass: process.env.EMAIL_PASS
-          }
-        }
-      });
-
-      confirmEmail
-        .send({
-          template: "resetPass",
-          locals: {
-            title,
-            intro,
-            link
-          }
-        })
-        .then(() => {
-          console.log("Finished signup email to:", email);
-          /*
-          return res.json({
-            success: true,
-            message: "Successfully sent reset password email."
-          });
-          */
-        })
-        .catch(console.log);
     })
     .catch(err => {
       // catch for ref.get
@@ -229,6 +233,7 @@ router.get("/confirmEmail", (req, res) => {
           emailTokenExpires: null
         });
 
+
       console.log("Activated account:", email);
       return res.json({
         success: true,
@@ -273,6 +278,10 @@ router.post("/googleSignup", (req, res) => {
       }
 
       // else, email does not exist, make account
+      const token = crypto.randomBytes(20).toString("hex");
+      const now = Date.now();
+      const time = new Date(now + 3600000);
+
       userRef
         .set(
           {
@@ -282,18 +291,21 @@ router.post("/googleSignup", (req, res) => {
             },
             email,
             isAdmin: false,
-            isVerified: true,
-            isOauth: true
+            isVerified: false,
+            isOauth: true,
+            emailToken: token,
+            emailTokenExpires: time,
           },
           { merge: true }
         ) // merge just in casej
         .then(() => {
           console.log("New account successfully made: ", email);
-          return res.json({
+          res.json({
             success: true,
             message: "Successfully made new account.",
             email
           });
+          sendEmail(email, token)
         })
         .catch(err => {
           console.log("Server error for googleSignup route:", err);

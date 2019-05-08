@@ -10,116 +10,113 @@ import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
+import TextField from "@material-ui/core/TextField";
 
 /**
- * Convert orders array to an array of OrderHistoryItem components 
- * 
- * @param orders - array of orders 
- * @param filter - property of order item to be filtered by
- * @param filterValue - filter value to be checked against
+ * Return array OrderHistoryItem to be rendered to the page
+ *
+ * @param {array} orders - array of order objects
  */
-function getOrders(orders, filter = null, filterValue = null) {
-  var history;
+function renderOrders(orders, index) {
+  let renderedOrders;
 
-  if (filter) {
-    history = orders.map(order => {
-      let convertDate = new Date(order.date);
-      let hours = convertDate.getHours();
-      let timeOfDay = "AM";
-
-      if (hours > 12) {
-        hours = hours - 12;
-        timeOfDay = "PM";
-      }
-
-      hours = String(hours);
-
-      let minutes = String(convertDate.getMinutes());
-
-      if (minutes.length === 1) {
-        minutes = "0" + minutes;
-      }
-
-      let seconds = String(convertDate.getSeconds());
-
-      let actualDate =
-        convertDate.toDateString() +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        " " +
-        timeOfDay;
-
-      if (order[filter] === filterValue) {
-        return (
-          <Fragment key={order.oid}>
-            <OrderHistoryItem
-              key={order.oid}
-              orderDate={actualDate}
-              email={order.email}
-              firstName={order.firstName}
-              lastName={order.lastName}
-              oid={order.oid}
-              paid={String(order.paid)}
-              pickedUp={String(order.pickedUp)}
-              totalPrice={order.totalPrice}
-              clubHistory={false} // TODO figure out how to pass admin club version
-              items={order.items}
-            />
-          </Fragment>
-        );
-      }
-    });
-  } else {
-    history = orders.map(order => {
-      let convertDate = new Date(order.date);
-      let hours = convertDate.getHours();
-      let timeOfDay = "AM";
-
-      if (hours > 12) {
-        hours = hours - 12;
-        timeOfDay = "PM";
-      }
-
-      hours = String(hours);
-
-      let minutes = String(convertDate.getMinutes());
-
-      if (minutes.length === 1) {
-        minutes = "0" + minutes;
-      }
-
-      let seconds = String(convertDate.getSeconds());
-
-      let actualDate =
-        convertDate.toDateString() +
-        " " +
-        hours +
-        ":" +
-        minutes +
-        " " +
-        timeOfDay;
-
-      return (
-        <Fragment key={order.oid}>
-          <OrderHistoryItem
-            key={order.oid}
-            orderDate={actualDate}
-            email={order.email}
-            firstName={order.firstName}
-            lastName={order.lastName}
-            oid={order.oid}
-            paid={String(order.paid)}
-            pickedUp={String(order.pickedUp)}
-            totalPrice={order.totalPrice}
-            clubHistory={false} // TODO figure out how to pass admin club version
-            items={order.items}
-          />
-        </Fragment>
-      );
-    });
+  if (orders.length === 0 || orders === undefined) {
+    return <div>None</div>;
   }
+
+  renderedOrders = orders.map(order => {
+    let convertDate = new Date(order.date);
+    let hours = convertDate.getHours();
+    let timeOfDay = "AM";
+
+    if (hours > 12) {
+      hours = hours - 12;
+      timeOfDay = "PM";
+    }
+
+    hours = String(hours);
+
+    let minutes = String(convertDate.getMinutes());
+
+    if (minutes.length === 1) {
+      minutes = "0" + minutes;
+    }
+
+    let seconds = String(convertDate.getSeconds());
+
+    let actualDate =
+      convertDate.toDateString() +
+      " " +
+      hours +
+      ":" +
+      minutes +
+      " " +
+      timeOfDay;
+
+    return (
+      <Fragment key={`${order.oid}-${index}`}>
+        <OrderHistoryItem
+          key={`${order.oid}-${index}`}
+          orderDate={actualDate}
+          email={order.email}
+          firstName={order.firstName}
+          lastName={order.lastName}
+          oid={order.oid}
+          paid={String(order.paid)}
+          pickedUp={String(order.pickedUp)}
+          totalPrice={order.totalPrice}
+          clubHistory={false} // TODO figure out how to pass admin club version
+          items={order.items}
+        />
+      </Fragment>
+    );
+  });
+
+  return renderedOrders;
+}
+
+/**
+ * Return array of all orders that have a certain filterValue
+ *
+ * @param {array} orders - array of order objects
+ * @param {string} filter - property of order obj to check
+ * @param {any} filterValue - value to check filter against
+ */
+function filterOrders(orders, filter, filterValue) {
+  if (orders.length === 0 || orders === undefined) {
+    return [];
+  }
+
+  let history = orders.filter(order => {
+    if (order[filter] === filterValue) {
+      return true;
+    }
+    return false;
+  });
+
+  return history;
+}
+
+/**
+ * Returns of an array of order objects filtered by item names containing the
+ * search substring
+ *
+ * @param {array} orders - array of order objects
+ * @param {string} searchValue - substring to search item name by
+ */
+function searchOrders(orders, searchValue) {
+  if (orders.length === 0 || orders === undefined) {
+    return [];
+  }
+
+  let history = orders.filter(order => {
+    // true if any item name in order contains search substring
+    let hasSearch = order.items.some(item => {
+      return item.name.toLowerCase().includes(searchValue);
+    });
+
+    return hasSearch;
+  });
 
   return history;
 }
@@ -131,12 +128,33 @@ class OrderHistory extends Component {
       orders: [],
       show: "user", // which order history to show
       date: "asc", // default date to ascending order
-      pickedUp: false
+      pickedUp: false,
+      search: "",
+      searchValue: "", 
+      typingTimeout: 0,
     };
   }
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
+  };
+
+  handleSearch = event => {
+    // reset typing timeout 
+    if (this.state.typingTimeout) {
+      clearTimeout(this.state.typingTimeout);
+    }
+
+    // put dealy on changing search state to account for user typing;
+    // done so that the component doesnt try to rerender for every letter
+    this.setState({
+      searchValue: event.target.value.toLowerCase(),
+      typingTimeout: setTimeout(() => {
+        this.setState(() => ({ search: this.state.searchValue }))
+      }, 300)
+
+    })
+    // this.setState({ search: event.target.value.toLowerCase() });
   };
 
   componentDidMount() {
@@ -162,6 +180,7 @@ class OrderHistory extends Component {
         }
       })
       .catch(err => {
+        console.log(err);
         this.props.notifier({
           title: "Error",
           message: err.toString(),
@@ -173,10 +192,6 @@ class OrderHistory extends Component {
   render() {
     const { isAdmin, adminsOf } = this.props;
 
-    const orders = getOrders(this.state.orders);
-
-    let filteredOrders = orders;
-
     if (this.state.orders.length === 0) {
       return (
         <div>
@@ -185,13 +200,25 @@ class OrderHistory extends Component {
       );
     }
 
+    let filteredOrders = this.state.orders;
+
+    // filter by picked up only
     if (this.state.pickedUp === true) {
-      filteredOrders = getOrders(this.state.orders, 'pickedUp', true);
+      filteredOrders = filterOrders(filteredOrders, "pickedUp", true);
     }
 
+    // filter by search and pickedUp
+    if (this.state.search !== "") {
+      filteredOrders = searchOrders(filteredOrders, this.state.search);
+    }
+
+    // reverse array if descending
     if (this.state.date === "desc") {
       filteredOrders = [...filteredOrders].reverse();
     }
+
+    // finally render the filtered orders into OrderHistoryItems
+    filteredOrders = renderOrders(filteredOrders, 'user');
 
     return (
       <div>
@@ -261,6 +288,14 @@ class OrderHistory extends Component {
         </form>
 
         {/* search by item name in order */}
+        <form noValidate autoComplete="off">
+          <TextField
+            label="Search by Item Name"
+            value={this.state.searchValue}
+            onChange={this.handleSearch}
+            margin="normal"
+          />
+        </form>
 
         {/* below displays the actual order histories */}
         {isAdmin
@@ -273,6 +308,7 @@ class OrderHistory extends Component {
                 show={this.state.show}
                 date={this.state.date}
                 pickedUp={this.state.pickedUp}
+                search={this.state.search}
               />
             ))
           : ""}
@@ -334,31 +370,38 @@ class ClubOrders extends Component {
   }
 
   render() {
-    const { vendorName, show, vid, date, pickedUp } = this.props;
+    const { vendorName, show, vid, date, pickedUp, search } = this.props;
 
-    let orders = getOrders(this.state.orders);
+    let filteredOrders = this.state.orders;
 
-    let filteredOrders = orders;
-
-
-    if (pickedUp === true) {
-      filteredOrders = getOrders(this.state.orders, 'pickedUp', true);
+    if (show !== vid) {
+      return null;
     }
 
+    // filter by picked up only
+    if (pickedUp === true) {
+      filteredOrders = filterOrders(filteredOrders, "pickedUp", true);
+    }
+
+    // filter by search and pickedUp
+    if (search !== "") {
+      filteredOrders = searchOrders(filteredOrders, search);
+    }
+
+    // reverse array if descending
     if (date === "desc") {
       filteredOrders = [...filteredOrders].reverse();
     }
 
-    if (show === vid) {
-      return (
-        <div>
-          {vendorName}
-          {filteredOrders}
-        </div>
-      );
-    }
+    // finally render the filtered orders into OrderHistoryItems
+    filteredOrders = renderOrders(filteredOrders, vendorName);
 
-    return null;
+    return (
+      <div>
+        {vendorName}
+        {filteredOrders}
+      </div>
+    );
   }
 }
 

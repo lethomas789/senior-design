@@ -78,7 +78,7 @@ router.post("/", (req, res) => {
 
       const resetPassEmail = new Email({
         message: {
-          from: "ecs193.ecommerce@gmail.com",
+          from: process.env.EMAIL,
           // from: 'test@test.com',
           subject: emailSubject,
           to: email
@@ -145,7 +145,7 @@ router.get("/checkToken", (req, res) => {
   }
 
   const time = new Date();
-  console.log(time);
+  // console.log(time);
 
   const queryRef = db
     .collection("users")
