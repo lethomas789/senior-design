@@ -212,6 +212,16 @@ class ButtonAppBar extends Component {
     }
   };
 
+  toggleOpenDrawer = () => {
+    if (!this.state.mobile) {
+        return;
+    }
+    this.setState({
+        open: !this.state.open
+    })
+}
+
+
   render() {
     const { classes } = this.props;
     const { anchorEl, anchorElAccount } = this.state;
@@ -226,6 +236,8 @@ class ButtonAppBar extends Component {
         );
       });
     }
+
+
 
     return (
       <nav className="root">
