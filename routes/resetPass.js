@@ -145,7 +145,7 @@ router.get("/checkToken", (req, res) => {
   }
 
   const time = new Date();
-  console.log(time);
+  // console.log(time);
 
   const queryRef = db
     .collection("users")
