@@ -60,7 +60,9 @@ class ShopView extends Component {
 
     return (
       <div id="shopview-container">
+      <header>
           <h1> Shop </h1>
+          </header>
           <div className="shop-hero-image-container">
             <div className="hero-image">
               <img

@@ -20,7 +20,9 @@ export default class Home extends Component {
           alignItems="center"
         >
           <div className="helv">
+          <header>
             <h1> Welcome to ECS193 ECommerce! </h1>
+            </header>
           </div>
 
           {/* <img src={require('../../images/wics2.png')} width="100%" /> */}
