@@ -101,7 +101,6 @@ router.post('/', (req, res) =>{
               message: 'Server error in getting admin info: ' + err
             });
           });
-
         }
 
         // else not admin, send empty array
@@ -173,6 +172,14 @@ router.get('/googleLogin', (req, res) => {
       return res.json({
         success: false,
         message: 'Sorry, no such account for this email.'
+      });
+    }
+
+    if(doc.data().isVerified === false) {
+      console.log('No such account for provided email:', email);
+      return res.json({
+        success: false,
+        message: 'Please verify your account through your email before logging in.'
       });
     }
 

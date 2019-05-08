@@ -21,8 +21,6 @@ class InputRecoveryPassword extends Component {
 
     //extract query string param for token
     var queryParseParams = queryString.parse(this.props.location.search);
-
-    console.log(queryParseParams);
     var token = queryParseParams.token;
 
     const apiURL = "/api/resetPass/checkToken";
@@ -51,7 +49,6 @@ class InputRecoveryPassword extends Component {
 
   //check reset token
   updatePassword = () => {
-    console.log("updating password");
     //input checks for matching passwords and min/max length
     if (this.state.password !== this.state.confirmPassword) {
       this.props.notifier({
@@ -86,7 +83,7 @@ class InputRecoveryPassword extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
         }
@@ -94,7 +91,7 @@ class InputRecoveryPassword extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -125,6 +122,7 @@ class InputRecoveryPassword extends Component {
               label="Password"
               required="true"
               onChange={this.handlePasswordField}
+              type = "password"
               style={{ marginBottom: "20px" }}
             />
           </form>
@@ -133,6 +131,7 @@ class InputRecoveryPassword extends Component {
             <TextField
               label="Confirm Password"
               required="true"
+              type = "password"
               onChange={this.handleConfirmPasswordField}
               style={{ marginBottom: "20px" }}
             />

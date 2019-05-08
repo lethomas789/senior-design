@@ -36,6 +36,7 @@ const style = {
   field: { width: "500px" }
 };
 
+//component to allow admin to add products for purchase
 class AddProduct extends Component {
   constructor(props) {
     super(props);
@@ -68,8 +69,6 @@ class AddProduct extends Component {
       .storage()
       .ref("images")
       .child(filename);
-    // .getDownloadURL()
-    // .then(url => this.setState({ avatarURL: url }));
   };
 
   //handle stock change, update total stock values when user changes input
@@ -128,10 +127,9 @@ class AddProduct extends Component {
     const filesToStore = this.state.imageNames;
 
     //store actual image files
-    // const actualImages = [];
     const actualImages = this.state.images;
-    console.log(files);
-    console.log(files[0]);
+    // console.log(files);
+    // console.log(files[0]);
 
     //store image name as an object
     let imageName = {};
@@ -200,7 +198,7 @@ class AddProduct extends Component {
             this.uploadFiles();
             this.props.notifier({
               title: "Success",
-              message: res.data.message,
+              message: res.data.message.toString(),
               type: "success"
             });
           }
@@ -208,7 +206,7 @@ class AddProduct extends Component {
         .catch(err => {
           this.props.notifier({
             title: "Error",
-            message: err,
+            message: err.toString(),
             type: "danger"
           });
         });
@@ -237,7 +235,7 @@ class AddProduct extends Component {
             this.uploadFiles();
             this.props.notifier({
               title: "Success",
-              message: res.data.message,
+              message: res.data.message.toString(),
               type: "success"
             });
           }
@@ -245,7 +243,7 @@ class AddProduct extends Component {
         .catch(err => {
           this.props.notifier({
             title: "Error",
-            message: err,
+            message: err.toString(),
             type: "danger"
           });
         });
@@ -422,7 +420,13 @@ class AddProduct extends Component {
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }} 
               />
               </div>
 
@@ -430,7 +434,13 @@ class AddProduct extends Component {
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}              
               />
               </div>
 
@@ -438,14 +448,26 @@ class AddProduct extends Component {
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}              
               />
               </div>
           
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
-                onUploadError={(error) => {console.log(error)}} 
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}              
               />
             </div>
 

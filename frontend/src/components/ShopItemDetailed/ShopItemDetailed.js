@@ -331,7 +331,6 @@ class ShopItemDetailed extends Component {
 
   addApparelToCart = () => {
     const apiURL = '/api/getUserCart/addItems';
-    console.log("checking shirt size", this.state.size);
     axios
       .post(apiURL, {
         params: {
@@ -370,12 +369,20 @@ class ShopItemDetailed extends Component {
               });
             })
             .catch(err => {
-              alert(err);
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
             });
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
         });
   }
 
@@ -495,7 +502,11 @@ class ShopItemDetailed extends Component {
           break;
 
         default:
-          break;
+          this.props.notifier({
+            title: "Error",
+            message: "Please select size!",
+            type: "danger"
+          });
       }
     }
 
@@ -505,7 +516,6 @@ class ShopItemDetailed extends Component {
       var apiURL = "/api/getUserCart/addItems";
       //item added to user's cart is not an apparel
       if (this.state.isApparel === false) {
-        console.log("adding item");
         axios
           .post(apiURL, {
             params: {
@@ -539,7 +549,7 @@ class ShopItemDetailed extends Component {
                 .catch(err => {
                   this.props.notifier({
                     title: "Error",
-                    message: err,
+                    message: err.toString(),
                     type: "danger"
                   });
                 });
@@ -548,7 +558,7 @@ class ShopItemDetailed extends Component {
           .catch(err => {
             this.props.notifier({
               title: "Error",
-              message: err,
+              message: err.toString(),
               type: "danger"
             });
           });
@@ -556,7 +566,6 @@ class ShopItemDetailed extends Component {
 
       //item added to user's cart is an apparel
       else {
-        console.log("checking shirt size", this.state.size);
         axios
           .post(apiURL, {
             params: {
@@ -595,12 +604,20 @@ class ShopItemDetailed extends Component {
                   });
                 })
                 .catch(err => {
-                  alert(err);
+                  this.props.notifier({
+                    title: "Error",
+                    message: err.toString(),
+                    type: "danger"
+                  });
                 });
             }
           })
           .catch(err => {
-            alert(err);
+            this.props.notifier({
+              title: "Error",
+              message: err.toString(),
+              type: "danger"
+            });
           });
       } //end of else statement for isApparel
     } //end of adding item to cart
@@ -674,9 +691,7 @@ class ShopItemDetailed extends Component {
           //extract param values from URL
           //match object contains parameter values
           const handle = this.props.match.params;
-
-          console.log(handle);
-
+          
           //update vid for redux, link to about page
           this.props.updateVendor(handle.vid);
           this.setState({
@@ -735,16 +750,29 @@ class ShopItemDetailed extends Component {
                 }
               } else {
                 alert(res.data.message);
+                this.props.notifier({
+                  title: "Success",
+                  message: res.data.message.toString(),
+                  type: "success"
+                });
               }
             })
             .catch(err => {
-              alert(err);
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
             });
         }
       })
       //catch error for getting vendors
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   }
 

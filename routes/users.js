@@ -6,20 +6,26 @@ const db = admin.firestore();
 
 //get all users in /users collection
 router.get('/', (req,res) => {
-    //access collections of users
-    db.collection('/users').get()
-        .then(snapshot => {
-            //create array, append each data record to array
-            var results = [];
-            snapshot.forEach(doc => {
-                results.push(doc.data());
+    var email = '';
+    email = req.query.email;
+
+    const userRef = db.collection('users').doc(email);
+    userRef.get().then(doc => {
+        if(!doc.exists) {
+            console.log('No such account for given email:', email);
+            return res.status(200).json({
+              success: false,
+              message: 'No such account for given email: ' + email
             });
-            //return result of data
-            res.status(200).send(results);
-        })
-        .catch((err) => {
-            console.log(err);
-        })
+        }
+    
+        else{
+            return res.status(200).json({
+                message:"Account info retrieved",
+                data: doc.data()
+            })
+        }
+    })
 })
 
 module.exports = router;

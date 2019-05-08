@@ -19,16 +19,14 @@ class Cart extends Component {
     this.state = {
       total: 0,
       cart: this.props.passedItems,
-      allVendors: [],
-      vendorItemsSeparated: [],
-      vendor: this.props.passedVendor
+      vendor: this.props.passedVendor,
+      vendorsInView: this.props.passedAllVendors
     };
   }
 
   //update total price of cart
   updateTotal = () => {
     //get total from items
-    // var currentCart = this.props.items;
     var currentCart = this.state.cart;
     var priceTotal = 0;
 
@@ -37,7 +35,7 @@ class Cart extends Component {
       this.setState({
         total: 0
       });
-      // this.props.updateTotal(priceTotal);
+      this.props.updateTotal(priceTotal);
     }
 
     //if there are items, calculate total price
@@ -50,22 +48,22 @@ class Cart extends Component {
       this.setState({
         total: priceTotal
       });
+      this.props.updateTotal(priceTotal);
     }
   };
 
   //update total price based on quantity
   //if user changes quantity in selector, find the matching item via pid and update total price/amount purchased 
-  updateItemTotal = (pid, newTotal, amt) => {
+  updateItemTotal = (itemID, newTotal, amt) => {
     var currentCart = this.state.cart;
     for (let i = 0; i < currentCart.length; i++) {
-      if (currentCart[i].pid === pid) {
+      if (currentCart[i].itemID === itemID) {
         currentCart[i].totalPrice = newTotal;
         currentCart[i].amtPurchased = amt;
       }
     }
 
-
-    console.log("checking state of cart ", this.state.cart);
+    //update state of cart with new prices and amount purchased with new item
     this.setState(
       {
         cart: currentCart
@@ -77,6 +75,47 @@ class Cart extends Component {
     );
   };
 
+  //update cart of items in current vendor if an item is removed from CartItem
+  //function passed as prop to child, child calls parent function to update state of items in cart
+  updateCartAfterDelete = (newItems) => {
+    this.setState({
+      cart: newItems
+    }, () => {
+      //no more items for this vendor cart, update CartView to remove this cart
+      if(this.state.cart.length === 0){
+        //reload page only if no more items in cart for a vendor
+        //work around for ppxo error, cleanup error for paypal when trying to unmount component?
+        window.location.reload();
+
+        //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
+        //error window clean up?
+
+        // console.log("passed all vendors to view", this.state.vendorsInView);
+        // var currentVendorsView = this.state.vendorsInView;
+        // var vidIndex = 0;
+
+        // //find location of vid, remove from array of current vendors to render
+        // for(let i = 0; i < currentVendorsView.length; i++){
+        //   if(currentVendorsView[i] === this.state.vendor){
+        //     vidIndex = i;
+        //     break;
+        //   }
+        // }
+
+        // console.log("vid to remove", this.state.vendor);
+        // console.log("location of vid", vidIndex);
+
+        // currentVendorsView.splice(Number(vidIndex),1);
+        // console.log("new vendors", currentVendorsView);
+        // this.props.updateVendorsView(currentVendorsView);
+      }
+
+      else{
+        this.updateTotal();
+      }
+    })
+  }
+
   //get cart from server for user
   componentDidMount() {
     //calculate running total of items
@@ -87,36 +126,45 @@ class Cart extends Component {
   render() {
     //render each item in the cart
     const cart = this.state.cart.map(result => {
-      console.log("result in cart:", result);
       if (result.size === undefined) {
         return (
           <CartItem
-            key={result.productName}
+            key={result.itemID}
             imageSrc={result.image[0]}
             pid={result.pid}
+            itemID={result.itemID}
             vendorID={result.vid}
             productName={result.productName}
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
+            size={result.size}
+            isApparel={result.isApparel}
             updateItemTotal = {this.updateItemTotal}
             notifier = {this.props.notifier}
+            updateAfterDelete = {this.props.updateAfterDelete}
+            updateCartAfterDelete = {this.updateCartAfterDelete}
           />
         );
       } else {
         return (
           <CartItem
-            key={result.productName}
+            key={result.itemID}
             size={result.size}
             imageSrc={result.image[0]}
             pid={result.pid}
+            itemID={result.itemID}
             vendorID={result.vid}
             productName={result.productName}
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
+            size={result.size}
+            isApparel={result.isApparel}
             updateItemTotal = {this.updateItemTotal}
             notifier = {this.props.notifier}
+            updateAfterDelete = {this.props.updateAfterDelete}
+            updateCartAfterDelete = {this.updateCartAfterDelete}
           />
         );
       }

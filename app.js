@@ -119,7 +119,7 @@ var initSchedules = db
                     to: vdoc.data().email
                   },
                   send: false, // set send to true when not testing
-                  // preview: false,  // TODO turn off preview before production
+                  preview: false, // TODO turn off preview before production
 
                   transport: {
                     // uncomment when actually sending emails
@@ -170,7 +170,7 @@ var initSchedules = db
         from: process.env.EMAIL,
         // from: 'test@test.com',
         subject: emailSubject,
-        to: process.env.ERROR_EMAIL,
+        to: process.env.ERROR_EMAIL
       },
       send: true, // set send to true when not testing
       // preview: false,  // TODO turn off preview before production
@@ -201,6 +201,30 @@ var initSchedules = db
       })
       .catch(console.log);
   });
+
+// clear from DB once every 60 min, accounts who is not verified, and their email toekens have expired
+var clearUnVerifiedAccounts = schedule.scheduleJob("*/60 * * * *", function() {
+  let time = new Date();
+  console.log("Clearing unverified accounts at:", time);
+  let usersRef = db
+    .collection("users")
+    .where("isVerified", "==", false)
+    .where("emailTokenExpires", "<", time)
+    .get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        console.log("Clearing out account:", doc.id);
+        let deleteUserDoc = db
+          .collection("users")
+          .doc(doc.id)
+          .delete();
+      });
+      console.log("Finished clearing job.");
+    })
+    .catch(err => {
+      console.log("Error in clearing unverified accounts job", err);
+    });
+});
 
 /*var defaultApp = admin.initializeApp(defaultAppConfig);
 var defaultAuth = defaultApp.auth();

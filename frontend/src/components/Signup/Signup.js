@@ -36,7 +36,7 @@ class Signup extends Component {
       progressVariant: "determinate",
       responseMessage: "",
       success: false,
-      toLogin: false,
+      toRedirect: false
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -63,14 +63,6 @@ class Signup extends Component {
     });
 
     if (this.state.password !== this.state.confirmPassword) {
-      /*
-      this.setState({
-        open: true,
-        progressValue: 0,
-        progressVariant: "determinate",
-        responseMessage: "Passwords do not match!"
-      });
-      */
       this.props.notifier({
         title: "Error",
         message: "Passwords do not match.",
@@ -91,31 +83,17 @@ class Signup extends Component {
         .then(res => {
           //if signup is successful, display success message
           if (res.data.success === true) {
-            // this.setState({
-            //   open: true,
-            //   progressValue: 0,
-            //   progressVariant: "determinate",
-            //   responseMessage: "Signup successful! Please login!",
-            //   success: true
-            // });
             this.props.notifier({
               title: "Success",
-              message: "Signup successful, please check your email to activate your account.",
+              message:
+                "Signup successful, please check your email to activate your account.",
               type: "success"
             });
-            this.setState(() => ({ toLogin: true }));
+            this.setState(() => ({ toRedirect: true }));
           }
 
           //display error message
           else {
-            /*
-            this.setState({
-              open: true,
-              progressValue: 0,
-              progressVariant: "determinate",
-              responseMessage: res.data.message
-            });
-            */
             this.props.notifier({
               title: "Error",
               message: res.data.message + " Please try again.",
@@ -168,10 +146,12 @@ class Signup extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: "Signup successful. Please login.",
-            type: "success"
+            message:
+              "Signup successful. Please check your email for a confirmation link.",
+            type: "success",
+            time: 5000
           });
-          this.setState(() => ({ toLogin: true }));
+          this.setState(() => ({ toRedirect: true }));
         }
 
         //display error message
@@ -193,8 +173,12 @@ class Signup extends Component {
   };
 
   render() {
-    if (this.state.toLogin === true) {
-      return <Redirect to='/login' />
+    if (this.state.toRedirect === true) {
+      const pageText =
+        "Thanks for signing up. Please check your email to verify your account.";
+      return (
+        <Redirect to={{ pathname: "/page/check-email", state: { pageText } }} />
+      );
     }
 
     const { classes } = this.props;
@@ -272,34 +256,6 @@ class Signup extends Component {
               />
             </div>
           </Paper>
-
-          {/* <div className="progressContainer">
-            <div className="circle">
-              <CircularProgress
-                className="loadingCircle"
-                size={80}
-                variant={this.state.progressVariant}
-                value={this.state.progressValue}
-              />
-            </div>
-          </div> */}
-
-          {/* <Dialog
-            open={this.state.open}
-            onClose={this.handleClose}
-            aria-describedby="alert-dialog-description"
-          >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                {this.state.responseMessage}
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button onClick={this.handleClose} color="primary">
-                Ok
-              </Button>
-            </DialogActions>
-          </Dialog> */}
         </div>
       </div>
     );

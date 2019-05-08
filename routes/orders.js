@@ -128,7 +128,7 @@ router.post('/', (req, res) => {
           to: doc.data().email
         },
         send: true,  // set send to true when not testing
-        // preview: false,  // TODO turn off preview before production
+        preview: false,  // TODO turn off preview before production
 
         transport: {
          // host: 'localhost', // TODO update w/ website?

@@ -11,12 +11,14 @@ class CartItem extends Component {
   // store product id PID to reference for item removal
   state = {
     pid: this.props.pid,
+    itemID: this.props.itemID,
     vid: this.props.vendorID,
     size: this.props.size,
     amtPurchased: this.props.amtPurchased,
     price: this.props.productPrice,
     total: this.props.totalPrice,
-    stock: 0
+    stock: 0,
+    isApparel: this.props.isApparel
   };
 
   //when a CartItem renders, store the state of the stock
@@ -35,7 +37,11 @@ class CartItem extends Component {
       })
     })
     .catch(err => {
-      alert(err);
+      this.props.notifier({
+        title: "Error",
+        message: err.toString(),
+        type: "danger"
+      });
     })
   }
 
@@ -72,7 +78,35 @@ class CartItem extends Component {
       }, () => {
         //update total in cart
         //update total and amount based on pid
-        this.props.updateItemTotal(this.state.pid, newTotal, newAmount);
+        this.props.updateItemTotal(this.state.itemID, newTotal, newAmount);
+        
+        //update cart on server with new amount 
+        var updateURL = '/api/getUserCart/updateItems';
+        axios.post(updateURL, {
+          params:{
+            user: this.props.user,
+            pid: this.state.pid,
+            amtPurchased: newAmount,
+            isApparel: this.state.isApparel,
+            size: this.state.size
+          }
+        })
+        .then(res => {
+          if(res.data.success === false){
+            this.props.notifier({
+              title: "Error",
+              message: res.data.message.toString(),
+              type: "danger"
+            });
+          }
+        })
+        .catch(err => {
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
+        })
       });
     }
   };
@@ -84,7 +118,9 @@ class CartItem extends Component {
       .post(apiURL, {
         params: {
           user: this.props.user,
-          pid: this.state.pid
+          pid: this.state.pid,
+          isApparel: this.state.isApparel,
+          size: this.state.size
         }
       })
       .then(res => {
@@ -98,18 +134,40 @@ class CartItem extends Component {
           })
           .then(res => {
             //after removing item from cart, update cart on server
-            console.log("updating cartview cart", res.data);
             this.props.updateItems(res.data.data);
 
-            //reload the page after deleting items to update carts of each vendor
-            window.location.reload();
+            //get all items related to this vendor and update vendor cart
+            var newItemsAfterDeletion = [];
+
+            //remove vendor from view if no more items
+            if(res.data.data.length != 0){
+              for(let i = 0; i < res.data.data.length; i++){
+                if (res.data.data[i].vid === this.state.vid){
+                  newItemsAfterDeletion.push(res.data.data[i]);
+                }
+              }
+              this.props.updateCartAfterDelete(newItemsAfterDeletion);
+            }
+
+            //update list of vendor items after item removal, no more items in vendor, empty
+            else{
+              this.props.updateCartAfterDelete(res.data.data);
+            }
           })
           .catch(err => {
-            alert(err);
+            this.props.notifier({
+              title: "Error",
+              message: err.toString(),
+              type: "danger"
+            });
           });
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   };
 

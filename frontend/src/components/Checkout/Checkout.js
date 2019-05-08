@@ -9,6 +9,7 @@ import { withStyles } from "@material-ui/core/styles";
 // import PaypalExpressBtn from "react-paypal-express-checkout";
 import PaypalButton from "../PaypalButton/PaypalButton";
 import axios from "axios";
+import { withRouter, Redirect } from 'react-router-dom';
 
 //styles for checkout button
 const styles = theme => ({
@@ -115,38 +116,176 @@ class Checkout extends Component {
     // );
   }
 
-  // checkStock = () => {
-  //   //started onclick for checking stock before purchase
-  //   //check stock for each item
-  //   var items = this.props.cartItems;
-  //   for(let i =0; i < items.length; i++){
-  //       console.log("checking stock");
-  //       axios.get('/api/stock/', {
-  //         params:{
-  //           pid: items[i].pid,
-  //           isApparel: items[i].isApparel,
-  //           size: items[i].size,
-  //           amt: items[i].amtPurchased
-  //         }
-  //       })
-  //       .then(res => {
-  //         if(res.data.availableStock === false){
-  //           alert("not enough stock on purchase");
-  //         }
-  //       })
-  //       .catch(err => {
-  //         alert(err);
-  //       })
-  //   }
-  // }
+  //subtract stock for single item
+  subtractStockSingleItem = (item) => {
+    return new Promise( (resolve,reject) => {
+      const apiURL = '/api/stock';
+
+      //convert Size to apparel stock, eg. Small -> s_stock
+      var sizeStock = '';
+      switch(item.size){
+        case 'Small':
+          sizeStock = 's_stock';
+          break;
+    
+        case 'Medium':
+          sizeStock = 'm_stock';
+          break;
+    
+        case 'Large':
+          sizeStock = 'l_stock';
+          break;
+    
+        case 'X-Large':
+          sizeStock = 'xl_stock';
+          break;
+            
+        case 'X-Small':
+          sizeStock = 'xs_stock';
+          break;
+    
+        default:
+          sizeStock = '';
+          break;
+      }
+
+      //make request to subtract stock on server
+      axios.patch(apiURL, {
+        params:{
+          pid: item.pid,
+          isApparel: item.isApparel,
+          size: sizeStock,
+          amt: item.amtPurchased
+        }
+      })
+      .then(res => {
+        //if subtraction successful, resolve promise
+        if(res.data.success === true){
+          resolve(1);
+        }
+        //if error, reject promise
+        else{
+          reject(0);
+        }
+      })
+      .catch(err => {
+        reject(0);
+      })
+    })
+  }
+
+  //wait for all items to complete stock subtraction
+  subtractStock = () => {
+    var waitPromises = [];
+    var currentVendorItems = this.props.cartItems;
+
+    //for each item, subtract stock, create a promise for each
+    for(let i = 0; i < currentVendorItems.length; i++){
+      waitPromises.push(this.subtractStockSingleItem(currentVendorItems[i]));
+    }
+
+    //subtract stock and then remove items from cart
+    Promise.all(waitPromises)
+      .then(res => {
+        //delete items from vendor in user's cart after successfully subtracting stock
+        this.removeItemsFromVendor();
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      })
+  }
+
+  //remove each item from vendor after purchase
+  //create a promise for each item, call /api/getUserCart/deleteItems to delete each item
+  removeSingleItemFromVendor = (removeItem) => {
+    return new Promise( (resolve, reject) => {
+      const apiURL = "/api/getUserCart/deleteItems";
+
+      axios.post(apiURL, {
+        params:{
+          user: this.props.user,
+          pid: removeItem.pid,
+          isApparel: removeItem.isApparel,
+          size: removeItem.size
+        }
+      })
+      .then(res => {
+        //item was deleted on server, resolve promise
+        if(res.data.success === true){
+          resolve(1);
+        }
+        else{
+          //if item was not deleted, reject promise
+          reject(0);
+        }
+      })
+      .catch(err => {
+        reject(0);
+      })
+    }); 
+  }
+
+  //remove items from vendor after purchase
+  //wait for all promises to return, and then update user's cart
+  removeItemsFromVendor = () => {
+    var waitPromises = [];
+    var currentVendorItems = this.props.cartItems;
+
+    //create a promise for each item to be deleted and wait
+    for(let i = 0; i < currentVendorItems.length; i++){
+      waitPromises.push(this.removeSingleItemFromVendor(currentVendorItems[i]));
+    }
+
+    //wait until all promises have been resolved
+    Promise.all(waitPromises)
+      //when all promises have been resolved, proceed to get updated user's cart
+      .then(res => {  
+        //after removing items from user's cart with vendor item, get updated cart
+        const cartURL = '/api/getUserCart';
+        axios.get(cartURL, {
+          params:{
+            user: this.props.user
+          }
+        })
+        .then(res => {
+          if(res.data.success === true){
+            //update new items and redirect to successful payment page
+            this.props.updateItems(res.data.data);
+            window.location = '/successfulPayment';
+          }
+          else{
+            this.props.notifier({
+              title: "Error",
+              message: "Error with server, no cart.",
+              type: "danger"
+            });
+          }
+        })
+        .catch(err => {
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
+        })
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      })
+  }
 
   onSuccess = payment => {
-    console.log("Payment successful!", payment);
+    // console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cartItems[0].vid);
-
     const apiURL = "/api/orders";
-
-    // check for stock in database before payment
 
     //make post request to orders
     axios
@@ -163,34 +302,64 @@ class Checkout extends Component {
       .then(res => {
         //on successful payment
         if (res.data.success === true) {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message.toString(),
+            type: "success"
+          });
 
-          //clear cart on server
-          const clearcartURL = "/api/getUserCart/clearCart";
-          axios
-            .delete(clearcartURL, {
-              params: {
-                user: this.props.user
-              }
-            })
-            .then(res => {
-              if (res.data.success === true) {
-                //when payment is successfully processed, clear cart and set total to 0
-                this.props.emptyCartOnPayment();
-                this.props.clearTotalOnPayment(0);
-              } else {
-                alert("error with server");
-              }
-            })
-            .catch(err => {
-              alert(err);
-            });
+          //subtract stock from database after items have been processed for checkout
+          //remove items that are based on vendor after purchase
+          //call api to delete item from cart on server
+
+          //subtract stock removes stock from database and calls removeItemsFromVendor()
+          this.subtractStock();
+
+          // this.removeItemsFromVendor();
+
+          // //clear cart on server
+          // const clearcartURL = "/api/getUserCart/clearCart";
+          // axios
+          //   .delete(clearcartURL, {
+          //     params: {
+          //       user: this.props.user
+          //     }
+          //   })
+          //   .then(res => {
+          //     if (res.data.success === true) {
+          //       //when payment is successfully processed, clear cart and set total to 0
+          //       this.props.emptyCartOnPayment();
+          //       this.props.clearTotalOnPayment(0);
+          //       window.location = '/successfulPayment';
+          //     } else {
+          //       this.props.notifier({
+          //         title: "Error",
+          //         message: "Error with server.",
+          //         type: "danger"
+          //       });
+          //     }
+          //   })
+          //   .catch(err => {
+          //     this.props.notifier({
+          //       title: "Error",
+          //       message: err.toString(),
+          //       type: "danger"
+          //     });
+          //   });
         } else {
-          alert("Error with sending order");
+          this.props.notifier({
+            title: "Error",
+            message: "Payment Unsuccessful",
+            type: "danger"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
 
     // You can bind the "payment" object's value to your state or props or whatever here, please see below for sample returned data
@@ -206,15 +375,15 @@ class Checkout extends Component {
 
   onCancel = data => {
     // The user pressed "cancel" or closed the PayPal popup
-    console.log("Payment cancelled!", data);
+    // console.log("Payment cancelled!", data);
     // You can bind the "data" object's value to your state or props or whatever here, please see below for sample returned data
   };
 
   onNotEnoughStock = itemName => {
-    console.log(
-      "Payment canceled because there was not enough stock for:",
-      itemName
-    );
+    // console.log(
+    //   "Payment canceled because there was not enough stock for:",
+    //   itemName
+    // );
 
     this.props.notifier({
       title: "Error",
@@ -225,8 +394,12 @@ class Checkout extends Component {
 
   onError = err => {
     // The main Paypal script could not be loaded or something blocked the script from loading
-    console.log("Error!", err);
-    alert(err);
+    // console.log("Error!", err);
+    this.props.notifier({
+      title: "Error",
+      message: err.toString(),
+      type: "danger"
+    });
     // Because the Paypal's main script is loaded asynchronously from "https://www.paypalobjects.com/api/checkout.js"
     // => sometimes it may take about 0.5 second for everything to get set, or for the button to appear
   };
@@ -310,7 +483,7 @@ const mapDispatchToProps = dispatch => {
 //   classes: PropTypes.object.isRequired
 // };
 
-export default connect(
+export default withRouter(connect(
   mapStateToProps,
   mapDispatchToProps
-)(withStyles(styles)(Checkout));
+)(withStyles(styles)(Checkout)));

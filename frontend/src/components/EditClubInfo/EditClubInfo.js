@@ -13,7 +13,9 @@ class EditClubInfo extends Component {
     lastUpdate: "",
     lastUpdateUser: "",
     vendorName: "",
-    emailSchedule: ""
+    emailSchedule: "",
+    email: "",
+    pickupInfo: "",
   };
 
   //get club info
@@ -32,7 +34,8 @@ class EditClubInfo extends Component {
             bio: res.data.bio,
             lastUpdate: res.data.lastUpdate,
             lastUpdateUser: res.data.lastUpdateUser,
-            vendorName: res.data.vendorName
+            vendorName: res.data.vendorName,
+            pickupInfo: res.data.pickupInfo
           });
         } else {
           this.props.notifier({
@@ -45,7 +48,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -79,13 +82,13 @@ class EditClubInfo extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
         } else {
           this.props.notifier({
             title: "Error",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "warning"
           });
         }
@@ -93,7 +96,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -108,7 +111,9 @@ class EditClubInfo extends Component {
           user: this.props.user,
           vid: this.props.vendorID,
           vendorName: this.state.vendorName,
-          bio: this.state.bio
+          bio: this.state.bio,
+          email: this.state.email,
+          pickupInfo: this.state.pickupInfo,
         }
       })
       .then(res => {
@@ -116,7 +121,7 @@ class EditClubInfo extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
           this.getClubInfo();
@@ -125,7 +130,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -157,6 +162,26 @@ class EditClubInfo extends Component {
             onChange={event => this.setState({ bio: event.target.value })}
             multiline={true}
             rows={4}
+          />
+
+          <TextField
+            className="inputWidth"
+            label="Item Pickup Info"
+            value={this.state.pickupInfo}
+            id="standard-full-width"
+            onChange={event => this.setState({ pickupInfo: event.target.value })}
+            multiline={true}
+            rows={4}
+          />
+
+          <TextField
+            className="inputWidth"
+            label="Email to be contacted for order purchase notifications."
+            type="email"
+            value={this.state.email}
+            onChange={event =>
+              this.setState({ email: event.target.value })
+            }
           />
         </form>
 
