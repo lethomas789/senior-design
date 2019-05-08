@@ -29,6 +29,7 @@ import AboutClub from "./components/AboutClub/AboutClub";
 import Clubs from "./components/Clubs/Clubs";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
+import GenericPage from './components/GenericPage/GenericPage'
 
 require("dotenv").config();
 
@@ -194,6 +195,16 @@ class App extends Component {
               path="/emailConfirmation/:token"
               render={props => (
                 <EmailConfirmation {...props} notifier={this.addNotification} />
+              )}
+            />
+
+            <Route
+              path="/page"
+              render={props => (
+                <GenericPage
+                  {...props}
+                  notifier={this.addNotification}
+                />
               )}
             />
             
