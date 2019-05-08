@@ -22,6 +22,7 @@ import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecov
 import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
+import SuccessfulPayment from './components/SuccesfulPayment/SuccessfulPayment';
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -58,12 +59,21 @@ class App extends Component {
   render() {
     return (
       <Router>
+
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />
             <Route exact path="/" component={Home} />
             <Route exact path="/about" component={About} />
-            <Route exact path="/shop" component={Shop} />
+            
+            <Route
+              exact
+              path="/shop"
+              render={props => (
+                <Shop {...props} notifier={this.addNotification} />
+              )}
+            />
+            
             <Route
               exact
               path="/signup"
@@ -85,12 +95,22 @@ class App extends Component {
                 <CartView {...props} notifier={this.addNotification} />
               )}
             />
-            <Route path="/vendorProducts/:vid" component={VendorView} />
+
+            <Route 
+              path="/vendorProducts/:vid" 
+              render={props => (
+                <VendorView {...props} notifier={this.addNotification} />
+              )}
+            />
+
             <Route
               exact
               path="/abcdefg/vendorSignup"
-              component={VendorSignup}
+              render={props => (
+                <VendorSignup {...props} notifier={this.addNotification} />
+              )}
             />
+
             <Route
               exact
               path="/editClubInfo"
@@ -98,6 +118,7 @@ class App extends Component {
                 <EditClubInfo {...props} notifier={this.addNotification} />
               )}
             />
+
             <Route
               exact
               path="/addProduct"
@@ -105,6 +126,7 @@ class App extends Component {
                 <AddProduct {...props} notifier={this.addNotification} />
               )}
             />
+
             <Route
               exact
               path="/orderHistory"
@@ -112,6 +134,7 @@ class App extends Component {
                 <OrderHistory {...props} notifier={this.addNotification} />
               )}
             />
+
             <Route
               path="/itemDetails/:vid/:pid"
               render={props => (
@@ -119,10 +142,35 @@ class App extends Component {
               )}
             />
 
-            <Route path="/aboutClub/:vid" component={AboutClub} />
-            <Route exact path="/editItem" component={EditItemView} />
-            <Route exact path="/clubs" component={Clubs} />
-            <Route exact path="/accountInfo" component={AccountInfo} />
+            <Route 
+              path="/aboutClub/:vid" 
+              render={props => (
+                <AboutClub {...props} notifier={this.addNotification} />
+              )}
+            />
+
+            <Route
+              path="/editItem"
+              render={props => (
+                <EditItemView {...props} notifier={this.addNotification} />
+              )}
+            />
+
+            <Route 
+              exact 
+              path="/clubs" 
+              render = {props => (
+                <Clubs {...props} notifier = {this.addNotification}/>
+              )}
+            />
+
+            <Route 
+              exact 
+              path="/accountInfo" 
+              render = {props => (
+                <AccountInfo {...props} notifier = {this.addNotification}/>
+              )}
+            />
 
             <Route
               exact
@@ -131,6 +179,7 @@ class App extends Component {
                 <RecoverPassword {...props} notifier={this.addNotification} />
               )}
             />
+
             <Route
               path="/inputNewPassword"
               render={props => (
@@ -140,12 +189,16 @@ class App extends Component {
                 />
               )}
             />
+
             <Route
               path="/emailConfirmation/:token"
               render={props => (
                 <EmailConfirmation {...props} notifier={this.addNotification} />
               )}
             />
+            
+            <Route exact path="/successfulPayment" component = {SuccessfulPayment}/>
+
             <Footer />
             <ReactNotification ref={this.notificationDOMRef} />
           </div>

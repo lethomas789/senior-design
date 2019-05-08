@@ -29,6 +29,7 @@ router.get('/', (req, res) => {
   }
 
   const productRef = db.collection('products').doc(pid);
+
   productRef.get().then(doc => {
     if (!doc) {
       console.log('Error: no such product for given pid:', pid);
@@ -122,7 +123,7 @@ router.patch('/', (req, res) => {
     const pdata = doc.data();
 
     // if apparel, check the size stock
-    if (isApparel) {
+    if (isApparel === true) {
       if (pdata[size] >= amt) {
         console.log('Successfully checked for existing stock:', pdata[size]);
 

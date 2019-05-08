@@ -119,7 +119,7 @@ var initSchedules = db
                     to: vdoc.data().email
                   },
                   send: false, // set send to true when not testing
-                  // preview: false,  // TODO turn off preview before production
+                  preview: false,  // TODO turn off preview before production
 
                   transport: {
                     // uncomment when actually sending emails

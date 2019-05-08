@@ -1,0 +1,12 @@
+#payment-successful-container{
+  display:flex;
+  flex-direction: column;
+  height: 70vh;
+  justify-content: center;
+  text-align: center;
+}
+
+#payment-successful-content{
+  display: flex;
+  align-self: center;
+}

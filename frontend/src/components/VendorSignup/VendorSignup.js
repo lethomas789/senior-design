@@ -47,6 +47,13 @@ class VendorSignup extends Component {
           vendors: res.data.vendors
         })
       })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      })
   }
 
   //close select
@@ -123,24 +130,40 @@ class VendorSignup extends Component {
             //update redux store
             //update user's email, vendorID currently an admin of, list of vids of an admin of, and name of current
             this.props.updateAdminLogin(this.state.email, this.state.vendorID, res.data.vendors,currentVendor);
-            alert("Admin verification succesful!");
+            this.props.notifier({
+              title: "Success",
+              message: "Admin verification successful",
+              type: "success"
+            });
 
             //redirect user back home
             this.props.history.push('/');
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
         })
       }
 
       //print why verification didn't work
       else{
-        alert(res.data.message);
+        this.props.notifier({
+          title: "Error",
+          message: res.data.message,
+          type: "danger"
+        });
       }
     })
     .catch(err => {
-      alert(err);
+      this.props.notifier({
+        title: "Error",
+        message: err.toString(),
+        type: "danger"
+      });
     })
   }
 

@@ -133,13 +133,8 @@ class ButtonAppBar extends Component {
     if (this.props.loginText === "Logout") {
       this.props.updateLogout();
       this.props.emptyCart();
+      
       //display dialog
-      /*
-      this.setState({
-        open: true,
-        alertMessage: "Logout successful!"
-      });
-      */
       this.props.notifier({
         title: "Success",
         message: "Logout successful.",
@@ -169,10 +164,6 @@ class ButtonAppBar extends Component {
   viewCartCheck = () => {
     //prevent user from using cart until logged in
     if (this.props.loginValue === false) {
-      // this.setState({
-      //   open: true,
-      //   alertMessage: "Please login to view cart"
-      // });
       this.props.notifier({
         title: "Info",
         message: "Please login to view cart.",
@@ -203,7 +194,7 @@ class ButtonAppBar extends Component {
           .catch(err => {
             this.props.notifier({
               title: "Error",
-              message: err,
+              message: err.toString(),
               type: "danger"
             });
           });

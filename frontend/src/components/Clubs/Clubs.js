@@ -34,11 +34,19 @@ export default class Clubs extends Component {
         if (res.data.success) {
           this.setState({ vendors: res.data.vendors });
         } else {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message.toString(),
+            type: "danger"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   }
 

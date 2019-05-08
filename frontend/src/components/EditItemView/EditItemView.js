@@ -76,11 +76,19 @@ class EditItemView extends Component {
         })
       }
       else{
-        console.log("error");
+        this.props.notifier({
+          title: "Error",
+          message: "Error getting items",
+          type: "danger"
+        });
       }
     })
     .catch(err =>{
-      alert(err);
+      this.props.notifier({
+        title: "Error",
+        message: err.toString(),
+        type: "danger"
+      });
     })
   }
 
@@ -199,8 +207,8 @@ class EditItemView extends Component {
     filesToStore.push(imageName);
     actualImages.push(files[0]);
 
-    console.log("files to store", imageName);
-    console.log("actual images", actualImages);
+    // console.log("files to store", imageName);
+    // console.log("actual images", actualImages);
     
     //set state of component
     this.setState({
@@ -218,12 +226,12 @@ class EditItemView extends Component {
     //if the admin did not upload anymore pictures, use old array
     if(this.state.imageNames.length === 0){
       imagesToUpload = this.state.productPicture;
-      console.log("uploading old pictures");
+      // console.log("uploading old pictures");
     }
 
     //if admin updated new pictures, send new array
     else{
-      alert("uploading new pictures");
+      // console.log("updating new pictures");
       imagesToUpload = this.state.imageNames;
       newImages = true;
     }
@@ -254,19 +262,35 @@ class EditItemView extends Component {
     .then(res => {
       if(res.data.success === true && this.state.imageNames.length != 0){
         this.uploadFiles();
-        alert(res.data.message);
+        this.props.notifier({
+          title: "Success",
+          message: res.data.message.toString(),
+          type: "success"
+        });
       }
 
       else if(res.data.success === true){
-        alert(res.data.message);
+        this.props.notifier({
+          title: "Success",
+          message: res.data.message.toString(),
+          type: "success"
+        });
       }
 
       else{
-        alert("Error updating item");
+        this.props.notifier({
+          title: "Error",
+          message: "Error updating item",
+          type: "danger"
+        });
       }
     })
     .catch(err => {
-      alert(err);
+      this.props.notifier({
+        title: "Error",
+        message: err.toString(),
+        type: "danger"
+      });
     })
   }// end of updating item
   
@@ -285,7 +309,7 @@ class EditItemView extends Component {
           <div className = "textForm">
             {products}
             </div>
-
+            
               <div className = "textForm" id="row">
                 <TextField
                     label="Product Name"
@@ -416,7 +440,13 @@ class EditItemView extends Component {
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
-                  onUploadError={(error) => {console.log(error)}} 
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });
+                  }}                  
                   style={style.field}
                 />
                 </div>
@@ -425,7 +455,13 @@ class EditItemView extends Component {
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
-                  onUploadError={(error) => {console.log(error)}} 
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });
+                  }}                  
                   style={style.field}
                 />
                 </div>  
@@ -434,7 +470,13 @@ class EditItemView extends Component {
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
-                  onUploadError={(error) => {console.log(error)}} 
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });
+                  }}                  
                   style={style.field}
                 />
                 </div>
@@ -443,7 +485,13 @@ class EditItemView extends Component {
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
-                  onUploadError={(error) => {console.log(error)}}
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });
+                  }}                  
                   style={style.field} 
                 />
                 </div>
