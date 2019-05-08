@@ -78,7 +78,7 @@ router.post("/", (req, res) => {
 
       const resetPassEmail = new Email({
         message: {
-          from: "ecs193.ecommerce@gmail.com",
+          from: process.env.EMAIL,
           // from: 'test@test.com',
           subject: emailSubject,
           to: email

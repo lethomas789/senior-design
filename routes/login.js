@@ -175,6 +175,14 @@ router.get('/googleLogin', (req, res) => {
       });
     }
 
+    if(doc.data().isVerified === false) {
+      console.log('No such account for provided email:', email);
+      return res.json({
+        success: false,
+        message: 'Please verify your account through your email before logging in.'
+      });
+    }
+
     if(doc.data().isAdmin) {
       db.collection('admins').doc(email).get().then(adoc => {
         if (!adoc.exists) {
