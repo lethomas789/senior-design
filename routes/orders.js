@@ -22,7 +22,7 @@ require("dotenv").config();
  * @param paymentID - paymentID from paypal API
  * @param payerID - payerID from paypal API
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
 
   if (req.body.params) {
     var {
@@ -62,6 +62,10 @@ router.post('/', (req, res) => {
   }
   
   const userRef = db.collection('users').doc(user);
+
+  // get vendorName and pickupInfo
+  const vendorData = await db.collection('vendors').doc(vid).get();
+
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: provided user does not exist:', user);
@@ -117,6 +121,7 @@ router.post('/', (req, res) => {
         newItems.push(newItem);
       }
 
+
       let emailSubject = 'ECS193 E-commerce Order Recipt: ' + oid;
       let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
 
@@ -128,7 +133,7 @@ router.post('/', (req, res) => {
           to: doc.data().email
         },
         send: true,  // set send to true when not testing
-        preview: false,  // TODO turn off preview before production
+        // preview: false,  // TODO turn off preview before production
 
         transport: {
          // host: 'localhost', // TODO update w/ website?
@@ -154,9 +159,10 @@ router.post('/', (req, res) => {
         locals: {
           items: newItems,
           totalPrice: totalPrice,
-          location: 'Test club location here.', 
+          pickupInfo: vendorData.data().pickupInfo,
           emailIntro: emailIntro,
           oid: oid,
+          vendorName: vendorData.data().vendorName,
           vid: vid,
         }
       })
