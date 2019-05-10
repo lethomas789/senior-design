@@ -8,6 +8,13 @@ const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 const jwtKey = require("../config/jwt.json");
 
+const cookieConfig = { 
+  httpOnly: true,   // prevent frontend JS from reading cookies
+  // secure: true,     // force https
+  maxAge: 3600000,  // cookie expires in 1 hour
+  signed: true,
+}
+
 router.post("/", (req, res) => {
   //extract email and password from request
   if (req.body.params) {
@@ -57,13 +64,13 @@ router.post("/", (req, res) => {
         });
       }
 
-//             jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-//               return res.status(200).json({
-//                 success: true,
-//                 message: "Login Successful!",
-//                 token: token,
-//                 email,
-//                 vendors
+      //             jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+      //               return res.status(200).json({
+      //                 success: true,
+      //                 message: "Login Successful!",
+      //                 token: token,
+      //                 email,
+      //                 vendors
 
       bcrypt.compare(password, doc.data().password, (err, validPassword) => {
         if (err) {
@@ -95,7 +102,11 @@ router.post("/", (req, res) => {
 
                 // info that JWT stores; TODO include anything else for frontend
                 // TODO modify all backend routes to change email to user
-                const payload = { user: email, vendors };
+                const payload = {
+                  user: email,
+                  vendors,
+                  isAdmin: true
+                };
 
                 jwt.sign(
                   payload,
@@ -110,10 +121,14 @@ router.post("/", (req, res) => {
                       });
                     }
 
+                    res.cookie("token", token, cookieConfig);
+
                     return res.status(200).json({
                       success: true,
                       message: "Login Successful!",
-                      token: token
+                      // TODO remove
+                      vendors: vendors,
+                      token: 'no'
                     });
 
                     // OLD TODO DELETE once frontend is changed
@@ -138,19 +153,28 @@ router.post("/", (req, res) => {
           // else not admin, send empty array
           else {
             // info that JWT stores
-            const payload = { email: email };
+            const payload = {
+              user: email,
+              vendors: [],
+              isAdmin: false
+            };
 
             jwt.sign(
               payload,
               jwtKey.JWTSecret,
-              { expiresIn: 3600 },
+              { expiresIn: "1h" },
               (err, token) => {
+                if (err) {
+                  console.log(err);
+                  return res.json({
+                    success: false,
+                    message: "Error in generating jwt."
+                  });
+                }
                 return res.status(200).json({
                   success: true,
                   message: "Login Successful!",
-                  token: "Bearer " + token,
-                  email,
-                  vendors
+                  token
                 });
               }
             );
@@ -227,7 +251,11 @@ router.get("/googleLogin", (req, res) => {
             }
             const vendors = adoc.data().vendors;
             // info that JWT stores; TODO include anything else for frontend
-            const payload = { user: email, vendors };
+            const payload = {
+              user: email,
+              vendors: [],
+              isAdmin: true
+            };
 
             jwt.sign(
               payload,
@@ -266,26 +294,31 @@ router.get("/googleLogin", (req, res) => {
             });
           });
       } else {
+        const payload = {
+          user: email,
+          vendors: [],
+          isAdmin: false
+        };
         jwt.sign(
-              payload,
-              jwtKey.JWTSecret,
-              { expiresIn: "1h" },
-              (err, token) => {
-                if (err) {
-                  console.log(err);
-                  return res.json({
-                    success: false,
-                    message: "Error in generating jwt."
-                  });
-                }
+          payload,
+          jwtKey.JWTSecret,
+          { expiresIn: "1h" },
+          (err, token) => {
+            if (err) {
+              console.log(err);
+              return res.json({
+                success: false,
+                message: "Error in generating jwt."
+              });
+            }
 
-                return res.status(200).json({
-                  success: true,
-                  message: "Login Successful!",
-                  token: token
-                });
-              }
-            );
+            return res.status(200).json({
+              success: true,
+              message: "Login Successful!",
+              token: token
+            });
+          }
+        );
       }
     })
     .catch(err => {

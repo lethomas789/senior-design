@@ -9,6 +9,7 @@ const cron = require("node-cron");
 const Email = require("email-templates");
 const jwt = require("jsonwebtoken");
 const jwtKey = require("./config/jwt.json");
+const cookieParser = require("cookie-parser");
 
 require("dotenv").config();
 
@@ -33,30 +34,32 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // use cors;
 app.use(cors());
 
+app.use(cookieParser('TODO-SECRET'));
+
 //serve react files
 app.use(express.static(path.join(__dirname, "/frontend/build")));
 
 // middleware to extract and verify token from headers
 const checkToken = (req, res, next) => {
-  const header = req.headers["authorization"];
 
-  if (typeof header !== "undefined") {
-    const token = header.split(" ")[1];
-
-    req.token = token;
-    next();
-  } else {
-    // if header is undefined return Forbidden (403)
+  if (!req.signedCookies.token) {
+    // if no tokens, unauthorized request
+    console.log("Unauthorized. No token.");
+    res.clearCookie("token");
     res.sendStatus(403);
+  } else {
+    // if
+    next();
   }
 };
 
 // middleware to decode token and grab authorized data
 const decodeToken = (req, res, next) => {
-  jwt.verify(req.token, jwtKey.JWTSecret, (err, authorizedData) => {
+  jwt.verify(req.signedCookies.token, jwtKey.JWTSecret, (err, authorizedData) => {
     if (err) {
       // if error, send forbidden (403)
       console.log("ERROR: could not connect to protected route");
+      res.clearCookie("token");
       return res.sendStatus(403);
     } else {
       // if token is successfully verified, we can use the authorized data
@@ -108,7 +111,6 @@ app.use("/api/checkTokenRefresh", checkTokenRefresh);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
 });
-
 
 db = admin.firestore();
 
