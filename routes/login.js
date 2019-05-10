@@ -57,13 +57,13 @@ router.post("/", (req, res) => {
         });
       }
 
-//             jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-//               return res.status(200).json({
-//                 success: true,
-//                 message: "Login Successful!",
-//                 token: token,
-//                 email,
-//                 vendors
+      //             jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+      //               return res.status(200).json({
+      //                 success: true,
+      //                 message: "Login Successful!",
+      //                 token: token,
+      //                 email,
+      //                 vendors
 
       bcrypt.compare(password, doc.data().password, (err, validPassword) => {
         if (err) {
@@ -267,25 +267,25 @@ router.get("/googleLogin", (req, res) => {
           });
       } else {
         jwt.sign(
-              payload,
-              jwtKey.JWTSecret,
-              { expiresIn: "1h" },
-              (err, token) => {
-                if (err) {
-                  console.log(err);
-                  return res.json({
-                    success: false,
-                    message: "Error in generating jwt."
-                  });
-                }
+          payload,
+          jwtKey.JWTSecret,
+          { expiresIn: "1h" },
+          (err, token) => {
+            if (err) {
+              console.log(err);
+              return res.json({
+                success: false,
+                message: "Error in generating jwt."
+              });
+            }
 
-                return res.status(200).json({
-                  success: true,
-                  message: "Login Successful!",
-                  token: token
-                });
-              }
-            );
+            return res.status(200).json({
+              success: true,
+              message: "Login Successful!",
+              token: token
+            });
+          }
+        );
       }
     })
     .catch(err => {
