@@ -35,7 +35,8 @@ class EditClubInfo extends Component {
             lastUpdate: res.data.lastUpdate,
             lastUpdateUser: res.data.lastUpdateUser,
             vendorName: res.data.vendorName,
-            pickupInfo: res.data.pickupInfo
+            pickupInfo: res.data.pickupInfo,
+            email: res.data.email,
           });
         } else {
           this.props.notifier({

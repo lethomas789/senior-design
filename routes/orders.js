@@ -23,14 +23,15 @@ require("dotenv").config();
  * @param paymentID - paymentID from paypal API
  * @param payerID - payerID from paypal API
  */
-router.post('/', (req, res) => {
+router.post('/', async (req, res) => {
+
 
   if (req.body.params) {
     var {
       items,
       totalPrice,
       vid,
-      user,
+      // user,
       paymentID,
       payerID
     } = req.body.params;
@@ -40,11 +41,13 @@ router.post('/', (req, res) => {
       items,
       totalPrice,
       vid,
-      user,
+      // user,
       paymentID,
       payerID
     } = req.body;
   }
+
+  var user = req.authorizedData.user;
 
   // TODO: figure out how we want to structure multiple vendors in an order.
   // TODO: test if paymentID is transaction ID in paypal
@@ -63,6 +66,12 @@ router.post('/', (req, res) => {
   }
   
   const userRef = db.collection('users').doc(user);
+
+  // get vendorName and pickupInfo
+  const vendorData = await db.collection('vendors').doc(vid).get();
+
+  // TODO: figure out how to save newlines on pickupInfo
+
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: provided user does not exist:', user);
@@ -118,6 +127,7 @@ router.post('/', (req, res) => {
         newItems.push(newItem);
       }
 
+
       let emailSubject = 'ECS193 E-commerce Order Recipt: ' + oid;
       let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
 
@@ -129,7 +139,7 @@ router.post('/', (req, res) => {
           to: doc.data().email
         },
         send: true,  // set send to true when not testing
-        preview: false,  // TODO turn off preview before production
+        // preview: false,  // TODO turn off preview before production
 
         transport: {
          // host: 'localhost', // TODO update w/ website?
@@ -155,9 +165,10 @@ router.post('/', (req, res) => {
         locals: {
           items: newItems,
           totalPrice: totalPrice,
-          location: 'Test club location here.', 
+          pickupInfo: vendorData.data().pickupInfo,
           emailIntro: emailIntro,
           oid: oid,
+          vendorName: vendorData.data().vendorName,
           vid: vid,
         }
       })
@@ -293,8 +304,8 @@ router.post('/getVendorOrders', (req, res) => {
  * 
  * @param user - email for user
  */
-router.get('/getUserOrders', (req, res) => {
-  var user = '';
+
+router.get('/getUserOrders', tokenMiddleware, (req, res) => {
   if (req.query.params) {
     // var user = req.query.params.user;
     var token = req.query.params.token;

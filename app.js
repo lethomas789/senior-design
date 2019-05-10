@@ -7,6 +7,9 @@ const firebase = require("firebase");
 const admin = require("firebase-admin");
 const cron = require("node-cron");
 const Email = require("email-templates");
+const jwt = require("jsonwebtoken");
+const jwtKey = require("./config/jwt.json");
+
 require("dotenv").config();
 
 global.schedule = require("node-schedule");
@@ -32,6 +35,38 @@ app.use(cors());
 
 //serve react files
 app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+// middleware to extract and verify token from headers
+const checkToken = (req, res, next) => {
+  const header = req.headers["authorization"];
+
+  if (typeof header !== "undefined") {
+    const token = header.split(" ")[1];
+
+    req.token = token;
+    next();
+  } else {
+    // if header is undefined return Forbidden (403)
+    res.sendStatus(403);
+  }
+};
+
+// middleware to decode token and grab authorized data
+const decodeToken = (req, res, next) => {
+  jwt.verify(req.token, jwtKey.JWTSecret, (err, authorizedData) => {
+    if (err) {
+      // if error, send forbidden (403)
+      console.log("ERROR: could not connect to protected route");
+      return res.sendStatus(403);
+    } else {
+      // if token is successfully verified, we can use the authorized data
+      req.authorizedData = authorizedData;
+      next();
+    }
+  });
+};
+
+global.tokenMiddleware = [checkToken, decodeToken];
 
 //routes
 const router = express.Router();
@@ -73,6 +108,7 @@ app.use("/api/checkTokenRefresh", checkTokenRefresh);
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
 });
+
 
 db = admin.firestore();
 
