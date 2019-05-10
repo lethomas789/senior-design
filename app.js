@@ -50,6 +50,7 @@ const orders = require("./routes/orders");
 const getProductInfo = require("./routes/getProductInfo");
 const stock = require("./routes/stock");
 const resetPass = require("./routes/resetPass");
+const checkTokenRefresh = require("./routes/checkTokenRefresh");
 
 app.use("/api/users", users);
 app.use("/api/signup", signup);
@@ -66,6 +67,7 @@ app.use("/api/orders", orders);
 app.use("/api/getProductInfo", getProductInfo);
 app.use("/api/stock", stock);
 app.use("/api/resetPass", resetPass);
+app.use("/api/checkTokenRefresh", checkTokenRefresh);
 
 //fix react app crashing on refresh
 app.get("*", (req, res) => {

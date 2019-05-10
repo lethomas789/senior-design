@@ -89,7 +89,10 @@ class Login extends Component {
         if (res.data.success === true && res.data.vendors.length === 0) {
           //dispatch update login action to update login state
           let email = this.state.email;
-          this.props.updateLogin(email);
+          let token = res.data.token;
+
+          //update redux store with email and jwt
+          this.props.updateLogin(email,token);
 
           //after updating login, get cart info
           this.getCart();
@@ -104,6 +107,7 @@ class Login extends Component {
         } else if (res.data.success === true && res.data.vendors.length > 0) {
           //after determining user is an admin, get object list of user's active vendors
           // console.log("admin login", res.data);
+          var token = res.data.token;
 
           const vendorURL = "/api/adminUser";
           axios
@@ -124,7 +128,8 @@ class Login extends Component {
                 email,
                 currentVendorID,
                 currentVendors,
-                currentVendorName
+                currentVendorName,
+                token
               );
 
               //after updating login, get cart info
@@ -208,8 +213,9 @@ class Login extends Component {
       .then(res => {
         //check for login success status
         if (res.data.success === true && res.data.vendors.length === 0) {
+          console.log("gmail login", res.data);
           //dispatch update login action to update login state
-          this.props.updateLogin(email);
+          this.props.updateLogin(email,res.data.token);
 
           this.props.notifier({
             title: "Success",
@@ -223,6 +229,7 @@ class Login extends Component {
           //display dialog for login successful
         } else if (res.data.success === true && res.data.vendors.length > 0) {
           const vendorURL = "/api/adminUser";
+          var token = res.data.token;
           axios
             .get(vendorURL, {
               params: {
@@ -240,7 +247,8 @@ class Login extends Component {
                 email,
                 currentVendorID,
                 currentVendors,
-                currentVendorName
+                currentVendorName,
+                token
               );
 
               //after updating login, get cart info
@@ -354,10 +362,11 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     //update logged in values
-    updateLogin: currentEmail =>
+    updateLogin: (currentEmail, currentToken) =>
       dispatch({
         type: actions.LOGGED_IN,
-        user: currentEmail
+        user: currentEmail,
+        token: currentToken
       }),
 
     //get user's cart from state after logging in
@@ -368,13 +377,14 @@ const mapDispatchToProps = dispatch => {
       }),
 
     //update admin login
-    updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor) =>
+    updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor, token) =>
       dispatch({
         type: actions.ADMIN_LOGGED_IN,
         user: currentEmail,
         vid: vendorID,
         admins: adminsOf,
-        currentVendor: vendor
+        currentVendor: vendor,
+        token: token
       })
   };
 };

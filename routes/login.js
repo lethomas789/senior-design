@@ -81,13 +81,13 @@ router.post('/', (req, res) =>{
             vendors = doc.data().vendors;
 
             //info that JWT stores
-            const payload = { email };
+            const payload = { email: email };
 
-            jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
+            jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
               return res.status(200).json({
                 success: true,
                 message: "Login Successful!",
-                token: 'Bearer ' + token,
+                token: token,
                 email,
                 vendors
               });
@@ -108,11 +108,11 @@ router.post('/', (req, res) =>{
           // info that JWT stores
           const payload = { email: email };
 
-          jwt.sign(payload, jwtKey.JWTSecret, { expiresIn: 3600 }, (err, token) => {
+          jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 10 }, (err, token) => {
             return res.status(200).json({
               success: true,
               message: "Login Successful!",
-              token: 'Bearer ' + token,
+              token: token,
               email,
               vendors
             });
@@ -141,6 +141,7 @@ router.post('/', (req, res) =>{
 })
 
 router.get('/googleLogin', (req, res) => {
+  console.log("in google login");
   if (req.query.params) {
     var {
       email,
@@ -195,12 +196,25 @@ router.get('/googleLogin', (req, res) => {
         const vendors = adoc.data().vendors;
         console.log('vendors here', vendors);
 
-        return res.status(200).json({
-          success: true,
-          message: "Login Successful!",
-          email,
-          vendors
+        //return jwt for login with google
+        const payload = { email: email };
+        jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+          console.log("sending back jwt", token);
+          return res.status(200).json({
+            success: true,
+            message: "Login Successful!",
+            token: token,
+            email,
+            vendors
+          });
         });
+
+        // return res.status(200).json({
+        //   success: true,
+        //   message: "Login Successful!",
+        //   email,
+        //   vendors
+        // });
       })
       .catch(err => {
         console.log('Server error in getting admin info:', err);
@@ -211,12 +225,29 @@ router.get('/googleLogin', (req, res) => {
       });
     }
     else {
-      return res.json({
-        success: true,
-        message: 'Login successful.',
-        email,
-        vendors: [],
+
+      //return jwt for login with google
+      const payload = { email: email };
+      console.log("trying to send jwt non-admin");
+
+      jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
+        console.log("sending jwt non-admin");
+        return res.status(200).json({
+          success: true,
+          message: "Login Successful!",
+          token: token,
+          email,
+          vendors: []
+        });
       });
+
+      // return res.json({
+      //   success: true,
+      //   message: 'Login successful.',
+      //   email,
+      //   vendors: [],
+      // });
+
     }
   })
   .catch(err => {

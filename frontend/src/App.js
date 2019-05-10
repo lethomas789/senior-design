@@ -23,6 +23,9 @@ import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import SuccessfulPayment from './components/SuccesfulPayment/SuccessfulPayment';
+import { connect } from "react-redux";
+import actions from "./store/actions";
+import axios from 'axios';
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -57,6 +60,32 @@ class App extends Component {
     });
   };
 
+  checkIfTokenNeedsRefresh = () => {
+    const apiURL = "/api/checkTokenRefresh";
+
+    axios.get(apiURL, {
+      params:{
+        token: this.props.token
+      }
+    })
+    .then(res => {
+      if(res.data.success === false){
+        alert("need to relogin, token expired");
+        this.props.updateLogout();
+      }
+    })
+    .catch(err => { 
+      alert(err);
+    })
+  }
+
+  componentDidMount() {
+    // alert("testing to see if token needs to be refreshed");
+    //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
+    //if token is expired, logout user and redirect to login
+    this.checkIfTokenNeedsRefresh();
+  }
+  
   render() {
     return (
       <Router>
@@ -219,4 +248,23 @@ class App extends Component {
   }
 }
 
-export default App;
+//obtain state from store as props for component
+//get cart items, login value, and user email
+const mapStateToProps = state => {
+  return {
+    token: state.auth.token
+  };
+};
+
+//dispatch action to reducer
+const mapDispatchToProps = dispatch => {
+  return {
+    //update store that user logged out
+    updateLogout: () =>
+      dispatch({
+        type: actions.LOGGED_OUT
+      })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

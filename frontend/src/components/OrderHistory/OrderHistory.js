@@ -163,7 +163,8 @@ class OrderHistory extends Component {
     axios
       .get(apiURL, {
         params: {
-          user: this.props.user
+          user: this.props.user,
+          token: this.props.token
         }
       })
       .then(res => {
@@ -415,7 +416,8 @@ const mapStateToProps = state => {
     total: state.cart.total,
     cart: state.cart.items,
     isAdmin: state.auth.isAdmin,
-    adminsOf: state.auth.adminsOf
+    adminsOf: state.auth.adminsOf,
+    token: state.auth.token
   };
 };
 
