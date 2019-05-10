@@ -38,6 +38,19 @@ require("dotenv").config();
 
 const history = createBrowserHistory();
 
+/*
+axios.interceptors.request.use(config => {
+  // const token 
+  if (token != null) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+}, err => {
+  return Promise.reject(err);
+})
+*/
+
 class App extends Component {
   notificationDOMRef = React.createRef();
 
@@ -83,7 +96,7 @@ class App extends Component {
     // alert("testing to see if token needs to be refreshed");
     //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
     //if token is expired, logout user and redirect to login
-    this.checkIfTokenNeedsRefresh();
+    // this.checkIfTokenNeedsRefresh();
   }
   
   render() {

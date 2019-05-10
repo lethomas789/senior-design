@@ -130,8 +130,8 @@ class OrderHistory extends Component {
       date: "asc", // default date to ascending order
       pickedUp: false,
       search: "",
-      searchValue: "", 
-      typingTimeout: 0,
+      searchValue: "",
+      typingTimeout: 0
     };
   }
 
@@ -140,7 +140,7 @@ class OrderHistory extends Component {
   };
 
   handleSearch = event => {
-    // reset typing timeout 
+    // reset typing timeout
     if (this.state.typingTimeout) {
       clearTimeout(this.state.typingTimeout);
     }
@@ -150,10 +150,9 @@ class OrderHistory extends Component {
     this.setState({
       searchValue: event.target.value.toLowerCase(),
       typingTimeout: setTimeout(() => {
-        this.setState(() => ({ search: this.state.searchValue }))
+        this.setState(() => ({ search: this.state.searchValue }));
       }, 300)
-
-    })
+    });
     // this.setState({ search: event.target.value.toLowerCase() });
   };
 
@@ -162,6 +161,7 @@ class OrderHistory extends Component {
 
     axios
       .get(apiURL, {
+        withCredentials: true,
         params: {
           user: this.props.user,
           token: this.props.token
@@ -219,7 +219,7 @@ class OrderHistory extends Component {
     }
 
     // finally render the filtered orders into OrderHistoryItems
-    filteredOrders = renderOrders(filteredOrders, 'user');
+    filteredOrders = renderOrders(filteredOrders, "user");
 
     return (
       <div>
@@ -239,6 +239,7 @@ class OrderHistory extends Component {
             color="primary"
             onClick={() => this.setState({ show: "user" })}
             key="user"
+            style={{ marginLeft: "10px" }}
           >
             User Orders
           </Button>
@@ -254,6 +255,7 @@ class OrderHistory extends Component {
                 color="primary"
                 onClick={() => this.setState({ show: vendor.vid })}
                 key={vendor.vid}
+                style={{ marginLeft: "10px" }}
               >
                 {vendor.vendorName} Orders
               </Button>
@@ -262,41 +264,44 @@ class OrderHistory extends Component {
 
         {/********* filter buttons ********************/}
 
-        {/* filter by date: asc/desc */}
-        <form autoComplete="off">
-          <InputLabel htmlFor="date">Date</InputLabel>
-          <Select
-            value={this.state.date}
-            onChange={this.handleChange}
-            inputProps={{ name: "date", id: "date" }}
-          >
-            <MenuItem value="asc"> Ascending </MenuItem>
-            <MenuItem value="desc"> Descending </MenuItem>
-          </Select>
-        </form>
+        <div id="order-history-filters-container">
+          {/* filter by date: asc/desc */}
+          <form autoComplete="off">
+            <InputLabel htmlFor="date">Date:</InputLabel>
+            <Select
+              value={this.state.date}
+              onChange={this.handleChange}
+              inputProps={{ name: "date", id: "date" }}
+              style={{ margin: "16px 10px 0px 10px" }}
+            >
+              <MenuItem value="asc"> Ascending </MenuItem>
+              <MenuItem value="desc"> Descending </MenuItem>
+            </Select>
+          </form>
 
-        {/* filter by picked up true/false */}
-        <form autoComplete="off">
-          <InputLabel htmlFor="pickedUp">Picked Up</InputLabel>
-          <Select
-            value={this.state.pickedUp}
-            onChange={this.handleChange}
-            inputProps={{ name: "pickedUp", id: "pickedUp" }}
-          >
-            <MenuItem value={true}> True </MenuItem>
-            <MenuItem value={false}> False </MenuItem>
-          </Select>
-        </form>
+          {/* filter by picked up true/false */}
+          <form autoComplete="off">
+            <InputLabel htmlFor="pickedUp">Picked Up:</InputLabel>
+            <Select
+              value={this.state.pickedUp}
+              onChange={this.handleChange}
+              inputProps={{ name: "pickedUp", id: "pickedUp" }}
+              style={{ margin: "16px 10px 0px 10px" }}
+            >
+              <MenuItem value={true}> True </MenuItem>
+              <MenuItem value={false}> False </MenuItem>
+            </Select>
+          </form>
 
-        {/* search by item name in order */}
-        <form noValidate autoComplete="off">
-          <TextField
-            label="Search by Item Name"
-            value={this.state.searchValue}
-            onChange={this.handleSearch}
-            margin="normal"
-          />
-        </form>
+          {/* search by item name in order */}
+          <form noValidate autoComplete="off">
+            <TextField
+              label="Search by Item Name"
+              value={this.state.searchValue}
+              onChange={this.handleSearch}
+            />
+          </form>
+        </div>
 
         {/* below displays the actual order histories */}
         {isAdmin
@@ -316,7 +321,7 @@ class OrderHistory extends Component {
 
         {/* this user orders */}
         {this.state.show === "user" ? (
-          <div id="order-history-container" key="user-orders">
+          <div id="order-history-items-container" key="user-orders">
             {filteredOrders}
           </div>
         ) : (
@@ -346,7 +351,7 @@ class ClubOrders extends Component {
   componentDidMount() {
     const apiURL = "/api/orders/getVendorOrders";
     axios
-      .post(apiURL, { params: { vid: this.props.vid } })
+      .post(apiURL, { withCredentials: true, params: { vid: this.props.vid } })
       .then(res => {
         if (res.data.success) {
           this.setState({

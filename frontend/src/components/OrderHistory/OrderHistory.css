@@ -3,6 +3,18 @@
 }
 
 #order-history-container {
+
+}
+
+#order-history-filters-container {
+    display: flex;
+    /* width: 950px; */
+    /* justify-content: space-between; */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#order-history-items-container {
     font-family: 'Raleway';
     /* height: 95vh; */
 }
