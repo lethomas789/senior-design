@@ -5,6 +5,7 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 const nodemailer = require('nodemailer');
 const Email = require('email-templates');
+const jwt = require('jsonwebtoken');
 require("dotenv").config();
 
 /**
@@ -303,13 +304,36 @@ router.post('/getVendorOrders', (req, res) => {
  * 
  * @param user - email for user
  */
-router.get('/getUserOrders', tokenMiddleware, (req, res) => {
 
+router.get('/getUserOrders', tokenMiddleware, (req, res) => {
   if (req.query.params) {
-    var user = req.query.params.user;
+    // var user = req.query.params.user;
+    var token = req.query.params.token;
   }
   else {
-    var user = req.query.user;
+    // var user = req.query.user;
+    var token = req.query.token;
+  }
+
+  //verify token, access email by extracting from payload
+  if(token){
+    jwt.verify(token, process.env.JWT_SECRET,  (err, payload) => {
+      if(err){
+        console.log("error verifying token");
+        return res.status(200).json({
+          success: false,
+          message: "Error with token"
+        })
+      }
+
+      //if token check successful, extract email from payload 
+      else{
+        console.log("user before payload", user);
+        console.log("token check successful!", payload);
+        user = payload.email;
+        console.log("user after payload", user);
+      }
+    })
   }
 
   if (!user) {
