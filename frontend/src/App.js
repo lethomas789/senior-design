@@ -30,6 +30,7 @@ import Clubs from "./components/Clubs/Clubs";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 import GenericPage from './components/GenericPage/GenericPage'
+import Terms from "./components/Terms/Terms";
 
 require("dotenv").config();
 
@@ -162,6 +163,14 @@ class App extends Component {
               path="/clubs" 
               render = {props => (
                 <Clubs {...props} notifier = {this.addNotification}/>
+              )}
+            />
+
+	    <Route 
+              exact 
+              path="/terms" 
+              render = {props => (
+                <Terms {...props} notifier = {this.addNotification}/>
               )}
             />
 

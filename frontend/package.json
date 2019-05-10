@@ -10,7 +10,7 @@
     "dotenv": "^7.0.0",
     "firebase": "^5.8.6",
     "history": "^4.7.2",
-    "paypal-checkout": "^4.0.267",
+    "paypal-checkout": "^4.0.268",
     "query-string": "^6.4.2",
     "react": "^16.7.0",
     "react-alice-carousel": "^1.13.1",
