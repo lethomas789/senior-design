@@ -86,7 +86,8 @@ router.post("/", (req, res) => {
                 vendors = doc.data().vendors;
 
                 // info that JWT stores; TODO include anything else for frontend
-                const payload = { email, vendors };
+                // TODO modify all backend routes to change email to user
+                const payload = { user: email, vendors };
 
                 jwt.sign(
                   payload,
@@ -218,7 +219,7 @@ router.get("/googleLogin", (req, res) => {
             }
             const vendors = adoc.data().vendors;
             // info that JWT stores; TODO include anything else for frontend
-            const payload = { email, vendors };
+            const payload = { user: email, vendors };
 
             jwt.sign(
               payload,
