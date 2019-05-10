@@ -24,12 +24,13 @@ require("dotenv").config();
  */
 router.post('/', async (req, res) => {
 
+
   if (req.body.params) {
     var {
       items,
       totalPrice,
       vid,
-      user,
+      // user,
       paymentID,
       payerID
     } = req.body.params;
@@ -39,11 +40,13 @@ router.post('/', async (req, res) => {
       items,
       totalPrice,
       vid,
-      user,
+      // user,
       paymentID,
       payerID
     } = req.body;
   }
+
+  var user = req.authorizedData.user;
 
   // TODO: figure out how we want to structure multiple vendors in an order.
   // TODO: test if paymentID is transaction ID in paypal
@@ -65,6 +68,8 @@ router.post('/', async (req, res) => {
 
   // get vendorName and pickupInfo
   const vendorData = await db.collection('vendors').doc(vid).get();
+
+  // TODO: figure out how to save newlines on pickupInfo
 
   userRef.get().then(doc => {
     if (!doc.exists) {
@@ -298,7 +303,8 @@ router.post('/getVendorOrders', (req, res) => {
  * 
  * @param user - email for user
  */
-router.get('/getUserOrders', (req, res) => {
+router.get('/getUserOrders', tokenMiddleware, (req, res) => {
+
   if (req.query.params) {
     var user = req.query.params.user;
   }
