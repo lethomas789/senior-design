@@ -155,7 +155,8 @@ router.post("/", (req, res) => {
               payload,
               jwtKey.JWTSecret,
               //change expiresIn from hours to seconds to test token expiration timeout on frontend
-              { expiresIn: "1h" },
+              // { expiresIn: 5 },
+              { expiresIn: "1hr" },
               (err, token) => {
                 if (err) {
                   console.log(err);

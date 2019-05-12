@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, Redirect } from "react-router-dom";
 import "./App.css";
 import About from "./components/About/About";
 import Signup from "./components/Signup/Signup";
@@ -86,15 +86,21 @@ class App extends Component {
       })
       //err catches 403 forbidden error
       .catch(err => {
+        //logout user and then display error message
         this.addNotification({
           title: "Error",
           message:  "Token Expired Please Login Again",
           type:  "danger",
         });
+
         this.props.updateLogout();
-        
-        //need to figure out how to show message to user and redirect to login
-        // window.location = "/login";
+
+        //goal is to show alert message and then redirect
+        //set timeout, after 4 seconds redirect to login
+        setTimeout(() => {
+           window.location = "/login";
+        }, 4000);
+
       })
     }
   }
@@ -107,9 +113,9 @@ class App extends Component {
   }
   
   render() {
+
     return (
       <Router>
-
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />
