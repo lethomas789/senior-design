@@ -293,10 +293,36 @@ class ShopItemDetailed extends Component {
     pid: ""
   };
 
-  // TODO make this smarter
+  //display stock based on number of items available for each apparel
+  //display number if less than 10
   displayApparelStock = () => {
     const { xs_stock, s_stock, m_stock, l_stock, xl_stock } = this.state;
-    const totalStock = xs_stock + s_stock + m_stock + l_stock + xl_stock;
+    var totalStock = xs_stock + s_stock + m_stock + l_stock + xl_stock;
+
+    //display stock based on size selected
+    switch(this.state.size){
+      case 'Small':
+        totalStock = s_stock;
+        break;
+
+      case 'Medium':
+        totalStock = m_stock;
+        break;
+
+      case 'Large':
+        totalStock = l_stock;
+        break;
+
+      case 'X-Small':
+        totalStock = xs_stock;
+        break;
+
+      case 'X-Large':
+        totalStock = xl_stock;
+        break;
+      default:
+        break;
+    }
 
     let text = "";
 

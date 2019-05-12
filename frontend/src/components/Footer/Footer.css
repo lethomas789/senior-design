@@ -8,6 +8,8 @@
 .footer-container {
   /* position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%; */
   display: grid;
   /* min-height: 200px; TODO remove for testing */
