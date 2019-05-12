@@ -178,9 +178,7 @@ class ButtonAppBar extends Component {
       if (this.props.login === true) {
         axios
           .get(apiURL, {
-            params: {
-              user: this.props.user
-            }
+            withCredentials: true,
           })
           .then(res => {
             //after getting cart from server, update user's items in redux state
@@ -518,7 +516,6 @@ const mapStateToProps = state => {
   return {
     loginValue: state.auth.login,
     loginText: state.auth.text,
-    user: state.auth.user,
     isAdmin: state.auth.isAdmin,
     cartLength: state.cart.items.length,
     items: state.cart.items,

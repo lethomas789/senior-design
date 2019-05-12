@@ -23,6 +23,9 @@ import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import SuccessfulPayment from './components/SuccesfulPayment/SuccessfulPayment';
+import { connect } from "react-redux";
+import actions from "./store/actions";
+import axios from 'axios';
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -34,6 +37,19 @@ import GenericPage from './components/GenericPage/GenericPage'
 require("dotenv").config();
 
 const history = createBrowserHistory();
+
+/*
+axios.interceptors.request.use(config => {
+  // const token 
+  if (token != null) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+}, err => {
+  return Promise.reject(err);
+})
+*/
 
 class App extends Component {
   notificationDOMRef = React.createRef();
@@ -57,10 +73,49 @@ class App extends Component {
     });
   };
 
+  //check token expiration if user was logged in
+  checkIfTokenNeedsRefresh = () => {
+    if(this.props.login === true){
+      const apiURL = "/api/checkTokenRefresh";
+
+      axios.get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+
+      })
+      //err catches 403 forbidden error
+      .catch(err => {
+        //logout user and then display error message
+        this.addNotification({
+          title: "Error",
+          message:  "Token Expired Please Login Again",
+          type:  "danger",
+        });
+
+        this.props.updateLogout();
+
+        //goal is to show alert message and then redirect
+        //set timeout, after 4 seconds redirect to login
+        setTimeout(() => {
+           window.location = "/login";
+        }, 4000);
+
+      })
+    }
+  }
+
+  componentDidMount() {
+    // alert("testing to see if token needs to be refreshed");
+    //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
+    //if token is expired, logout user and redirect to login
+    this.checkIfTokenNeedsRefresh();
+  }
+  
   render() {
+
     return (
       <Router>
-
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />
@@ -219,4 +274,23 @@ class App extends Component {
   }
 }
 
-export default App;
+//obtain state from store as props for component
+//get cart items, login value, and user email
+const mapStateToProps = state => {
+  return {
+    login: state.auth.login
+  };
+};
+
+//dispatch action to reducer
+const mapDispatchToProps = dispatch => {
+  return {
+    //update store that user logged out
+    updateLogout: () =>
+      dispatch({
+        type: actions.LOGGED_OUT
+      })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

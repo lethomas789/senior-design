@@ -19,9 +19,7 @@ class AccountInfo extends Component {
   componentDidMount(){
     const apiURL = '/api/users';
     axios.get(apiURL, {
-      params:{
-        email: this.props.email
-      }
+      withCredentials: true
     })
     .then(res => {
       if(res.data.data.name){

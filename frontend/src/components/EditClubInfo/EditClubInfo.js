@@ -23,19 +23,20 @@ class EditClubInfo extends Component {
     const apiURL = "/api/adminVendor";
     axios
       .get(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
           vid: this.props.vendorID
         }
       })
       .then(res => {
         if (res.data.success === true) {
-          this.setState({
+          this.setState({ 
             bio: res.data.bio,
             lastUpdate: res.data.lastUpdate,
             lastUpdateUser: res.data.lastUpdateUser,
             vendorName: res.data.vendorName,
-            pickupInfo: res.data.pickupInfo
+            pickupInfo: res.data.pickupInfo,
+            email: res.data.email,
           });
         } else {
           this.props.notifier({
@@ -72,8 +73,8 @@ class EditClubInfo extends Component {
     const apiURL = "/api/adminVendor/emailSchedule";
     axios
       .patch(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
           emailSchedule: this.state.emailSchedule,
           vid: this.props.vendorID
         }
@@ -107,8 +108,8 @@ class EditClubInfo extends Component {
     const apiURL = "/api/adminVendor/editVendorInfo";
     axios
       .patch(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
           vid: this.props.vendorID,
           vendorName: this.state.vendorName,
           bio: this.state.bio,
@@ -225,7 +226,6 @@ const mapStateToProps = state => {
   return {
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     vendorID: state.auth.vendorID
   };
 };

@@ -95,6 +95,7 @@ class VendorSignup extends Component {
     const apiURL = "/api/adminUser/addAdminUser";
 
     axios.post(apiURL, {
+
       params:{
         user: this.state.email,
         vid: this.state.vendorID,
@@ -110,9 +111,7 @@ class VendorSignup extends Component {
         //get the vids of vendors in which user is an admin of
         const adminsURL = "/api/adminUser";
         axios.get(adminsURL, {
-          params:{
-            user: this.state.email
-          }
+          withCredentials: true,
         })
         .then(res => {
           if(res.data.success === true){
@@ -129,7 +128,7 @@ class VendorSignup extends Component {
 
             //update redux store
             //update user's email, vendorID currently an admin of, list of vids of an admin of, and name of current
-            this.props.updateAdminLogin(this.state.email, this.state.vendorID, res.data.vendors,currentVendor);
+            this.props.updateAdminLogin(this.state.vendorID, res.data.vendors,currentVendor);
             this.props.notifier({
               title: "Success",
               message: "Admin verification successful",
@@ -217,7 +216,6 @@ const mapStateToProps = state => {
   return{
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     vendors: state.vendor.vendors
   }
 }
@@ -226,9 +224,8 @@ const mapStateToProps = state => {
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
   return{
-    updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor) => dispatch({
+    updateAdminLogin: (vendorID, adminsOf, vendor) => dispatch({
       type: actions.ADMIN_LOGGED_IN,
-      user: currentEmail,
       vid: vendorID,
       admins: adminsOf,
       currentVendor: vendor

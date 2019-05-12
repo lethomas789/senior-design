@@ -156,8 +156,7 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     items: state.cart.items,
-    login: state.auth.login,
-    user: state.auth.user
+    login: state.auth.login
   };
 };
 

@@ -8,11 +8,12 @@ const db = admin.firestore();
 /**
  * Adds new product for vendor.
  */
-router.post('/addNewProduct', (req, res) => {
+router.post('/addNewProduct', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params){ 
     var {
       vid,
-      user,
+      // user,
       productInfo,
       productName,
       productPicture,  // TODO: ask how this is being sent again
@@ -39,9 +40,10 @@ router.post('/addNewProduct', (req, res) => {
   }
 
   else {
+    var { user } = req.authorizedData;
     var {
       vid,
-      user,
+      // user,
       productInfo,
       productName,
       productPicture,
@@ -221,19 +223,20 @@ router.post('/addNewProduct', (req, res) => {
  * @param pid - product id
  * @param user - admin doing checking the admin product info
  */
-router.get('/getProduct', (req, res) => {
+router.get('/getProduct', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
 
   if (req.query.params) {
     var {
       vid,
-      user,
+      // user,
       pid
     } = req.query.params;
   }
   else {
     var {
       vid,
-      user,
+      // user,
       pid
     } = req.query;
   }
@@ -350,11 +353,12 @@ router.get('/getProduct', (req, res) => {
 
 });  // END POST /addNewProduct
 
-router.patch('/editProduct', (req, res) => {
+router.patch('/editProduct', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params){ 
     var {
       vid,
-      user,
+      // user,
       productInfo,
       productName,
       productPicture,  // TODO: ask how this is being sent again
@@ -382,9 +386,10 @@ router.patch('/editProduct', (req, res) => {
   }
 
   else {
+    var { user } = req.authorizedData;
     var {
       vid,
-      user,
+      // user,
       productInfo,
       productName,
       productPicture,
