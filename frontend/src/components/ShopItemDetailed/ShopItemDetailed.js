@@ -333,8 +333,9 @@ class ShopItemDetailed extends Component {
     const apiURL = '/api/getUserCart/addItems';
     axios
       .post(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
+          // user: this.props.user,
           pid: this.props.pid,
           amtPurchased: this.state.amtPurchased,
           vendorID: this.state.vid,
@@ -518,8 +519,9 @@ class ShopItemDetailed extends Component {
       if (this.state.isApparel === false) {
         axios
           .post(apiURL, {
+            withCredentials: true,
             params: {
-              user: this.props.user,
+              // user: this.props.user,
               pid: this.props.pid,
               amtPurchased: this.state.amtPurchased,
               vendorID: this.state.vid,
@@ -568,8 +570,9 @@ class ShopItemDetailed extends Component {
       else {
         axios
           .post(apiURL, {
+            withCredentials: true,
             params: {
-              user: this.props.user,
+              // user: this.props.user,
               pid: this.props.pid,
               amtPurchased: this.state.amtPurchased,
               vendorID: this.state.vid,

@@ -10,14 +10,18 @@ const db = admin.firestore();
  * 2. Get user cart ref in DB
  * 3. Collect all cart items, and return
  */
-router.get('/', (req,res) => {
-  // get user id
-  if (req.query.params) {
-    var user = req.query.params.user;
-  }
-  else {
-    var user = req.query.user;
-  }
+router.get('/', tokenMiddleware, (req,res) => {
+
+  //passing user/email param through payload of token
+  var { user } = req.authorizedData;
+
+  //get user id
+  // if (req.query.params) {
+  //   var user = req.query.params.user;
+  // }
+  // else {
+  //   var user = req.query.user;
+  // }
 
   // return error if empty request
   if (!user) {
@@ -83,10 +87,11 @@ router.get('/', (req,res) => {
  * @param isApparel - bool
  * @param amtPurchased - num items purchased
  */
-router.post('/addItems', (req, res) => {
+router.post('/addItems', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params) {
     var {
-      user,
+      // user,
       pid,
       vendorID,
       imageLink,
@@ -97,7 +102,7 @@ router.post('/addItems', (req, res) => {
   }
   else {
     var {
-      user,
+      // user,
       pid,
       vendorID,
       imageLink,
@@ -144,7 +149,6 @@ router.post('/addItems', (req, res) => {
       const productInfo = doc.data();
 
       let itemID = pid;
-
 
       // if item added is apparrel, the item id is pid-size
       if (isApparel === true) {
@@ -279,15 +283,17 @@ router.post('/addItems', (req, res) => {
   });  // end userRef.get()
 });
 
-router.post('/deleteItems', (req,res) => {
+router.post('/deleteItems', tokenMiddleware, (req,res) => {
+  var { user } = req.authorizedData;
+
   if (req.body.params) {
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
     var pid = req.body.params.pid;
     var isApparel = req.body.params.isApparel;
     var size = req.body.params.size;
   }
   else {
-    var user = req.body.user;
+    // var user = req.body.user;
     var pid = req.body.pid;
     var isApparel = req.body.isApparel;
     var size = req.body.size;
@@ -357,16 +363,17 @@ router.post('/deleteItems', (req,res) => {
 });
 
 // update amt on user cart page
-router.post('/updateItems', (req, res) => {
+router.post('/updateItems', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params) {
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
     var pid = req.body.params.pid;
     var amtPurchased = Number(req.body.params.amtPurchased);
     var isApparel = req.body.params.isApparel;
     var size = req.body.params.size;
   }
   else {
-    var user = req.body.user;
+    // var user = req.body.user;
     var pid = req.body.pid;
     var amtPurchased = Number(req.body.amtPurchased);
     var isApparel = req.body.isApparel;
@@ -440,15 +447,17 @@ router.post('/updateItems', (req, res) => {
 });
 
 // route not used
-router.post('/updateCart', (req,res) => {
+router.post('/updateCart', tokenMiddleware, (req,res) => {
+  var { user } = req.authorizedData;
+
   if (req.body.params) {
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
     var cartTotalPrice = Number(req.body.params.cartTotalPrice);
     var itemsInCart = Number(req.body.params.itemsInCart);
     var vendorsInOrder = req.body.params.vendorsInOrder;
   }
   else {
-    var user = req.body.user;
+    // var user = req.body.user;
     var cartTotalPrice = Number(req.body.cartTotalPrice);
     var itemsInCart = Number(req.body.itemsInCart);
     var vendorsInOrder = req.body.vendorsInOrder;

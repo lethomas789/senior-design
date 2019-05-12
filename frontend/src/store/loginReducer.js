@@ -7,7 +7,6 @@ import actions from './actions';
 //store user email to use with other components
 const initialState = {
     login: false,
-    token: '',
     text: "Login",
     user: '',
     isAdmin: false,
@@ -29,7 +28,6 @@ const reducer = (state = initialState, action) => {
                 //return new state object with updated 
                 login: true,
                 text: "Logout",
-                token: action.token,
                 user: action.user
             }
         //when an admin is logged in
@@ -43,7 +41,6 @@ const reducer = (state = initialState, action) => {
                 vendorID: action.vid,
                 adminsOf: action.admins,
                 currentVendor: action.currentVendor,
-                token: action.token
             }
         //if user logs out, update state
         case actions.LOGGED_OUT:

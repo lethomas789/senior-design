@@ -99,7 +99,7 @@ router.post("/", (req, res) => {
                   });
                 }
                 vendors = doc.data().vendors;
-
+                
                 // info that JWT stores; TODO include anything else for frontend
                 // TODO modify all backend routes to change email to user
                 const payload = {
@@ -126,9 +126,9 @@ router.post("/", (req, res) => {
                     return res.status(200).json({
                       success: true,
                       message: "Login Successful!",
-                      // TODO remove
-                      vendors: vendors,
-                      token: 'no'
+                      // // TODO remove
+                      // vendors: vendors,
+                      // token: 'no'
                     });
 
                     // OLD TODO DELETE once frontend is changed
@@ -171,6 +171,9 @@ router.post("/", (req, res) => {
                     message: "Error in generating jwt."
                   });
                 }
+
+                res.cookie("token", token, cookieConfig);
+
                 return res.status(200).json({
                   success: true,
                   message: "Login Successful!",

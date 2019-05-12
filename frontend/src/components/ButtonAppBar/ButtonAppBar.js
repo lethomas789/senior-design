@@ -178,9 +178,10 @@ class ButtonAppBar extends Component {
       if (this.props.login === true) {
         axios
           .get(apiURL, {
-            params: {
-              user: this.props.user
-            }
+            withCredentials: true,
+            // params: {
+            //   user: this.props.user
+            // }
           })
           .then(res => {
             //after getting cart from server, update user's items in redux state

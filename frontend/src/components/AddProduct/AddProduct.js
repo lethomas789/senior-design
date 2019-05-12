@@ -175,9 +175,10 @@ class AddProduct extends Component {
       const apiURL = "/api/adminProducts/addNewProduct";
       axios
         .post(apiURL, {
+          withCredentials: true,
           params: {
             vid: this.props.vid,
-            user: this.props.user,
+            // user: this.props.user,
             productInfo: this.state.productInfo,
             productName: this.state.productName,
             productPrice: this.state.productPrice,
@@ -217,9 +218,10 @@ class AddProduct extends Component {
       const apiURL = "/api/adminProducts/addNewProduct";
       axios
         .post(apiURL, {
+          withCredentials: true,
           params: {
             vid: this.props.vid,
-            user: this.props.user,
+            // user: this.props.user,
             productInfo: this.state.productInfo,
             productName: this.state.productName,
             productPrice: this.state.productPrice,

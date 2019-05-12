@@ -238,9 +238,10 @@ class EditItemView extends Component {
 
     //params for editing item
     axios.patch(apiURL, {
+      withCredentials: true,
       params:{
         vid: this.state.vid,
-        user: this.state.user,
+        // user: this.state.user,
         pid: this.state.pid,
         productInfo: this.state.info,
         productName: this.state.name,
