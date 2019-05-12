@@ -246,15 +246,22 @@ class ButtonAppBar extends Component {
           style={{ background: `${primary}`, boxShadow: "none" }}
         >
           <Toolbar>
+            <div id="menu-button">
             {/* MENU BUTTON */}
             {/* currently doesnt do anything so hide it */}
-            {/* <IconButton
+            <IconButton
               className="menuButton"
               color="inherit"
               aria-label="Menu"
+              
             >
-              <MenuIcon />
-            </IconButton> */}
+              <MenuIcon 
+              style={{ 
+                display: "none"
+               }}/>
+               {/* disappears, need to make it reappear on desktops */}
+            </IconButton>
+            </div>
 
             {/* HOME LABEL */}
             <Typography

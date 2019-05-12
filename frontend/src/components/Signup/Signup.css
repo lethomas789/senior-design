@@ -57,4 +57,28 @@
   padding-top: 50px;
 }
 
+@media (max-width: 40em) {
+  .signupPaperContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 550px;
+    width: 300px;
+    margin-top: 50px;
+    opacity: 0.90;
+  }
+
+  #signupForms {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    padding: 10px;
+    /* padding-bottom: 100px; */
+    padding-bottom: 40px;
+  }
+
+
+}
+
+
 

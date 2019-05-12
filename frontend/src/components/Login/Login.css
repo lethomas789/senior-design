@@ -54,3 +54,15 @@
 .pushDown {
   padding-top: 25px;
 }
+
+@media (max-width: 40em) {
+  .paperContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 350px;
+    width: 300px;
+    margin-top: 50px;
+  }
+
+}

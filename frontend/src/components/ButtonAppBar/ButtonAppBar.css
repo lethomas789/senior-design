@@ -12,6 +12,12 @@
 .menuButton{
     margin-left: -12;
     margin-right: 20;
+    display: hidden;
+}
+
+.menu-button {
+    display: hidden;
+    color: green;
 }
 
 #navLink{
@@ -39,3 +45,10 @@
   width: 200px;
   border-left: 20px;
 }
+
+
+@media (max-width: 40em) {
+
+
+}
+

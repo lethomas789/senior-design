@@ -49,19 +49,15 @@
   .footer-container {
     
     background-color: #6F8AB7;
-   
-    
     justify-content: space-around;
     border-radius: 3px;
   }
-   
-
-
   .footer-header {
     margin: 20px;
     color: white;
     font-size: 11px;
     text-align: center;
+    display: block;
   }
   .footer-col {
   display: none;
