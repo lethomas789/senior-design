@@ -23,9 +23,7 @@ require("dotenv").config();
  * @param paymentID - paymentID from paypal API
  * @param payerID - payerID from paypal API
  */
-router.post('/', async (req, res) => {
-
-
+router.post('/', tokenMiddleware, async (req, res) => {
   if (req.body.params) {
     var {
       items,
@@ -48,6 +46,7 @@ router.post('/', async (req, res) => {
   }
 
   var user = req.authorizedData.user;
+  console.log("user", user);
 
   // TODO: figure out how we want to structure multiple vendors in an order.
   // TODO: test if paymentID is transaction ID in paypal
@@ -139,7 +138,9 @@ router.post('/', async (req, res) => {
           to: doc.data().email
         },
         send: true,  // set send to true when not testing
-        // preview: false,  // TODO turn off preview before production
+
+        //leaving this code commented out throws a process error on backend, preventing email from being sent
+        preview: false,  // TODO turn off preview before production
 
         transport: {
          // host: 'localhost', // TODO update w/ website?

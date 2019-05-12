@@ -162,10 +162,6 @@ class OrderHistory extends Component {
     axios
       .get(apiURL, {
         withCredentials: true,
-        params: {
-          user: this.props.user,
-          token: this.props.token
-        }
       })
       .then(res => {
         if (res.data.success === true) {

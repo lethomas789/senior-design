@@ -5,9 +5,8 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 
 //get all users in /users collection
-router.get('/', (req,res) => {
-    var email = '';
-    email = req.query.email;
+router.get('/', tokenMiddleware, (req,res) => {
+    var email = req.authorizedData.user;
 
     const userRef = db.collection('users').doc(email);
     userRef.get().then(doc => {

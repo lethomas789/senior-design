@@ -208,7 +208,6 @@ class Checkout extends Component {
       axios.post(apiURL, {
         withCredentials: true,
         params:{
-          // user: this.props.user,
           pid: removeItem.pid,
           isApparel: removeItem.isApparel,
           size: removeItem.size
@@ -249,9 +248,6 @@ class Checkout extends Component {
         const cartURL = '/api/getUserCart';
         axios.get(cartURL, {
           withCredentials: true,
-          // params:{
-          //   user: this.props.user
-          // }
         })
         .then(res => {
           if(res.data.success === true){
@@ -297,7 +293,6 @@ class Checkout extends Component {
           items: this.state.paymentOptions.transactions[0].item_list.items,
           totalPrice: String(this.props.totalValue),
           vid: this.props.cartItems[0].vid,
-          // user: this.props.user,
           paymentID: payment.paymentID,
           payerID: payment.payerID
         }
@@ -444,7 +439,6 @@ const mapStateToProps = state => {
   return {
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     cart: state.cart.items
   };
 };

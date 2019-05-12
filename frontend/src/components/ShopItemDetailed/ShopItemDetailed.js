@@ -335,7 +335,6 @@ class ShopItemDetailed extends Component {
       .post(apiURL, {
         withCredentials: true,
         params: {
-          // user: this.props.user,
           pid: this.props.pid,
           amtPurchased: this.state.amtPurchased,
           vendorID: this.state.vid,
@@ -355,9 +354,7 @@ class ShopItemDetailed extends Component {
           const getCartURL = "/api/getUserCart";
           axios
             .get(getCartURL, {
-              params: {
-                user: this.props.user
-              }
+              withCredentials: true
             })
             .then(res => {
               //after getting cart info, update redux store container
@@ -521,7 +518,6 @@ class ShopItemDetailed extends Component {
           .post(apiURL, {
             withCredentials: true,
             params: {
-              // user: this.props.user,
               pid: this.props.pid,
               amtPurchased: this.state.amtPurchased,
               vendorID: this.state.vid,
@@ -535,9 +531,7 @@ class ShopItemDetailed extends Component {
               const getCartURL = "/api/getUserCart";
               axios
                 .get(getCartURL, {
-                  params: {
-                    user: this.props.user
-                  }
+                  withCredentials: true
                 })
                 .then(res => {
                   //after getting cart info, update redux store container
@@ -572,7 +566,6 @@ class ShopItemDetailed extends Component {
           .post(apiURL, {
             withCredentials: true,
             params: {
-              // user: this.props.user,
               pid: this.props.pid,
               amtPurchased: this.state.amtPurchased,
               vendorID: this.state.vid,
@@ -826,7 +819,6 @@ const mapStateToProps = state => {
   return {
     pid: state.selectedItem.selectedItemID,
     login: state.auth.login,
-    user: state.auth.user,
     vendorID: state.vendor.vendor
   };
 };

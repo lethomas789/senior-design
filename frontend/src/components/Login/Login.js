@@ -49,9 +49,6 @@ class Login extends Component {
     axios
       .get(apiURL, {
         withCredentials: true
-        // params: {
-        //   user: this.state.email
-        // }
       })
       .then(res => {
         //after getting cart info, update redux store container
@@ -86,12 +83,9 @@ class Login extends Component {
       })
       //successful login, display message
       .then(res => {
-        
         //login for regular user, non-admin
-        if (res.data.success === true && res.data.vendors === undefined) {
+        if (res.data.success === true && res.data.isAdmin === false) {
           //dispatch update login action to update login state
-          // let email = this.state.email;
-          // let token = res.data.token;
 
           //update redux store with email and jwt
           this.props.updateLogin();
@@ -106,27 +100,21 @@ class Login extends Component {
             type: "success"
           });
           this.props.history.push("/shop");
-        } else if (res.data.success === true && res.data.vendors.length > 0) {
+        } else if (res.data.success === true && res.data.isAdmin === true) {
           //after determining user is an admin, get object list of user's active vendors
-          // console.log("admin login", res.data);
 
           const vendorURL = "/api/adminUser";
           axios
             .get(vendorURL, {
-              params: {
-                user: this.state.email
-              }
+              withCredentials: true,
             })
             .then(res => {
-              // console.log(res.data);
               let currentVendorID = res.data.vendors[0].vid;
-              let email = this.state.email;
               let currentVendors = res.data.vendors;
               let currentVendorName = res.data.vendors[0].vendorName;
 
               //update redux store state
               this.props.updateAdminLogin(
-                email,
                 currentVendorID,
                 currentVendors,
                 currentVendorName
@@ -211,8 +199,9 @@ class Login extends Component {
         }
       })
       .then(res => {
+        console.log(res);
         //check for login success status
-        if (res.data.success === true && res.data.vendors === undefined) {
+        if (res.data.success === true && res.data.isAdmin === false) {
           //dispatch update login action to update login state
           this.props.updateLogin();
 
@@ -226,19 +215,14 @@ class Login extends Component {
           this.getCart();
 
           //display dialog for login successful
-        } else if (res.data.success === true && res.data.vendors.length > 0) {
+        } else if (res.data.success === true && res.data.isAdmin === true) {
           const vendorURL = "/api/adminUser";
-          var token = res.data.token;
           axios
             .get(vendorURL, {
               withCredentials: true
-              // params: {
-              //   user: this.state.email
-              // }
             })
             .then(res => {
               let currentVendorID = res.data.vendors[0].vid;
-              let email = this.state.email;
               let currentVendors = res.data.vendors;
               let currentVendorName = res.data.vendors[0].vendorName;
 
@@ -351,7 +335,6 @@ const mapStateToProps = state => {
   return {
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     vendors: state.vendor.vendors
   };
 };

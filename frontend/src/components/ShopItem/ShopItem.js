@@ -148,7 +148,6 @@ class ShopItem extends Component {
 //get login value and user email
 const mapStateToProps = state => {
   return {
-    user: state.auth.user,
     login: state.auth.login
   };
 };

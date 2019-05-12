@@ -108,6 +108,7 @@ router.post("/", (req, res) => {
                   isAdmin: true
                 };
 
+                console.log("user signing is an admin");
                 jwt.sign(
                   payload,
                   jwtKey.JWTSecret,
@@ -126,18 +127,9 @@ router.post("/", (req, res) => {
                     return res.status(200).json({
                       success: true,
                       message: "Login Successful!",
-                      // // TODO remove
-                      // vendors: vendors,
-                      // token: 'no'
+                      //EDIT, need to indicate user signing in is an admin to update redux on frontend
+                      isAdmin: true
                     });
-
-                    // OLD TODO DELETE once frontend is changed
-                    // return res.status(200).json({
-                    //   success: true,
-                    //   message: "Login Successful!",
-                    //   email,
-                    //   vendors
-                    // });
                   }
                 );
               })
@@ -162,6 +154,7 @@ router.post("/", (req, res) => {
             jwt.sign(
               payload,
               jwtKey.JWTSecret,
+              //change expiresIn from hours to seconds to test token expiration timeout on frontend
               { expiresIn: "1h" },
               (err, token) => {
                 if (err) {
@@ -177,6 +170,7 @@ router.post("/", (req, res) => {
                 return res.status(200).json({
                   success: true,
                   message: "Login Successful!",
+                  isAdmin: false
                 });
               }
             );
@@ -277,6 +271,7 @@ router.get("/googleLogin", (req, res) => {
                 return res.status(200).json({
                   success: true,
                   message: "Login Successful!",
+                  isAdmin: true
                 });
               }
             );
@@ -320,6 +315,7 @@ router.get("/googleLogin", (req, res) => {
             return res.status(200).json({
               success: true,
               message: "Login Successful!",
+              isAdmin: false
             });
           }
         );

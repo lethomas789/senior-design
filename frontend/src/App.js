@@ -73,30 +73,37 @@ class App extends Component {
     });
   };
 
+  //check token expiration if user was logged in
   checkIfTokenNeedsRefresh = () => {
-    const apiURL = "/api/checkTokenRefresh";
+    if(this.props.login === true){
+      const apiURL = "/api/checkTokenRefresh";
 
-    axios.get(apiURL, {
-      params:{
-        token: this.props.token
-      }
-    })
-    .then(res => {
-      if(res.data.success === false){
-        alert("need to relogin, token expired");
+      axios.get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+
+      })
+      //err catches 403 forbidden error
+      .catch(err => {
+        this.addNotification({
+          title: "Error",
+          message:  "Token Expired Please Login Again",
+          type:  "danger",
+        });
         this.props.updateLogout();
-      }
-    })
-    .catch(err => { 
-      alert(err);
-    })
+        
+        //need to figure out how to show message to user and redirect to login
+        // window.location = "/login";
+      })
+    }
   }
 
   componentDidMount() {
     // alert("testing to see if token needs to be refreshed");
     //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
     //if token is expired, logout user and redirect to login
-    // this.checkIfTokenNeedsRefresh();
+    this.checkIfTokenNeedsRefresh();
   }
   
   render() {
@@ -265,7 +272,7 @@ class App extends Component {
 //get cart items, login value, and user email
 const mapStateToProps = state => {
   return {
-    token: state.auth.token
+    login: state.auth.login
   };
 };
 

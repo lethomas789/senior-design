@@ -83,8 +83,8 @@ class CartItem extends Component {
         //update cart on server with new amount 
         var updateURL = '/api/getUserCart/updateItems';
         axios.post(updateURL, {
+          withCredentials: true,
           params:{
-            user: this.props.user,
             pid: this.state.pid,
             amtPurchased: newAmount,
             isApparel: this.state.isApparel,
@@ -116,8 +116,8 @@ class CartItem extends Component {
     const apiURL = "/api/getUserCart/deleteItems";
     axios
       .post(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
           pid: this.state.pid,
           isApparel: this.state.isApparel,
           size: this.state.size
@@ -128,9 +128,7 @@ class CartItem extends Component {
         //after successful deletion, get updated user's cart
         axios
           .get(getCart, {
-            params: {
-              user: this.props.user
-            }
+            withCredentials: true,
           })
           .then(res => {
             //after removing item from cart, update cart on server
@@ -225,8 +223,7 @@ class CartItem extends Component {
 const mapStateToProps = state => {
   return {
     items: state.cart.items,
-    login: state.auth.login,
-    user: state.auth.user
+    login: state.auth.login
   };
 };
 
