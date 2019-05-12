@@ -273,7 +273,7 @@ class ButtonAppBar extends Component {
             </div>
 
             {/* HOME LABEL */}
-            <Hidden lgUp>
+            <Hidden smDown>
             <Typography
               style={{ textDecoration: "none", fontFamily: "Comfortaa" }}
               component={Link}
