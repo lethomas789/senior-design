@@ -177,7 +177,6 @@ router.post("/", (req, res) => {
                 return res.status(200).json({
                   success: true,
                   message: "Login Successful!",
-                  token
                 });
               }
             );
@@ -273,10 +272,11 @@ router.get("/googleLogin", (req, res) => {
                   });
                 }
 
+                res.cookie("token", token, cookieConfig);
+
                 return res.status(200).json({
                   success: true,
                   message: "Login Successful!",
-                  token: token
                 });
               }
             );
@@ -315,10 +315,11 @@ router.get("/googleLogin", (req, res) => {
               });
             }
 
+            res.cookie("token", token, cookieConfig);
+
             return res.status(200).json({
               success: true,
               message: "Login Successful!",
-              token: token
             });
           }
         );

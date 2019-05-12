@@ -89,16 +89,14 @@ class Login extends Component {
         
         //login for regular user, non-admin
         if (res.data.success === true && res.data.vendors === undefined) {
-          console.log(res.data);
           //dispatch update login action to update login state
-          let email = this.state.email;
+          // let email = this.state.email;
           // let token = res.data.token;
 
           //update redux store with email and jwt
-          this.props.updateLogin(email);
+          this.props.updateLogin();
 
           //after updating login, get cart info
-          console.log("trying to get cart after login");
           this.getCart();
 
           //display dialog for login successful
@@ -214,10 +212,9 @@ class Login extends Component {
       })
       .then(res => {
         //check for login success status
-        if (res.data.success === true && res.data.vendors.length === 0) {
-          console.log("gmail login", res.data);
+        if (res.data.success === true && res.data.vendors === undefined) {
           //dispatch update login action to update login state
-          this.props.updateLogin(email,res.data.token);
+          this.props.updateLogin();
 
           this.props.notifier({
             title: "Success",
@@ -234,9 +231,10 @@ class Login extends Component {
           var token = res.data.token;
           axios
             .get(vendorURL, {
-              params: {
-                user: this.state.email
-              }
+              withCredentials: true
+              // params: {
+              //   user: this.state.email
+              // }
             })
             .then(res => {
               let currentVendorID = res.data.vendors[0].vid;
@@ -246,11 +244,9 @@ class Login extends Component {
 
               //update redux store state
               this.props.updateAdminLogin(
-                email,
                 currentVendorID,
                 currentVendors,
                 currentVendorName,
-                token
               );
 
               //after updating login, get cart info
@@ -364,10 +360,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     //update logged in values
-    updateLogin: (currentEmail) =>
+    updateLogin: () =>
       dispatch({
         type: actions.LOGGED_IN,
-        user: currentEmail,
       }),
 
     //get user's cart from state after logging in
@@ -378,10 +373,9 @@ const mapDispatchToProps = dispatch => {
       }),
 
     //update admin login
-    updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor) =>
+    updateAdminLogin: (vendorID, adminsOf, vendor) =>
       dispatch({
         type: actions.ADMIN_LOGGED_IN,
-        user: currentEmail,
         vid: vendorID,
         admins: adminsOf,
         currentVendor: vendor,

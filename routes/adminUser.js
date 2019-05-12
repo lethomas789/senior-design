@@ -24,12 +24,15 @@ async function getVendorNames(arrayOfRefs, retArray) {
  * @returns: vendors - array of vid(s) for the vendor(s) user is admin of
  */
 router.get('/', (req, res) => {
-  if (req.query.params) {
-    var user = req.query.params.user;
-  }
-  else {
-    var user = req.query.user;
-  }
+
+  var { user } = req.authorizedData;
+
+  // if (req.query.params) {
+  //   var user = req.query.params.user;
+  // }
+  // else {
+  //   var user = req.query.user;
+  // }
 
   // check if given user
   if (!user) {
