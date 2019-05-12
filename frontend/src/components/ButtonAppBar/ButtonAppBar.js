@@ -24,6 +24,8 @@ import Select from "@material-ui/core/Select";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { createMuiTheme } from "@material-ui/core/styles";
+import Hidden from '@material-ui/core/Hidden';
+import withWidth from '@material-ui/core/withWidth';
 
 // export const prime = '#89BBFE';
 
@@ -54,6 +56,7 @@ const styles = theme => ({
     }`
   }
 });
+
 
 //navbar component
 class ButtonAppBar extends Component {
@@ -255,15 +258,22 @@ class ButtonAppBar extends Component {
               aria-label="Menu"
               
             >
+            <Hidden smUp>
               <MenuIcon 
-              style={{ 
-                display: "none"
-               }}/>
+              // style={{ 
+              //   display: "none",
+              //   media:"(max-width: 40em)",
+              //   background: "green"
+                
+              //  }}
+              />
+              </Hidden>
                {/* disappears, need to make it reappear on desktops */}
             </IconButton>
             </div>
 
             {/* HOME LABEL */}
+            <Hidden lgUp>
             <Typography
               style={{ textDecoration: "none", fontFamily: "Comfortaa" }}
               component={Link}
@@ -501,7 +511,9 @@ class ButtonAppBar extends Component {
                 </Button>
               </DialogActions>
             </Dialog>
+            </Hidden>
           </Toolbar>
+          
         </AppBar>
       </nav>
     );
