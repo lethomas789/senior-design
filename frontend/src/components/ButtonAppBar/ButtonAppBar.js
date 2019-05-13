@@ -280,6 +280,7 @@ class ButtonAppBar extends Component {
                       to={homeRoute}
                       color="inherit"
                       onClick={this.handleMenuClose}
+                      style={{fontFamily: "Raleway" }}
                     >
                       {" "}
                       Home{" "}
@@ -292,7 +293,8 @@ class ButtonAppBar extends Component {
                     onClick={this.handleAccountClick}
                     style={{fontFamily: "Raleway" }}
                   >
-                    Account
+                    {" "}
+                      Account{" "}
                   </MenuItem>
 
                   <Menu
@@ -324,8 +326,173 @@ class ButtonAppBar extends Component {
               ) : (
                 <Fragment />
               )}
+              </MenuItem>
+                    <MenuItem>
+                    {this.props.isAdmin ? (
+              <Typography
+                style={{
+                  textDecoration: "none",
+                  fontFamily: "Raleway",
+                  // marginRight: "10px"
+                }}
+              >
+                Select Club:
+              </Typography>
+            ) : (
+              ""
+            )}
+            <Menu>
+                anchorEl={anchorElAccount}
+                open={Boolean(anchorElAccount)}
+                onClose={this.handleMenuCloseAccount}
 
+            </Menu>
+            <MenuItem>
+            <Fragment>
+                  {/* SELECT CLUB */}
+                  <FormControl
+                    variant="filled"
+                    className="club-select"
+                    style={{ marginRight: "10px" }}
+                  >
+                    <InputLabel
+                      htmlFor="club-select"
+                      style={{ color: "white" }}
+                    >
+                      {this.props.currentVendor}
+                    </InputLabel>
+
+                    <Select
+                      value={this.props.currentvendor}
+                      open={this.state.openSelect}
+                      onClose={this.handleCloseSelect}
+                      onOpen={this.handleOpenSelect}
+                      onChange={this.handleSelect}
+                      input={<OutlinedInput name={this.props.currentVendor} />}
+                    >
+                      {vendorList}
+                    </Select>
+                  </FormControl>
+                  </Fragment>
+            </MenuItem>
                     </MenuItem>
+                    <MenuItem>
+                    {this.props.isAdmin ? (
+                <Fragment>
+                  <MenuItem
+                    aria-haspopup="true"
+                    onClick={this.handleAccountClick}
+                    style={{fontFamily: "Raleway" }}
+                  >
+                    {" "}
+                      Admin Menu{" "}
+                  </MenuItem>
+
+                  <Menu
+                    anchorEl={anchorElAccount}
+                    open={Boolean(anchorElAccount)}
+                    onClose={this.handleMenuCloseAccount}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={editClubRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Edit Club Info{" "}
+                    </MenuItem>
+
+                    <MenuItem
+                      component={Link}
+                      to={addProductRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Add Items{" "}
+                    </MenuItem>
+                    <MenuItem
+                      component={Link}
+                      to={editItemRoute}
+                      color="inherit"
+                      onClick={this.handleMenuClose}
+                    >
+                      {" "}
+                      Edit Items{" "}
+                    </MenuItem>
+                  </Menu>
+                </Fragment>
+              ) : (
+                <Fragment />
+              )}
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to={aboutRoute}
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
+                {" "}
+                About{" "}
+              </MenuItem>
+             
+              {!this.props.loginValue ? (
+                <MenuItem>
+                  component={Link}
+                  to={signupRoute}
+                  color="inherit"
+                  style={{ fontFamily: "Raleway" }}
+                >
+                  {" "}
+                  Sign Up{" "}
+                </MenuItem>
+              ) : (
+                <Fragment />
+              )}
+
+             <MenuItem
+                style={{ fontFamily: "Raleway" }}
+                component={Link}
+                to={loginRoute}
+                color="inherit"
+                onClick={this.logoutUser}
+              >
+                {" "}
+                {this.props.loginText}{" "}
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to={shopRoute}
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
+                {" "}
+                Shop{" "}
+              </MenuItem>
+              {this.props.loginValue ? (
+                // if logged in, display amt items in cart
+                <MenuItem
+                  component={Link}
+                  to={cartRoute}
+                  color="inherit"
+                  onClick={this.viewCartCheck}
+                >
+                  <Badge
+                    badgeContent={this.props.cartLength}
+                    color="primary"
+                    classes={{ badge: classes.badge }}
+                  >
+                    <CartIcon />
+                  </Badge>
+                </MenuItem>
+              ) : (
+                // else not logged in, display generic cart icon
+                <MenuItem color="inherit" onClick={this.viewCartCheck}>
+                  <CartIcon />
+                </MenuItem>
+              )}
+              
                     </Menu>
             </div>
 
