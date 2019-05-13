@@ -253,6 +253,10 @@ class ButtonAppBar extends Component {
             {/* MENU BUTTON */}
             {/* currently doesnt do anything so hide it */}
             <IconButton
+              aria-owns={anchorEl ? "responsive-menu" : undefined}
+              aria-haspopup="true"
+              onClick={this.handleAdminClick}
+              style={{ color: "white", fontFamily: "Raleway" }}
               className="menuButton"
               color="inherit"
               aria-label="Menu"
@@ -260,16 +264,69 @@ class ButtonAppBar extends Component {
             >
             <Hidden smUp>
               <MenuIcon 
-              // style={{ 
-              //   display: "none",
-              //   media:"(max-width: 40em)",
-              //   background: "green"
-                
-              //  }}
+    
               />
               </Hidden>
                {/* disappears, need to make it reappear on desktops */}
             </IconButton>
+            <Menu
+                    id="responsive-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleMenuClose}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={homeRoute}
+                      color="inherit"
+                      onClick={this.handleMenuClose}
+                    >
+                      {" "}
+                      Home{" "}
+                    </MenuItem>
+                    <MenuItem>
+                    {this.props.loginValue ? (
+                <Fragment>
+                  <MenuItem
+                    aria-haspopup="true"
+                    onClick={this.handleAccountClick}
+                    style={{fontFamily: "Raleway" }}
+                  >
+                    Account
+                  </MenuItem>
+
+                  <Menu
+                    anchorEl={anchorElAccount}
+                    open={Boolean(anchorElAccount)}
+                    onClose={this.handleMenuCloseAccount}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={orderHistoryRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Order History{" "}
+                    </MenuItem>
+
+                    <MenuItem
+                      component={Link}
+                      to={accountInfoRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Account Info{" "}
+                    </MenuItem>
+                  </Menu>
+                </Fragment>
+              ) : (
+                <Fragment />
+              )}
+
+                    </MenuItem>
+                    </Menu>
             </div>
 
             {/* HOME LABEL */}
@@ -513,6 +570,8 @@ class ButtonAppBar extends Component {
             </Dialog>
             </Hidden>
           </Toolbar>
+
+           
           
         </AppBar>
       </nav>
