@@ -21,7 +21,7 @@ function renderOrders(orders, index) {
   let renderedOrders;
 
   if (orders.length === 0 || orders === undefined) {
-    return <div>None</div>;
+    return <div id = "order-history-container">None</div>;
   }
 
   renderedOrders = orders.map(order => {
@@ -191,7 +191,7 @@ class OrderHistory extends Component {
 
     if (this.state.orders.length === 0) {
       return (
-        <div>
+        <div id = "order-history-container">
           <h1> No orders were made! </h1>
         </div>
       );
@@ -399,7 +399,7 @@ class ClubOrders extends Component {
     filteredOrders = renderOrders(filteredOrders, vendorName);
 
     return (
-      <div>
+      <div id = "order-history-container">
         {vendorName}
         {filteredOrders}
       </div>

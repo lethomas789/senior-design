@@ -122,7 +122,7 @@ class CartView extends Component {
     });
    }
 
-    return <div>{renderCarts}</div>;
+    return <div id = "cart-items">{renderCarts}</div>;
   }
 }
 
