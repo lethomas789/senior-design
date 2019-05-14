@@ -556,7 +556,7 @@ class ButtonAppBar extends Component {
                   </FormControl>
 
                   <Button
-                    aria-owns={anchorEl ? "admin-menu" : undefined}
+                    // aria-owns={anchorElAccount}
                     aria-haspopup="true"
                     onClick={this.handleAdminClick}
                     style={{ color: "white", fontFamily: "Raleway" }}
@@ -564,7 +564,7 @@ class ButtonAppBar extends Component {
                     Admin Menu
                   </Button>
                   <Menu
-                    id="admin-menu"
+                    // id="admin-menu"
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={this.handleMenuClose}
