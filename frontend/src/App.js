@@ -32,6 +32,7 @@ import "react-notifications-component/dist/theme.css";
 import GenericPage from './components/GenericPage/GenericPage'
 import Terms from "./components/Terms/Terms";
 import Privacy from "./components/Privacy/Privacy";
+import Faq from "./components/Faq/Faq";
 require("dotenv").config();
 
 const history = createBrowserHistory();
@@ -179,6 +180,14 @@ class App extends Component {
               path="/privacy" 
               render = {props => (
                 <Privacy {...props} notifier = {this.addNotification}/>
+              )}
+            />
+
+	    <Route 
+              exact 
+              path="/faq" 
+              render = {props => (
+                <Faq {...props} notifier = {this.addNotification}/>
               )}
             />
 
