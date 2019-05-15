@@ -163,6 +163,7 @@ class EditClubInfo extends Component {
             onChange={event => this.setState({ bio: event.target.value })}
             multiline={true}
             rows={4}
+            rowsMax={Infinity}
           />
 
           <TextField
@@ -173,6 +174,7 @@ class EditClubInfo extends Component {
             onChange={event => this.setState({ pickupInfo: event.target.value })}
             multiline={true}
             rows={4}
+            rowsMax={Infinity}
           />
 
           <TextField
