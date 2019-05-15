@@ -436,7 +436,7 @@ class EditItemView extends Component {
                   </div>
                 </div>
                 
-                <div id ="column">
+                <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
@@ -451,7 +451,7 @@ class EditItemView extends Component {
                 />
                 </div>
                
-              <div id ="column">
+              <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
@@ -466,7 +466,7 @@ class EditItemView extends Component {
                 />
                 </div>  
 
-                <div id ="column">
+                <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
@@ -481,7 +481,7 @@ class EditItemView extends Component {
                 />
                 </div>
 
-                <div id ="column">
+                <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple

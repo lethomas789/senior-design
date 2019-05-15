@@ -24,6 +24,8 @@ import Select from "@material-ui/core/Select";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { createMuiTheme } from "@material-ui/core/styles";
+import Hidden from '@material-ui/core/Hidden';
+import withWidth from '@material-ui/core/withWidth';
 
 // export const prime = '#89BBFE';
 
@@ -55,6 +57,7 @@ const styles = theme => ({
   }
 });
 
+
 //navbar component
 class ButtonAppBar extends Component {
   state = {
@@ -65,7 +68,8 @@ class ButtonAppBar extends Component {
     openSelect: false,
     currentVendor: "",
     anchorEl: null,
-    anchorElAccount: null
+    anchorElAccount: null,
+    anchorIconMenu: null,
   };
 
   //when navbar loads, get list of all vendors in database
@@ -99,6 +103,10 @@ class ButtonAppBar extends Component {
 
   handleAdminClick = event => {
     this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleIconMenuClick = event => {
+    this.setState({ anchorIconMenu: event.currentTarget });
   };
 
   //handle account click, same logic as handle admin click
@@ -200,9 +208,19 @@ class ButtonAppBar extends Component {
     }
   };
 
+  toggleOpenDrawer = () => {
+    if (!this.state.mobile) {
+        return;
+    }
+    this.setState({
+        open: !this.state.open
+    })
+}
+
+
   render() {
     const { classes } = this.props;
-    const { anchorEl, anchorElAccount } = this.state;
+    const { anchorEl, anchorElAccount, anchorIconMenu } = this.state;
 
     if (this.props.isAdmin) {
       var vendorList = this.props.adminsOf.map(result => {
@@ -214,6 +232,8 @@ class ButtonAppBar extends Component {
       });
     }
 
+
+
     return (
       <nav className="root">
         <AppBar
@@ -221,17 +241,255 @@ class ButtonAppBar extends Component {
           style={{ background: `${primary}`, boxShadow: "none" }}
         >
           <Toolbar>
+            <div id="menu-button">
             {/* MENU BUTTON */}
             {/* currently doesnt do anything so hide it */}
-            {/* <IconButton
+            <IconButton
+              aria-owns={anchorEl ? "responsive-menu" : undefined}
+              aria-haspopup="true"
+              onClick={this.handleAdminClick}
+              style={{ color: "white", fontFamily: "Raleway" }}
               className="menuButton"
               color="inherit"
               aria-label="Menu"
+              
             >
-              <MenuIcon />
-            </IconButton> */}
+            <Hidden smUp>
+              <MenuIcon 
+    
+              />
+              </Hidden>
+               {/* disappears, need to make it reappear on desktops */}
+            </IconButton>
+            <Menu
+                    id="responsive-menu"
+                    anchorEl={anchorEl}
+                    open={Boolean(anchorEl)}
+                    onClose={this.handleMenuClose}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={homeRoute}
+                      color="inherit"
+                      onClick={this.handleMenuClose}
+                      style={{fontFamily: "Raleway" }}
+                    >
+                      {" "}
+                      Home{" "}
+                    </MenuItem>
+                    <MenuItem>
+                    {this.props.loginValue ? (
+                <Fragment>
+                  <MenuItem
+                    aria-haspopup="true"
+                    onClick={this.handleAccountClick}
+                    style={{fontFamily: "Raleway" }}
+                  >
+                    {" "}
+                      Account{" "}
+                  </MenuItem>
+
+                  <Menu
+                    anchorEl={anchorElAccount}
+                    open={Boolean(anchorElAccount)}
+                    onClose={this.handleMenuCloseAccount}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={orderHistoryRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Order History{" "}
+                    </MenuItem>
+
+                    <MenuItem
+                      component={Link}
+                      to={accountInfoRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Account Info{" "}
+                    </MenuItem>
+                  </Menu>
+                </Fragment>
+              ) : (
+                <Fragment />
+              )}
+              </MenuItem>
+                    <MenuItem>
+                    {this.props.isAdmin ? (
+              <Typography
+                style={{
+                  textDecoration: "none",
+                  fontFamily: "Raleway",
+                  // marginRight: "10px"
+                }}
+              >
+                Select Club:
+              </Typography>
+            ) : (
+              ""
+            )}
+            <Menu>
+                anchorEl={anchorElAccount}
+                open={Boolean(anchorElAccount)}
+                onClose={this.handleMenuCloseAccount}
+
+            </Menu>
+            <MenuItem>
+            <Fragment>
+                  {/* SELECT CLUB */}
+                  <FormControl
+                    variant="filled"
+                    className="club-select"
+                    style={{ marginRight: "10px" }}
+                  >
+                    <InputLabel
+                      htmlFor="club-select"
+                      style={{ color: "white" }}
+                    >
+                      {this.props.currentVendor}
+                    </InputLabel>
+
+                    <Select
+                      value={this.props.currentvendor}
+                      open={this.state.openSelect}
+                      onClose={this.handleCloseSelect}
+                      onOpen={this.handleOpenSelect}
+                      onChange={this.handleSelect}
+                      input={<OutlinedInput name={this.props.currentVendor} />}
+                    >
+                      {vendorList}
+                    </Select>
+                  </FormControl>
+                  </Fragment>
+            </MenuItem>
+                    </MenuItem>
+                    <MenuItem>
+                    {this.props.isAdmin ? (
+                <Fragment>
+                  <MenuItem
+                    aria-haspopup="true"
+                    onClick={this.handleAccountClick}
+                    style={{fontFamily: "Raleway" }}
+                  >
+                    {" "}
+                      Admin Menu{" "}
+                  </MenuItem>
+
+                  <Menu
+                    anchorEl={anchorElAccount}
+                    open={Boolean(anchorElAccount)}
+                    onClose={this.handleMenuCloseAccount}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={editClubRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Edit Club Info{" "}
+                    </MenuItem>
+
+                    <MenuItem
+                      component={Link}
+                      to={addProductRoute}
+                      color="inherit"
+                      onClick={this.handleMenuCloseAccount}
+                    >
+                      {" "}
+                      Add Items{" "}
+                    </MenuItem>
+                    <MenuItem
+                      component={Link}
+                      to={editItemRoute}
+                      color="inherit"
+                      onClick={this.handleMenuClose}
+                    >
+                      {" "}
+                      Edit Items{" "}
+                    </MenuItem>
+                  </Menu>
+                </Fragment>
+              ) : (
+                <Fragment />
+              )}
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to={aboutRoute}
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
+                {" "}
+                About{" "}
+              </MenuItem>
+             
+              {!this.props.loginValue ? (
+                <MenuItem>
+                  component={Link}
+                  to={signupRoute}
+                  color="inherit"
+                  style={{ fontFamily: "Raleway" }}
+                >
+                  {" "}
+                  Sign Up{" "}
+                </MenuItem>
+              ) : (
+                <Fragment />
+              )}
+
+             <MenuItem
+                style={{ fontFamily: "Raleway" }}
+                component={Link}
+                to={loginRoute}
+                color="inherit"
+                onClick={this.logoutUser}
+              >
+                {" "}
+                {this.props.loginText}{" "}
+              </MenuItem>
+              <MenuItem
+                component={Link}
+                to={shopRoute}
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
+                {" "}
+                Shop{" "}
+              </MenuItem>
+              {this.props.loginValue ? (
+                // if logged in, display amt items in cart
+                <MenuItem
+                  component={Link}
+                  to={cartRoute}
+                  color="inherit"
+                  onClick={this.viewCartCheck}
+                >
+                  <Badge
+                    badgeContent={this.props.cartLength}
+                    color="primary"
+                    classes={{ badge: classes.badge }}
+                  >
+                    <CartIcon />
+                  </Badge>
+                </MenuItem>
+              ) : (
+                // else not logged in, display generic cart icon
+                <MenuItem color="inherit" onClick={this.viewCartCheck}>
+                  <CartIcon />
+                </MenuItem>
+              )}
+              
+                    </Menu>
+            </div>
 
             {/* HOME LABEL */}
+            <Hidden smDown>
             <Typography
               style={{ textDecoration: "none", fontFamily: "Comfortaa" }}
               component={Link}
@@ -290,7 +548,7 @@ class ButtonAppBar extends Component {
                   </FormControl>
 
                   <Button
-                    aria-owns={anchorEl ? "admin-menu" : undefined}
+                    // aria-owns={anchorElAccount}
                     aria-haspopup="true"
                     onClick={this.handleAdminClick}
                     style={{ color: "white", fontFamily: "Raleway" }}
@@ -298,7 +556,7 @@ class ButtonAppBar extends Component {
                     Admin Menu
                   </Button>
                   <Menu
-                    id="admin-menu"
+                    // id="admin-menu"
                     anchorEl={anchorEl}
                     open={Boolean(anchorEl)}
                     onClose={this.handleMenuClose}
@@ -469,7 +727,11 @@ class ButtonAppBar extends Component {
                 </Button>
               </DialogActions>
             </Dialog>
+            </Hidden>
           </Toolbar>
+
+           
+          
         </AppBar>
       </nav>
     );

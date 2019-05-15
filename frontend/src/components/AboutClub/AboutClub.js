@@ -25,10 +25,10 @@ class ClubInfo extends Component {
         <div className="club-bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique alias libero quia!</div>
         {/* <div className="club-links">LINKS BOX</div> */}
 
-        <div className="club-links">Lorem ipsum dolor sit amet consectetur adipisicing elit. Labore hic placeat, distinctio fugiat eos quam voluptates. Accusamus nostrum dicta, aut natus sequi, maxime deleniti quisquam voluptate a laborum, optio minus.</div>
+        <div className="club-links"><div className = "hero-texttt">Events every week!</div></div>
         {/* <div className="club-meetings">CLUB MEETINGS/PICKUP INFO BOX</div> */}
 
-        <div className="club-meetings">Lorem ipsum dolor sit amet, consectetur adipisicing elit. Ullam, esse itaque tempora harum et ipsum ex inventore cupiditate, incidunt aut perspiciatis! Voluptates repudiandae tenetur exercitationem harum temporibus laudantium optio labore!</div>
+        <div className="club-meetings"><div className = "hero-texttt">Shop our merch!</div></div>
         </div>
         </div>
     );

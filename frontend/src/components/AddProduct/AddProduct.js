@@ -297,7 +297,9 @@ class AddProduct extends Component {
             {/* toggle visibility of product stock
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
+            
             <div className = {this.state.itemShowStock} id="row">
+            <div className = "textForm" id = "row">
               <TextField
                 label="Product Stock"
                 required="true"
@@ -306,6 +308,7 @@ class AddProduct extends Component {
                 onChange={(event) => this.setState({ stock: event.target.value })}
                 style={style.field}
               />
+              </div>
             </div>
 
             <FormControl component="fieldset">

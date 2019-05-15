@@ -90,6 +90,17 @@
   grid-column: 3 / span 1;
   text-align: center;
   vertical-align: middle;
+  font-family: 'Raleway';
+  background-image: url(../../images/painting.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  text-align: center;
+  color: white;
+  display: inline-block;
+  margin-left: 20px;
+  background-color: #8098c0;
 
 }
 
@@ -98,6 +109,17 @@
   grid-column: 3 / span 1;
   text-align: center;
   vertical-align: middle;
+  font-family: 'Raleway';
+  background-image: url(../../images/finals_lib.jpg);
+  background-size: cover;
+  background-repeat: no-repeat;
+  background-position: center;
+  position: relative;
+  text-align: center;
+  color: white;
+  display: inline-block;
+  margin-left: 20px;
+  background-color: #8098c0;
 
 }
 

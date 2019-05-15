@@ -1,9 +1,11 @@
+
 .order-history-item-container {
   display: flex;
   font-family: 'Muli';
   flex-direction: column;
   margin: 0 auto;
   width: 80vw;
+  
 }
 
 .order-summary-container {
