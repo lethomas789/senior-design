@@ -1,23 +1,21 @@
 import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
+import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Clubs.css";
 
 function DisplayClub(props) {
-  const { bio, vendorName, bioPicture } = props;
+  const { bio, vendorName, bioPicture, vid } = props;
 
   return (
-    <div className="moreColls">
-    <div className="roww">
-    <div className="moreContainer">
-   
-      <img src={bioPicture} alt="Display Club" width="100%"/>
-      <div className ="hero-textt">
-      CLUB
+    <Link to={`/aboutClub/${vid}`} className="moreColls">
+      <div className="roww">
+        <div className="moreContainer">
+          <img src={bioPicture} alt="Display Club" width="100%" />
+          <div className="hero-textt">{vendorName}</div>
+        </div>
       </div>
-    </div>
-    </div>
-    </div>
+    </Link>
   );
 }
 
@@ -36,11 +34,19 @@ export default class Clubs extends Component {
         if (res.data.success) {
           this.setState({ vendors: res.data.vendors });
         } else {
-          alert(res.data.message);
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message.toString(),
+            type: "danger"
+          });
         }
       })
       .catch(err => {
-        alert(err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
   }
 
@@ -48,13 +54,14 @@ export default class Clubs extends Component {
     const { vendors } = this.state;
     return (
       <div id="display-clubs-container">
-        <h1 className = "clubHeader">CLUBS</h1>
+        <h1 className="clubHeader">CLUBS</h1>
         <div id="display-club-boxes">
           {vendors.map(vendor => (
             <DisplayClub
               bio={vendor.bio}
               vendorName={vendor.vendorName}
               bioPicture={vendor.bioPictures[0]}
+              vid={vendor.vid}
             />
           ))}
         </div>

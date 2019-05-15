@@ -34,7 +34,6 @@ class ShopItem extends Component {
   //update vendor in redux store
   updateVendor() {
     var viewVendor = this.state.vendorID;
-    console.log("trying to update vendor ", viewVendor);
     this.props.updateVendor(viewVendor);
   }
 
@@ -80,12 +79,20 @@ class ShopItem extends Component {
                 });
               })
               .catch(err => {
-                alert(err);
+                this.props.notifier({
+                  title: "Error",
+                  message: err.toString(),
+                  type: "danger"
+                });
               });
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
         });
     }
   } //end of add item
@@ -141,7 +148,6 @@ class ShopItem extends Component {
 //get login value and user email
 const mapStateToProps = state => {
   return {
-    user: state.auth.user,
     login: state.auth.login
   };
 };

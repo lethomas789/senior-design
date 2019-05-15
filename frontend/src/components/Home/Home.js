@@ -1,4 +1,5 @@
 import React, { Component } from "react";
+import { Link } from "react-router-dom";
 import "./Home.css";
 import Grid from "@material-ui/core/Grid";
 import { Slide } from "react-slideshow-image";
@@ -48,30 +49,36 @@ export default class Home extends Component {
 
           <div className="roww">
             <div className="colls">
-              <div className="moreContainer">
-                <img src={require("../../images/cows.jpg")} width="100%" />
-                {/* <a target="_blank" href="https://193ecommerce.com/shop">
+              <Link to="/shop">
+                <div className="moreContainer">
+                  <img src={require("../../images/cows.jpg")} width="100%" />
+                  {/* <a target="_blank" href="https://193ecommerce.com/shop">
                     <img src={require("../../images/cows.jpg")} width="100%" />
                   </a> */}
-                <div className="hero-textt">SHOP</div>
-                {/* <a target="_blank" href="https://193ecommerce.com/shop">
+                  <div className="hero-textt">SHOP</div>
+                  {/* <a target="_blank" href="https://193ecommerce.com/shop">
                   <div className="hero-textt">SHOP</div>
                 </a> */}
-              </div>
+                </div>
+              </Link>
             </div>
 
             <div className="colls">
-              <div className="moreContainer">
-                <img src={require("../../images/band.jpg")} width="100%" />
-                <div className="hero-textt">CLUBS</div>
-              </div>
+              <Link to="/clubs">
+                <div className="moreContainer">
+                  <img src={require("../../images/band.jpg")} width="100%" />
+                  <div className="hero-textt">CLUBS</div>
+                </div>
+              </Link>
             </div>
 
             <div className="colls">
-              <div className="moreContainer">
-                <img src={require("../../images/bikes.jpg")} width="100%" />
-                <div className="hero-textt">ABOUT</div>
-              </div>
+              <Link to="/about">
+                <div className="moreContainer">
+                  <img src={require("../../images/bikes.jpg")} width="100%" />
+                  <div className="hero-textt">ABOUT</div>
+                </div>
+              </Link>
             </div>
           </div>
         </Grid>

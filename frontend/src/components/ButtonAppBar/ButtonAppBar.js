@@ -141,19 +141,13 @@ class ButtonAppBar extends Component {
     if (this.props.loginText === "Logout") {
       this.props.updateLogout();
       this.props.emptyCart();
+      
       //display dialog
-      /*
-      this.setState({
-        open: true,
-        alertMessage: "Logout successful!"
-      });
-      */
       this.props.notifier({
         title: "Success",
         message: "Logout successful.",
         type: "success"
       });
-
     }
   };
 
@@ -178,10 +172,6 @@ class ButtonAppBar extends Component {
   viewCartCheck = () => {
     //prevent user from using cart until logged in
     if (this.props.loginValue === false) {
-      // this.setState({
-      //   open: true,
-      //   alertMessage: "Please login to view cart"
-      // });
       this.props.notifier({
         title: "Info",
         message: "Please login to view cart.",
@@ -196,9 +186,7 @@ class ButtonAppBar extends Component {
       if (this.props.login === true) {
         axios
           .get(apiURL, {
-            params: {
-              user: this.props.user
-            }
+            withCredentials: true,
           })
           .then(res => {
             //after getting cart from server, update user's items in redux state
@@ -212,7 +200,7 @@ class ButtonAppBar extends Component {
           .catch(err => {
             this.props.notifier({
               title: "Error",
-              message: err,
+              message: err.toString(),
               type: "danger"
             });
           });
@@ -238,8 +226,7 @@ class ButtonAppBar extends Component {
       var vendorList = this.props.adminsOf.map(result => {
         return (
           <MenuItem key={result.vid} value={result.vendorName}>
-            {" "}
-            {result.vendorName}{" "}
+            {result.vendorName}
           </MenuItem>
         );
       });
@@ -580,8 +567,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuClose}
                     >
-                      {" "}
-                      Edit Club Info{" "}
+                      Edit Club Info
                     </MenuItem>
                     <MenuItem
                       component={Link}
@@ -589,8 +575,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuClose}
                     >
-                      {" "}
-                      Add Items{" "}
+                      Add Items
                     </MenuItem>
                     <MenuItem
                       component={Link}
@@ -598,8 +583,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuClose}
                     >
-                      {" "}
-                      Edit Items{" "}
+                      Edit Items
                     </MenuItem>
                   </Menu>
                 </Fragment>
@@ -615,8 +599,16 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 style={{ fontFamily: "Raleway" }}
               >
-                {" "}
-                About{" "}
+                About
+              </Button>
+
+              <Button
+                component={Link}
+                to="/clubs"
+                color="inherit"
+                style={{ fontFamily: "Raleway" }}
+              >
+                Clubs
               </Button>
 
               {/* display signup if not logged in */}
@@ -627,8 +619,7 @@ class ButtonAppBar extends Component {
                   color="inherit"
                   style={{ fontFamily: "Raleway" }}
                 >
-                  {" "}
-                  Sign Up{" "}
+                  Sign Up
                 </Button>
               ) : (
                 <Fragment />
@@ -656,8 +647,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuCloseAccount}
                     >
-                      {" "}
-                      Order History{" "}
+                      Order History
                     </MenuItem>
 
                     <MenuItem
@@ -666,8 +656,7 @@ class ButtonAppBar extends Component {
                       color="inherit"
                       onClick={this.handleMenuCloseAccount}
                     >
-                      {" "}
-                      Account Info{" "}
+                      Account Info
                     </MenuItem>
                   </Menu>
                 </Fragment>
@@ -683,8 +672,7 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 onClick={this.logoutUser}
               >
-                {" "}
-                {this.props.loginText}{" "}
+                {this.props.loginText}
               </Button>
 
               <Button
@@ -693,8 +681,7 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 style={{ fontFamily: "Raleway" }}
               >
-                {" "}
-                Shop{" "}
+                Shop
               </Button>
 
               {/* CART BUTTON */}
@@ -791,7 +778,6 @@ const mapStateToProps = state => {
   return {
     loginValue: state.auth.login,
     loginText: state.auth.text,
-    user: state.auth.user,
     isAdmin: state.auth.isAdmin,
     cartLength: state.cart.items.length,
     items: state.cart.items,

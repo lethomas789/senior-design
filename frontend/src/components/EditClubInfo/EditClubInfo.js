@@ -13,7 +13,9 @@ class EditClubInfo extends Component {
     lastUpdate: "",
     lastUpdateUser: "",
     vendorName: "",
-    emailSchedule: ""
+    emailSchedule: "",
+    email: "",
+    pickupInfo: "",
   };
 
   //get club info
@@ -21,18 +23,20 @@ class EditClubInfo extends Component {
     const apiURL = "/api/adminVendor";
     axios
       .get(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
           vid: this.props.vendorID
         }
       })
       .then(res => {
         if (res.data.success === true) {
-          this.setState({
+          this.setState({ 
             bio: res.data.bio,
             lastUpdate: res.data.lastUpdate,
             lastUpdateUser: res.data.lastUpdateUser,
-            vendorName: res.data.vendorName
+            vendorName: res.data.vendorName,
+            pickupInfo: res.data.pickupInfo,
+            email: res.data.email,
           });
         } else {
           this.props.notifier({
@@ -45,7 +49,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -69,8 +73,8 @@ class EditClubInfo extends Component {
     const apiURL = "/api/adminVendor/emailSchedule";
     axios
       .patch(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
           emailSchedule: this.state.emailSchedule,
           vid: this.props.vendorID
         }
@@ -79,13 +83,13 @@ class EditClubInfo extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
         } else {
           this.props.notifier({
             title: "Error",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "warning"
           });
         }
@@ -93,7 +97,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -104,11 +108,13 @@ class EditClubInfo extends Component {
     const apiURL = "/api/adminVendor/editVendorInfo";
     axios
       .patch(apiURL, {
+        withCredentials: true,
         params: {
-          user: this.props.user,
           vid: this.props.vendorID,
           vendorName: this.state.vendorName,
-          bio: this.state.bio
+          bio: this.state.bio,
+          email: this.state.email,
+          pickupInfo: this.state.pickupInfo,
         }
       })
       .then(res => {
@@ -116,7 +122,7 @@ class EditClubInfo extends Component {
         if (res.data.success === true) {
           this.props.notifier({
             title: "Success",
-            message: res.data.message,
+            message: res.data.message.toString(),
             type: "success"
           });
           this.getClubInfo();
@@ -125,7 +131,7 @@ class EditClubInfo extends Component {
       .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: err,
+          message: err.toString(),
           type: "danger"
         });
       });
@@ -157,6 +163,28 @@ class EditClubInfo extends Component {
             onChange={event => this.setState({ bio: event.target.value })}
             multiline={true}
             rows={4}
+            rowsMax={Infinity}
+          />
+
+          <TextField
+            className="inputWidth"
+            label="Item Pickup Info"
+            value={this.state.pickupInfo}
+            id="standard-full-width"
+            onChange={event => this.setState({ pickupInfo: event.target.value })}
+            multiline={true}
+            rows={4}
+            rowsMax={Infinity}
+          />
+
+          <TextField
+            className="inputWidth"
+            label="Email to be contacted for order purchase notifications."
+            type="email"
+            value={this.state.email}
+            onChange={event =>
+              this.setState({ email: event.target.value })
+            }
           />
         </form>
 
@@ -200,7 +228,6 @@ const mapStateToProps = state => {
   return {
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     vendorID: state.auth.vendorID
   };
 };

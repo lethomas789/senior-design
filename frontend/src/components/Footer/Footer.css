@@ -8,6 +8,8 @@
 .footer-container {
   /* position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%; */
   display: grid;
   /* min-height: 200px; TODO remove for testing */
@@ -17,7 +19,11 @@
   /* grid-template-rows: 50px 1fr 1fr; */
   justify-content: space-around;
   border-radius: 3px;
- 
+}
+
+.footer-container a {
+  text-decoration: none;
+  color: inherit;
 }
 
 .footer-header {
@@ -44,6 +50,7 @@
 .footer-link {
   margin: 10px 0;
 }
+
 
 @media (max-width: 40em) {
   .footer-container {
@@ -72,3 +79,4 @@
         display: none;
         }
 }
+

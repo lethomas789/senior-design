@@ -5,6 +5,8 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 const nodemailer = require('nodemailer');
 const Email = require('email-templates');
+const jwt = require('jsonwebtoken');
+require("dotenv").config();
 
 /**
  * Creates a new order when a user checksout a purchase. Saves order to orders
@@ -21,14 +23,13 @@ const Email = require('email-templates');
  * @param paymentID - paymentID from paypal API
  * @param payerID - payerID from paypal API
  */
-router.post('/', (req, res) => {
-
+router.post('/', tokenMiddleware, async (req, res) => {
   if (req.body.params) {
     var {
       items,
       totalPrice,
       vid,
-      user,
+      // user,
       paymentID,
       payerID
     } = req.body.params;
@@ -38,11 +39,14 @@ router.post('/', (req, res) => {
       items,
       totalPrice,
       vid,
-      user,
+      // user,
       paymentID,
       payerID
     } = req.body;
   }
+
+  var user = req.authorizedData.user;
+  console.log("user", user);
 
   // TODO: figure out how we want to structure multiple vendors in an order.
   // TODO: test if paymentID is transaction ID in paypal
@@ -61,6 +65,12 @@ router.post('/', (req, res) => {
   }
   
   const userRef = db.collection('users').doc(user);
+
+  // get vendorName and pickupInfo
+  const vendorData = await db.collection('vendors').doc(vid).get();
+
+  // TODO: figure out how to save newlines on pickupInfo
+
   userRef.get().then(doc => {
     if (!doc.exists) {
       console.log('Error: provided user does not exist:', user);
@@ -116,17 +126,20 @@ router.post('/', (req, res) => {
         newItems.push(newItem);
       }
 
+
       let emailSubject = 'ECS193 E-commerce Order Recipt: ' + oid;
       let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
 
-      const testEmail = new Email({
+      const receiptEmail = new Email({
         message: {
-          from: 'ecs193.ecommerce@gmail.com',
+          from: process.env.EMAIL,
           // from: 'test@test.com',
           subject: emailSubject,
           to: doc.data().email
         },
         send: true,  // set send to true when not testing
+
+        //leaving this code commented out throws a process error on backend, preventing email from being sent
         // preview: false,  // TODO turn off preview before production
 
         transport: {
@@ -141,21 +154,23 @@ router.post('/', (req, res) => {
           // uncomment when actually sending emails
           service: 'gmail',
           auth: {
-            user: 'ecs193.ecommerce@gmail.com',
-            pass: '193ecommerce'
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS,
           }
         
         }
       });
 
-      testEmail.send({
+      receiptEmail.send({
         template: 'receipt',
         locals: {
           items: newItems,
           totalPrice: totalPrice,
-          location: 'Test club location here.', 
+          pickupInfo: vendorData.data().pickupInfo + '\n \n', // newlines for email styling purposes
           emailIntro: emailIntro,
-          oid: oid
+          oid: oid,
+          vendorName: vendorData.data().vendorName,
+          vid: vid,
         }
       })
       .then(() => {
@@ -196,17 +211,19 @@ router.post('/', (req, res) => {
 
 
 /**
- * GET vendor's order history
+ * POST vendor's order history
+ * Make it a POST for extra security
  * 
  * @param vid - vendor vid
  */
-router.get('/getVendorOrders', (req, res) => {
-  if (req.query.params) {
-    var vid = req.query.params.vid;
+router.post('/getVendorOrders', tokenMiddleware, (req, res) => {
+  if (req.body.params) {
+    var vid = req.body.params.vid;
   }
   else {
-    var vid = req.query.vid
+    var vid = req.body.vid
   }
+
 
   if (!vid) {
     console.log('Error: missing request params in GET orders route.');
@@ -288,13 +305,18 @@ router.get('/getVendorOrders', (req, res) => {
  * 
  * @param user - email for user
  */
-router.get('/getUserOrders', (req, res) => {
-  if (req.query.params) {
-    var user = req.query.params.user;
-  }
-  else {
-    var user = req.query.user;
-  }
+
+router.get('/getUserOrders', tokenMiddleware, (req, res) => {
+  // if (req.query.params) {
+  //   // var user = req.query.params.user;
+  //   var token = req.query.params.token;
+  // }
+  // else {
+  //   // var user = req.query.user;
+  //   var token = req.query.token;
+  // }
+
+  var { user } = req.authorizedData;
 
   if (!user) {
     console.log('Error: missing request params in GET orders route.');
@@ -374,7 +396,7 @@ router.get('/getUserOrders', (req, res) => {
  * @param user - vendor admin
  * @param oid - firestore document order ID
  */
- router.patch('/updateOrder', (req, res) => {
+ router.patch('/updateOrder', tokenMiddleware, (req, res) => {
    if (req.body.params) {
      var vid = req.body.params.vid;
      var user = req.body.params.user;
@@ -427,103 +449,6 @@ router.get('/getUserOrders', (req, res) => {
        message: 'Server error in getting order ' + err
      });
    });
-
-
  });
-
-router.get('/testEmail', (req, res) => {
-  db.collection('vendors').get().then(snapshot => {
-    snapshot.forEach(vdoc => {
-      db.collection('orders').where('vid', '==', vdoc.id)
-        .where('seenByVendor', '==', false)
-        .orderBy('date', 'asc')
-        .get().then(ordersSnapshot => {
-          let orders = [];
-          let orderCount = 0;
-          ordersSnapshot.forEach(odoc => {
-            odoc.update({ seenByVendor: true });
-
-            /*
-            let orderData = {
-              // have to call toDate on firestore data or else errors
-              date: odoc.data().date.toDate(),
-              items: odoc.data().items,
-              totalPrice: odoc.data().totalPrice,
-              paid: odoc.data().paid,
-              firstName: odoc.data().name.firstName,
-              lastName: odoc.data().name.lastName,
-              oid: odoc.data().oid,
-              pickedUp: odoc.data().pickedUp,
-              email: odoc.data().email
-            };
-            orders.push(orderData);
-            */
-
-            // NOTE: for our own sanity, we are just gonna send a count of items
-            // and a link to order history page.
-            orderCount += 1;
-          });
-
-          // once obtained the orders
-          let emailSubject = "You've got new orders from ECS193 E-commerce"
-
-          const vendorEmail = new Email({
-            message: {
-              // from: 'ecs193.ecommerce@gmail.com',
-              from: 'test@test.com',
-              subject: emailSubject,
-              to: 'test@test.com'
-            },
-            send: false,  // set send to true when not testing
-            // preview: false,  // TODO turn off preview before production
-
-            transport: {
-              host: 'localhost', // TODO update w/ website?
-              port: 465,
-              secure: true,
-              tls: {
-                // do not fail on invalid certs
-                rejectUnauthorized: false
-              },
-              /*
-              // uncomment when actually sending emails
-              service: 'gmail',
-              auth: {
-                user: 'ecs193.ecommerce@gmail.com',
-                pass: '193ecommerce'
-              }
-              */
-            }
-          });
-
-          // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
-          let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
-
-          vendorEmail.send({
-            template: 'ordersNotification',
-            locals: {
-              emailIntro: emailIntro,
-            }
-          })
-            .then(() => {
-              console.log('Finished Sending Email.');
-            })
-            .catch(console.log);
-
-        })
-        .catch(err => {
-          console.log('Error in getting user orders for emailing:', err);
-        });
-
-    });  // end forEach vendor
-
-  })
-    .catch(err => {
-      console.log('Server error in getting vendors for emailing:', err);
-    });
-  return res.sendStatus(200);
-
-});
-
 
 module.exports = router;

@@ -7,6 +7,10 @@ const firebase = require("firebase");
 const admin = require("firebase-admin");
 const cron = require("node-cron");
 const Email = require("email-templates");
+const jwt = require("jsonwebtoken");
+const jwtKey = require("./config/jwt.json");
+const cookieParser = require("cookie-parser");
+
 require("dotenv").config();
 
 global.schedule = require("node-schedule");
@@ -30,8 +34,42 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // use cors;
 app.use(cors());
 
+app.use(cookieParser('TODO-SECRET'));
+
 //serve react files
 app.use(express.static(path.join(__dirname, "/frontend/build")));
+
+// middleware to extract and verify token from headers
+const checkToken = (req, res, next) => {
+
+  if (!req.signedCookies.token) {
+    // if no tokens, unauthorized request
+    console.log("Unauthorized. No token.");
+    res.clearCookie("token");
+    res.sendStatus(403);
+  } else {
+    // if
+    next();
+  }
+};
+
+// middleware to decode token and grab authorized data
+const decodeToken = (req, res, next) => {
+  jwt.verify(req.signedCookies.token, jwtKey.JWTSecret, (err, authorizedData) => {
+    if (err) {
+      // if error, send forbidden (403)
+      console.log("ERROR: could not connect to protected route");
+      res.clearCookie("token");
+      return res.sendStatus(403);
+    } else {
+      // if token is successfully verified, we can use the authorized data
+      req.authorizedData = authorizedData;
+      next();
+    }
+  });
+};
+
+global.tokenMiddleware = [checkToken, decodeToken];
 
 //routes
 const router = express.Router();
@@ -50,6 +88,7 @@ const orders = require("./routes/orders");
 const getProductInfo = require("./routes/getProductInfo");
 const stock = require("./routes/stock");
 const resetPass = require("./routes/resetPass");
+const checkTokenRefresh = require("./routes/checkTokenRefresh");
 
 app.use("/api/users", users);
 app.use("/api/signup", signup);
@@ -66,6 +105,7 @@ app.use("/api/orders", orders);
 app.use("/api/getProductInfo", getProductInfo);
 app.use("/api/stock", stock);
 app.use("/api/resetPass", resetPass);
+app.use("/api/checkTokenRefresh", checkTokenRefresh);
 
 //fix react app crashing on refresh
 app.get("*", (req, res) => {
@@ -113,13 +153,13 @@ var initSchedules = db
 
                 const vendorEmail = new Email({
                   message: {
-                    from: "ecs193.ecommerce@gmail.com",
+                    from: process.env.EMAIL,
                     // from: 'test@test.com',
                     subject: emailSubject,
                     to: vdoc.data().email
                   },
                   send: false, // set send to true when not testing
-                  // preview: false,  // TODO turn off preview before production
+                  preview: false, // TODO turn off preview before production
 
                   transport: {
                     // uncomment when actually sending emails
@@ -167,10 +207,10 @@ var initSchedules = db
 
     const errorEmail = new Email({
       message: {
-        from: "ecs193.ecommerce@gmail.com",
+        from: process.env.EMAIL,
         // from: 'test@test.com',
         subject: emailSubject,
-        to: "thele@ucdavis.edu"
+        to: process.env.ERROR_EMAIL
       },
       send: true, // set send to true when not testing
       // preview: false,  // TODO turn off preview before production
@@ -201,6 +241,30 @@ var initSchedules = db
       })
       .catch(console.log);
   });
+
+// clear from DB once every 60 min, accounts who is not verified, and their email toekens have expired
+var clearUnVerifiedAccounts = schedule.scheduleJob("*/60 * * * *", function() {
+  let time = new Date();
+  console.log("Clearing unverified accounts at:", time);
+  let usersRef = db
+    .collection("users")
+    .where("isVerified", "==", false)
+    .where("emailTokenExpires", "<", time)
+    .get()
+    .then(snapshot => {
+      snapshot.forEach(doc => {
+        console.log("Clearing out account:", doc.id);
+        let deleteUserDoc = db
+          .collection("users")
+          .doc(doc.id)
+          .delete();
+      });
+      console.log("Finished clearing job.");
+    })
+    .catch(err => {
+      console.log("Error in clearing unverified accounts job", err);
+    });
+});
 
 /*var defaultApp = admin.initializeApp(defaultAppConfig);
 var defaultAuth = defaultApp.auth();

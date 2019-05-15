@@ -20,10 +20,10 @@ const styles = theme => ({
     backgroundColor: theme.palette.background.paper
   },
   dividerFullWidth: {
-    margin: "5px 0 0 ${theme.spacing.unit * 2}px"
+    margin: `5px 0 0 ${1 * 2}px`
   },
   dividerInset: {
-    margin: "5px 0 0 ${theme.spacing.unit * 9}px"
+    margin: `5px 0 0 ${1 * 9}px`
   },
   flexContainer: {
     display: "flex",
@@ -120,19 +120,30 @@ class OrderHistoryItem extends Component {
           </li>
 
           <ListItem>
-            <ListItemText primary="Total" secondary={'$'+ this.props.totalPrice} />
+            <ListItemText
+              primary="Total"
+              secondary={"$" + this.props.totalPrice}
+            />
           </ListItem>
         </List>
 
         <div className="order-summary-container">
           <div className="order-summary-row-title order-summary-row">
-            <div><b>Item</b></div>
-            <div><b>Price</b></div>
-            <div><b>Quantity</b></div>
-            <div><b>Total</b></div>
+            <div>
+              <b>Item</b>
+            </div>
+            <div>
+              <b>Price</b>
+            </div>
+            <div>
+              <b>Quantity</b>
+            </div>
+            <div>
+              <b>Total</b>
+            </div>
           </div>
           {items.map(item => (
-            <div className="order-summary-row">
+            <div key={item.name} className="order-summary-row">
               <div className="order-summary-item">
                 <div>
                   <b>{`${item.name}`}</b>
@@ -149,7 +160,10 @@ class OrderHistoryItem extends Component {
 
               <div>{item.quantity}</div>
 
-              <div>${Number(Number(item.price) * Number(item.quantity)).toFixed(2)}</div>
+
+              <div>
+                ${Number(Number(item.price) * Number(item.quantity)).toFixed(2)}
+              </div>
 
             </div>
             

@@ -87,6 +87,10 @@
   grid-column-gap: 10px;
 }
 
+#shopview-item-container a {
+  color: var(--color-link);
+}
+
 @media screen and (min-device-width: 1400px) {
   #shopview-item-container {
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
