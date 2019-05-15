@@ -118,8 +118,8 @@ router.patch("/", (req, res) => {
           );
         }
 
+        const pdata = doc.data();
         if (isApparel === true) {
-          const pdata = doc.data();
           const newAmt = pdata[size] - amt;
           t.update(productRef, { [size]: newAmt });
           console.log("Successfully subtracted product stock.");
@@ -130,7 +130,6 @@ router.patch("/", (req, res) => {
 
           t.update(productRef, { stock: newAmt });
           console.log("Successfully subtracted product stock.");
-          j;
           return Promise.resolve("Product stock subtracted.");
         }
       });
