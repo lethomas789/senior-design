@@ -140,7 +140,7 @@ router.post('/', tokenMiddleware, async (req, res) => {
         send: true,  // set send to true when not testing
 
         //leaving this code commented out throws a process error on backend, preventing email from being sent
-        preview: false,  // TODO turn off preview before production
+        // preview: false,  // TODO turn off preview before production
 
         transport: {
          // host: 'localhost', // TODO update w/ website?
@@ -166,7 +166,7 @@ router.post('/', tokenMiddleware, async (req, res) => {
         locals: {
           items: newItems,
           totalPrice: totalPrice,
-          pickupInfo: vendorData.data().pickupInfo,
+          pickupInfo: vendorData.data().pickupInfo + '\n \n', // newlines for email styling purposes
           emailIntro: emailIntro,
           oid: oid,
           vendorName: vendorData.data().vendorName,
