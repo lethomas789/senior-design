@@ -262,8 +262,20 @@ class App extends Component {
                 />
               )}
             />
+
+            <Route
+              exact 
+              path="/successfulPayment"
+              render={props => (
+                <GenericPage
+                  {...props}
+                  notifier={this.addNotification}
+                  pageText={"Thanks for purchasing. Please check your e-mail inbox for an order receipt."}
+                />
+              )}
+            />
             
-            <Route exact path="/successfulPayment" component = {SuccessfulPayment}/>
+            {/* <Route exact path="/successfulPayment" component = {SuccessfulPayment}/> */}
 
             <Footer />
             <ReactNotification ref={this.notificationDOMRef} />

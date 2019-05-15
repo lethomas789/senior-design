@@ -4,12 +4,17 @@ import Paper from "@material-ui/core/Paper";
 import "./GenericPage.css";
 
 export default class GenericPage extends Component {
-  static propTypes = {
-    pageText: PropTypes.string.isRequired
-  };
+  // static propTypes = {
+  //   pageText: PropTypes.string.isRequired
+  // };
 
   render() {
-    const { pageText } = this.props.location.state;
+    if (this.props.pageText == null) {
+      var { pageText } = this.props.location.state;
+    }
+    else {
+      var { pageText } = this.props;
+    }
 
     return (
       <div id="generic-page-container">
