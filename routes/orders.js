@@ -216,7 +216,7 @@ router.post('/', tokenMiddleware, async (req, res) => {
  * 
  * @param vid - vendor vid
  */
-router.post('/getVendorOrders', (req, res) => {
+router.post('/getVendorOrders', tokenMiddleware, (req, res) => {
   if (req.body.params) {
     var vid = req.body.params.vid;
   }
@@ -396,7 +396,7 @@ router.get('/getUserOrders', tokenMiddleware, (req, res) => {
  * @param user - vendor admin
  * @param oid - firestore document order ID
  */
- router.patch('/updateOrder', (req, res) => {
+ router.patch('/updateOrder', tokenMiddleware, (req, res) => {
    if (req.body.params) {
      var vid = req.body.params.vid;
      var user = req.body.params.user;
@@ -449,101 +449,6 @@ router.get('/getUserOrders', tokenMiddleware, (req, res) => {
        message: 'Server error in getting order ' + err
      });
    });
-
-
  });
-
-router.get('/testEmail', (req, res) => {
-  // db.collection('vendors').get().then(snapshot => {
-  //   snapshot.forEach(vdoc => {
-  //     db.collection('orders').where('vid', '==', vdoc.id)
-  //       .where('seenByVendor', '==', false)
-  //       .orderBy('date', 'asc')
-  //       .get().then(ordersSnapshot => {
-  //         let orders = [];
-  //         let orderCount = 0;
-  //         ordersSnapshot.forEach(odoc => {
-  //           odoc.update({ seenByVendor: true });
-
-  //           let orderData = {
-  //             // have to call toDate on firestore data or else errors
-  //             date: odoc.data().date.toDate(),
-  //             items: odoc.data().items,
-  //             totalPrice: odoc.data().totalPrice,
-  //             paid: odoc.data().paid,
-  //             firstName: odoc.data().name.firstName,
-  //             lastName: odoc.data().name.lastName,
-  //             oid: odoc.data().oid,
-  //             pickedUp: odoc.data().pickedUp,
-  //             email: odoc.data().email
-  //           };
-  //           orders.push(orderData);
-
-  //           // NOTE: for our own sanity, we are just gonna send a count of items
-  //           // and a link to order history page.
-  //           orderCount += 1;
-  //         });
-
-  //         // once obtained the orders
-  //         let emailSubject = "You've got new orders from ECS193 E-commerce"
-
-  //         const vendorEmail = new Email({
-  //           message: {
-  //             // from: 'ecs193.ecommerce@gmail.com',
-  //             from: 'test@test.com',
-  //             subject: emailSubject,
-  //             to: 'test@test.com'
-  //           },
-  //           send: false,  // set send to true when not testing
-  //           // preview: false,  // TODO turn off preview before production
-
-  //           transport: {
-  //             host: 'localhost', // TODO update w/ website?
-  //             port: 465,
-  //             secure: true,
-  //             tls: {
-  //               // do not fail on invalid certs
-  //               rejectUnauthorized: false
-  //             },
-  //             /*
-  //             // uncomment when actually sending emails
-  //             service: 'gmail',
-  //             auth: {
-  //               user: 'ecs193.ecommerce@gmail.com',
-  //               pass: '193ecommerce'
-  //             }
-  //             */
-  //           }
-  //         });
-
-  //         // let emailIntro = 'Hi ' + firstName + ' ' + lastName + ', here is an order receipt for you to show the club when you pick up your order.'
-  //         let emailIntro = 'Hello, you have ' + orderCount + ' new orders. Please go to your admin order history page to see more details.'
-
-  //         vendorEmail.send({
-  //           template: 'ordersNotification',
-  //           locals: {
-  //             emailIntro: emailIntro,
-  //           }
-  //         })
-  //           .then(() => {
-  //             console.log('Finished Sending Email.');
-  //           })
-  //           .catch(console.log);
-
-  //       })
-  //       .catch(err => {
-  //         console.log('Error in getting user orders for emailing:', err);
-  //       });
-
-  //   });  // end forEach vendor
-
-  // })
-  //   .catch(err => {
-  //     console.log('Server error in getting vendors for emailing:', err);
-  //   });
-  // return res.sendStatus(200);
-
-});
-
 
 module.exports = router;
