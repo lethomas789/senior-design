@@ -45,3 +45,26 @@
   padding-bottom: 20px;
 
 }
+
+@media (max-width: 40em) {
+
+  #edit-club-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+    height: 100vh;
+    
+  
+  }
+
+  .inputWidth{
+    width: 100vw;
+    padding: 5px;
+    height: 100px;
+    display: inline-block;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+}

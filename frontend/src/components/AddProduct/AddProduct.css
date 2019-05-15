@@ -54,3 +54,35 @@
 .smaller {
   padding-top: 10px;
 }
+
+@media (max-width: 40em) {
+
+  .addProductContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+    height: 150vh;
+    padding: 10px;
+    
+  }
+
+  .additem-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    /* align-self: center; */
+    
+  }
+
+  .textForm {
+    width: 100vw;
+    
+  }
+
+  #row {
+    overflow: hidden;
+  }
+
+}
+

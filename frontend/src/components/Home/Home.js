@@ -32,7 +32,8 @@ export default class Home extends Component {
               buttonsDisabled={true}
               // responsive={this.responsive}
               style={{ height: "100vh" }}
-            >
+            > 
+            {/* must disable the carousel, cannot override library's responsive design */}
               <img className="slideImage" src={image1} />
               <img className="slideImage" src={image2} />
               <img className="slideImage" src={image3} />

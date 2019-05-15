@@ -68,7 +68,8 @@ class ButtonAppBar extends Component {
     openSelect: false,
     currentVendor: "",
     anchorEl: null,
-    anchorElAccount: null
+    anchorElAccount: null,
+    anchorIconMenu: null,
   };
 
   //when navbar loads, get list of all vendors in database
@@ -102,6 +103,10 @@ class ButtonAppBar extends Component {
 
   handleAdminClick = event => {
     this.setState({ anchorEl: event.currentTarget });
+  };
+
+  handleIconMenuClick = event => {
+    this.setState({ anchorIconMenu: event.currentTarget });
   };
 
   //handle account click, same logic as handle admin click
@@ -227,7 +232,7 @@ class ButtonAppBar extends Component {
 
   render() {
     const { classes } = this.props;
-    const { anchorEl, anchorElAccount } = this.state;
+    const { anchorEl, anchorElAccount, anchorIconMenu } = this.state;
 
     if (this.props.isAdmin) {
       var vendorList = this.props.adminsOf.map(result => {
