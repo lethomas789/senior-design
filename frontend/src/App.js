@@ -56,7 +56,7 @@ class App extends Component {
 
   addNotification = ({
     title = "Error",
-    message = "Sorry, an error occured.",
+    message = "Sorry, an error occurred.",
     type = "danger",
     duration = 2500
   }) => {
