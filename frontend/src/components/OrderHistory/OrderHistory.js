@@ -13,71 +13,6 @@ import MenuItem from "@material-ui/core/MenuItem";
 import TextField from "@material-ui/core/TextField";
 
 /**
- * Return array OrderHistoryItem to be rendered to the page
- *
- * @param {array} orders - array of order objects
- */
-function renderOrders(orders, index, vid = "null", notifier) {
-  let renderedOrders;
-
-  if (orders.length === 0 || orders === undefined) {
-    return <div id="order-history-container">None</div>;
-  }
-
-  renderedOrders = orders.map(order => {
-    let convertDate = new Date(order.date);
-    let hours = convertDate.getHours();
-    let timeOfDay = "AM";
-
-    if (hours > 12) {
-      hours = hours - 12;
-      timeOfDay = "PM";
-    }
-
-    hours = String(hours);
-
-    let minutes = String(convertDate.getMinutes());
-
-    if (minutes.length === 1) {
-      minutes = "0" + minutes;
-    }
-
-    let seconds = String(convertDate.getSeconds());
-
-    let actualDate =
-      convertDate.toDateString() +
-      " " +
-      hours +
-      ":" +
-      minutes +
-      " " +
-      timeOfDay;
-
-    return (
-      <Fragment key={`${order.oid}-${index}`}>
-        <OrderHistoryItem
-          key={`${order.oid}-${index}`}
-          orderDate={actualDate}
-          email={order.email}
-          firstName={order.firstName}
-          lastName={order.lastName}
-          oid={order.oid}
-          paid={String(order.paid)}
-          pickedUp={order.pickedUp}
-          totalPrice={order.totalPrice}
-          clubHistory={false} // TODO figure out how to pass admin club version
-          items={order.items}
-          notifier={notifier}
-          vid={vid}
-        />
-      </Fragment>
-    );
-  });
-
-  return renderedOrders;
-}
-
-/**
  * Return array of all orders that have a certain filterValue
  *
  * @param {array} orders - array of order objects
@@ -158,6 +93,70 @@ class OrderHistory extends Component {
     // this.setState({ search: event.target.value.toLowerCase() });
   };
 
+  /**
+   * Return array OrderHistoryItem to be rendered to the page
+   *
+   * @param {array} orders - array of order objects
+   */
+  renderOrders = (orders, index, vid = "null", notifier) => {
+    let renderedOrders;
+
+    if (orders.length === 0 || orders === undefined) {
+      return <div id="order-history-container">None</div>;
+    }
+
+    renderedOrders = orders.map(order => {
+      let convertDate = new Date(order.date);
+      let hours = convertDate.getHours();
+      let timeOfDay = "AM";
+
+      if (hours > 12) {
+        hours = hours - 12;
+        timeOfDay = "PM";
+      }
+
+      hours = String(hours);
+
+      let minutes = String(convertDate.getMinutes());
+
+      if (minutes.length === 1) {
+        minutes = "0" + minutes;
+      }
+
+      let seconds = String(convertDate.getSeconds());
+
+      let actualDate =
+        convertDate.toDateString() +
+        " " +
+        hours +
+        ":" +
+        minutes +
+        " " +
+        timeOfDay;
+
+      return (
+        <Fragment key={`${order.oid}-${index}`}>
+          <OrderHistoryItem
+            key={`${order.oid}-${index}`}
+            orderDate={actualDate}
+            email={order.email}
+            firstName={order.firstName}
+            lastName={order.lastName}
+            oid={order.oid}
+            paid={String(order.paid)}
+            pickedUp={order.pickedUp}
+            totalPrice={order.totalPrice}
+            items={order.items}
+            notifier={notifier}
+            vid={vid}
+          />
+        </Fragment>
+      );
+    });
+
+    return renderedOrders;
+  };
+
   componentDidMount() {
     const apiURL = "/api/orders/getUserOrders";
 
@@ -201,10 +200,17 @@ class OrderHistory extends Component {
 
     let filteredOrders = this.state.orders;
 
-    // filter by picked up only
-    if (this.state.pickedUp === true) {
-      filteredOrders = filterOrders(filteredOrders, "pickedUp", true);
-    }
+    // filter by picked up first
+    filteredOrders = filterOrders(
+      filteredOrders,
+      "pickedUp",
+      this.state.pickedUp
+    );
+
+    // // filter by picked up only
+    // if (this.state.pickedUp === true) {r
+    //   filteredOrders = filterOrders(filteredOrders, "pickedUp", true);
+    // }
 
     // filter by search and pickedUp
     if (this.state.search !== "") {
@@ -217,7 +223,7 @@ class OrderHistory extends Component {
     }
 
     // finally render the filtered orders into OrderHistoryItems
-    filteredOrders = renderOrders(
+    filteredOrders = this.renderOrders(
       filteredOrders,
       "user",
       "null",
@@ -318,6 +324,7 @@ class OrderHistory extends Component {
                 date={this.state.date}
                 pickedUp={this.state.pickedUp}
                 search={this.state.search}
+                renderOrders={this.renderOrders}
               />
             ))
           : ""}
@@ -387,10 +394,10 @@ class ClubOrders extends Component {
       return null;
     }
 
-    // filter by picked up only
-    if (pickedUp === true) {
-      filteredOrders = filterOrders(filteredOrders, "pickedUp", true);
-    }
+    // TODO pickedUp toggling fixes
+
+    // filter by picked up first
+    filteredOrders = filterOrders(filteredOrders, "pickedUp", pickedUp);
 
     // filter by search and pickedUp
     if (search !== "") {
@@ -403,7 +410,7 @@ class ClubOrders extends Component {
     }
 
     // finally render the filtered orders into OrderHistoryItems
-    filteredOrders = renderOrders(
+    filteredOrders = this.props.renderOrders(
       filteredOrders,
       vendorName,
       vid,

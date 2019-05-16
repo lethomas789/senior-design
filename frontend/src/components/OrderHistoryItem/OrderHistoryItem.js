@@ -113,19 +113,20 @@ class OrderHistoryItem extends Component {
             <ListItemText
               primary="Picked Up"
               secondary={this.state.pickedUp ? "Yes" : "No"}
+              style={{ position: "relative" }}
             />
+            {vid !== "null" ? (
+              <Checkbox
+                checked={this.state.pickedUp}
+                color="primary"
+                value="pickedUp"
+                style={{ position: "absolute", right: "30px" }}
+                onChange={() => this.handleUpdateOrder(oid, vid)}
+              />
+            ) : (
+              ""
+            )}
           </ListItem>
-
-          {vid !== "null" ? (
-            <Checkbox
-              checked={this.state.pickedUp}
-              color="primary"
-              value="pickedUp"
-              onChange={() => this.handleUpdateOrder(oid, vid)}
-            />
-          ) : (
-            ""
-          )}
 
           <ListItem>
             <ListItemText
