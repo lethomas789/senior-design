@@ -100,6 +100,7 @@ class Login extends Component {
             type: "success"
           });
           this.props.history.push("/shop");
+          this.forceUpdate();
         } else if (res.data.success === true && res.data.isAdmin === true) {
           //after determining user is an admin, get object list of user's active vendors
 
