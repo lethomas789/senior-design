@@ -17,11 +17,11 @@ import TextField from "@material-ui/core/TextField";
  *
  * @param {array} orders - array of order objects
  */
-function renderOrders(orders, index) {
+function renderOrders(orders, index, vid = "null", notifier) {
   let renderedOrders;
 
   if (orders.length === 0 || orders === undefined) {
-    return <div id = "order-history-container">None</div>;
+    return <div id="order-history-container">None</div>;
   }
 
   renderedOrders = orders.map(order => {
@@ -63,10 +63,12 @@ function renderOrders(orders, index) {
           lastName={order.lastName}
           oid={order.oid}
           paid={String(order.paid)}
-          pickedUp={String(order.pickedUp)}
+          pickedUp={order.pickedUp}
           totalPrice={order.totalPrice}
           clubHistory={false} // TODO figure out how to pass admin club version
           items={order.items}
+          notifier={notifier}
+          vid={vid}
         />
       </Fragment>
     );
@@ -161,7 +163,7 @@ class OrderHistory extends Component {
 
     axios
       .get(apiURL, {
-        withCredentials: true,
+        withCredentials: true
       })
       .then(res => {
         if (res.data.success === true) {
@@ -191,7 +193,7 @@ class OrderHistory extends Component {
 
     if (this.state.orders.length === 0) {
       return (
-        <div id = "order-history-container">
+        <div id="order-history-container">
           <h1> No orders were made! </h1>
         </div>
       );
@@ -215,7 +217,12 @@ class OrderHistory extends Component {
     }
 
     // finally render the filtered orders into OrderHistoryItems
-    filteredOrders = renderOrders(filteredOrders, "user");
+    filteredOrders = renderOrders(
+      filteredOrders,
+      "user",
+      "null",
+      this.props.notifier
+    );
 
     return (
       <div>
@@ -396,10 +403,15 @@ class ClubOrders extends Component {
     }
 
     // finally render the filtered orders into OrderHistoryItems
-    filteredOrders = renderOrders(filteredOrders, vendorName);
+    filteredOrders = renderOrders(
+      filteredOrders,
+      vendorName,
+      vid,
+      this.props.notifier
+    );
 
     return (
-      <div id = "order-history-container">
+      <div id="order-history-container">
         {vendorName}
         {filteredOrders}
       </div>
