@@ -333,7 +333,7 @@ class ButtonAppBar extends Component {
                         // marginRight: "10px"
                       }}
                     >
-                      Select Club:
+                      Select Admin Club:
                     </Typography>
                   ) : (
                     ""
@@ -502,7 +502,7 @@ class ButtonAppBar extends Component {
                   variant="h6"
                   color="inherit"
                 >
-                  Select Club:
+                  Select Admin Club:
                 </Typography>
               ) : (
                 ""
