@@ -1,11 +1,13 @@
 // import dependencies
 import "./matchMedia.mock";
 import React from "react";
-import { withRouter } from "react-router";
-import { Link, Route, Router, Switch } from "react-router-dom";
+import { withRouter, StaticRouter } from "react-router";
+import { Link, Route, Router, Switch, MemoryRouter } from "react-router-dom";
 import { createMemoryHistory } from "history";
-import {createStore} from 'redux'
-import {Provider, connect} from 'react-redux'
+import { createStore } from "redux";
+import { Provider, connect } from "react-redux";
+import { create } from "react-test-renderer";
+import axios from "axios";
 
 // import react-testing methods
 import {
@@ -26,6 +28,8 @@ import axiosMock from "axios";
 import Home from "../components/Home/Home";
 import App from "../App-testing";
 import Clubs from "../components/Clubs/Clubs";
+
+jest.mock("axios");
 
 afterEach(cleanup);
 
@@ -50,53 +54,35 @@ function renderWithRouter(
 // this is a handy function that I normally make available for all my tests
 // that deal with connected components.
 // you can provide initialState or the entire store that the ui is rendered with
-function reducer(state = {count: 0}, action) {
+function reducer(state = { count: 0 }, action) {
   switch (action.type) {
-    case 'INCREMENT':
+    case "INCREMENT":
       return {
-        count: state.count + 1,
-      }
-    case 'DECREMENT':
+        count: state.count + 1
+      };
+    case "DECREMENT":
       return {
-        count: state.count - 1,
-      }
+        count: state.count - 1
+      };
     default:
-      return state
+      return state;
   }
 }
 
 function renderWithRedux(
   ui,
-  {initialState, store = createStore(reducer, initialState)} = {},
+  { initialState, store = createStore(reducer, initialState) } = {}
 ) {
   return {
     ...render(<Provider store={store}>{ui}</Provider>),
     // adding `store` to the returned utilities to allow us
     // to reference it in our tests (just try to avoid using
     // this to test implementation details).
-    store,
-  }
+    store
+  };
 }
 
-
 // call with "DEBUG_PRINT_LIMIT=10 npm test" to lower DOM debug
-// window.matchMedia = () => {};
-
-    // window.matchMedia = jest.fn().mockImplementation(query => {
-    //   return {
-    //     matches: false,
-    //     media: query,
-    //     onchange: null,
-    //     addListener: jest.fn(),
-    //     removeListener: jest.fn()
-    //   };
-    // });
-
-// window.matchMedia = {
-//   matches: false, // <-- Set according to what you want to test
-//   addListener: () => {},
-//   removeListener: () => {}
-// }
 
 window.matchMedia =
   window.matchMedia ||
@@ -108,37 +94,7 @@ window.matchMedia =
     };
   };
 
-
 describe("Home Component", () => {
-  // global.window.matchMedia = jest.fn(() => {
-  //   return {
-  //     matches: false,
-  //     addListener: jest.fn(),
-  //     removeListener: jest.fn()
-  //   };
-  // });
-
-    // global.window.matchMedia = jest.fn().mockImplementation(query => {
-    //   return {
-    //     matches: false,
-    //     media: query,
-    //     onchange: null,
-    //     addListener: jest.fn(),
-    //     removeListener: jest.fn()
-    //   };
-    // });
-
-  // beforeAll(() => {
-  //   window.matchMedia = jest.fn().mockImplementation(query => {
-  //     return {
-  //       matches: false,
-  //       media: query,
-  //       onchange: null,
-  //       addListener: jest.fn(),
-  //       removeListener: jest.fn()
-  //     };
-  //   });
-  // });
 
   beforeAll(() => {
     Object.defineProperty(window, "matchMedia", {
@@ -146,7 +102,7 @@ describe("Home Component", () => {
         return {
           matches: false,
           addListener: jest.fn(),
-          removeListener: jest.fn(),
+          removeListener: jest.fn()
         };
       })
     });
@@ -172,10 +128,77 @@ describe("Home Component", () => {
 });
 
 describe("Clubs Component", () => {
-  it("displays properly", () => {
-    const { getByText } = renderWithRouter(<Clubs />);
-    getByText('CLUBS')
+  it("displays properly", async () => {
+    // const { getByText } = renderWithRouter(<Clubs />);
+    const response = {
+      data: {
+        success: true,
+        vendors: [
+          {
+            vendorName: "WICS",
+            bioPictures: [
+              "https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/test-club-2.jpg?alt=media&token=13ba901a-302b-402e-b749-1a291f410d92"
+            ]
+          }
+        ]
+      }
+    };
+
+    axios.get.mockResolvedValue(response);
+    const component = create(
+      <MemoryRouter>
+        <Clubs />
+      </MemoryRouter>
+    );
+
+    const instance = component.getInstance();
+    // console.log(instance);
+    await instance.componentDidMount();
+    console.log(instance.state);
+    // console.log(component.root);
+    const rootInstance = component.root;
+    console.log(rootInstance);
+
+    expect(rootInstance.findAllByType("img").props.src).toBe(
+      response.data.vendors[0].bioPictures[0]
+    );
+
+    // expect(
+    //   rootInstance.findByProps({ className: "hero-textt" }).children
+    // ).toEqual([response.data.vendors[0].vendorName]);
+  });
+});
 
 
-  })
-})
+
+
+
+  // global.window.matchMedia = jest.fn(() => {
+  //   return {
+  //     matches: false,
+  //     addListener: jest.fn(),
+  //     removeListener: jest.fn()
+  //   };
+  // });
+
+  // global.window.matchMedia = jest.fn().mockImplementation(query => {
+  //   return {
+  //     matches: false,
+  //     media: query,
+  //     onchange: null,
+  //     addListener: jest.fn(),
+  //     removeListener: jest.fn()
+  //   };
+  // });
+
+  // beforeAll(() => {
+  //   window.matchMedia = jest.fn().mockImplementation(query => {
+  //     return {
+  //       matches: false,
+  //       media: query,
+  //       onchange: null,
+  //       addListener: jest.fn(),
+  //       removeListener: jest.fn()
+  //     };
+  //   });
+  // });
