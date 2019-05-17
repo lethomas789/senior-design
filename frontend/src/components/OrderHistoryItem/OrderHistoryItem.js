@@ -43,7 +43,6 @@ class OrderHistoryItem extends Component {
     paid: PropTypes.string.isRequired,
     pickedUp: PropTypes.bool.isRequired,
     totalPrice: PropTypes.string.isRequired,
-    clubHistory: PropTypes.bool.isRequired, // viewing club history true/false
     items: PropTypes.array.isRequired,
     vid: PropTypes.string.isRequired
   };
