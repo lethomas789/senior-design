@@ -522,7 +522,7 @@ class ButtonAppBar extends Component {
                         onClose={this.handleCloseSelect}
                         onOpen={this.handleOpenSelect}
                         onChange={this.handleSelect}
-                        style={{ color: "white" }}
+                        style={{ color: "white", width: "150px" }}
                       >
                         {vendorList}
                       </Select>
