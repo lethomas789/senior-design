@@ -68,7 +68,7 @@ class ButtonAppBar extends Component {
     anchorEl: null,
     anchorElAccount: null,
     anchorIconMenu: null,
-    logout: false,  
+    logout: false
   };
 
   //when navbar loads, get list of all vendors in database
@@ -140,7 +140,7 @@ class ButtonAppBar extends Component {
 
   //logout user when clicking "Logout" on navbar
   //empty shopping cart
-  logoutUser = (isResponsiveMenu) => {
+  logoutUser = isResponsiveMenu => {
     if (this.props.loginText === "Logout") {
       this.props.updateLogout();
       this.props.emptyCart();
@@ -148,7 +148,6 @@ class ButtonAppBar extends Component {
       // setState to rerender component
       this.setState(() => ({ logout: !this.state.logout }));
       // this.forceUpdate();
-
 
       //display dialog
       this.props.notifier({
@@ -257,9 +256,9 @@ class ButtonAppBar extends Component {
           style={{ background: `${primary}`, boxShadow: "none" }}
         >
           <Toolbar>
-              {/* MENU BUTTON */}
-              <Hidden mdUp>
-                <div id="menu-button">
+            {/* MENU BUTTON */}
+            <Hidden mdUp>
+              <div id="menu-button">
                 <IconButton
                   aria-owns={anchorIconMenu ? "responsive-menu" : undefined}
                   aria-haspopup="true"
@@ -288,7 +287,6 @@ class ButtonAppBar extends Component {
 
                   {this.props.loginValue ? (
                     <span>
-
                       <MenuItem
                         aria-haspopup="true"
                         onClick={this.handleAccountClick}
@@ -340,25 +338,24 @@ class ButtonAppBar extends Component {
                   )}
 
                   {this.props.isAdmin ? (
-                    <Fragment>
+                    <span>
                       <FormControl
                         variant="filled"
                         className="club-select"
                         style={{ marginRight: "10px" }}
                       >
-
                         <Select
-                          value={this.props.currentvendor}
+                          value={this.props.currentVendor}
                           open={this.state.openSelect}
                           onClose={this.handleCloseSelect}
                           onOpen={this.handleOpenSelect}
                           onChange={this.handleSelect}
-                          style={{ color: "white" }}
+                          style={{ color: "black" }}
                         >
                           {vendorList}
                         </Select>
                       </FormControl>
-                    </Fragment>
+                    </span>
                   ) : (
                     ""
                   )}
@@ -404,7 +401,7 @@ class ButtonAppBar extends Component {
                           Edit Items
                         </MenuItem>
                       </Menu>
-                      </span>
+                    </span>
                   ) : (
                     ""
                   )}
@@ -474,10 +471,10 @@ class ButtonAppBar extends Component {
                     </MenuItem>
                   )}
                 </Menu>
-            </div>
-              </Hidden>
+              </div>
+            </Hidden>
 
-              {/******************* END RESPONSIVE MENU ICON **********/}
+            {/******************* END RESPONSIVE MENU ICON **********/}
 
             {/* HOME LABEL */}
             <Hidden smDown>
@@ -507,7 +504,6 @@ class ButtonAppBar extends Component {
               ) : (
                 ""
               )}
-
 
               {/* NAV BUTTONS */}
               <div id="navLink">
