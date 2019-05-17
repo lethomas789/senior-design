@@ -11,7 +11,12 @@ function DisplayClub(props) {
     <Link to={`/aboutClub/${vid}`} className="moreColls">
       <div className="roww">
         <div className="moreContainer">
-          <img src={bioPicture} alt="Display Club" width="100%" />
+          <img
+            data-testid={vid}
+            src={bioPicture}
+            alt={`Club: ${vid}`}
+            width="100%"
+          />
           <div className="hero-textt">{vendorName}</div>
         </div>
       </div>
