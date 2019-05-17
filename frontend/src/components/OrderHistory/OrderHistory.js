@@ -65,7 +65,7 @@ class OrderHistory extends Component {
       orders: [],
       show: "user", // which order history to show
       date: "asc", // default date to ascending order
-      pickedUp: false,
+      pickedUp: "all",
       search: "",
       searchValue: "",
       typingTimeout: 0
@@ -200,17 +200,13 @@ class OrderHistory extends Component {
 
     let filteredOrders = this.state.orders;
 
-    // filter by picked up first
-    filteredOrders = filterOrders(
-      filteredOrders,
-      "pickedUp",
-      this.state.pickedUp
-    );
-
-    // // filter by picked up only
-    // if (this.state.pickedUp === true) {r
-    //   filteredOrders = filterOrders(filteredOrders, "pickedUp", true);
-    // }
+    if (this.state.pickedUp !== "all") {
+      filteredOrders = filterOrders(
+        filteredOrders,
+        "pickedUp",
+        this.state.pickedUp
+      );
+    }
 
     // filter by search and pickedUp
     if (this.state.search !== "") {
@@ -297,8 +293,9 @@ class OrderHistory extends Component {
               inputProps={{ name: "pickedUp", id: "pickedUp" }}
               style={{ margin: "16px 10px 0px 10px" }}
             >
-              <MenuItem value={true}> True </MenuItem>
-              <MenuItem value={false}> False </MenuItem>
+              <MenuItem value="all"> Display All </MenuItem>
+              <MenuItem value={true}> Yes </MenuItem>
+              <MenuItem value={false}> No </MenuItem>
             </Select>
           </form>
 
@@ -350,7 +347,7 @@ class ClubOrders extends Component {
     vendorName: PropTypes.string.isRequired,
     show: PropTypes.string,
     date: PropTypes.string.isRequired,
-    pickedUp: PropTypes.bool.isRequired
+    // pickedUp: PropTypes.bool.isRequired
   };
 
   state = {
@@ -396,8 +393,13 @@ class ClubOrders extends Component {
 
     // TODO pickedUp toggling fixes
 
-    // filter by picked up first
-    filteredOrders = filterOrders(filteredOrders, "pickedUp", pickedUp);
+    if (pickedUp !== "all") {
+      filteredOrders = filterOrders(
+        filteredOrders,
+        "pickedUp",
+        this.state.pickedUp
+      );
+    }
 
     // filter by search and pickedUp
     if (search !== "") {
