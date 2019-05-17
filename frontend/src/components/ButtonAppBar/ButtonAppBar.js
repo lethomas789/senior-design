@@ -364,22 +364,22 @@ class ButtonAppBar extends Component {
                     <span>
                       <MenuItem
                         aria-haspopup="true"
-                        onClick={this.handleAccountClick}
+                        onClick={this.handleAdminClick}
                         style={{ fontFamily: "Raleway" }}
                       >
                         Admin Menu
                       </MenuItem>
 
                       <Menu
-                        anchorEl={anchorElAccount}
-                        open={Boolean(anchorElAccount)}
-                        onClose={this.handleMenuCloseAccount}
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={this.handleMenuClose}
                       >
                         <MenuItem
                           component={Link}
                           to={editClubRoute}
                           color="inherit"
-                          onClick={this.handleMenuCloseAccount}
+                          onClick={this.handleMenuClose}
                         >
                           Edit Club Info
                         </MenuItem>
@@ -388,7 +388,7 @@ class ButtonAppBar extends Component {
                           component={Link}
                           to={addProductRoute}
                           color="inherit"
-                          onClick={this.handleMenuCloseAccount}
+                          onClick={this.handleMenuClose}
                         >
                           Add Items
                         </MenuItem>
