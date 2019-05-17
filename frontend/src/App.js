@@ -1,5 +1,10 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  withRouter,
+  Switch
+} from "react-router-dom";
 import "./App.css";
 import About from "./components/About/About";
 import Signup from "./components/Signup/Signup";
@@ -22,17 +27,17 @@ import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecov
 import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-import SuccessfulPayment from './components/SuccesfulPayment/SuccessfulPayment';
+import SuccessfulPayment from "./components/SuccesfulPayment/SuccessfulPayment";
 import { connect } from "react-redux";
 import actions from "./store/actions";
-import axios from 'axios';
+import axios from "axios";
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
 import Clubs from "./components/Clubs/Clubs";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
-import GenericPage from './components/GenericPage/GenericPage'
+import GenericPage from "./components/GenericPage/GenericPage";
 
 require("dotenv").config();
 
@@ -79,35 +84,33 @@ class App extends Component {
 
   //check token expiration if user was logged in
   checkIfTokenNeedsRefresh = () => {
-    if(this.props.login === true){
+    if (this.props.login === true) {
       const apiURL = "/api/checkTokenRefresh";
 
-      axios.get(apiURL, {
-        withCredentials: true
-      })
-      .then(res => {
+      axios
+        .get(apiURL, {
+          withCredentials: true
+        })
+        .then(res => {})
+        //err catches 403 forbidden error
+        .catch(err => {
+          //logout user and then display error message
+          this.addNotification({
+            title: "Error",
+            message: "Token Expired Please Login Again",
+            type: "danger"
+          });
 
-      })
-      //err catches 403 forbidden error
-      .catch(err => {
-        //logout user and then display error message
-        this.addNotification({
-          title: "Error",
-          message:  "Token Expired Please Login Again",
-          type:  "danger",
+          this.props.updateLogout();
+
+          //goal is to show alert message and then redirect
+          //set timeout, after 4 seconds redirect to login
+          setTimeout(() => {
+            window.location = "/login";
+          }, 4000);
         });
-
-        this.props.updateLogout();
-
-        //goal is to show alert message and then redirect
-        //set timeout, after 4 seconds redirect to login
-        setTimeout(() => {
-           window.location = "/login";
-        }, 4000);
-
-      })
     }
-  }
+  };
 
   componentDidMount() {
     // alert("testing to see if token needs to be refreshed");
@@ -115,9 +118,8 @@ class App extends Component {
     //if token is expired, logout user and redirect to login
     this.checkIfTokenNeedsRefresh();
   }
-  
-  render() {
 
+  render() {
     return (
       <Router>
         <ScrollToTop>
@@ -125,161 +127,176 @@ class App extends Component {
             <ButtonAppBar notifier={this.addNotification} />
             <Route exact path="/" component={Home} />
             <Route exact path="/about" component={About} />
-            
-            <Route
-              exact
-              path="/shop"
-              render={props => (
-                <Shop {...props} notifier={this.addNotification} />
-              )}
-            />
-            
-            <Route
-              exact
-              path="/signup"
-              render={() => <Signup notifier={this.addNotification} />}
-            />
 
-            <Route
-              exact
-              path="/login"
-              render={props => (
-                <Login {...props} notifier={this.addNotification} />
-              )}
-            />
+            <Switch>
+              <Route
+                exact
+                path="/shop"
+                render={props => (
+                  <Shop {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              exact
-              path="/cart"
-              render={props => (
-                <CartView {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/signup"
+                render={() => <Signup notifier={this.addNotification} />}
+              />
 
-            <Route 
-              path="/vendorProducts/:vid" 
-              render={props => (
-                <VendorView {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/login"
+                render={props => (
+                  <Login {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              exact
-              path="/abcdefg/vendorSignup"
-              render={props => (
-                <VendorSignup {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/cart"
+                render={props => (
+                  <CartView {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              exact
-              path="/editClubInfo"
-              render={props => (
-                <EditClubInfo {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                path="/vendorProducts/:vid"
+                render={props => (
+                  <VendorView {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              exact
-              path="/addProduct"
-              render={props => (
-                <AddProduct {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/abcdefg/vendorSignup"
+                render={props => (
+                  <VendorSignup {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              exact
-              path="/orderHistory"
-              render={props => (
-                <OrderHistory {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/editClubInfo"
+                render={props => (
+                  <EditClubInfo {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              path="/itemDetails/:vid/:pid"
-              render={props => (
-                <ShopItemDetailed {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/addProduct"
+                render={props => (
+                  <AddProduct {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route 
-              path="/aboutClub/:vid" 
-              render={props => (
-                <AboutClub {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/orderHistory"
+                render={props => (
+                  <OrderHistory {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              path="/editItem"
-              render={props => (
-                <EditItemView {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                path="/itemDetails/:vid/:pid"
+                render={props => (
+                  <ShopItemDetailed
+                    {...props}
+                    notifier={this.addNotification}
+                  />
+                )}
+              />
 
-            <Route 
-              exact 
-              path="/clubs" 
-              render = {props => (
-                <Clubs {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                path="/aboutClub/:vid"
+                render={props => (
+                  <AboutClub {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route 
-              exact 
-              path="/accountInfo" 
-              render = {props => (
-                <AccountInfo {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                path="/editItem"
+                render={props => (
+                  <EditItemView {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              exact
-              path="/recoverPassword"
-              render={props => (
-                <RecoverPassword {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/clubs"
+                render={props => (
+                  <Clubs {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              path="/inputNewPassword"
-              render={props => (
-                <InputRecoveryPassword
-                  {...props}
-                  notifier={this.addNotification}
-                />
-              )}
-            />
+              <Route
+                exact
+                path="/accountInfo"
+                render={props => (
+                  <AccountInfo {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              path="/emailConfirmation/:token"
-              render={props => (
-                <EmailConfirmation {...props} notifier={this.addNotification} />
-              )}
-            />
+              <Route
+                exact
+                path="/recoverPassword"
+                render={props => (
+                  <RecoverPassword {...props} notifier={this.addNotification} />
+                )}
+              />
 
-            <Route
-              path="/page"
-              render={props => (
-                <GenericPage
-                  {...props}
-                  notifier={this.addNotification}
-                />
-              )}
-            />
+              <Route
+                path="/inputNewPassword"
+                render={props => (
+                  <InputRecoveryPassword
+                    {...props}
+                    notifier={this.addNotification}
+                  />
+                )}
+              />
 
-            <Route
-              exact 
-              path="/successfulPayment"
-              render={props => (
-                <GenericPage
-                  {...props}
-                  notifier={this.addNotification}
-                  pageText={"Thanks for purchasing. Please check your e-mail inbox for an order receipt."}
-                />
-              )}
-            />
-            
-            {/* <Route exact path="/successfulPayment" component = {SuccessfulPayment}/> */}
+              <Route
+                path="/emailConfirmation/:token"
+                render={props => (
+                  <EmailConfirmation
+                    {...props}
+                    notifier={this.addNotification}
+                  />
+                )}
+              />
+
+              <Route
+                path="/page"
+                render={props => (
+                  <GenericPage {...props} notifier={this.addNotification} />
+                )}
+              />
+
+              <Route
+                exact
+                path="/successfulPayment"
+                render={props => (
+                  <GenericPage
+                    {...props}
+                    notifier={this.addNotification}
+                    pageText={
+                      "Thanks for purchasing. Please check your e-mail inbox for an order receipt."
+                    }
+                  />
+                )}
+              />
+
+              <Route
+                render={props => (
+                  <GenericPage
+                    {...props}
+                    notifier={this.addNotification}
+                    pageText={"Sorry, not a valid page."}
+                  />
+                )}
+              />
+            </Switch>
 
             <Footer />
             <ReactNotification ref={this.notificationDOMRef} />
@@ -309,4 +326,7 @@ const mapDispatchToProps = dispatch => {
   };
 };
 
-export default connect(mapStateToProps, mapDispatchToProps)(App);
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
