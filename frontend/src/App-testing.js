@@ -7,7 +7,6 @@ import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import ButtonAppBar from "./components/ButtonAppBar/ButtonAppBar";
 import Shop from "./components/Shop/Shop";
-import Cart from "./components/Cart/Cart";
 import VendorView from "./components/VendorView/VendorView";
 import VendorSignup from "./components/VendorSignup/VendorSignup";
 import EditClubInfo from "./components/EditClubInfo/EditClubInfo";
@@ -19,7 +18,7 @@ import Footer from "./components/Footer/Footer";
 import AccountInfo from "./components/AccountInfo/AccountInfo";
 import RecoverPassword from "./components/RecoverPassword/RecoverPassword";
 import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecoveryPassword";
-import CartView from "./components/CartView/CartView";
+// import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import SuccessfulPayment from './components/SuccesfulPayment/SuccessfulPayment';
@@ -38,9 +37,9 @@ require("dotenv").config();
 
 const history = createBrowserHistory();
 
-// const LocationDisplay = withRouter(({location}) => (
-//   <div data-testid="location-display">{location.pathname}</div>
-// ))
+const LocationDisplay = withRouter(({location}) => (
+  <div data-testid="location-display">{location.pathname}</div>
+))
 
 /*
 axios.interceptors.request.use(config => {
@@ -148,13 +147,13 @@ class App extends Component {
               )}
             />
 
-            <Route
+            {/* <Route
               exact
               path="/cart"
               render={props => (
                 <CartView {...props} notifier={this.addNotification} />
               )}
-            />
+            /> */}
 
             <Route 
               path="/vendorProducts/:vid" 
@@ -285,6 +284,7 @@ class App extends Component {
             <ReactNotification ref={this.notificationDOMRef} />
           </div>
         </ScrollToTop>
+        <LocationDisplay />
       </Router>
     );
   }
