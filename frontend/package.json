@@ -11,7 +11,7 @@
     "firebase": "^5.8.6",
     "history": "^4.7.2",
     "material-ui-responsive-menu": "^1.19.3",
-    "paypal-checkout": "^4.0.267",
+    "paypal-checkout": "^4.0.268",
     "query-string": "^6.4.2",
     "react": "^16.7.0",
     "react-alice-carousel": "^1.13.1",
@@ -47,5 +47,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "dom-testing-library": "^4.1.0",
+    "jest-dom": "^3.2.2",
+    "react-testing-library": "^7.0.0"
+  }
 }
