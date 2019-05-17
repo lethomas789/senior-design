@@ -8,6 +8,7 @@ import "react-alice-carousel/lib/alice-carousel.css";
 import image1 from "../../images/muclubs.jpg";
 import image2 from "../../images/foodtruck.jpg";
 import image3 from "../../images/horses.jpg";
+import Hidden from "@material-ui/core/Hidden";
 
 export default class Home extends Component {
   render() {

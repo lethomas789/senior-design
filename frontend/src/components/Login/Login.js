@@ -280,7 +280,7 @@ class Login extends Component {
         <div id="loginForms">
           <Paper className="paperContainer">
             <h1> Login </h1>
-            <div className="textForm" id="row">
+            <div className="testFormm" id="row">
               <TextField
                 id="outline-simple-start-adornment"
                 label="Email"
@@ -289,7 +289,7 @@ class Login extends Component {
                 onKeyDown={this.handleEnter}
               />
             </div>
-            <div className="textForm" id="row">
+            <div className="textFormm" id="row">
               <TextField
                 type="password"
                 label="Password"
