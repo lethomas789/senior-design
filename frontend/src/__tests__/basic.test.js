@@ -123,7 +123,7 @@ describe("Home Component", () => {
 
   it("This test should fail.", () => {
     const { getByText } = renderWithRouter(<Home />);
-    getByText("FAIL");
+    getByText("This text does not exist on the screen.");
   });
 });
 
@@ -146,9 +146,7 @@ describe("Clubs Component", () => {
 
     axios.get.mockResolvedValue(response);
     const component = create(
-      <MemoryRouter>
         <Clubs />
-      </MemoryRouter>
     );
 
     const instance = component.getInstance();
