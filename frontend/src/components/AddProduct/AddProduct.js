@@ -298,7 +298,7 @@ class AddProduct extends Component {
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
             
-            <div className = {this.state.itemShowStock} id="row">
+            {/* <div className = {this.state.itemShowStock} id = "row"> */}
             <div className = "textForm" id = "row">
               <TextField
                 label="Product Stock"
@@ -309,7 +309,7 @@ class AddProduct extends Component {
                 style={style.field}
               />
               </div>
-            </div>
+            {/* </div> */}
 
             <FormControl component="fieldset">
             <div className = "textForm">

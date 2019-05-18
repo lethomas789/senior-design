@@ -10,8 +10,7 @@ export default class About extends Component {
           <div>About Us</div>
           {/* <div>4 students trying to inspire</div> */}
         </header>
-        <div className="about-main-image">
-        </div>
+
         <section className="about-info">
         <div className = "about-info-text">
             We are a group of Computer Science seniors and this website is our senior design final project.
@@ -19,10 +18,16 @@ export default class About extends Component {
             modern technologies such as React, Node, Firebase, and Google Cloud Services. 
             </div>
         </section>
+
+
+        <div className="about-main-image">
+        </div>
+
+       
         
-        <section className="about-link-box about-link-box-1"><div className = "hero-texttt">CONTACT</div></section>
+        {/* <section className="about-link-box about-link-box-1"><div className = "hero-texttt">CONTACT</div></section>
  
-        <section className="about-link-box about-link-box-2"><div className = "hero-texttt">FAQ</div></section>
+        <section className="about-link-box about-link-box-2"><div className = "hero-texttt">FAQ</div></section> */}
         {/* <section className="about-contact-box">
           BOX TO HOLD CONTACT US INFO?
         </section>

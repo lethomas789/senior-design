@@ -17,4 +17,17 @@
 #order-history-items-container {
     font-family: 'Raleway';
     /* height: 95vh; */
+    min-height: 95vh;
 }
+
+@media (max-width: 40em) {
+    #order-history-container {
+        min-height: 90vh;
+        width: 80vw;
+    }
+
+
+
+}
+
+
