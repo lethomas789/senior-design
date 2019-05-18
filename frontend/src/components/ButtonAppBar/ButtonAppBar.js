@@ -416,6 +416,16 @@ class ButtonAppBar extends Component {
                     About
                   </MenuItem>
 
+                  <MenuItem
+                  component={Link}
+                  to="/clubs"
+                  color="inherit"
+                  style={{ fontFamily: "Raleway" }}
+                >
+                  Clubs
+                </MenuItem>
+
+
                   {!this.props.loginValue ? (
                     <MenuItem
                       component={Link}
@@ -505,6 +515,8 @@ class ButtonAppBar extends Component {
                 ""
               )}
 
+
+              {/* REGULAR NAV BAR */}
               {/* NAV BUTTONS */}
               <div id="navLink">
                 {/* ADMIN BUTTONS */}

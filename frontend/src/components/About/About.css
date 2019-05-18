@@ -59,3 +59,29 @@
   grid-column: 2 / span 2;
 }
 
+
+.greater-containerr {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.about-containerr {
+  display: grid;
+  width: 70vw;
+  margin: 0 auto;
+  grid-template-columns: 1fr 1fr 1fr;
+  grid-row-gap: 15px;
+  grid-column-gap: 10px;
+}
+
+.about-headerr {
+  padding-top: 20px;
+  font-size: 36px;
+  grid-column: 1 / span 3;
+  justify-self: center;
+  justify-items: center;
+  font-family: 'Comfortaa', sans-serif;
+}
+

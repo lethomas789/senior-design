@@ -217,7 +217,6 @@ p {
   .each-fade .image-container {
     width: 75%;
     overflow: hidden;
-    height: 50vh;
   }
 
   .slideImage {
