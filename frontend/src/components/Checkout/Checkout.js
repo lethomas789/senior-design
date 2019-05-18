@@ -83,7 +83,7 @@ class Checkout extends Component {
       // if apparrel, concat the size to the name
       if (this.props.cartItems[i].isApparel === true) {
         paypalItem.name = paypalItem.name.concat(
-          " - ",
+          " : ",
           this.props.cartItems[i].size
         );
       }
