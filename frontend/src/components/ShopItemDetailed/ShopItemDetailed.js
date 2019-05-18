@@ -355,6 +355,19 @@ class ShopItemDetailed extends Component {
     return <span className="stock">{text}</span>;
   };
 
+  //calculate total number of items purchased and update cart
+  totalAmountPurchased = (items) => {
+    var amtPurchased = 0;
+    for(let i = 0; i < items.length; i++){
+      amtPurchased = amtPurchased + items[i].amtPurchased
+    }
+
+    //update cart badge based on number of items in user's cart
+    this.props.updateAmountPurchased(amtPurchased);
+  }
+
+
+
   addApparelToCart = () => {
     const apiURL = '/api/getUserCart/addItems';
     axios
@@ -385,6 +398,7 @@ class ShopItemDetailed extends Component {
             .then(res => {
               //after getting cart info, update redux store container
               this.props.updateItems(res.data.data);
+              this.totalAmountPurchased(res.data.data);
               //switch from alert to notifier
               this.props.notifier({
                 title: "Success",
@@ -562,6 +576,7 @@ class ShopItemDetailed extends Component {
                 .then(res => {
                   //after getting cart info, update redux store container
                   this.props.updateItems(res.data.data);
+                  this.totalAmountPurchased(res.data.data);
                   this.props.notifier({
                     title: "Success",
                     message: "Item added to cart.",
@@ -864,7 +879,13 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.GET_VENDOR_PRODUCTS,
         vendor: newVendor
-      })
+      }),
+    //update badge amount for cart, total number of items/quantity purchased
+    updateAmountPurchased: amount => 
+    dispatch({
+      type: actions.UPDATE_AMOUNT_PURCHASED,
+      amountPurchased: amount
+    })
   };
 };
 

@@ -127,12 +127,24 @@ class CartView extends Component {
    else {
     //render carts for each vendor
     var renderCarts = this.state.allVendors.map(vendor => {
+      var vendorGroupName = '';
+      var listOfVendors = this.props.vendors;
+
+      //extract vendor name
+      for(let i = 0; i < listOfVendors.length; i++){
+        if(vendor === listOfVendors[i].vid){
+          vendorGroupName = listOfVendors[i].vendorName;
+          break;
+        }
+      }
+
+
       //for each vendor, want to render a cart
       for (let i = 0; i < this.state.vendorItemsSeparated.length; i++) {
         var currentListItems = this.state.vendorItemsSeparated[i];
         if(currentListItems[0].vid === vendor){
           return(
-            <Cart key = {vendor} passedAllVendors = {this.state.allVendors} updateVendorsView = {this.updateVendorsView} passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier} updateAfterDelete = {this.updateAfterDelete} handleRedirect={this.handleRedirect} />
+            <Cart key = {vendor} vendorName={vendorGroupName} passedAllVendors = {this.state.allVendors} updateVendorsView = {this.updateVendorsView} passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier} updateAfterDelete = {this.updateAfterDelete} handleRedirect={this.handleRedirect} />
           )
         }
       }
@@ -173,7 +185,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     items: state.cart.items,
-    login: state.auth.login
+    login: state.auth.login,
+    vendors: state.vendor.vendors
   };
 };
 
