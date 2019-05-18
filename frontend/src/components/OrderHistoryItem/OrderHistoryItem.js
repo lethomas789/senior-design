@@ -121,7 +121,7 @@ class OrderHistoryItem extends Component {
                 checked={this.state.pickedUp}
                 color="primary"
                 value="pickedUp"
-                style={{ position: "absolute", right: "30px" }}
+                style={{ position: "absolute", right: "100px" }}
                 onChange={() => this.handleUpdateOrder(oid, vid)}
               />
             ) : (

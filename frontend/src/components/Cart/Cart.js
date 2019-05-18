@@ -159,7 +159,6 @@ class Cart extends Component {
             amtPurchased={result.amtPurchased}
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
-            size={result.size}
             isApparel={result.isApparel}
             updateItemTotal = {this.updateItemTotal}
             notifier = {this.props.notifier}
@@ -201,6 +200,7 @@ class Cart extends Component {
             cartItems={this.state.cart}
             totalValue={this.state.total}
             notifier={this.props.notifier}
+            handleRedirect={this.props.handleRedirect}
           />
         </div>
       </div>

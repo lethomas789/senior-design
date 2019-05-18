@@ -292,7 +292,7 @@ class App extends Component {
                   <GenericPage
                     {...props}
                     notifier={this.addNotification}
-                    pageText={"Sorry, not a valid page."}
+                    pageText={"Error 404 not found."}
                   />
                 )}
               />

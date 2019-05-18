@@ -53,8 +53,9 @@ class Checkout extends Component {
           return_url: "https://193ecommerce.com/",
           cancel_url: "https://193ecommerce.com/cart"
         },
-        transactions: []
-        // note_to_payer: "Pickup the sale at this location:" // does a popup, not incuded in transaction on paypal
+        transactions: [],
+        note_to_payer:
+          "Please see club page or order receipt for info on pickup location/time." // does a popup, not incuded in transaction on paypal
       },
       // cartTotal: this.props.total
       cartTotal: this.props.totalValue
@@ -106,7 +107,7 @@ class Checkout extends Component {
     this.state.paymentOptions.transactions = paypalTransactionsArray;
 
     //update transaction total based on total summed from items for each vendor
-    this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
+    // this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
     this.state.paymentOptions.transactions[0].amount.total = String(
       this.props.totalValue
     );
@@ -265,6 +266,8 @@ class Checkout extends Component {
               //update new items and redirect to successful payment page
               this.props.updateItems(res.data.data);
               window.location = "/successfulPayment";
+              // this.setState(() => ({ toRedirect: true }));
+              // this.props.handleRedirect();
             } else {
               this.props.notifier({
                 title: "Error",
@@ -419,9 +422,9 @@ class Checkout extends Component {
   render() {
     const { classes } = this.props;
 
+
     return (
       <div>
-        {/* <button onClick = {this.checkStock(this.props.items)}> Check Stock </button> */}
         <Fragment>
           {/* <PaypalExpressBtn */}
           <PaypalButton

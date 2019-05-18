@@ -4,7 +4,7 @@ import axios from "axios";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
 import "./CartView.css";
-import { Link } from 'react-router-dom';
+import { Link, Redirect } from 'react-router-dom';
 import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
 
 //split cart into groups, grouped by vendors
@@ -16,8 +16,15 @@ class CartView extends Component {
     this.state = {
       allVendors: [],
       vendorItemsSeparated: [],
-      currentCartItems: this.props.items
+      currentCartItems: this.props.items,
+      toRedirect: false,
     };
+  }
+
+  // handle redirect called from checkout on successful purchase
+  handleRedirect = () => {
+    // this.setState(() => ({ toRedirect: true }));
+    this.setState({ toRedirect: true });
   }
 
   //pass list of vendors to function to categorize items
@@ -98,8 +105,18 @@ class CartView extends Component {
   }
 
   render() {
+
+    if (this.state.toRedirect === true) {
+      const pageText =
+        "Thanks for purchasing. Please check your e-mail inbox for an order receipt.";
+      return (
+        <Redirect
+          to={{ pathname: "/page/successfulPayment", state: { pageText } }}
+        />
+      );
+    }
     // if empty cart, display empty cart text
-    if (this.state.allVendors.length === 0) {
+    else if (this.state.allVendors.length === 0) {
       var renderCarts = (
         <div id='empty-cart'>
           No items in cart. Click here to <Link to="/shop"> Shop </Link>
@@ -115,7 +132,7 @@ class CartView extends Component {
         var currentListItems = this.state.vendorItemsSeparated[i];
         if(currentListItems[0].vid === vendor){
           return(
-            <Cart key = {vendor} passedAllVendors = {this.state.allVendors} updateVendorsView = {this.updateVendorsView} passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier} updateAfterDelete = {this.updateAfterDelete}/>
+            <Cart key = {vendor} passedAllVendors = {this.state.allVendors} updateVendorsView = {this.updateVendorsView} passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier} updateAfterDelete = {this.updateAfterDelete} handleRedirect={this.handleRedirect} />
           )
         }
       }

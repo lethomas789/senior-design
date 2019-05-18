@@ -1,4 +1,5 @@
 import React from "react";
+import PropTypes from 'prop-types'
 import ReactDOM from "react-dom";
 import scriptLoader from "react-async-script-loader";
 import paypal from "paypal-checkout";
@@ -94,23 +95,37 @@ class PaypalButton extends React.Component {
       onError,
       onCancel,
       items,
-      onNotEnoughStock
+      onNotEnoughStock,
+      paymentOptions
     } = this.props;
 
     const { showButton } = this.state;
-    console.log("ITEMS: ", items);
 
-    const payment = () =>
-      paypal.rest.payment.create(env, client, {
-        transactions: [
-          {
-            amount: {
-              total,
-              currency
+    // const payment = () =>
+    //   paypal.rest.payment.create(env, client, {
+    //     transactions: [
+    //       {
+    //         amount: {
+    //           total,
+    //           currency
+    //         }
+    //       }
+    //     ]
+    //   });
+
+      let payment = () => {
+        return paypal.rest.payment.create(this.props.env, this.props.client, Object.assign({
+            transactions: [
+                { amount: { total, currency } }
+            ]
+        }, paymentOptions), {
+            input_fields: {
+                // any values other than null, and the address is not returned after payment execution.
+                no_shipping: this.props.shipping
             }
-          }
-        ]
-      });
+        });
+    }
+
 
     // onAuthorize occurs once the user authorizes the purchase by choosing payment type
     const onAuthorize = (data, actions) => {
@@ -195,6 +210,30 @@ class PaypalButton extends React.Component {
     );
   }
 }
+
+PaypalButton.propTypes = {
+  currency: PropTypes.string.isRequired,
+  total: PropTypes.number.isRequired,
+  client: PropTypes.object.isRequired,
+  style: PropTypes.object
+}
+
+PaypalButton.defaultProps = {
+  paymentOptions: {},
+  env: 'sandbox',
+  // null means buyer address is returned in the payment execution response
+  shipping: null,
+  onSuccess: (payment) => {
+      console.log('The payment was succeeded!', payment);
+  },
+  onCancel: (data) => {
+      console.log('The payment was cancelled!', data)
+  },
+  onError: (err) => {
+      console.log('Error loading Paypal script!', err)
+  }
+};
+
 
 export default scriptLoader("https://www.paypalobjects.com/api/checkout.js")(
   PaypalButton
