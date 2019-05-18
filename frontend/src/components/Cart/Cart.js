@@ -5,7 +5,7 @@ import { connect } from "react-redux";
 import actions from "../../store/actions";
 import Grid from "@material-ui/core/Grid";
 import CartItem from "../CartItem/CartItem";
-import Checkout from "../Checkout/Checkout";  
+import Checkout from "../Checkout/Checkout";
 import { Link } from "react-router-dom";
 import EmptyItem from "../EmptyItem/EmptyItem";
 import ReactNotification from "react-notifications-component";
@@ -53,7 +53,7 @@ class Cart extends Component {
   };
 
   //update total price based on quantity
-  //if user changes quantity in selector, find the matching item via pid and update total price/amount purchased 
+  //if user changes quantity in selector, find the matching item via pid and update total price/amount purchased
   updateItemTotal = (itemID, newTotal, amt) => {
     var currentCart = this.state.cart;
     for (let i = 0; i < currentCart.length; i++) {
@@ -77,44 +77,45 @@ class Cart extends Component {
 
   //update cart of items in current vendor if an item is removed from CartItem
   //function passed as prop to child, child calls parent function to update state of items in cart
-  updateCartAfterDelete = (newItems) => {
-    this.setState({
-      cart: newItems
-    }, () => {
-      //no more items for this vendor cart, update CartView to remove this cart
-      if(this.state.cart.length === 0){
-        //reload page only if no more items in cart for a vendor
-        //work around for ppxo error, cleanup error for paypal when trying to unmount component?
-        window.location.reload();
+  updateCartAfterDelete = newItems => {
+    this.setState(
+      {
+        cart: newItems
+      },
+      () => {
+        //no more items for this vendor cart, update CartView to remove this cart
+        if (this.state.cart.length === 0) {
+          //reload page only if no more items in cart for a vendor
+          //work around for ppxo error, cleanup error for paypal when trying to unmount component?
+          window.location.reload();
 
-        //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
-        //error window clean up?
+          //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
+          //error window clean up?
 
-        // console.log("passed all vendors to view", this.state.vendorsInView);
-        // var currentVendorsView = this.state.vendorsInView;
-        // var vidIndex = 0;
+          // console.log("passed all vendors to view", this.state.vendorsInView);
+          // var currentVendorsView = this.state.vendorsInView;
+          // var vidIndex = 0;
 
-        // //find location of vid, remove from array of current vendors to render
-        // for(let i = 0; i < currentVendorsView.length; i++){
-        //   if(currentVendorsView[i] === this.state.vendor){
-        //     vidIndex = i;
-        //     break;
-        //   }
-        // }
+          // //find location of vid, remove from array of current vendors to render
+          // for(let i = 0; i < currentVendorsView.length; i++){
+          //   if(currentVendorsView[i] === this.state.vendor){
+          //     vidIndex = i;
+          //     break;
+          //   }
+          // }
 
-        // console.log("vid to remove", this.state.vendor);
-        // console.log("location of vid", vidIndex);
+          // console.log("vid to remove", this.state.vendor);
+          // console.log("location of vid", vidIndex);
 
-        // currentVendorsView.splice(Number(vidIndex),1);
-        // console.log("new vendors", currentVendorsView);
-        // this.props.updateVendorsView(currentVendorsView);
+          // currentVendorsView.splice(Number(vidIndex),1);
+          // console.log("new vendors", currentVendorsView);
+          // this.props.updateVendorsView(currentVendorsView);
+        } else {
+          this.updateTotal();
+        }
       }
-
-      else{
-        this.updateTotal();
-      }
-    })
-  }
+    );
+  };
 
   //get cart from server for user
   componentDidMount() {
@@ -140,10 +141,10 @@ class Cart extends Component {
             totalPrice={result.totalPrice}
             size={result.size}
             isApparel={result.isApparel}
-            updateItemTotal = {this.updateItemTotal}
-            notifier = {this.props.notifier}
-            updateAfterDelete = {this.props.updateAfterDelete}
-            updateCartAfterDelete = {this.updateCartAfterDelete}
+            updateItemTotal={this.updateItemTotal}
+            notifier={this.props.notifier}
+            updateAfterDelete={this.props.updateAfterDelete}
+            updateCartAfterDelete={this.updateCartAfterDelete}
           />
         );
       } else {
@@ -160,10 +161,10 @@ class Cart extends Component {
             productPrice={result.productPrice}
             totalPrice={result.totalPrice}
             isApparel={result.isApparel}
-            updateItemTotal = {this.updateItemTotal}
-            notifier = {this.props.notifier}
-            updateAfterDelete = {this.props.updateAfterDelete}
-            updateCartAfterDelete = {this.updateCartAfterDelete}
+            updateItemTotal={this.updateItemTotal}
+            notifier={this.props.notifier}
+            updateAfterDelete={this.props.updateAfterDelete}
+            updateCartAfterDelete={this.updateCartAfterDelete}
           />
         );
       }
@@ -174,7 +175,9 @@ class Cart extends Component {
         {/* TABLE HEADERS */}
         <span className="table-header table-row">
           <span>
-            <strong>My Cart ({this.state.cart.length})</strong>
+            <strong>
+              Cart ({this.state.cart.length})
+            </strong>
           </span>
           <span>
             <strong>Price</strong>
@@ -188,7 +191,6 @@ class Cart extends Component {
         </span>
 
         {/* TABLE DATA */}
-        {/* TODO have conditional to render empty page */}
         {cart}
 
         <div id="total-text">Total</div>
