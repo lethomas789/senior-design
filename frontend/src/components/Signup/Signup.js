@@ -159,7 +159,8 @@ class Signup extends Component {
           this.props.notifier({
             title: "Error",
             message: res.data.message + " Please try again.",
-            type: "warning"
+            type: "warning",
+            time: 5000
           });
         }
       })
@@ -167,7 +168,8 @@ class Signup extends Component {
         this.props.notifier({
           title: "Error",
           message: err.toString(),
-          type: "danger"
+          type: "danger",
+          time: 5000,
         });
       });
   };

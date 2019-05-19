@@ -12,7 +12,7 @@ import Divider from "@material-ui/core/Divider";
 //import CardActions from '@material-ui/core/CardActions';
 //import CardContent from '@material-ui/core/CardContent';
 //import CardMedia from '@material-ui/core/CardMedia';
-import Typography from "@material-ui/core/Typography";
+// import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = theme => ({

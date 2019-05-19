@@ -2,9 +2,9 @@ import React, { Component } from "react";
 import "./EditClubInfo.css";
 import axios from "axios";
 import { connect } from "react-redux";
-import actions from "../../store/actions";
+// import actions from "../../store/actions";
 import TextField from "@material-ui/core/TextField";
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 
 class EditClubInfo extends Component {

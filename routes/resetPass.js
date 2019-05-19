@@ -12,7 +12,8 @@ require('dotenv').config();
 
 router.post("/", (req, res) => {
   // var host = req.headers.host;
-  var host = 'localhost:3000'
+  // var host = 'http:/localhost:3000'
+  var host = "https://193ecommerce.com"
   if (req.body.params) {
     var { email } = req.body.params;
   } else {
@@ -70,7 +71,7 @@ router.post("/", (req, res) => {
         `Please click on the following link within one hour of receiving it: `;
       
       const link = 
-        `http://localhost:3000/inputNewPassword/?token=${token} \n\n`;
+        `${host}/inputNewPassword/?token=${token} \n\n`;
 
       const introEnd = 
         `If you did not request this, please ignore this email and your

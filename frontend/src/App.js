@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import {
   BrowserRouter as Router,
   Route,
-  withRouter,
   Switch
 } from "react-router-dom";
 import "./App.css";
@@ -12,7 +11,7 @@ import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import ButtonAppBar from "./components/ButtonAppBar/ButtonAppBar";
 import Shop from "./components/Shop/Shop";
-import Cart from "./components/Cart/Cart";
+// import Cart from "./components/Cart/Cart";
 import VendorView from "./components/VendorView/VendorView";
 import VendorSignup from "./components/VendorSignup/VendorSignup";
 import EditClubInfo from "./components/EditClubInfo/EditClubInfo";
@@ -27,7 +26,7 @@ import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecov
 import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-import SuccessfulPayment from "./components/SuccesfulPayment/SuccessfulPayment";
+// import SuccessfulPayment from "./components/SuccesfulPayment/SuccessfulPayment";
 import { connect } from "react-redux";
 import actions from "./store/actions";
 import axios from "axios";
@@ -43,7 +42,7 @@ import Privacy from "./components/Privacy/Privacy";
 import Faq from "./components/Faq/Faq";
 require("dotenv").config();
 
-const history = createBrowserHistory();
+// const history = createBrowserHistory();
 
 // const LocationDisplay = withRouter(({location}) => (
 //   <div data-testid="location-display">{location.pathname}</div>
@@ -69,7 +68,7 @@ class App extends Component {
     title = "Error",
     message = "Sorry, an error occurred.",
     type = "danger",
-    duration = 2500
+    duration = 3500
   }) => {
     this.notificationDOMRef.current.addNotification({
       title: title,
@@ -118,7 +117,7 @@ class App extends Component {
     // alert("testing to see if token needs to be refreshed");
     //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
     //if token is expired, logout user and redirect to login
-    this.checkIfTokenNeedsRefresh();
+    // this.checkIfTokenNeedsRefresh();
   }
 
   render() {

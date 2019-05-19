@@ -120,14 +120,21 @@ class ShopItem extends Component {
       <div className="shopitem-container">
         <div onClick={this.showDetailed} className="box">
           <div className="center">
-            <img src={this.props.imageSrc} alt="Item" width="100%" height="100%" />
+            <img
+              src={this.props.imageSrc}
+              alt="Item"
+              width="100%"
+              height="100%"
+            />
           </div>
         </div>
 
         <div className="resizing">
           <h5 className="shopitem-productname">{this.props.productName}</h5>
-          <div>
-            ${this.props.productPrice}
+          <div style={{ marginTop: "10px" }}>
+            <span style={{ color: "rgba(14, 138, 240, 0.822)" }}>
+              ${Number(this.props.productPrice).toFixed(2)}
+            </span>
             {/* <Button size="small" color="primary" onClick={this.addItem}>
               Add To Cart
             </Button> */}
