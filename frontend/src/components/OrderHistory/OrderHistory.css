@@ -20,10 +20,23 @@
     min-height: 95vh;
 }
 
+.centerize {
+    align-items: center;
+}
+
 @media (max-width: 40em) {
     #order-history-container {
         min-height: 90vh;
         width: 80vw;
+    }
+
+    #order-history-filters-container {
+        display: flex;
+        /* width: 950px; */
+        /* justify-content: space-between; */
+        margin-top: 20px;
+        margin-bottom: 20px;
+        align-items: center;
     }
 
 

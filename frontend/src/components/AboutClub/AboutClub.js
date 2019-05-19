@@ -16,8 +16,8 @@ class ClubInfo extends Component {
   render() {
     const { vendorName, bio, bioPictures } = this.props;
     return (
-        <div className = "greater-container">
-        <div className = "about-container">
+        <div className = "greater-containerr">
+        <div className = "about-containerr">
         <header className = "about-header">{vendorName}</header>
         {/* <div className="club-bio">{bio}</div> */}
         <div className = "about-main-imagee">

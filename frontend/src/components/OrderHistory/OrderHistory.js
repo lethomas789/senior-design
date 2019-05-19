@@ -237,6 +237,8 @@ class OrderHistory extends Component {
          * filter/search order history
          */}
 
+        < div className = "centerize">
+
         {/* if admin, display button to switch to logged in user orders */}
         {isAdmin ? (
           <Button
@@ -283,6 +285,7 @@ class OrderHistory extends Component {
               <MenuItem value="desc"> Descending </MenuItem>
             </Select>
           </form>
+          
 
           {/* filter by picked up true/false */}
           <form autoComplete="off">
@@ -307,6 +310,7 @@ class OrderHistory extends Component {
               onChange={this.handleSearch}
             />
           </form>
+        </div>
         </div>
 
         {/* below displays the actual order histories */}

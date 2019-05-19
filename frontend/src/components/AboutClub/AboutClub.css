@@ -159,19 +159,30 @@
 @media (max-width: 40em) {
 
   #about-club-containerr {
-    /* display: grid; */
-    /* grid-template-columns: 1.5fr 2fr; */
-    /* grid-template-columns: 1fr 1fr; */
-    /* grid-template-rows: auto 80vh auto; */
     justify-content: center;
     margin: 0 auto;
     margin-top: 50px;
     /* height: 95vh; */
   }
+
+  .greater-containerr {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: column;
+    padding-bottom: 20px;
+    height: 100vh;
+  }
+
   
   #about-club-container {
     /* display: grid; */
     width: 70vw;
+  }
+
+  .about-containerr {
+    display: grid;
+    width: 70vw;
+    margin: 0 auto;
   }
 
   .club-pictures-container {
@@ -194,6 +205,7 @@
     padding: 60px;
     background-color: white;
     color: black;
+    width: 100px;
   }
   
   
@@ -246,6 +258,7 @@
   
   }
 
+ 
  
 
 }
