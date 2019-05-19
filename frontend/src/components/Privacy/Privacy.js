@@ -84,6 +84,9 @@ Additionally, you can opt out of some of these services by visiting the Digital 
 <p>
 Please note that we do not alter our Site’s data collection and use practices when we see a Do Not Track signal from your browser.
 </p>
+</div>
+
+<div className = "each-question">
 <h2>YOUR RIGHTS</h2>
 <p>
 If you are a European resident, you have the right to access personal information we hold about you and to ask that your personal information be corrected, updated, or deleted. If you would like to exercise this right, please contact us through the contact information below.
@@ -98,6 +101,9 @@ Additionally, if you are a European resident we note that we are processing your
 <p>
 When you place an order through the Site, we will maintain your Order Information for our records unless and until you ask us to delete this information.
 </p>
+</div>
+
+<div className = "each-question">
 <h2>CHANGES</h2>
 <p>
 We may update this privacy policy from time to time in order to reflect, for example, changes to our practices or for other operational, legal or regulatory reasons.
