@@ -2,7 +2,7 @@ import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import "./AboutClub.css";
 import axios from "axios";
-import Slider from 'react-slick';
+import Slider from "react-slick";
 import testPicture from "../../images/wics2.png";
 import Hidden from "@material-ui/core/Hidden";
 
@@ -10,30 +10,37 @@ class ClubInfo extends Component {
   static propTypes = {
     vendorName: PropTypes.string.isRequired,
     bio: PropTypes.string.isRequired,
-    bioPictures: PropTypes.array.isRequired, 
+    bioPictures: PropTypes.array.isRequired
   };
 
   render() {
     const { vendorName, bio, bioPictures } = this.props;
     return (
-        <div className = "greater-containerr">
-        <div className = "about-containerr">
-        <header className = "about-header">{vendorName}</header>
-        {/* <div className="club-bio">{bio}</div> */}
-        <div className = "about-main-imagee">
-        <ClubImages bioPictures={bioPictures} /></div>
 
-        <div className="club-bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique alias libero!</div>
-        {/* <div className="club-links">LINKS BOX</div> */}
+        <div id="about-club-container">
+          <h1 className="club-header">{vendorName}</h1>
+          {/* <div className="club-bio">{bio}</div> */}
+          <ClubImages bioPictures={bioPictures} />
 
-        <Hidden smDown>
+          <div className="club-bio">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus
+            modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit
+            quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique
+            alias libero quia!
+          </div>
+          {/* <div className="club-links">LINKS BOX</div> */}
 
-        <div className="club-links"><div className = "hero-texttt">Events every week!</div></div>
-        {/* <div className="club-meetings">CLUB MEETINGS/PICKUP INFO BOX</div> */}
+          <div className="club-links">
+            <div className="hero-texttt">Events every week!</div>
+          </div>
+          {/* <div className="club-meetings">CLUB MEETINGS/PICKUP INFO BOX</div> */}
 
-        <div className="club-meetings"><div className = "hero-texttt">Shop our merch!</div></div>
-        </Hidden>
-        </div>
+          <div className="club-meetings">
+            <div className="hero-texttt">Shop our merch!</div>
+          </div>
+          <div className="extra">
+            
+          </div>
         </div>
 
     );
@@ -42,8 +49,8 @@ class ClubInfo extends Component {
 
 class ClubImages extends Component {
   static propTypes = {
-    bioPictures: PropTypes.array.isRequired,
-  }
+    bioPictures: PropTypes.array.isRequired
+  };
 
   render() {
     const { bioPictures } = this.props;
@@ -55,18 +62,18 @@ class ClubImages extends Component {
       slidesToScroll: 1,
       autoplay: true,
       autoplaySpeed: 5000,
-      pauseOnHover: true,
-    }
+      pauseOnHover: true
+    };
     return (
       <div className="club-pictures-container">
-        <img src={testPicture} alt="About Club"/>
+        <img src={testPicture} alt="About Club" />
         {/* <Slider {...settings } className="club-pictures-slider">
           {bioPictures.map(img => 
             <img src={img} alt="Img" key={img} className="club-picture"/>
           )}
         </Slider> */}
       </div>
-    )
+    );
   }
 }
 
@@ -130,7 +137,7 @@ export default class AboutClub extends Component {
 
     return (
       // <div id="about-club-container">
-        <ClubInfo vendorName={vendorName} bio={bio} bioPictures={bioPictures} />
+      <ClubInfo vendorName={vendorName} bio={bio} bioPictures={bioPictures} />
       // </div>
     );
   }

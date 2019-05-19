@@ -34,19 +34,29 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // use cors;
 app.use(cors());
 
-app.use(cookieParser('TODO-SECRET'));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 
 //serve react files
 app.use(express.static(path.join(__dirname, "/frontend/build")));
 
+const cookieConfig = {
+  httpOnly: true, // prevent frontend JS from reading cookies
+  // secure: true,     // force https
+  maxAge: 3600000, // cookie expires in 1 hour
+  signed: true
+};
+
 // middleware to extract and verify token from headers
 const checkToken = (req, res, next) => {
-
   if (!req.signedCookies.token) {
     // if no tokens, unauthorized request
     console.log("Unauthorized. No token.");
-    res.clearCookie("token");
-    res.sendStatus(403);
+    res.clearCookie("token", cookieConfig);
+    // res.sendStatus(403);
+    res.json({
+      success: false,
+      message: "Please login to view."
+    });
   } else {
     // if
     next();
@@ -55,18 +65,22 @@ const checkToken = (req, res, next) => {
 
 // middleware to decode token and grab authorized data
 const decodeToken = (req, res, next) => {
-  jwt.verify(req.signedCookies.token, jwtKey.JWTSecret, (err, authorizedData) => {
-    if (err) {
-      // if error, send forbidden (403)
-      console.log("ERROR: could not connect to protected route");
-      res.clearCookie("token");
-      return res.sendStatus(403);
-    } else {
-      // if token is successfully verified, we can use the authorized data
-      req.authorizedData = authorizedData;
-      next();
+  jwt.verify(
+    req.signedCookies.token,
+    process.env.JWT_SECRET,
+    (err, authorizedData) => {
+      if (err) {
+        // if error, send forbidden (403)
+        console.log("ERROR: could not connect to protected route");
+        res.clearCookie("token", cookieConfig);
+        return res.sendStatus(403);
+      } else {
+        // if token is successfully verified, we can use the authorized data
+        req.authorizedData = authorizedData;
+        next();
+      }
     }
-  });
+  );
 };
 
 global.tokenMiddleware = [checkToken, decodeToken];
@@ -89,6 +103,7 @@ const getProductInfo = require("./routes/getProductInfo");
 const stock = require("./routes/stock");
 const resetPass = require("./routes/resetPass");
 const checkTokenRefresh = require("./routes/checkTokenRefresh");
+const logout = require("./routes/logout");
 
 app.use("/api/users", users);
 app.use("/api/signup", signup);
@@ -106,6 +121,7 @@ app.use("/api/getProductInfo", getProductInfo);
 app.use("/api/stock", stock);
 app.use("/api/resetPass", resetPass);
 app.use("/api/checkTokenRefresh", checkTokenRefresh);
+app.use("/api/logout", logout);
 
 //fix react app crashing on refresh
 app.get("*", (req, res) => {

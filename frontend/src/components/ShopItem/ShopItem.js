@@ -120,7 +120,7 @@ class ShopItem extends Component {
       <div className="shopitem-container">
         <div onClick={this.showDetailed} className="box">
           <div className="center">
-            <img src={this.props.imageSrc} width="100%" height="100%" />
+            <img src={this.props.imageSrc} alt="Item" width="100%" height="100%" />
           </div>
         </div>
 
@@ -128,13 +128,12 @@ class ShopItem extends Component {
           <h5 className="shopitem-productname">{this.props.productName}</h5>
           <div>
             ${this.props.productPrice}
-            <Button size="small" color="primary" onClick={this.addItem}>
+            {/* <Button size="small" color="primary" onClick={this.addItem}>
               Add To Cart
-            </Button>
+            </Button> */}
             <Button size="small" color="primary" onClick={this.updateVendor}>
               <Link to={`/vendorProducts/${this.state.vendorID}`}>
-                {" "}
-                More From Vendor{" "}
+                More From Vendor
               </Link>
             </Button>
           </div>

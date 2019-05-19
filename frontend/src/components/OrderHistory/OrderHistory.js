@@ -68,9 +68,15 @@ class OrderHistory extends Component {
       pickedUp: "all",
       search: "",
       searchValue: "",
-      typingTimeout: 0
+      typingTimeout: 0,
+      updateParent: false
     };
   }
+
+  updateParent = () => {
+    console.log("I AM CALLED 1");
+    this.setState({ updateParent: true });
+  };
 
   handleChange = event => {
     this.setState({ [event.target.name]: event.target.value });
@@ -98,7 +104,7 @@ class OrderHistory extends Component {
    *
    * @param {array} orders - array of order objects
    */
-  renderOrders = (orders, index, vid = "null", notifier) => {
+  renderOrders = (orders, index, vid = "null", notifier, updateOrder) => {
     let renderedOrders;
 
     if (orders.length === 0 || orders === undefined) {
@@ -149,6 +155,7 @@ class OrderHistory extends Component {
             items={order.items}
             notifier={notifier}
             vid={vid}
+            updateOrder={updateOrder}
           />
         </Fragment>
       );
@@ -159,6 +166,7 @@ class OrderHistory extends Component {
 
   componentDidMount() {
     const apiURL = "/api/orders/getUserOrders";
+    console.log('HISTORY MOUNTED');
 
     axios
       .get(apiURL, {
@@ -204,7 +212,8 @@ class OrderHistory extends Component {
       filteredOrders = filterOrders(
         filteredOrders,
         "pickedUp",
-        this.state.pickedUp
+        this.state.pickedUp,
+        this.updateParent
       );
     }
 
@@ -223,7 +232,8 @@ class OrderHistory extends Component {
       filteredOrders,
       "user",
       "null",
-      this.props.notifier
+      this.props.notifier,
+      this.updateParent
     );
 
     return (
@@ -346,13 +356,28 @@ class ClubOrders extends Component {
     vid: PropTypes.string.isRequired,
     vendorName: PropTypes.string.isRequired,
     show: PropTypes.string,
-    date: PropTypes.string.isRequired,
+    date: PropTypes.string.isRequired
     // pickedUp: PropTypes.bool.isRequired
   };
 
   state = {
     orders: [],
-    display: true
+    display: true,
+    updateParent: false
+  };
+
+  updateParent = () => {
+    console.log("I AM CALLED 2");
+    this.forceUpdate();
+    // this.setState({ updateParent: true })
+  };
+
+  updateOrder = (oid, pickedUp) => {
+    const index = this.state.orders.findIndex(order => order.oid === oid);
+    const newArr = this.state.orders;
+    newArr[index].oid = oid;
+    newArr[index].pickedUp = pickedUp;
+    this.setState(() => ({ orders: newArr }));
   };
 
   componentDidMount() {
@@ -394,11 +419,7 @@ class ClubOrders extends Component {
     // TODO pickedUp toggling fixes
 
     if (pickedUp !== "all") {
-      filteredOrders = filterOrders(
-        filteredOrders,
-        "pickedUp",
-        this.state.pickedUp
-      );
+      filteredOrders = filterOrders(filteredOrders, "pickedUp", pickedUp);
     }
 
     // filter by search and pickedUp
@@ -416,7 +437,8 @@ class ClubOrders extends Component {
       filteredOrders,
       vendorName,
       vid,
-      this.props.notifier
+      this.props.notifier,
+      this.updateOrder
     );
 
     return (

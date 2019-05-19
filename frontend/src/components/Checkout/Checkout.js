@@ -9,7 +9,7 @@ import { withStyles } from "@material-ui/core/styles";
 // import PaypalExpressBtn from "react-paypal-express-checkout";
 import PaypalButton from "../PaypalButton/PaypalButton";
 import axios from "axios";
-import { withRouter, Redirect } from 'react-router-dom';
+import { withRouter, Redirect } from "react-router-dom";
 
 //styles for checkout button
 const styles = theme => ({
@@ -50,11 +50,12 @@ class Checkout extends Component {
         //   "payment_method": "paypal"
         // },
         redirect_urls: {
-          return_url: "www.google.com",
-          cancel_url: "www.reddit.com"
+          return_url: "https://193ecommerce.com/",
+          cancel_url: "https://193ecommerce.com/cart"
         },
         transactions: [],
-        note_to_payer: "Pickup the sale at this location:" // does a popup, not incuded in transaction on paypal
+        note_to_payer:
+          "Please see club page or order receipt for info on pickup location/time." // does a popup, not incuded in transaction on paypal
       },
       // cartTotal: this.props.total
       cartTotal: this.props.totalValue
@@ -78,6 +79,15 @@ class Checkout extends Component {
 
       //construct new paypal object based on each item in Redux store container
       paypalItem.name = this.props.cartItems[i].productName;
+
+      // if apparrel, concat the size to the name
+      if (this.props.cartItems[i].isApparel === true) {
+        paypalItem.name = paypalItem.name.concat(
+          " : ",
+          this.props.cartItems[i].size
+        );
+      }
+
       paypalItem.price = String(
         this.props.cartItems[i].productPrice.toFixed(2)
       );
@@ -97,7 +107,7 @@ class Checkout extends Component {
     this.state.paymentOptions.transactions = paypalTransactionsArray;
 
     //update transaction total based on total summed from items for each vendor
-    this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
+    // this.state.paymentOptions.transactions[0].amount.total = this.props.totalValue;
     this.state.paymentOptions.transactions[0].amount.total = String(
       this.props.totalValue
     );
@@ -117,62 +127,63 @@ class Checkout extends Component {
   }
 
   //subtract stock for single item
-  subtractStockSingleItem = (item) => {
-    return new Promise( (resolve,reject) => {
-      const apiURL = '/api/stock';
+  subtractStockSingleItem = item => {
+    return new Promise((resolve, reject) => {
+      const apiURL = "/api/stock";
 
       //convert Size to apparel stock, eg. Small -> s_stock
-      var sizeStock = '';
-      switch(item.size){
-        case 'Small':
-          sizeStock = 's_stock';
+      var sizeStock = "";
+      switch (item.size) {
+        case "Small":
+          sizeStock = "s_stock";
           break;
-    
-        case 'Medium':
-          sizeStock = 'm_stock';
+
+        case "Medium":
+          sizeStock = "m_stock";
           break;
-    
-        case 'Large':
-          sizeStock = 'l_stock';
+
+        case "Large":
+          sizeStock = "l_stock";
           break;
-    
-        case 'X-Large':
-          sizeStock = 'xl_stock';
+
+        case "X-Large":
+          sizeStock = "xl_stock";
           break;
-            
-        case 'X-Small':
-          sizeStock = 'xs_stock';
+
+        case "X-Small":
+          sizeStock = "xs_stock";
           break;
-    
+
         default:
-          sizeStock = '';
+          sizeStock = "";
           break;
       }
 
       //make request to subtract stock on server
-      axios.patch(apiURL, {
-        params:{
-          pid: item.pid,
-          isApparel: item.isApparel,
-          size: sizeStock,
-          amt: item.amtPurchased
-        }
-      })
-      .then(res => {
-        //if subtraction successful, resolve promise
-        if(res.data.success === true){
-          resolve(1);
-        }
-        //if error, reject promise
-        else{
+      axios
+        .patch(apiURL, {
+          params: {
+            pid: item.pid,
+            isApparel: item.isApparel,
+            size: sizeStock,
+            amt: item.amtPurchased
+          }
+        })
+        .then(res => {
+          //if subtraction successful, resolve promise
+          if (res.data.success === true) {
+            resolve(1);
+          }
+          //if error, reject promise
+          else {
+            reject(0);
+          }
+        })
+        .catch(err => {
           reject(0);
-        }
-      })
-      .catch(err => {
-        reject(0);
-      })
-    })
-  }
+        });
+    });
+  };
 
   //wait for all items to complete stock subtraction
   subtractStock = () => {
@@ -180,7 +191,7 @@ class Checkout extends Component {
     var currentVendorItems = this.props.cartItems;
 
     //for each item, subtract stock, create a promise for each
-    for(let i = 0; i < currentVendorItems.length; i++){
+    for (let i = 0; i < currentVendorItems.length; i++) {
       waitPromises.push(this.subtractStockSingleItem(currentVendorItems[i]));
     }
 
@@ -196,38 +207,38 @@ class Checkout extends Component {
           message: err.toString(),
           type: "danger"
         });
-      })
-  }
+      });
+  };
 
   //remove each item from vendor after purchase
   //create a promise for each item, call /api/getUserCart/deleteItems to delete each item
-  removeSingleItemFromVendor = (removeItem) => {
-    return new Promise( (resolve, reject) => {
+  removeSingleItemFromVendor = removeItem => {
+    return new Promise((resolve, reject) => {
       const apiURL = "/api/getUserCart/deleteItems";
 
-      axios.post(apiURL, {
-        withCredentials: true,
-        params:{
-          pid: removeItem.pid,
-          isApparel: removeItem.isApparel,
-          size: removeItem.size
-        }
-      })
-      .then(res => {
-        //item was deleted on server, resolve promise
-        if(res.data.success === true){
-          resolve(1);
-        }
-        else{
-          //if item was not deleted, reject promise
+      axios
+        .post(apiURL, {
+          withCredentials: true,
+          params: {
+            pid: removeItem.pid,
+            isApparel: removeItem.isApparel,
+            size: removeItem.size
+          }
+        })
+        .then(res => {
+          //item was deleted on server, resolve promise
+          if (res.data.success === true) {
+            resolve(1);
+          } else {
+            //if item was not deleted, reject promise
+            reject(0);
+          }
+        })
+        .catch(err => {
           reject(0);
-        }
-      })
-      .catch(err => {
-        reject(0);
-      })
-    }); 
-  }
+        });
+    });
+  };
 
   //remove items from vendor after purchase
   //wait for all promises to return, and then update user's cart
@@ -236,40 +247,42 @@ class Checkout extends Component {
     var currentVendorItems = this.props.cartItems;
 
     //create a promise for each item to be deleted and wait
-    for(let i = 0; i < currentVendorItems.length; i++){
+    for (let i = 0; i < currentVendorItems.length; i++) {
       waitPromises.push(this.removeSingleItemFromVendor(currentVendorItems[i]));
     }
 
     //wait until all promises have been resolved
     Promise.all(waitPromises)
       //when all promises have been resolved, proceed to get updated user's cart
-      .then(res => {  
+      .then(res => {
         //after removing items from user's cart with vendor item, get updated cart
-        const cartURL = '/api/getUserCart';
-        axios.get(cartURL, {
-          withCredentials: true,
-        })
-        .then(res => {
-          if(res.data.success === true){
-            //update new items and redirect to successful payment page
-            this.props.updateItems(res.data.data);
-            window.location = '/successfulPayment';
-          }
-          else{
+        const cartURL = "/api/getUserCart";
+        axios
+          .get(cartURL, {
+            withCredentials: true
+          })
+          .then(res => {
+            if (res.data.success === true) {
+              //update new items and redirect to successful payment page
+              this.props.updateItems(res.data.data);
+              window.location = "/successfulPayment";
+              // this.setState(() => ({ toRedirect: true }));
+              // this.props.handleRedirect();
+            } else {
+              this.props.notifier({
+                title: "Error",
+                message: "Error with server, no cart.",
+                type: "danger"
+              });
+            }
+          })
+          .catch(err => {
             this.props.notifier({
               title: "Error",
-              message: "Error with server, no cart.",
+              message: err.toString(),
               type: "danger"
             });
-          }
-        })
-        .catch(err => {
-          this.props.notifier({
-            title: "Error",
-            message: err.toString(),
-            type: "danger"
           });
-        })
       })
       .catch(err => {
         this.props.notifier({
@@ -277,8 +290,8 @@ class Checkout extends Component {
           message: err.toString(),
           type: "danger"
         });
-      })
-  }
+      });
+  };
 
   onSuccess = payment => {
     // console.log("Payment successful!", payment);
@@ -409,9 +422,9 @@ class Checkout extends Component {
   render() {
     const { classes } = this.props;
 
+
     return (
       <div>
-        {/* <button onClick = {this.checkStock(this.props.items)}> Check Stock </button> */}
         <Fragment>
           {/* <PaypalExpressBtn */}
           <PaypalButton
@@ -480,7 +493,9 @@ const mapDispatchToProps = dispatch => {
 //   classes: PropTypes.object.isRequired
 // };
 
-export default withRouter(connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(withStyles(styles)(Checkout)));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(withStyles(styles)(Checkout))
+);

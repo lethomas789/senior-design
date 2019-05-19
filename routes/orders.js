@@ -45,10 +45,6 @@ router.post("/", tokenMiddleware, async (req, res) => {
   }
 
   var user = req.authorizedData.user;
-  console.log("user", user);
-
-  // TODO: figure out how we want to structure multiple vendors in an order.
-  // TODO: test if paymentID is transaction ID in paypal
 
   /**
    * 1. Write to orders root collection.
@@ -86,12 +82,14 @@ router.post("/", tokenMiddleware, async (req, res) => {
 
       // TODO save vendorName, pickup time, pickup location, etc.
       let date = admin.firestore.Timestamp.now();
+      console.log('ITEMS ARE:', items);
+
       let orderData = {
         paymentID: paymentID,
         payerID: payerID,
         items: items,
         totalPrice: totalPrice,
-        vid: vid, // TODO vendor list
+        vid: vid, 
         date: date,
         paid: true, // if done through paypal express checkout, then paid
         pickedUp: false,

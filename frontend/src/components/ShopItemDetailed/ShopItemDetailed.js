@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { Component, Fragment } from "react";
 import PropTypes from "prop-types";
 import actions from "../../store/actions";
 import { connect } from "react-redux";
@@ -144,12 +144,19 @@ class ApparelItemInfo extends Component {
         <h2> {productName} </h2>
         <div className="price">${Number(productPrice).toFixed(2)}</div>
         <div>
-          <b>Availability</b>: {displayApparelStock()}
+          {this.props.size === "None" ? ( 
+            <Fragment>
+              <b>Availability</b>: Please select a size first.
+            </Fragment>
+          ) : (
+            <Fragment>
+              <b>Availability</b>: {displayApparelStock()}
+            </Fragment>
+          )}
           <p>
-            <b>Club</b>:{" "}
+            <b>Club</b>:
             <Link to={`/vendorProducts/${this.props.vendorID}`}>
-              {" "}
-              {clubName}{" "}
+              {clubName}
             </Link>
           </p>
         </div>
@@ -232,10 +239,9 @@ class ItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayStock()}
           <p>
-            <b>Club</b>:{" "}
+            <b>Club</b>:
             <Link to={`/vendorProducts/${this.props.vendorID}`}>
-              {" "}
-              {clubName}{" "}
+              {clubName}
             </Link>
           </p>
         </div>
@@ -320,8 +326,10 @@ class ShopItemDetailed extends Component {
       case 'X-Large':
         totalStock = xl_stock;
         break;
+
+      // when no size selected, do not display
       default:
-        break;
+        return;
     }
 
     let text = "";

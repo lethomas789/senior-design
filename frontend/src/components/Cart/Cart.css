@@ -9,7 +9,6 @@
   grid-template-columns: var(--table-columns);
   max-width: 980px;
   margin: 50px auto;
-  height: 100vh;
 }
 
 .table-header {

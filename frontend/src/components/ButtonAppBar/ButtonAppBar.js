@@ -68,7 +68,8 @@ class ButtonAppBar extends Component {
     anchorEl: null,
     anchorElAccount: null,
     anchorIconMenu: null,
-    logout: false
+    logout: false,
+    anchorShop: false
   };
 
   //when navbar loads, get list of all vendors in database
@@ -117,6 +118,14 @@ class ButtonAppBar extends Component {
     this.setState({ anchorElAccount: event.currentTarget });
   };
 
+  handleShopClick = event => {
+    this.setState({ anchorShop: event.currentTarget });
+  };
+
+  handleShopMenuClose = () => {
+    this.setState({ anchorShop: null });
+  };
+
   //handle dialog closing
   handleClose = () => {
     this.setState({
@@ -148,6 +157,16 @@ class ButtonAppBar extends Component {
       // setState to rerender component
       this.setState(() => ({ logout: !this.state.logout }));
       // this.forceUpdate();
+
+      // call route to clear token
+      axios
+        .post("/api/logout", { withCredentials: true })
+        .then(res => {
+          console.log(res.message);
+        })
+        .catch(err => {
+          console.log(err);
+        });
 
       //display dialog
       this.props.notifier({
@@ -286,39 +305,15 @@ class ButtonAppBar extends Component {
                   </MenuItem>
 
                   {this.props.loginValue ? (
-                    <span>
-                      <MenuItem
-                        aria-haspopup="true"
-                        onClick={this.handleAccountClick}
-                        style={{ fontFamily: "Raleway" }}
-                      >
-                        Account
-                      </MenuItem>
-
-                      <Menu
-                        anchorEl={anchorElAccount}
-                        open={Boolean(anchorElAccount)}
-                        onClose={this.handleMenuCloseAccount}
-                      >
-                        <MenuItem
-                          component={Link}
-                          to={orderHistoryRoute}
-                          color="inherit"
-                          onClick={this.handleMenuCloseAccount}
-                        >
-                          Order History
-                        </MenuItem>
-
-                        <MenuItem
-                          component={Link}
-                          to={accountInfoRoute}
-                          color="inherit"
-                          onClick={this.handleMenuCloseAccount}
-                        >
-                          Account Info
-                        </MenuItem>
-                      </Menu>
-                    </span>
+                    <MenuItem
+                      component={Link}
+                      to={orderHistoryRoute}
+                      color="inherit"
+                      onClick={this.handleIconMenuClose}
+                      style={{ fontFamily: "Raleway" }}
+                    >
+                      Order History
+                    </MenuItem>
                   ) : (
                     ""
                   )}
@@ -450,14 +445,37 @@ class ButtonAppBar extends Component {
                     {this.props.loginText}
                   </MenuItem>
                   <MenuItem
-                    component={Link}
-                    to={shopRoute}
                     color="inherit"
                     style={{ fontFamily: "Raleway" }}
-                    onClick={this.handleIconMenuClose}
+                    onClick={this.handleShopClick}
                   >
                     Shop
                   </MenuItem>
+                  <Menu
+                    // id="admin-menu"
+                    anchorEl={this.state.anchorShop}
+                    open={Boolean(this.state.anchorShop)}
+                    onClose={this.handleShopMenuClose}
+                  >
+                    <MenuItem
+                      component={Link}
+                      to={"/clubs"}
+                      color="inherit"
+                      onClick={this.handleShopMenuClose}
+                    >
+                      By Club
+                    </MenuItem>
+
+                    <MenuItem
+                      component={Link}
+                      to={"/shop"}
+                      color="inherit"
+                      onClick={this.handleShopMenuClose}
+                    >
+                      All Items
+                    </MenuItem>
+                  </Menu>
+
                   {this.props.loginValue ? (
                     // if logged in, display amt items in cart
                     <MenuItem
@@ -620,39 +638,14 @@ class ButtonAppBar extends Component {
 
                 {/* ACCOUNT BUTTON? */}
                 {this.props.loginValue ? (
-                  <Fragment>
-                    <Button
-                      aria-haspopup="true"
-                      onClick={this.handleAccountClick}
-                      style={{ color: "white", fontFamily: "Raleway" }}
-                    >
-                      Account
-                    </Button>
-
-                    <Menu
-                      anchorEl={anchorElAccount}
-                      open={Boolean(anchorElAccount)}
-                      onClose={this.handleMenuCloseAccount}
-                    >
-                      <MenuItem
-                        component={Link}
-                        to={orderHistoryRoute}
-                        color="inherit"
-                        onClick={this.handleMenuCloseAccount}
-                      >
-                        Order History
-                      </MenuItem>
-
-                      <MenuItem
-                        component={Link}
-                        to={accountInfoRoute}
-                        color="inherit"
-                        onClick={this.handleMenuCloseAccount}
-                      >
-                        Account Info
-                      </MenuItem>
-                    </Menu>
-                  </Fragment>
+                  <Button
+                    component={Link}
+                    to={orderHistoryRoute}
+                    color="inherit"
+                    style={{ fontFamily: "Raleway" }}
+                  >
+                    Order History
+                  </Button>
                 ) : (
                   ""
                 )}
@@ -669,13 +662,36 @@ class ButtonAppBar extends Component {
                 </Button>
 
                 <Button
-                  component={Link}
-                  to={shopRoute}
+                  onClick={this.handleShopClick}
                   color="inherit"
                   style={{ fontFamily: "Raleway" }}
                 >
                   Shop
                 </Button>
+                <Menu
+                  // id="admin-menu"
+                  anchorEl={this.state.anchorShop}
+                  open={Boolean(this.state.anchorShop)}
+                  onClose={this.handleShopMenuClose}
+                >
+                  <MenuItem
+                    component={Link}
+                    to={"/clubs"}
+                    color="inherit"
+                    onClick={this.handleShopMenuClose}
+                  >
+                    By Club
+                  </MenuItem>
+
+                  <MenuItem
+                    component={Link}
+                    to={"/shop"}
+                    color="inherit"
+                    onClick={this.handleShopMenuClose}
+                  >
+                    All Items
+                  </MenuItem>
+                </Menu>
 
                 {/* CART BUTTON */}
                 {this.props.loginValue ? (

@@ -111,7 +111,7 @@ router.post("/", (req, res) => {
                 console.log("user signing is an admin");
                 jwt.sign(
                   payload,
-                  jwtKey.JWTSecret,
+                  process.env.JWT_SECRET,
                   { expiresIn: "1h" },
                   (err, token) => {
                     if (err) {
@@ -153,7 +153,7 @@ router.post("/", (req, res) => {
 
             jwt.sign(
               payload,
-              jwtKey.JWTSecret,
+              process.env.JWT_SECRET,
               //change expiresIn from hours to seconds to test token expiration timeout on frontend
               // { expiresIn: 5 },
               { expiresIn: "1h" },
@@ -256,7 +256,7 @@ router.get("/googleLogin", (req, res) => {
 
             jwt.sign(
               payload,
-              jwtKey.JWTSecret,
+              process.env.JWT_SECRET,
               { expiresIn: "1h" },
               (err, token) => {
                 if (err) {
@@ -300,7 +300,7 @@ router.get("/googleLogin", (req, res) => {
         };
         jwt.sign(
           payload,
-          jwtKey.JWTSecret,
+          process.env.JWT_SECRET,
           { expiresIn: "1h" },
           (err, token) => {
             if (err) {

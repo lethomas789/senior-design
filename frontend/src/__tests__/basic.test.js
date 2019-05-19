@@ -1,5 +1,4 @@
 // import dependencies
-import "./matchMedia.mock";
 import React from "react";
 import { withRouter, StaticRouter } from "react-router";
 import { Link, Route, Router, Switch, MemoryRouter } from "react-router-dom";
@@ -28,6 +27,7 @@ import axiosMock from "axios";
 import Home from "../components/Home/Home";
 import App from "../App-testing";
 import Clubs from "../components/Clubs/Clubs";
+import { exportAllDeclaration } from "babel-types";
 
 jest.mock("axios");
 
@@ -95,7 +95,6 @@ window.matchMedia =
   };
 
 describe("Home Component", () => {
-
   beforeAll(() => {
     Object.defineProperty(window, "matchMedia", {
       value: jest.fn(() => {
@@ -128,6 +127,34 @@ describe("Home Component", () => {
 });
 
 describe("Clubs Component", () => {
+  it("god help me", async () => {
+    const response = axios.get.mockResolvedValueOnce({
+      data: {
+        success: true,
+        vendors: [
+          {
+            vendorName: "WICS",
+            bioPictures: [
+              "https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/test-club-2.jpg?alt=media&token=13ba901a-302b-402e-b749-1a291f410d92"
+            ],
+            vid: "vid1"
+          }
+        ]
+      }
+    });
+
+    const { getByText, getByTestId } = renderWithRouter(<Clubs />);
+
+    const resolved = await waitForElement(() => getByText("WICS"));
+    const image = getByTestId("vid1");
+    expect(image).toHaveAttribute(
+      "src",
+      "https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/test-club-2.jpg?alt=media&token=13ba901a-302b-402e-b749-1a291f410d92"
+    );
+
+  });
+
+  /*
   it("displays properly", async () => {
     // const { getByText } = renderWithRouter(<Clubs />);
     const response = {
@@ -145,9 +172,7 @@ describe("Clubs Component", () => {
     };
 
     axios.get.mockResolvedValue(response);
-    const component = create(
-        <Clubs />
-    );
+    const component = create(<Clubs />);
 
     const instance = component.getInstance();
     // console.log(instance);
@@ -165,38 +190,35 @@ describe("Clubs Component", () => {
     //   rootInstance.findByProps({ className: "hero-textt" }).children
     // ).toEqual([response.data.vendors[0].vendorName]);
   });
+  */
 });
 
+// global.window.matchMedia = jest.fn(() => {
+//   return {
+//     matches: false,
+//     addListener: jest.fn(),
+//     removeListener: jest.fn()
+//   };
+// });
 
+// global.window.matchMedia = jest.fn().mockImplementation(query => {
+//   return {
+//     matches: false,
+//     media: query,
+//     onchange: null,
+//     addListener: jest.fn(),
+//     removeListener: jest.fn()
+//   };
+// });
 
-
-
-  // global.window.matchMedia = jest.fn(() => {
-  //   return {
-  //     matches: false,
-  //     addListener: jest.fn(),
-  //     removeListener: jest.fn()
-  //   };
-  // });
-
-  // global.window.matchMedia = jest.fn().mockImplementation(query => {
-  //   return {
-  //     matches: false,
-  //     media: query,
-  //     onchange: null,
-  //     addListener: jest.fn(),
-  //     removeListener: jest.fn()
-  //   };
-  // });
-
-  // beforeAll(() => {
-  //   window.matchMedia = jest.fn().mockImplementation(query => {
-  //     return {
-  //       matches: false,
-  //       media: query,
-  //       onchange: null,
-  //       addListener: jest.fn(),
-  //       removeListener: jest.fn()
-  //     };
-  //   });
-  // });
+// beforeAll(() => {
+//   window.matchMedia = jest.fn().mockImplementation(query => {
+//     return {
+//       matches: false,
+//       media: query,
+//       onchange: null,
+//       addListener: jest.fn(),
+//       removeListener: jest.fn()
+//     };
+//   });
+// });

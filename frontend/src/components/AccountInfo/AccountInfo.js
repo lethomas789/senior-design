@@ -65,7 +65,7 @@ class AccountInfo extends Component {
       <div className ="account-info-header">
       <div className = "accountForms">
       <Paper className="paper-account-Container">
-        <h1> Account Info Here:  </h1>
+        <h1> Account Info Here </h1>
         <h1> Email: {this.state.email} </h1>
         <h1> First Name:  {this.state.firstName} </h1>
         <h1> Last Name:  {this.state.lastName} </h1>

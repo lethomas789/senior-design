@@ -44,7 +44,8 @@ class OrderHistoryItem extends Component {
     pickedUp: PropTypes.bool.isRequired,
     totalPrice: PropTypes.string.isRequired,
     items: PropTypes.array.isRequired,
-    vid: PropTypes.string.isRequired
+    vid: PropTypes.string.isRequired,
+    updateOrder: PropTypes.func.isRequired,
   };
 
   state = {
@@ -57,6 +58,7 @@ class OrderHistoryItem extends Component {
       .patch(apiURL, { withCredentials: true, params: { oid: oid, vid: vid } })
       .then(res => {
         if (res.data.success) {
+          this.props.updateOrder(oid, !this.state.pickedUp);
           this.setState(() => ({ pickedUp: !this.state.pickedUp }));
 
           // this.props.notifier({
@@ -119,7 +121,7 @@ class OrderHistoryItem extends Component {
                 checked={this.state.pickedUp}
                 color="primary"
                 value="pickedUp"
-                style={{ position: "absolute", right: "30px" }}
+                style={{ position: "absolute", right: "100px" }}
                 onChange={() => this.handleUpdateOrder(oid, vid)}
               />
             ) : (

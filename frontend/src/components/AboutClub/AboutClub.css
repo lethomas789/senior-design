@@ -9,41 +9,38 @@
   --color-primary-dark: rgba(86, 67, 250);
 }
 
+/*
 #about-club-containerr {
   display: grid;
-  /* grid-template-columns: 1.5fr 2fr; */
-  /* grid-template-columns: 1fr 1fr; */
-  /* grid-template-rows: auto 80vh auto; */
-  grid-template-rows: auto auto auto;
   justify-content: center;
   margin: 0 auto;
   margin-top: 50px;
   width: 80vw;
-  /* height: 95vh; */
-  grid-template-columns: 1fr 1fr 1fr;
-  grid-row-gap: 15px;
-  grid-column-gap: 10px;
+  grid-row-gap: 25px;
+  grid-column-gap: 15px;
 }
+*/
 
 #about-club-container {
   display: grid;
-  width: 70vw;
+  width: 80vw;
   margin: 0 auto;
   grid-template-columns: 1fr 1fr 1fr;
   grid-row-gap: 15px;
-  grid-column-gap: 10px;
+  grid-column-gap: 15px;
 }
 
 
 .club-header {
-  /* grid-row-start: 1;
-  grid-column-start: span 2; */
+  grid-row: 1;
+  grid-column: 1 / span 3;
   justify-self: center;
+  justify-content: center;
 }
 
 .club-pictures-container {
-  grid-column: 3 / span 3;
-  grid-row: span 3;
+  grid-column: 1 / span 3;
+  grid-row: 2 / span 3;
   /* grid-row-start: 2;
   grid-column-start: span 2; */
   justify-self: center;
@@ -88,14 +85,11 @@
   vertical-align: middle;
   font-family: 'Raleway';
   background-image: linear-gradient(
-    to right,
-    /* rgba(111, 138, 183, 0.3),
-    rgba(97, 93, 108, 0.3) */
-  rgba(0, 0, 0, 0.3),
-  rgba(0, 0, 0, 0.3)
-  ),
-
-  url(../../images/painting.jpg);
+      to right,
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.4)
+    ),
+    url(../../images/painting.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -113,6 +107,12 @@
   text-align: center;
   vertical-align: middle;
   font-family: 'Raleway';
+  background-image: linear-gradient(
+      to right,
+      rgba(0, 0, 0, 0.4),
+      rgba(0, 0, 0, 0.4)
+    ),
+    url(../../images/finals_lib.jpg);
   background-size: cover;
   background-repeat: no-repeat;
   background-position: center;
@@ -122,15 +122,10 @@
   display: inline-block;
   margin-left: 20px;
   background-color: #8098c0;
-  background-image: linear-gradient(
-    to right,
-    /* rgba(111, 138, 183, 0.3),
-    rgba(97, 93, 108, 0.3) */
-  rgba(0, 0, 0, 0.4),
-  rgba(0, 0, 0, 0.4)
-  ),
-  url(../../images/finals_lib.jpg);
+}
 
+.extra {
+  margin-bottom: 30px;
 }
 
 .about-containerr {
@@ -155,110 +150,45 @@
   margin-bottom: 20px;
 }
 
-
-@media (max-width: 40em) {
-
-  #about-club-containerr {
-    justify-content: center;
-    margin: 0 auto;
-    margin-top: 50px;
-    /* height: 95vh; */
-  }
-
-  .greater-containerr {
-    display: flex;
-    flex-wrap: wrap;
-    flex-direction: column;
-    padding-bottom: 20px;
-    height: 100vh;
-  }
-
-  
+@media (max-width: 767px) {
   #about-club-container {
-    /* display: grid; */
-    width: 70vw;
-  }
-
-  .about-containerr {
-    display: grid;
-    width: 70vw;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
     margin: 0 auto;
+    justify-content: center;
   }
 
-  .club-pictures-container {
+  .club-header {
+    align-self: center;
     justify-self: center;
-    z-index: 500;
-    margin: 20px;
-  }
-
-  .about-main-imagee {
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: cover;
-    margin-bottom: 20px;
-    height: 100px;
+    margin: 0 auto;
+    margin-top: 20px;
   }
 
   .club-bio {
-    text-align: center;
-    vertical-align: middle;
-    padding: 60px;
-    background-color: white;
-    color: black;
-    width: 100px;
+    padding: 20px;
+    margin-top: 30px;
+    margin-left: 0;
   }
-  
-  
+
   .club-links {
-    text-align: center;
-    vertical-align: middle;
-    font-family: 'Raleway';
-    background-image: linear-gradient(
-      to right,
-      /* rgba(111, 138, 183, 0.3),
-      rgba(97, 93, 108, 0.3) */
-    rgba(0, 0, 0, 0.3),
-    rgba(0, 0, 0, 0.3)
-    ),
-  
-    url(../../images/painting.jpg);
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: relative;
-    text-align: center;
-    color: white;
-    display: inline-block;
-    margin-left: 20px;
-    background-color: #8098c0;
-  
+    height: 200px;
+    margin-top: 30px;
+    margin-left: 0;
   }
-  
+
   .club-meetings {
-    text-align: center;
-    vertical-align: middle;
-    font-family: 'Raleway';
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    position: relative;
-    text-align: center;
-    color: white;
-    display: inline-block;
-    margin-left: 20px;
-    background-color: #8098c0;
-    background-image: linear-gradient(
-      to right,
-      /* rgba(111, 138, 183, 0.3),
-      rgba(97, 93, 108, 0.3) */
-    rgba(0, 0, 0, 0.4),
-    rgba(0, 0, 0, 0.4)
-    ),
-    url(../../images/finals_lib.jpg);
+    height: 200px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 0;
+  }
+
+  .extra {
+    display: none;
   }
 
 }
-
-
 
 

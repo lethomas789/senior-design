@@ -13,10 +13,22 @@
   margin: 0 auto;
 }
 
+#display-clubs-container a {
+  color: var(--color-link);
+}
+
+.display-individual-club-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-content: center;
+  max-width: 800px;
+}
+
 .moreColls {
-  float: left;
-  width: 50%;
-  padding: 20px;
+  /* float: left; */
+  /* width: 50%;
+  padding: 20px; */
 }
 
 .clubResize {

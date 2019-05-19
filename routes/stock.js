@@ -123,7 +123,6 @@ router.patch("/", (req, res) => {
           const newAmt = pdata[size] - amt;
           t.update(productRef, { [size]: newAmt });
           console.log("Successfully subtracted product stock.");
-          j;
           return Promise.resolve("Product stock subtracted.");
         } else {
           const newAmt = pdata.stock - amt;
