@@ -10,8 +10,10 @@ export default class Terms extends Component {
     return(
       <div className = "terms-container">
         <div>
+          <div className = "terms-header">
 	    <h1>Terms and Service</h1>
 	    <h2>OVERVIEW</h2>
+      </div>
 
      
 <font size = '4'>
@@ -177,30 +179,42 @@ In the event that any provision of these Terms of Service is determined to be un
 </p>
 </div>
 
+<div className = "each-question">
 <h2>SECTION 16 - TERMINATION</h2>
 <p>
 The obligations and liabilities of the parties incurred prior to the termination date shall survive the termination of this agreement for all purposes.
 These Terms of Service are effective unless and until terminated by either you or us. You may terminate these Terms of Service at any time by notifying us that you no longer wish to use our Services, or when you cease using our site.
 If in our sole judgment you fail, or we suspect that you have failed, to comply with any term or provision of these Terms of Service, we also may terminate this agreement at any time without notice and you will remain liable for all amounts due up to and including the date of termination; and/or accordingly may deny you access to our Services (or any part thereof).
 </p>
+</div>
+
+<div className = "each-question">
 <h2>SECTION 17 - ENTIRE AGREEMENT</h2>
 <p>
 The failure of us to exercise or enforce any right or provision of these Terms of Service shall not constitute a waiver of such right or provision.
 These Terms of Service and any policies or operating rules posted by us on this site or in respect to The Service constitutes the entire agreement and understanding between you and us and govern your use of the Service, superseding any prior or contemporaneous agreements, communications and proposals, whether oral or written, between you and us (including, but not limited to, any prior versions of the Terms of Service).
 Any ambiguities in the interpretation of these Terms of Service shall not be construed against the drafting party.
 </p>
+</div>
+
+<div className = "each-question">
 <h2>SECTION 18 - GOVERNING LAW</h2>
 
 These Terms of Service and any separate agreements whereby we provide you Services shall be governed by and construed in accordance with the laws of United States.
-
+</div>
+<div className = "each-question">
 <h2>SECTION 19 - CHANGES TO TERMS OF SERVICE</h2>
 <p>
 You can review the most current version of the Terms of Service at any time at this page.
 We reserve the right, at our sole discretion, to update, change or replace any part of these Terms of Service by posting updates and changes to our website. It is your responsibility to check our website periodically for changes. Your continued use of or access to our website or the Service following the posting of any changes to these Terms of Service constitutes acceptance of those changes.
 </p>
+</div>
+
+<div className = "each-question">
 <h2>SECTION 20 - CONTACT INFORMATION</h2>
 
 Questions about the Terms of Service should be sent to us at ecs193.ecommerce@gmail.com
+</div>
 	</font>
   </div>
       </div>
