@@ -13,11 +13,6 @@
   margin-top: 50px;
   width: 85vw;
   height: 95vh;
-/*
-  margin-left: auto;
-  margin-right: auto;
-  padding-bottom: 50px;
-*/
 }
 
 .item-image-container {
@@ -154,3 +149,107 @@
   }
 
 }
+
+@media (max-width: 40em) {
+  .centered {
+    display: block;
+    align-items: center;
+  }
+  
+  .item-detailed-container {
+    display: grid;
+    box-sizing: border-box;
+    grid-template-rows: auto;
+    justify-content: center;
+    margin-top: 50px;
+    width: 85vw;
+    height: 95vh;
+  }
+  
+  .item-image-container {
+    margin: 0 auto;
+    justify-self: center;
+    display: flex;
+    max-height: 60vh;
+  }
+  
+  .item-info h2 {
+    text-align: start;
+  }
+  
+  .price {
+    color: rgba(14, 138, 240, 0.822);
+    font-size: 24px;
+    height: 50px;
+  }
+  
+  .stock {
+    color: rgba(14, 138, 240, 0.822);
+  }
+  
+  .description {
+    margin-top: 30px;
+    margin-bottom: 30px;
+    width: 50ch;
+  }
+  
+  .select-container {
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+  }
+  
+  .select-size {
+    display: block;
+    width: 200px;
+  }
+  
+  .quantity {
+    width: 75px;
+  }
+  
+  .btn-cart {
+    margin-top: 30px;
+  }
+  
+  .carousel-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-around;
+    margin-top: 30px;
+    width: 200px;
+  }
+  
+  .carousel-img {
+    /* width, height a little glitchy; see media queries below */
+    /* width: 80%;
+    height: 80%; */
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 3px;
+  }
+  
+  .selected-carousel-img {
+    /* width: 80%;
+    height: 80%; */
+    max-width: 100px;
+    max-height: 100px;
+    cursor: pointer;
+    border: 1px solid black;
+    border-radius: 3px;
+    -webkit-filter: opacity(.5);
+    filter: opacity(.5);
+  }
+  
+  .carousel-img:hover {
+    -webkit-filter: opacity(.5);
+    filter: opacity(.5);
+  }
+
+
+
+}
+

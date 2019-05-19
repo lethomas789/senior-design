@@ -34,8 +34,6 @@ class ClubInfo extends Component {
         <div className="club-meetings"><div className = "hero-texttt">Shop our merch!</div></div>
         </Hidden>
         </div>
-
-
         </div>
 
     );
