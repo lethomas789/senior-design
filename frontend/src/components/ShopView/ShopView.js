@@ -3,6 +3,7 @@ import "./ShopView.css";
 import ShopItem from "../ShopItem/ShopItem";
 import Grid from "@material-ui/core/Grid";
 import axios from "axios";
+import Hidden from '@material-ui/core/Hidden';
 import { connect } from "react-redux";
 import actions from "../../store/actions";
 import { banner } from "../../images/generic_club.jpg";
@@ -65,7 +66,10 @@ class ShopView extends Component {
 
     return (
       <div id="shopview-container">
+      <header>
           <h1> Shop </h1>
+          </header>
+          <Hidden smDown>
           <div className="shop-hero-image-container">
             <div className="hero-image">
               <img
@@ -77,6 +81,7 @@ class ShopView extends Component {
             </div>
             <div className="hero-text">UCD CLUBS</div>
           </div>
+          </Hidden>
           <div id="shopview-item-container">
             {items}
           </div>

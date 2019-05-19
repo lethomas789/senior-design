@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import "./OrderHistoryItem.css";
 import PropTypes from "prop-types";
+import axios from "axios";
 import { withStyles } from "@material-ui/core/styles";
 import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
@@ -12,6 +13,7 @@ import Divider from "@material-ui/core/Divider";
 //import CardContent from '@material-ui/core/CardContent';
 //import CardMedia from '@material-ui/core/CardMedia';
 import Typography from "@material-ui/core/Typography";
+import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = theme => ({
   root: {
@@ -39,29 +41,56 @@ class OrderHistoryItem extends Component {
     firstName: PropTypes.string.isRequired,
     lastName: PropTypes.string.isRequired,
     paid: PropTypes.string.isRequired,
-    pickedUp: PropTypes.string.isRequired,
+    pickedUp: PropTypes.bool.isRequired,
     totalPrice: PropTypes.string.isRequired,
-    clubHistory: PropTypes.bool.isRequired, // viewing club history true/false
-    items: PropTypes.array.isRequired
+    items: PropTypes.array.isRequired,
+    vid: PropTypes.string.isRequired
+  };
+
+  state = {
+    pickedUp: this.props.pickedUp
+  };
+
+  handleUpdateOrder = (oid, vid) => {
+    const apiURL = "/api/orders/updateOrder";
+    axios
+      .patch(apiURL, { withCredentials: true, params: { oid: oid, vid: vid } })
+      .then(res => {
+        if (res.data.success) {
+          this.setState(() => ({ pickedUp: !this.state.pickedUp }));
+
+          // this.props.notifier({
+          //   title: "Success",
+          //   message: res.data.message.toString(),
+          //   type: "success"
+          // });
+        } else {
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message.toString(),
+            type: "warning"
+          });
+        }
+      })
+      .catch(err => {
+        console.log("Error in OrderHistory:", err);
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
   };
 
   render() {
-    const { classes, items, oid } = this.props;
+    const { classes, items, oid, vid } = this.props;
+
     return (
       <div className="order-history-item-container">
         <List className={classes.flexContainer}>
           <ListItem>
             <ListItemText primary="Date" secondary={this.props.orderDate} />
           </ListItem>
-
-          <Divider component="li" />
-
-          <li>
-            <Typography
-              className={classes.dividerFullWidth}
-              color="textSecondary"
-            />
-          </li>
 
           {/* <ListItem>
           <ListItemText primary= "Name" secondary= {this.props.firstName + ' ' + this.props.lastName} />
@@ -71,53 +100,32 @@ class OrderHistoryItem extends Component {
             <ListItemText primary="Email" secondary={this.props.email} />
           </ListItem>
 
-          <Divider component="li" />
-
-          <li>
-            <Typography
-              className={classes.dividerInset}
-              color="textSecondary"
-            />
-          </li>
-
           <ListItem>
             <ListItemText primary="Order ID" secondary={this.props.oid} />
           </ListItem>
-
-          <Divider component="li" />
-
-          <li>
-            <Typography
-              className={classes.dividerInset}
-              color="textSecondary"
-            />
-          </li>
 
           {/* <ListItem>
           <ListItemText primary="Paid" secondary= {this.props.paid} />
         </ListItem> */}
 
-          <Divider component="li" />
-
-          <li>
-            <Typography
-              className={classes.dividerInset}
-              color="textSecondary"
-            />
-          </li>
-
           <ListItem>
-            <ListItemText primary="Picked Up" secondary={this.props.pickedUp} />
-          </ListItem>
-
-          <Divider component="li" />
-
-          <li>
-            <Typography
-              className={classes.dividerInset}
-              color="textSecondary"
+            <ListItemText
+              primary="Picked Up"
+              secondary={this.state.pickedUp ? "Yes" : "No"}
+              style={{ position: "relative" }}
             />
-          </li>
+            {vid !== "null" ? (
+              <Checkbox
+                checked={this.state.pickedUp}
+                color="primary"
+                value="pickedUp"
+                style={{ position: "absolute", right: "30px" }}
+                onChange={() => this.handleUpdateOrder(oid, vid)}
+              />
+            ) : (
+              ""
+            )}
+          </ListItem>
 
           <ListItem>
             <ListItemText
@@ -142,8 +150,8 @@ class OrderHistoryItem extends Component {
               <b>Total</b>
             </div>
           </div>
-          {items.map(item => (
-            <div key={item.name} className="order-summary-row">
+          {items.map((item, index) => (
+            <div key={`${item.name}-${index}`} className="order-summary-row">
               <div className="order-summary-item">
                 <div>
                   <b>{`${item.name}`}</b>

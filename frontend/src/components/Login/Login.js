@@ -48,9 +48,7 @@ class Login extends Component {
     const apiURL = "/api/getUserCart";
     axios
       .get(apiURL, {
-        params: {
-          user: this.state.email
-        }
+        withCredentials: true
       })
       .then(res => {
         //after getting cart info, update redux store container
@@ -86,10 +84,11 @@ class Login extends Component {
       //successful login, display message
       .then(res => {
         //login for regular user, non-admin
-        if (res.data.success === true && res.data.vendors.length === 0) {
+        if (res.data.success === true && res.data.isAdmin === false) {
           //dispatch update login action to update login state
-          let email = this.state.email;
-          this.props.updateLogin(email);
+
+          //update redux store with email and jwt
+          this.props.updateLogin();
 
           //after updating login, get cart info
           this.getCart();
@@ -101,27 +100,22 @@ class Login extends Component {
             type: "success"
           });
           this.props.history.push("/shop");
-        } else if (res.data.success === true && res.data.vendors.length > 0) {
+          this.forceUpdate();
+        } else if (res.data.success === true && res.data.isAdmin === true) {
           //after determining user is an admin, get object list of user's active vendors
-          // console.log("admin login", res.data);
 
           const vendorURL = "/api/adminUser";
           axios
             .get(vendorURL, {
-              params: {
-                user: this.state.email
-              }
+              withCredentials: true,
             })
             .then(res => {
-              // console.log(res.data);
               let currentVendorID = res.data.vendors[0].vid;
-              let email = this.state.email;
               let currentVendors = res.data.vendors;
               let currentVendorName = res.data.vendors[0].vendorName;
 
               //update redux store state
               this.props.updateAdminLogin(
-                email,
                 currentVendorID,
                 currentVendors,
                 currentVendorName
@@ -206,10 +200,11 @@ class Login extends Component {
         }
       })
       .then(res => {
+        console.log(res);
         //check for login success status
-        if (res.data.success === true && res.data.vendors.length === 0) {
+        if (res.data.success === true && res.data.isAdmin === false) {
           //dispatch update login action to update login state
-          this.props.updateLogin(email);
+          this.props.updateLogin();
 
           this.props.notifier({
             title: "Success",
@@ -221,26 +216,22 @@ class Login extends Component {
           this.getCart();
 
           //display dialog for login successful
-        } else if (res.data.success === true && res.data.vendors.length > 0) {
+        } else if (res.data.success === true && res.data.isAdmin === true) {
           const vendorURL = "/api/adminUser";
           axios
             .get(vendorURL, {
-              params: {
-                user: this.state.email
-              }
+              withCredentials: true
             })
             .then(res => {
               let currentVendorID = res.data.vendors[0].vid;
-              let email = this.state.email;
               let currentVendors = res.data.vendors;
               let currentVendorName = res.data.vendors[0].vendorName;
 
               //update redux store state
               this.props.updateAdminLogin(
-                email,
                 currentVendorID,
                 currentVendors,
-                currentVendorName
+                currentVendorName,
               );
 
               //after updating login, get cart info
@@ -289,7 +280,7 @@ class Login extends Component {
         <div id="loginForms">
           <Paper className="paperContainer">
             <h1> Login </h1>
-            <div className="textForm" id="row">
+            <div className="testFormm" id="row">
               <TextField
                 id="outline-simple-start-adornment"
                 label="Email"
@@ -298,7 +289,7 @@ class Login extends Component {
                 onKeyDown={this.handleEnter}
               />
             </div>
-            <div className="textForm" id="row">
+            <div className="textFormm" id="row">
               <TextField
                 type="password"
                 label="Password"
@@ -345,7 +336,6 @@ const mapStateToProps = state => {
   return {
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     vendors: state.vendor.vendors
   };
 };
@@ -354,10 +344,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     //update logged in values
-    updateLogin: currentEmail =>
+    updateLogin: () =>
       dispatch({
         type: actions.LOGGED_IN,
-        user: currentEmail
       }),
 
     //get user's cart from state after logging in
@@ -368,13 +357,12 @@ const mapDispatchToProps = dispatch => {
       }),
 
     //update admin login
-    updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor) =>
+    updateAdminLogin: (vendorID, adminsOf, vendor) =>
       dispatch({
         type: actions.ADMIN_LOGGED_IN,
-        user: currentEmail,
         vid: vendorID,
         admins: adminsOf,
-        currentVendor: vendor
+        currentVendor: vendor,
       })
   };
 };

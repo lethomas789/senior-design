@@ -4,6 +4,9 @@ import scriptLoader from "react-async-script-loader";
 import paypal from "paypal-checkout";
 import axios from "axios";
 
+// const scriptLoader = require('react-async-script-loader');
+// const paypal = require('paypal-checkout'); 
+ 
 const PPBtn = paypal.Button.driver("react", { React, ReactDOM });
 
 class PaypalButton extends React.Component {

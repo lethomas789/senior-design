@@ -21,7 +21,6 @@
 }
 
 .uploadImageText{
-  /* text-align: center; */
   padding-top: 5px;
   padding-bottom: 10px;
   padding-left: 10px;
@@ -34,26 +33,16 @@
   padding-bottom: 20px;
 }
 
-/* .addProductPaperContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  height: 840px;
-  width: 600px;
-  margin-top: 50px;
-  opacity: 0.90;
-} */
-
 .additem-info-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  /* align-self: center; */
 }
 
 .smaller {
   padding-top: 10px;
 }
+
 
 .tooltip {
   position: relative;
@@ -81,5 +70,33 @@
 /* Show the tooltip text when you mouse over the tooltip container */
 .tooltip:hover .tooltiptext {
   visibility: visible;
+
+  
+@media (max-width: 40em) {
+
+  .addProductContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+    height: 150vh;
+    padding: 10px;
+    
+  }
+
+  .additem-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+  }
+
+  .textForm {
+    width: 100vw;
+  }
+
+  #row {
+    overflow: hidden;
+  }
+
 }
 

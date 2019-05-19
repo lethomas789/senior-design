@@ -23,13 +23,15 @@ async function getVendorNames(arrayOfRefs, retArray) {
  *
  * @returns: vendors - array of vid(s) for the vendor(s) user is admin of
  */
-router.get('/', (req, res) => {
-  if (req.query.params) {
-    var user = req.query.params.user;
-  }
-  else {
-    var user = req.query.user;
-  }
+router.get('/', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
+
+  // if (req.query.params) {
+  //   var user = req.query.params.user;
+  // }
+  // else {
+  //   var user = req.query.user;
+  // }
 
   // check if given user
   if (!user) {
@@ -110,15 +112,16 @@ router.get('/', (req, res) => {
  * 
  * @returns res with success true or false
  */
-router.post('/addAdminUser', (req, res) => {
+router.post('/addAdminUser', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params) {
     var vid = req.body.params.vid;
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
     var adminCode = req.body.params.adminCode;
   }
   else {
     var vid = req.body.vid;
-    var user = req.body.user;
+    // var user = req.body.user;
     var adminCode = req.body.adminCode;
   }
 

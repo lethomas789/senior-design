@@ -8,6 +8,8 @@
 .footer-container {
   /* position: absolute;
   bottom: 0;
+  left: 0;
+  right: 0;
   width: 100%; */
   display: grid;
   /* min-height: 200px; TODO remove for testing */
@@ -48,3 +50,33 @@
 .footer-link {
   margin: 10px 0;
 }
+
+
+@media (max-width: 40em) {
+  .footer-container {
+    
+    background-color: #6F8AB7;
+    justify-content: space-around;
+    border-radius: 3px;
+  }
+  .footer-header {
+    margin: 20px;
+    color: white;
+    font-size: 11px;
+    text-align: center;
+    display: block;
+  }
+  .footer-col {
+  display: none;
+  }
+  .footer-col--1 {
+    display: none;
+    }
+    .footer-col-list ul {
+      display: none;
+      }
+      .footer-link {
+        display: none;
+        }
+}
+

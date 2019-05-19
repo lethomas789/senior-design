@@ -24,6 +24,7 @@ import Select from "@material-ui/core/Select";
 import Menu from "@material-ui/core/Menu";
 import MenuItem from "@material-ui/core/MenuItem";
 import { createMuiTheme } from "@material-ui/core/styles";
+import Hidden from "@material-ui/core/Hidden";
 
 // export const prime = '#89BBFE';
 
@@ -65,7 +66,9 @@ class ButtonAppBar extends Component {
     openSelect: false,
     currentVendor: "",
     anchorEl: null,
-    anchorElAccount: null
+    anchorElAccount: null,
+    anchorIconMenu: null,
+    logout: false
   };
 
   //when navbar loads, get list of all vendors in database
@@ -101,6 +104,14 @@ class ButtonAppBar extends Component {
     this.setState({ anchorEl: event.currentTarget });
   };
 
+  handleIconMenuClick = event => {
+    this.setState({ anchorIconMenu: event.currentTarget });
+  };
+
+  handleIconMenuClose = () => {
+    this.setState({ anchorIconMenu: null });
+  };
+
   //handle account click, same logic as handle admin click
   handleAccountClick = event => {
     this.setState({ anchorElAccount: event.currentTarget });
@@ -129,17 +140,25 @@ class ButtonAppBar extends Component {
 
   //logout user when clicking "Logout" on navbar
   //empty shopping cart
-  logoutUser = () => {
+  logoutUser = isResponsiveMenu => {
     if (this.props.loginText === "Logout") {
       this.props.updateLogout();
       this.props.emptyCart();
-      
+
+      // setState to rerender component
+      this.setState(() => ({ logout: !this.state.logout }));
+      // this.forceUpdate();
+
       //display dialog
       this.props.notifier({
         title: "Success",
         message: "Logout successful.",
         type: "success"
       });
+    }
+    // if response menu and login text, then close menu
+    else if (isResponsiveMenu && this.props.loginText === "Login") {
+      this.handleIconMenuClose();
     }
   };
 
@@ -178,9 +197,7 @@ class ButtonAppBar extends Component {
       if (this.props.login === true) {
         axios
           .get(apiURL, {
-            params: {
-              user: this.props.user
-            }
+            withCredentials: true
           })
           .then(res => {
             //after getting cart from server, update user's items in redux state
@@ -202,9 +219,18 @@ class ButtonAppBar extends Component {
     }
   };
 
+  toggleOpenDrawer = () => {
+    if (!this.state.mobile) {
+      return;
+    }
+    this.setState({
+      open: !this.state.open
+    });
+  };
+
   render() {
     const { classes } = this.props;
-    const { anchorEl, anchorElAccount } = this.state;
+    const { anchorEl, anchorElAccount, anchorIconMenu } = this.state;
 
     if (this.props.isAdmin) {
       var vendorList = this.props.adminsOf.map(result => {
@@ -216,6 +242,13 @@ class ButtonAppBar extends Component {
       });
     }
 
+    // aria-owns={anchorIconMenu ? "responsive-menu" : undefined}
+    // aria-haspopup="true"
+    // onClick={this.handleIconMenuClick}
+    // style={{ color: "white", fontFamily: "Raleway" }}
+    // className="menuButton"
+    // color="inherit"
+    // aria-label="Menu"
     return (
       <nav className="root">
         <AppBar
@@ -224,253 +257,469 @@ class ButtonAppBar extends Component {
         >
           <Toolbar>
             {/* MENU BUTTON */}
-            {/* currently doesnt do anything so hide it */}
-            {/* <IconButton
-              className="menuButton"
-              color="inherit"
-              aria-label="Menu"
-            >
-              <MenuIcon />
-            </IconButton> */}
+            <Hidden mdUp>
+              <div id="menu-button">
+                <IconButton
+                  aria-owns={anchorIconMenu ? "responsive-menu" : undefined}
+                  aria-haspopup="true"
+                  onClick={this.handleIconMenuClick}
+                  style={{ color: "white" }}
+                  className="menuButton"
+                >
+                  <MenuIcon />
+                </IconButton>
 
-            {/* HOME LABEL */}
-            <Typography
-              style={{ textDecoration: "none", fontFamily: "Comfortaa" }}
-              component={Link}
-              to={homeRoute}
-              variant="h6"
-              color="inherit"
-              className="grow"
-            >
-              ECS193 ECommerce
-            </Typography>
-
-            {this.props.isAdmin ? (
-              <Typography
-                style={{
-                  textDecoration: "none",
-                  fontFamily: "Raleway",
-                  marginRight: "10px"
-                }}
-                variant="h6"
-                color="inherit"
-              >
-                Select Club:
-              </Typography>
-            ) : (
-              ""
-            )}
-
-            {/* NAV BUTTONS */}
-            <div id="navLink">
-              {/* ADMIN BUTTONS */}
-              {this.props.isAdmin ? (
-                <Fragment>
-                  {/* SELECT CLUB */}
-                  <FormControl
-                    variant="filled"
-                    className="club-select"
-                    style={{ marginRight: "10px" }}
+                <Menu
+                  id="responsive-menu"
+                  anchorEl={anchorIconMenu}
+                  open={Boolean(anchorIconMenu)}
+                  onClose={this.handleIconMenuClose}
+                >
+                  <MenuItem
+                    component={Link}
+                    to={homeRoute}
+                    color="inherit"
+                    onClick={this.handleIconMenuClose}
+                    style={{ fontFamily: "Raleway" }}
                   >
-                    <InputLabel
-                      htmlFor="club-select"
-                      style={{ color: "white" }}
-                    >
-                      {this.props.currentVendor}
-                    </InputLabel>
+                    Home
+                  </MenuItem>
 
-                    <Select
-                      value={this.props.currentvendor}
-                      open={this.state.openSelect}
-                      onClose={this.handleCloseSelect}
-                      onOpen={this.handleOpenSelect}
-                      onChange={this.handleSelect}
-                      input={<OutlinedInput name={this.props.currentVendor} />}
-                    >
-                      {vendorList}
-                    </Select>
-                  </FormControl>
+                  {this.props.loginValue ? (
+                    <span>
+                      <MenuItem
+                        aria-haspopup="true"
+                        onClick={this.handleAccountClick}
+                        style={{ fontFamily: "Raleway" }}
+                      >
+                        Account
+                      </MenuItem>
 
-                  <Button
-                    aria-owns={anchorEl ? "admin-menu" : undefined}
-                    aria-haspopup="true"
-                    onClick={this.handleAdminClick}
-                    style={{ color: "white", fontFamily: "Raleway" }}
+                      <Menu
+                        anchorEl={anchorElAccount}
+                        open={Boolean(anchorElAccount)}
+                        onClose={this.handleMenuCloseAccount}
+                      >
+                        <MenuItem
+                          component={Link}
+                          to={orderHistoryRoute}
+                          color="inherit"
+                          onClick={this.handleMenuCloseAccount}
+                        >
+                          Order History
+                        </MenuItem>
+
+                        <MenuItem
+                          component={Link}
+                          to={accountInfoRoute}
+                          color="inherit"
+                          onClick={this.handleMenuCloseAccount}
+                        >
+                          Account Info
+                        </MenuItem>
+                      </Menu>
+                    </span>
+                  ) : (
+                    ""
+                  )}
+
+                  {this.props.isAdmin ? (
+                    <Typography
+                      style={{
+                        textDecoration: "none",
+                        fontFamily: "Raleway"
+                        // marginRight: "10px"
+                      }}
+                    >
+                      Select Admin Club:
+                    </Typography>
+                  ) : (
+                    ""
+                  )}
+
+                  {this.props.isAdmin ? (
+                    <span>
+                      <FormControl
+                        variant="filled"
+                        className="club-select"
+                        style={{ marginRight: "10px" }}
+                      >
+                        <Select
+                          value={this.props.currentVendor}
+                          open={this.state.openSelect}
+                          onClose={this.handleCloseSelect}
+                          onOpen={this.handleOpenSelect}
+                          onChange={this.handleSelect}
+                          style={{ color: "black" }}
+                        >
+                          {vendorList}
+                        </Select>
+                      </FormControl>
+                    </span>
+                  ) : (
+                    ""
+                  )}
+
+                  {this.props.isAdmin ? (
+                    <span>
+                      <MenuItem
+                        aria-haspopup="true"
+                        onClick={this.handleAdminClick}
+                        style={{ fontFamily: "Raleway" }}
+                      >
+                        Admin Menu
+                      </MenuItem>
+
+                      <Menu
+                        anchorEl={anchorEl}
+                        open={Boolean(anchorEl)}
+                        onClose={this.handleMenuClose}
+                      >
+                        <MenuItem
+                          component={Link}
+                          to={editClubRoute}
+                          color="inherit"
+                          onClick={this.handleMenuClose}
+                        >
+                          Edit Club Info
+                        </MenuItem>
+
+                        <MenuItem
+                          component={Link}
+                          to={addProductRoute}
+                          color="inherit"
+                          onClick={this.handleMenuClose}
+                        >
+                          Add Items
+                        </MenuItem>
+                        <MenuItem
+                          component={Link}
+                          to={editItemRoute}
+                          color="inherit"
+                          onClick={this.handleMenuClose}
+                        >
+                          Edit Items
+                        </MenuItem>
+                      </Menu>
+                    </span>
+                  ) : (
+                    ""
+                  )}
+
+                  <MenuItem
+                    component={Link}
+                    to={aboutRoute}
+                    color="inherit"
+                    style={{ fontFamily: "Raleway" }}
+                    onClick={this.handleIconMenuClose}
                   >
-                    Admin Menu
-                  </Button>
-                  <Menu
-                    id="admin-menu"
-                    anchorEl={anchorEl}
-                    open={Boolean(anchorEl)}
-                    onClose={this.handleMenuClose}
-                  >
-                    <MenuItem
-                      component={Link}
-                      to={editClubRoute}
-                      color="inherit"
-                      onClick={this.handleMenuClose}
-                    >
-                      Edit Club Info
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to={addProductRoute}
-                      color="inherit"
-                      onClick={this.handleMenuClose}
-                    >
-                      Add Items
-                    </MenuItem>
-                    <MenuItem
-                      component={Link}
-                      to={editItemRoute}
-                      color="inherit"
-                      onClick={this.handleMenuClose}
-                    >
-                      Edit Items
-                    </MenuItem>
-                  </Menu>
-                </Fragment>
-              ) : (
-                // else dont display admin stuff
-                <Fragment />
-              )}
+                    About
+                  </MenuItem>
 
-              {/* BUTTONS FOR ALL USERS */}
-              <Button
-                component={Link}
-                to={aboutRoute}
-                color="inherit"
-                style={{ fontFamily: "Raleway" }}
-              >
-                About
-              </Button>
-
-              <Button
-                component={Link}
-                to="/clubs"
-                color="inherit"
-                style={{ fontFamily: "Raleway" }}
-              >
-                Clubs
-              </Button>
-
-              {/* display signup if not logged in */}
-              {!this.props.loginValue ? (
-                <Button
+                  <MenuItem
                   component={Link}
-                  to={signupRoute}
+                  to="/clubs"
                   color="inherit"
                   style={{ fontFamily: "Raleway" }}
                 >
-                  Sign Up
-                </Button>
-              ) : (
-                <Fragment />
-              )}
+                  Clubs
+                </MenuItem>
 
-              {/* ACCOUNT BUTTON? */}
-              {this.props.loginValue ? (
-                <Fragment>
-                  <Button
-                    aria-haspopup="true"
-                    onClick={this.handleAccountClick}
-                    style={{ color: "white", fontFamily: "Raleway" }}
-                  >
-                    Account
-                  </Button>
 
-                  <Menu
-                    anchorEl={anchorElAccount}
-                    open={Boolean(anchorElAccount)}
-                    onClose={this.handleMenuCloseAccount}
-                  >
+                  {!this.props.loginValue ? (
                     <MenuItem
                       component={Link}
-                      to={orderHistoryRoute}
+                      to={signupRoute}
                       color="inherit"
-                      onClick={this.handleMenuCloseAccount}
+                      style={{ fontFamily: "Raleway" }}
+                      onClick={this.handleIconMenuClose}
                     >
-                      Order History
+                      Sign Up
                     </MenuItem>
+                  ) : (
+                    ""
+                  )}
 
+                  <MenuItem
+                    style={{ fontFamily: "Raleway" }}
+                    component={Link}
+                    to={loginRoute}
+                    color="inherit"
+                    onClick={this.logoutUser}
+                  >
+                    {this.props.loginText}
+                  </MenuItem>
+                  <MenuItem
+                    component={Link}
+                    to={shopRoute}
+                    color="inherit"
+                    style={{ fontFamily: "Raleway" }}
+                    onClick={this.handleIconMenuClose}
+                  >
+                    Shop
+                  </MenuItem>
+                  {this.props.loginValue ? (
+                    // if logged in, display amt items in cart
                     <MenuItem
                       component={Link}
-                      to={accountInfoRoute}
+                      to={cartRoute}
                       color="inherit"
-                      onClick={this.handleMenuCloseAccount}
+                      onClick={this.viewCartCheck}
                     >
-                      Account Info
+                      <Badge
+                        badgeContent={this.props.cartLength}
+                        color="primary"
+                        classes={{ badge: classes.badge }}
+                      >
+                        <CartIcon />
+                      </Badge>
                     </MenuItem>
-                  </Menu>
-                </Fragment>
+                  ) : (
+                    // else not logged in, display generic cart icon
+                    <MenuItem color="inherit" onClick={this.viewCartCheck}>
+                      <CartIcon />
+                    </MenuItem>
+                  )}
+                </Menu>
+              </div>
+            </Hidden>
+
+            {/******************* END RESPONSIVE MENU ICON **********/}
+
+            {/* HOME LABEL */}
+            <Hidden smDown>
+              <Typography
+                style={{ textDecoration: "none", fontFamily: "Comfortaa" }}
+                component={Link}
+                to={homeRoute}
+                variant="h6"
+                color="inherit"
+                className="grow"
+              >
+                ECS193 ECommerce
+              </Typography>
+
+              {this.props.isAdmin ? (
+                <Typography
+                  style={{
+                    textDecoration: "none",
+                    fontFamily: "Raleway",
+                    marginRight: "10px"
+                  }}
+                  variant="h6"
+                  color="inherit"
+                >
+                  Select Admin Club:
+                </Typography>
               ) : (
-                <Fragment />
+                ""
               )}
 
-              {/*LOGIN/LOGOUT BUTTON*/}
-              <Button
-                style={{ fontFamily: "Raleway" }}
-                component={Link}
-                to={loginRoute}
-                color="inherit"
-                onClick={this.logoutUser}
-              >
-                {this.props.loginText}
-              </Button>
 
-              <Button
-                component={Link}
-                to={shopRoute}
-                color="inherit"
-                style={{ fontFamily: "Raleway" }}
-              >
-                Shop
-              </Button>
+              {/* REGULAR NAV BAR */}
+              {/* NAV BUTTONS */}
+              <div id="navLink">
+                {/* ADMIN BUTTONS */}
+                {this.props.isAdmin ? (
+                  <Fragment>
+                    {/* SELECT CLUB */}
+                    <FormControl
+                      variant="filled"
+                      className="club-select"
+                      style={{ marginRight: "10px" }}
+                    >
+                      <Select
+                        value={this.props.currentVendor}
+                        open={this.state.openSelect}
+                        onClose={this.handleCloseSelect}
+                        onOpen={this.handleOpenSelect}
+                        onChange={this.handleSelect}
+                        style={{ color: "white", width: "150px" }}
+                      >
+                        {vendorList}
+                      </Select>
+                    </FormControl>
 
-              {/* CART BUTTON */}
-              {this.props.loginValue ? (
-                // if logged in, display amt items in cart
+                    <Button
+                      // aria-owns={anchorElAccount}
+                      aria-haspopup="true"
+                      onClick={this.handleAdminClick}
+                      style={{ color: "white", fontFamily: "Raleway" }}
+                    >
+                      Admin Menu
+                    </Button>
+                    <Menu
+                      // id="admin-menu"
+                      anchorEl={anchorEl}
+                      open={Boolean(anchorEl)}
+                      onClose={this.handleMenuClose}
+                    >
+                      <MenuItem
+                        component={Link}
+                        to={editClubRoute}
+                        color="inherit"
+                        onClick={this.handleMenuClose}
+                      >
+                        Edit Club Info
+                      </MenuItem>
+                      <MenuItem
+                        component={Link}
+                        to={addProductRoute}
+                        color="inherit"
+                        onClick={this.handleMenuClose}
+                      >
+                        Add Items
+                      </MenuItem>
+                      <MenuItem
+                        component={Link}
+                        to={editItemRoute}
+                        color="inherit"
+                        onClick={this.handleMenuClose}
+                      >
+                        Edit Items
+                      </MenuItem>
+                    </Menu>
+                  </Fragment>
+                ) : (
+                  // else dont display admin stuff
+                  ""
+                )}
+
+                {/* BUTTONS FOR ALL USERS */}
                 <Button
                   component={Link}
-                  to={cartRoute}
+                  to={aboutRoute}
                   color="inherit"
-                  onClick={this.viewCartCheck}
+                  style={{ fontFamily: "Raleway" }}
                 >
-                  <Badge
-                    badgeContent={this.props.cartLength}
-                    color="primary"
-                    classes={{ badge: classes.badge }}
-                  >
-                    <CartIcon />
-                  </Badge>
+                  About
                 </Button>
-              ) : (
-                // else not logged in, display generic cart icon
-                <Button color="inherit" onClick={this.viewCartCheck}>
-                  <CartIcon />
-                </Button>
-              )}
-            </div>
 
+                <Button
+                  component={Link}
+                  to="/clubs"
+                  color="inherit"
+                  style={{ fontFamily: "Raleway" }}
+                >
+                  Clubs
+                </Button>
+
+                {/* display signup if not logged in */}
+                {!this.props.loginValue ? (
+                  <Button
+                    component={Link}
+                    to={signupRoute}
+                    color="inherit"
+                    style={{ fontFamily: "Raleway" }}
+                  >
+                    Sign Up
+                  </Button>
+                ) : (
+                  <Fragment />
+                )}
+
+                {/* ACCOUNT BUTTON? */}
+                {this.props.loginValue ? (
+                  <Fragment>
+                    <Button
+                      aria-haspopup="true"
+                      onClick={this.handleAccountClick}
+                      style={{ color: "white", fontFamily: "Raleway" }}
+                    >
+                      Account
+                    </Button>
+
+                    <Menu
+                      anchorEl={anchorElAccount}
+                      open={Boolean(anchorElAccount)}
+                      onClose={this.handleMenuCloseAccount}
+                    >
+                      <MenuItem
+                        component={Link}
+                        to={orderHistoryRoute}
+                        color="inherit"
+                        onClick={this.handleMenuCloseAccount}
+                      >
+                        Order History
+                      </MenuItem>
+
+                      <MenuItem
+                        component={Link}
+                        to={accountInfoRoute}
+                        color="inherit"
+                        onClick={this.handleMenuCloseAccount}
+                      >
+                        Account Info
+                      </MenuItem>
+                    </Menu>
+                  </Fragment>
+                ) : (
+                  ""
+                )}
+
+                {/*LOGIN/LOGOUT BUTTON*/}
+                <Button
+                  style={{ fontFamily: "Raleway" }}
+                  component={Link}
+                  to={loginRoute}
+                  color="inherit"
+                  onClick={this.logoutUser}
+                >
+                  {this.props.loginText}
+                </Button>
+
+                <Button
+                  component={Link}
+                  to={shopRoute}
+                  color="inherit"
+                  style={{ fontFamily: "Raleway" }}
+                >
+                  Shop
+                </Button>
+
+                {/* CART BUTTON */}
+                {this.props.loginValue ? (
+                  // if logged in, display amt items in cart
+                  <Button
+                    component={Link}
+                    to={cartRoute}
+                    color="inherit"
+                    onClick={this.viewCartCheck}
+                  >
+                    <Badge
+                      badgeContent={this.props.cartLength}
+                      color="primary"
+                      classes={{ badge: classes.badge }}
+                    >
+                      <CartIcon />
+                    </Badge>
+                  </Button>
+                ) : (
+                  // else not logged in, display generic cart icon
+                  <Button color="inherit" onClick={this.viewCartCheck}>
+                    <CartIcon />
+                  </Button>
+                )}
+              </div>
+            </Hidden>
             {/* POP UP DIALOG */}
             {/* TODO: remove with an alert library for UX */}
-            <Dialog
-              open={this.state.open}
-              onClose={this.handleClose}
-              aria-describedby="alert-dialog-description"
-            >
-              <DialogContent>
-                <DialogContentText id="alert-dialog-description">
-                  {this.state.alertMessage}
-                </DialogContentText>
-              </DialogContent>
-              <DialogActions>
-                <Button onClick={this.handleClose} color="primary">
-                  Ok
-                </Button>
-              </DialogActions>
-            </Dialog>
+            {/* <Dialog
+                open={this.state.open}
+                onClose={this.handleClose}
+                aria-describedby="alert-dialog-description"
+              >
+                <DialogContent>
+                  <DialogContentText id="alert-dialog-description">
+                    {this.state.alertMessage}
+                  </DialogContentText>
+                </DialogContent>
+                <DialogActions>
+                  <Button onClick={this.handleClose} color="primary">
+                    Ok
+                  </Button>
+                </DialogActions>
+              </Dialog> */}
           </Toolbar>
         </AppBar>
       </nav>
@@ -518,7 +767,6 @@ const mapStateToProps = state => {
   return {
     loginValue: state.auth.login,
     loginText: state.auth.text,
-    user: state.auth.user,
     isAdmin: state.auth.isAdmin,
     cartLength: state.cart.items.length,
     items: state.cart.items,

@@ -238,9 +238,9 @@ class EditItemView extends Component {
 
     //params for editing item
     axios.patch(apiURL, {
+      withCredentials: true,
       params:{
         vid: this.state.vid,
-        user: this.state.user,
         pid: this.state.pid,
         productInfo: this.state.info,
         productName: this.state.name,
@@ -436,7 +436,7 @@ class EditItemView extends Component {
                   </div>
                 </div>
                 
-                <div id ="column">
+                <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
@@ -451,7 +451,7 @@ class EditItemView extends Component {
                 />
                 </div>
                
-              <div id ="column">
+              <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
@@ -466,7 +466,7 @@ class EditItemView extends Component {
                 />
                 </div>  
 
-                <div id ="column">
+                <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
@@ -481,7 +481,7 @@ class EditItemView extends Component {
                 />
                 </div>
 
-                <div id ="column">
+                <div id ="column" className = "tester">
                 <FileUploader accept="image/*" onChange = {this.handleFileChange}
                   storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
                   multiple
@@ -512,7 +512,6 @@ class EditItemView extends Component {
 //redux, pass as vid and username from redux store to use in component
 const mapStateToProps = state => {
   return {
-    user: state.auth.user,
     vendorID: state.auth.vendorID
   };
 };

@@ -10,6 +10,7 @@
     "dotenv": "^7.0.0",
     "firebase": "^5.8.6",
     "history": "^4.7.2",
+    "material-ui-responsive-menu": "^1.19.3",
     "paypal-checkout": "^4.0.268",
     "query-string": "^6.4.2",
     "react": "^16.7.0",
@@ -26,6 +27,7 @@
     "react-scripts": "^2.1.8",
     "react-slick": "^0.23.2",
     "react-slideshow-image": "^1.1.5",
+    "react-test-renderer": "^16.8.6",
     "redux": "^4.0.1",
     "redux-persist": "^5.10.0",
     "sanitize.css": "^8.0.0",
@@ -46,5 +48,10 @@
     "not dead",
     "not ie <= 11",
     "not op_mini all"
-  ]
+  ],
+  "devDependencies": {
+    "dom-testing-library": "^4.1.0",
+    "jest-dom": "^3.2.2",
+    "react-testing-library": "^7.0.0"
+  }
 }

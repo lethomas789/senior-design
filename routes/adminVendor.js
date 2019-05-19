@@ -15,12 +15,14 @@ require("dotenv").config();
  *
  * @returns Vendor about page info.
  */
-router.get("/", (req, res) => {
+router.get("/", tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
+
   if (req.query.params) {
-    var user = req.query.params.user;
+    // var user = req.query.params.user;
     var vid = req.query.params.vid;
   } else {
-    var user = req.query.user;
+    // var user = req.query.user;
     var vid = req.query.vid;
   }
 
@@ -110,11 +112,12 @@ router.get("/", (req, res) => {
  *
  * @returns res success true or false
  */
-router.patch("/editVendorInfo", (req, res) => {
+router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params) {
-    var { user, vid, vendorName, bio, email, pickupInfo } = req.body.params;
+    var { vid, vendorName, bio, email, pickupInfo } = req.body.params;
   } else {
-    var { user, vid, vendorName, bio, email, pickupInfo } = req.body;
+    var { vid, vendorName, bio, email, pickupInfo } = req.body;
   }
 
   // must include editing user and vid; bio and vendorName not always edited
@@ -198,15 +201,16 @@ router.patch("/editVendorInfo", (req, res) => {
     });
 }); // END PATCH /editVendorInfo
 
-router.patch("/emailSchedule", (req, res) => {
+router.patch("/emailSchedule", tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params) {
     var vid = req.body.params.vid;
     var emailSchedule = req.body.params.emailSchedule;
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
   } else {
     var vid = req.body.vid;
     var emailSchedule = req.body.emailSchedule;
-    var user = req.body.user;
+    // var user = req.body.user;
   }
 
   // example:

@@ -8,6 +8,7 @@ import "react-alice-carousel/lib/alice-carousel.css";
 import image1 from "../../images/muclubs.jpg";
 import image2 from "../../images/foodtruck.jpg";
 import image3 from "../../images/horses.jpg";
+import Hidden from "@material-ui/core/Hidden";
 
 export default class Home extends Component {
   render() {
@@ -21,26 +22,20 @@ export default class Home extends Component {
           alignItems="center"
         >
           <div className="helv">
-            <h1> Welcome to ECS193 ECommerce! </h1>
+          <header>
+            <h1> Welcome to ECS193 E-Commerce! </h1>
+            </header>
           </div>
-
-          {/* <img src={require('../../images/wics2.png')} width="100%" /> */}
-          {/* <div className = "homeText">
-          <div className = "center">
-          <p>This is a ecommerce website for UC Davis's clubs. 
-          Here we make merchandise available from all different clubs of Davis.
-          UC Davis clubs typically have an unofficial way to sell their merchandise, usually through Facebook and word of mouth. 
-          There is no easy way to display, buy and sell goods. 
-          </p>
-          </div>
-          </div> */}
 
           <div id="carouselContainer">
             <AliceCarousel
               autoPlay={true}
               autoPlayInterval={3000}
               buttonsDisabled={true}
-            >
+              // responsive={this.responsive}
+              style={{ height: "100vh" }}
+            > 
+            {/* must disable the carousel, cannot override library's responsive design */}
               <img className="slideImage" src={image1} />
               <img className="slideImage" src={image2} />
               <img className="slideImage" src={image3} />

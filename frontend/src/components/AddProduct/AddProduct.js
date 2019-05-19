@@ -175,9 +175,9 @@ class AddProduct extends Component {
       const apiURL = "/api/adminProducts/addNewProduct";
       axios
         .post(apiURL, {
+          withCredentials: true,
           params: {
             vid: this.props.vid,
-            user: this.props.user,
             productInfo: this.state.productInfo,
             productName: this.state.productName,
             productPrice: this.state.productPrice,
@@ -217,9 +217,9 @@ class AddProduct extends Component {
       const apiURL = "/api/adminProducts/addNewProduct";
       axios
         .post(apiURL, {
+          withCredentials: true,
           params: {
             vid: this.props.vid,
-            user: this.props.user,
             productInfo: this.state.productInfo,
             productName: this.state.productName,
             productPrice: this.state.productPrice,
@@ -297,7 +297,9 @@ class AddProduct extends Component {
             {/* toggle visibility of product stock
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
-            <div className = {this.state.itemShowStock} id="row">
+            
+            {/* <div className = {this.state.itemShowStock} id = "row"> */}
+            <div className = "textForm" id = "row">
               <TextField
                 label="Product Stock"
                 required="true"
@@ -306,7 +308,8 @@ class AddProduct extends Component {
                 onChange={(event) => this.setState({ stock: event.target.value })}
                 style={style.field}
               />
-            </div>
+              </div>
+            {/* </div> */}
 
             <FormControl component="fieldset">
             <div className = "textForm">
@@ -484,7 +487,6 @@ const mapStateToProps = state => {
   return {
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     vid: state.auth.vendorID
   };
 };

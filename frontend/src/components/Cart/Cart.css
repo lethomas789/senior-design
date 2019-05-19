@@ -8,8 +8,8 @@
   display: grid;
   grid-template-columns: var(--table-columns);
   max-width: 980px;
-
   margin: 50px auto;
+  height: 100vh;
 }
 
 .table-header {
@@ -54,3 +54,32 @@
   align-self: center;
 }
 */
+@media (max-width: 40em) {
+
+  .cart-table-container {
+    display: grid;
+    grid-template-columns: var(--table-columns);
+    max-width: 980px;
+    margin: 50px auto;
+    height: 100vh;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  #total-text {
+    font-size: 15px;
+  }
+
+  #total-price {
+    font-size: 15px;
+  }
+
+  .table-header {
+    font-size: 15px;
+  }
+  
+  .table-row {
+    font-size: 15px;
+  }
+
+}

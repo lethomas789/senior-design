@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { BrowserRouter as Router, Route } from "react-router-dom";
+import { BrowserRouter as Router, Route, withRouter } from "react-router-dom";
 import "./App.css";
 import About from "./components/About/About";
 import Signup from "./components/Signup/Signup";
@@ -23,6 +23,9 @@ import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
 import SuccessfulPayment from './components/SuccesfulPayment/SuccessfulPayment';
+import { connect } from "react-redux";
+import actions from "./store/actions";
+import axios from 'axios';
 
 import { createBrowserHistory } from "history";
 import AboutClub from "./components/AboutClub/AboutClub";
@@ -37,12 +40,29 @@ require("dotenv").config();
 
 const history = createBrowserHistory();
 
+// const LocationDisplay = withRouter(({location}) => (
+//   <div data-testid="location-display">{location.pathname}</div>
+// ))
+
+/*
+axios.interceptors.request.use(config => {
+  // const token 
+  if (token != null) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+
+  return config;
+}, err => {
+  return Promise.reject(err);
+})
+*/
+
 class App extends Component {
   notificationDOMRef = React.createRef();
 
   addNotification = ({
     title = "Error",
-    message = "Sorry, an error occured.",
+    message = "Sorry, an error occurred.",
     type = "danger",
     duration = 2500
   }) => {
@@ -59,10 +79,49 @@ class App extends Component {
     });
   };
 
+  //check token expiration if user was logged in
+  checkIfTokenNeedsRefresh = () => {
+    if(this.props.login === true){
+      const apiURL = "/api/checkTokenRefresh";
+
+      axios.get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+
+      })
+      //err catches 403 forbidden error
+      .catch(err => {
+        //logout user and then display error message
+        this.addNotification({
+          title: "Error",
+          message:  "Token Expired Please Login Again",
+          type:  "danger",
+        });
+
+        this.props.updateLogout();
+
+        //goal is to show alert message and then redirect
+        //set timeout, after 4 seconds redirect to login
+        setTimeout(() => {
+           window.location = "/login";
+        }, 4000);
+
+      })
+    }
+  }
+
+  componentDidMount() {
+    // alert("testing to see if token needs to be refreshed");
+    //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
+    //if token is expired, logout user and redirect to login
+    this.checkIfTokenNeedsRefresh();
+  }
+  
   render() {
+
     return (
       <Router>
-
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />
@@ -234,8 +293,20 @@ class App extends Component {
                 />
               )}
             />
+
+            <Route
+              exact 
+              path="/successfulPayment"
+              render={props => (
+                <GenericPage
+                  {...props}
+                  notifier={this.addNotification}
+                  pageText={"Thanks for purchasing. Please check your e-mail inbox for an order receipt."}
+                />
+              )}
+            />
             
-            <Route exact path="/successfulPayment" component = {SuccessfulPayment}/>
+            {/* <Route exact path="/successfulPayment" component = {SuccessfulPayment}/> */}
 
             <Footer />
             <ReactNotification ref={this.notificationDOMRef} />
@@ -246,4 +317,23 @@ class App extends Component {
   }
 }
 
-export default App;
+//obtain state from store as props for component
+//get cart items, login value, and user email
+const mapStateToProps = state => {
+  return {
+    login: state.auth.login
+  };
+};
+
+//dispatch action to reducer
+const mapDispatchToProps = dispatch => {
+  return {
+    //update store that user logged out
+    updateLogout: () =>
+      dispatch({
+        type: actions.LOGGED_OUT
+      })
+  };
+};
+
+export default connect(mapStateToProps, mapDispatchToProps)(App);

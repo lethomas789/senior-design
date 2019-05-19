@@ -28,7 +28,19 @@ export default class Clubs extends Component {
   componentDidMount() {
     const route = `/api/getVendorInfo`;
 
-    axios
+    // const res = await axios.get(route);
+
+    // if (res.data.success) {
+    //   this.setState({ vendors: res.data.vendors });
+    // } else {
+    //   this.props.notifier({
+    //     title: "Error",
+    //     message: res.data.message.toString(),
+    //     type: "danger"
+    //   });
+    // }
+
+    return axios
       .get(route)
       .then(res => {
         if (res.data.success) {
