@@ -77,7 +77,7 @@ class VendorView extends Component {
         <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
           <h1> {this.state.vendorName} </h1>
           <h3> <Link to={`/aboutClub/${this.props.vendor}`}> About Us </Link> </h3>
-          <h3> Bio: {this.state.bio} </h3>
+          {/* <h3> Bio: {this.state.bio} </h3> */}
         </Grid>
 
         <Grid container spacing={24} direction="row" justify="center" alignItems="center" justify-xs-space-evenly>

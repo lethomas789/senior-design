@@ -8,19 +8,22 @@ function DisplayClub(props) {
   const { bio, vendorName, bioPicture, vid } = props;
 
   return (
-    <Link to={`/aboutClub/${vid}`} className="moreColls">
-      <div className="roww">
-        <div className="moreContainer">
-          <img
-            data-testid={vid}
-            src={bioPicture}
-            alt={`Club: ${vid}`}
-            width="100%"
-          />
-          <div className="hero-textt">{vendorName}</div>
+    <div>
+      <Link to={`/aboutClub/${vid}`} className="moreColls">
+        <div className="roww">
+          <div className="moreContainer">
+            <img
+              data-testid={vid}
+              src={bioPicture}
+              alt={`Club: ${vid}`}
+              width="100%"
+            />
+            <div className="hero-textt">{vendorName}</div>
+          </div>
         </div>
-      </div>
-    </Link>
+      </Link>
+      <Link to={`/vendorProducts/${vid}`}> See club's items.</Link>
+    </div>
   );
 }
 

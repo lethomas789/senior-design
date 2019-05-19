@@ -166,6 +166,7 @@ class OrderHistory extends Component {
 
   componentDidMount() {
     const apiURL = "/api/orders/getUserOrders";
+    console.log('HISTORY MOUNTED');
 
     axios
       .get(apiURL, {

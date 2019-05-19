@@ -13,6 +13,10 @@
   margin: 0 auto;
 }
 
+#display-clubs-container a {
+  color: var(--color-link);
+}
+
 .moreColls {
   float: left;
   width: 50%;

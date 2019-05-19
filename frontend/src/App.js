@@ -125,10 +125,11 @@ class App extends Component {
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />
-            <Route exact path="/" component={Home} />
-            <Route exact path="/about" component={About} />
 
             <Switch>
+
+              <Route exact path="/" component={Home} />
+              <Route exact path="/about" component={About} />
               <Route
                 exact
                 path="/shop"
@@ -296,6 +297,7 @@ class App extends Component {
                   />
                 )}
               />
+
             </Switch>
 
             <Footer />
