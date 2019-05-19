@@ -5,13 +5,13 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "./Signup.css";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import { DialogActions } from "@material-ui/core";
+// import Dialog from "@material-ui/core/Dialog";
+// import DialogContent from "@material-ui/core/DialogContent";
+// import DialogContentText from "@material-ui/core/DialogContentText";
+// import { DialogActions } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
-import coffee from "../../images/coffee.jpg";
+// import CircularProgress from "@material-ui/core/CircularProgress";
+// import coffee from "../../images/coffee.jpg";
 import PropTypes from "prop-types";
 import { Redirect } from "react-router-dom";
 
@@ -249,7 +249,7 @@ class Signup extends Component {
             <div className="pushDown">
               <GoogleLogin
                 clientId={process.env.REACT_APP_GOOGLE_ID}
-                buttononText="Login"
+                buttonText="Sign Up through Google"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
                 cookiePolicy={"single_host_origin"}

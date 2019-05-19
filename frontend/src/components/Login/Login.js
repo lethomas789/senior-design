@@ -317,7 +317,7 @@ class Login extends Component {
             <div className="pushDown2">
               <GoogleLogin
                 clientId={process.env.REACT_APP_GOOGLE_ID}
-                buttononText="Login"
+                buttonText="Login through Google"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
                 cookiePolicy={"single_host_origin"}
