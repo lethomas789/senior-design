@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import "./Cart.css";
-import axios from "axios";
+// import axios from "axios";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
-import Grid from "@material-ui/core/Grid";
 import CartItem from "../CartItem/CartItem";
 import Checkout from "../Checkout/Checkout";
-import { Link } from "react-router-dom";
-import EmptyItem from "../EmptyItem/EmptyItem";
-import ReactNotification from "react-notifications-component";
+// import { Link } from "react-router-dom";
+// import EmptyItem from "../EmptyItem/EmptyItem";
+// import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
 //component to display user's cart

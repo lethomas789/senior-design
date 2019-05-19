@@ -1,12 +1,12 @@
 import React, { Component } from "react";
 import "./ShopView.css";
 import ShopItem from "../ShopItem/ShopItem";
-import Grid from "@material-ui/core/Grid";
+// import Grid from "@material-ui/core/Grid";
 import axios from "axios";
 import Hidden from '@material-ui/core/Hidden';
 import { connect } from "react-redux";
 import actions from "../../store/actions";
-import { banner } from "../../images/generic_club.jpg";
+// import { banner } from "../../images/generic_club.jpg";
 
 class ShopView extends Component {
   constructor(props) {

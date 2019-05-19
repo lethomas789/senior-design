@@ -1,15 +1,15 @@
 import React, { Component, Fragment } from "react";
 import "./Checkout.css";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+// import Grid from "@material-ui/core/Grid";
+// import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 // import PaypalExpressBtn from "react-paypal-express-checkout";
 import PaypalButton from "../PaypalButton/PaypalButton";
 import axios from "axios";
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 //styles for checkout button
 const styles = theme => ({

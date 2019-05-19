@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import "./ShopItem.css";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import actions from "../../store/actions";
 import { connect } from "react-redux";
 import axios from "axios";
-import { withStyles } from "@material-ui/core/styles";
+// import { withStyles } from "@material-ui/core/styles";
 import { Link, withRouter } from "react-router-dom";
 
 //component to display product info

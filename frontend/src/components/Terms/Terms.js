@@ -1,8 +1,8 @@
-import React, {Component, Fragment } from "react";
-import PropTypes from "prop-types";
+import React, {Component } from "react";
+// import PropTypes from "prop-types";
 import "./Terms.css"
-import axios from "axios";
-import Slider from 'react-slick';
+// import axios from "axios";
+// import Slider from 'react-slick';
 
 
 export default class Terms extends Component {

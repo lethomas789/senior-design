@@ -1,10 +1,10 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "./AboutClub.css";
 import axios from "axios";
-import Slider from "react-slick";
+// import Slider from "react-slick";
 import testPicture from "../../images/wics2.png";
-import Hidden from "@material-ui/core/Hidden";
+// import Hidden from "@material-ui/core/Hidden";
 
 class ClubInfo extends Component {
   static propTypes = {

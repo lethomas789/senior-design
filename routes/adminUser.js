@@ -77,7 +77,7 @@ router.get('/', tokenMiddleware, (req, res) => {
     })
     .then(() => {
       // once finished, send the object to frontend
-      console.log('Got admin info for provided user:', user);
+      // console.log('Got admin info for provided user:', user);
       return res.status(200).json({
         success: true,
         message: 'Got admin info for provided user.',

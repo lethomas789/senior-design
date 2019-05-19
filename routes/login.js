@@ -108,7 +108,7 @@ router.post("/", (req, res) => {
                   isAdmin: true
                 };
 
-                console.log("user signing is an admin");
+                // console.log("user signing is an admin");
                 jwt.sign(
                   payload,
                   process.env.JWT_SECRET,

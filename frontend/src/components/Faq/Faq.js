@@ -1,4 +1,5 @@
 import React, {Component, Fragment } from "react";
+import "./Faq.css";
 
 export default class Privacy extends Component {
   render(){

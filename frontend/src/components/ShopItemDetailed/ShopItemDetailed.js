@@ -11,7 +11,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class CarouselImage extends Component {
   handleClick = () => {

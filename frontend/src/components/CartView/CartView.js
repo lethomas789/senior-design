@@ -1,11 +1,11 @@
 import React, { Component } from "react";
 import Cart from "../Cart/Cart";
-import axios from "axios";
+// import axios from "axios";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
 import "./CartView.css";
 import { Link, Redirect } from 'react-router-dom';
-import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
+// import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
 
 //split cart into groups, grouped by vendors
 //each subcart has items, subtotal, and checkout button

@@ -7,14 +7,14 @@ import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import { DialogActions } from "@material-ui/core";
+// import Dialog from "@material-ui/core/Dialog";
+// import DialogContent from "@material-ui/core/DialogContent";
+// import DialogContentText from "@material-ui/core/DialogContentText";
+// import { DialogActions } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+// import CircularProgress from "@material-ui/core/CircularProgress";
 import PropTypes from "prop-types";
-import painting from "../../images/painting.jpg";
+// import painting from "../../images/painting.jpg";
 import { Link, Redirect } from "react-router-dom";
 
 const styles = theme => ({
