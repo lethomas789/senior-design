@@ -127,7 +127,10 @@
   display: inline-block;
   margin-left: 20px;
   background-color: #8098c0;
+}
 
+.extra {
+  margin-bottom: 30px;
 }
 
 .about-main-imagee {
@@ -176,6 +179,10 @@
     margin-top: 30px;
     margin-bottom: 30px;
     margin-left: 0;
+  }
+
+  .extra {
+    display: none;
   }
 
 }
