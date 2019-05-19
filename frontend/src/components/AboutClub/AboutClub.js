@@ -4,6 +4,7 @@ import "./AboutClub.css";
 import axios from "axios";
 import Slider from 'react-slick';
 import testPicture from "../../images/wics2.png";
+import Hidden from "@material-ui/core/Hidden";
 
 class ClubInfo extends Component {
   static propTypes = {
@@ -15,9 +16,9 @@ class ClubInfo extends Component {
   render() {
     const { vendorName, bio, bioPictures } = this.props;
     return (
-        <div className = "greater-containerr">
-        <div className = "about-containerr">
-        <header className = "about-headerr">{vendorName}</header>
+        <div className = "greater-container">
+        <div className = "about-container">
+        <header className = "about-header">{vendorName}</header>
         {/* <div className="club-bio">{bio}</div> */}
         <div className = "about-main-imagee">
         <ClubImages bioPictures={bioPictures} /></div>
@@ -25,11 +26,16 @@ class ClubInfo extends Component {
         <div className="club-bio">Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique alias libero!</div>
         {/* <div className="club-links">LINKS BOX</div> */}
 
+        <Hidden smDown>
+
         <div className="club-links"><div className = "hero-texttt">Events every week!</div></div>
         {/* <div className="club-meetings">CLUB MEETINGS/PICKUP INFO BOX</div> */}
 
         <div className="club-meetings"><div className = "hero-texttt">Shop our merch!</div></div>
+        </Hidden>
         </div>
+
+
         </div>
 
     );
