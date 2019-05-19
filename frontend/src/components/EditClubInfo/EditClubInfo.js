@@ -153,38 +153,43 @@ class EditClubInfo extends Component {
             onChange={event =>
               this.setState({ vendorName: event.target.value })
             }
+            style={{ paddingBottom: "20px" }}
           />
 
           <TextField
             className="inputWidth"
             label="Biography"
             value={this.state.bio}
-            id="standard-full-width"
+
             onChange={event => this.setState({ bio: event.target.value })}
             multiline={true}
-            rows={4}
+            
             rowsMax={Infinity}
+
+            style={{ paddingBottom: "20px" }}
           />
 
           <TextField
             className="inputWidth"
             label="Item Pickup Info"
             value={this.state.pickupInfo}
-            id="standard-full-width"
+
             onChange={event => this.setState({ pickupInfo: event.target.value })}
             multiline={true}
-            rows={4}
+            style={{ paddingBottom: "20px"}}
+            
             rowsMax={Infinity}
           />
 
           <TextField
             className="inputWidth"
-            label="Email to be contacted for order purchase notifications."
+            label="Contact Email"
             type="email"
             value={this.state.email}
             onChange={event =>
               this.setState({ email: event.target.value })
             }
+            style={{ paddingBottom: "20px" }}
           />
         </form>
 

@@ -187,7 +187,7 @@ class Signup extends Component {
         <div id="signupForms">
           <Paper className="signupPaperContainer">
             <h1> Sign Up </h1>
-            <div className="textForm" id="row">
+            <div className="textFormm" id="row">
               <TextField
                 label="First Name"
                 required="true"
@@ -197,7 +197,7 @@ class Signup extends Component {
                 onKeyDown={this.handleEnter}
               />
             </div>
-            <div className="textForm" id="row">
+            <div className="textFormm" id="row">
               <TextField
                 label="Last Name"
                 required="true"
@@ -207,7 +207,7 @@ class Signup extends Component {
                 onKeyDown={this.handleEnter}
               />
             </div>
-            <div className="textForm" id="row">
+            <div className="textFormm" id="row">
               <TextField
                 label="Email"
                 required="true"
@@ -215,7 +215,7 @@ class Signup extends Component {
                 onKeyDown={this.handleEnter}
               />
             </div>
-            <div className="textForm" id="row">
+            <div className="textFormm" id="row">
               <TextField
                 type="password"
                 label="Password"
@@ -226,7 +226,7 @@ class Signup extends Component {
                 onKeyDown={this.handleEnter}
               />
             </div>
-            <div className="textForm" id="row">
+            <div className="textFormm" id="row">
               <TextField
                 type="password"
                 label="Confirm Password"

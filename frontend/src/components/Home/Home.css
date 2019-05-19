@@ -148,15 +148,6 @@ p {
   background-color: white;
 }
 
-/* 
-.center {
-  display: block;
-  margin-left: auto;
-  margin-right: auto; 
-  align-items: center; 
-  text-align: center;
-  width: 800px;
-} */
 
 /* Create three equal columns that floats next to each other */
 .colls {
@@ -189,14 +180,34 @@ p {
 }
 
 @media (max-width: 40em) {
+
+  #homeContainer {
+    /* display:flex; */
+    /* flex-direction: column; */
+    /* margin-left: 100px;
+    margin-right: 100px; */
+    padding-bottom: 50px;
+    min-height: 90vh;
+  }
+
    .helv {
      font-size: 10px;
+   }
+
+   .helvv {
+     font-size: 9px;
+   }
+
+
+
+   .hero-textt {
+     font-size: 30px;
    }
 
   #carouselContainer {
     display: block;
     /* height: 100vh; */
-    width: 80vh;
+    width: 50vh;
   }
 
   .each-fade {
@@ -206,11 +217,10 @@ p {
   .each-fade .image-container {
     width: 75%;
     overflow: hidden;
-    height: 100vh;
   }
 
   .slideImage {
-    height: 100vh;
+    height: 50vh;
     /* width: 100vh; */
     background: cover;
   }
@@ -222,6 +232,20 @@ p {
   .each-fade .image-container img {
     width: 100%;
     height: 100vh;
+  }
+
+  .colls {
+    float: left;
+    width: 100%;
+    padding: 10px;
+  }
+  
+  /* Clear floats after the columns */
+  .roww:after {
+    content: "";
+    width: 90vw;
+    /* display: table; */
+    /* clear: both; */
   }
 
 

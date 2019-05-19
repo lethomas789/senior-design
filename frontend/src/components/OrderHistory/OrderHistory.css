@@ -17,4 +17,36 @@
 #order-history-items-container {
     font-family: 'Raleway';
     /* height: 95vh; */
+    min-height: 95vh;
 }
+
+.centerize {
+    align-items: center;
+    justify-self: center;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+    
+}
+
+@media (max-width: 40em) {
+    #order-history-container {
+        min-height: 90vh;
+        width: 80vw;
+    }
+
+    #order-history-filters-container {
+        display: flex;
+        /* width: 950px; */
+        /* justify-content: space-between; */
+        margin-top: 20px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+
+
+
+}
+
+
