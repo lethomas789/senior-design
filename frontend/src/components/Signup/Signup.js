@@ -249,7 +249,7 @@ class Signup extends Component {
             <div className="pushDown">
               <GoogleLogin
                 clientId={process.env.REACT_APP_GOOGLE_ID}
-                buttonText="Sign Up through Google"
+                buttonText="Sign Up with Google"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
                 cookiePolicy={"single_host_origin"}
