@@ -239,7 +239,7 @@ class ItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayStock()}
           <p>
-            <b>Club</b>:
+            <b>Club: </b>
             <Link to={`/vendorProducts/${this.props.vendorID}`}>
               {clubName}
             </Link>
@@ -425,7 +425,7 @@ class ShopItemDetailed extends Component {
   //add item to user's cart
   addItem = () => {
     //check if user is logged in
-    if (this.state.login === false) {
+    if (this.props.login === false) {
       // alert("please login to add to cart");
       //switch from alert to notifier
       this.props.notifier({
