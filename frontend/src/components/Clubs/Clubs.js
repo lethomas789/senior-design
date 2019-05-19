@@ -8,7 +8,7 @@ function DisplayClub(props) {
   const { bio, vendorName, bioPicture, vid } = props;
 
   return (
-    <div>
+    <div className="display-individual-club-container">
       <Link to={`/aboutClub/${vid}`} className="moreColls">
         <div className="roww">
           <div className="moreContainer">
