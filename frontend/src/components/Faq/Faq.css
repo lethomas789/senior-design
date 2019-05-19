@@ -11,5 +11,11 @@
     margin: auto;
     width: 80%;
     padding: 10px;
+}
 
+.each-question-faq {
+    padding-bottom: 20px;
+    margin: auto;
+    width: 50%;
+    padding: 10px;
 }
