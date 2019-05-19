@@ -39,14 +39,25 @@ app.use(cookieParser('TODO-SECRET'));
 //serve react files
 app.use(express.static(path.join(__dirname, "/frontend/build")));
 
+const cookieConfig = { 
+  httpOnly: true,   // prevent frontend JS from reading cookies
+  // secure: true,     // force https
+  maxAge: 3600000,  // cookie expires in 1 hour
+  signed: true,
+}
+
 // middleware to extract and verify token from headers
 const checkToken = (req, res, next) => {
 
   if (!req.signedCookies.token) {
     // if no tokens, unauthorized request
     console.log("Unauthorized. No token.");
-    res.clearCookie("token");
-    res.sendStatus(403);
+    res.clearCookie("token", cookieConfig);
+    // res.sendStatus(403);
+    res.json({
+      success: false,
+      message: 'Please login to view.'
+    })
   } else {
     // if
     next();
@@ -59,7 +70,7 @@ const decodeToken = (req, res, next) => {
     if (err) {
       // if error, send forbidden (403)
       console.log("ERROR: could not connect to protected route");
-      res.clearCookie("token");
+      res.clearCookie("token", cookieConfig);
       return res.sendStatus(403);
     } else {
       // if token is successfully verified, we can use the authorized data
@@ -89,6 +100,7 @@ const getProductInfo = require("./routes/getProductInfo");
 const stock = require("./routes/stock");
 const resetPass = require("./routes/resetPass");
 const checkTokenRefresh = require("./routes/checkTokenRefresh");
+const logout = require("./routes/logout");
 
 app.use("/api/users", users);
 app.use("/api/signup", signup);
@@ -106,6 +118,7 @@ app.use("/api/getProductInfo", getProductInfo);
 app.use("/api/stock", stock);
 app.use("/api/resetPass", resetPass);
 app.use("/api/checkTokenRefresh", checkTokenRefresh);
+app.use("/api/logout", logout);
 
 //fix react app crashing on refresh
 app.get("*", (req, res) => {
