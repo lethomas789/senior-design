@@ -131,11 +131,15 @@ class ShopItem extends Component {
             {/* <Button size="small" color="primary" onClick={this.addItem}>
               Add To Cart
             </Button> */}
-            <Button size="small" color="primary" onClick={this.updateVendor}>
-              <Link to={`/vendorProducts/${this.state.vendorID}`}>
-                More From Vendor
-              </Link>
-            </Button>
+            {this.props.displayLink ? (
+              <Button size="small" color="primary" onClick={this.updateVendor}>
+                <Link to={`/vendorProducts/${this.state.vendorID}`}>
+                  More From Vendor
+                </Link>
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

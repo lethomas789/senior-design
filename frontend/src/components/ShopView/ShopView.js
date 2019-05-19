@@ -60,6 +60,7 @@ class ShopView extends Component {
           productPrice={result.productPrice}
           stock={result.stock}
           productInfo={result.productInfo}
+          displayLink={true}
         />
       );
     });
