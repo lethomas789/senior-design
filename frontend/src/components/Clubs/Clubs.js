@@ -8,22 +8,22 @@ function DisplayClub(props) {
   const { bio, vendorName, bioPicture, vid } = props;
 
   return (
-    <div className="display-individual-club-container">
-      <Link to={`/aboutClub/${vid}`} className="moreColls">
-        <div className="roww">
-          <div className="moreContainer">
-            <img
-              data-testid={vid}
-              src={bioPicture}
-              alt={`Club: ${vid}`}
-              width="100%"
-            />
-            <div className="hero-textt">{vendorName}</div>
-          </div>
+    <Link to={`/aboutClub/${vid}`} className="moreColls">
+    <figure>
+      <div className="roww">
+        <div className="moreContainer">
+          <img src={bioPicture} alt="Display Club" width="100%" />
+          <div className="hero-textt">{vendorName}</div>
         </div>
-      </Link>
-      <Link to={`/vendorProducts/${vid}`}> See club's items.</Link>
-    </div>
+      </div>
+      <figcaption>
+      <Link className = "shopClub" to={`/vendorProducts/${vid}`}> See club's items.</Link>
+      </figcaption>
+      </figure>
+      
+    </Link>
+
+
   );
 }
 
@@ -36,19 +36,7 @@ export default class Clubs extends Component {
   componentDidMount() {
     const route = `/api/getVendorInfo`;
 
-    // const res = await axios.get(route);
-
-    // if (res.data.success) {
-    //   this.setState({ vendors: res.data.vendors });
-    // } else {
-    //   this.props.notifier({
-    //     title: "Error",
-    //     message: res.data.message.toString(),
-    //     type: "danger"
-    //   });
-    // }
-
-    return axios
+    axios
       .get(route)
       .then(res => {
         if (res.data.success) {

@@ -1,0 +1,15 @@
+.faq-header {
+    text-align: center;
+}
+
+.faq-container {
+    height: 100vh;
+}
+
+.each-question {
+    padding-bottom: 20px;
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+
+}
