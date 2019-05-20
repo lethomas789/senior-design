@@ -265,7 +265,8 @@ class Checkout extends Component {
             if (res.data.success === true) {
               //update new items and redirect to successful payment page
               this.props.updateItems(res.data.data);
-              window.location = "/successfulPayment";
+              this.props.history.push('/successfulPayment');
+              // window.location = "/successfulPayment";
               // this.setState(() => ({ toRedirect: true }));
               // this.props.handleRedirect();
             } else {
@@ -421,7 +422,6 @@ class Checkout extends Component {
   //check quantity of stock in database before proceeding with payment
   render() {
     const { classes } = this.props;
-
 
     return (
       <div>

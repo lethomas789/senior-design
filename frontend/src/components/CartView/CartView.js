@@ -4,7 +4,7 @@ import Cart from "../Cart/Cart";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
 import "./CartView.css";
-import { Link, Redirect } from 'react-router-dom';
+import { Link, Redirect, withRouter } from "react-router-dom";
 // import AddShoppingCart from "@material-ui/icons/AddShoppingCart";
 
 //split cart into groups, grouped by vendors
@@ -17,15 +17,17 @@ class CartView extends Component {
       allVendors: [],
       vendorItemsSeparated: [],
       currentCartItems: this.props.items,
-      toRedirect: false,
+      toRedirect: false
     };
   }
 
   // handle redirect called from checkout on successful purchase
   handleRedirect = () => {
     // this.setState(() => ({ toRedirect: true }));
-    this.setState({ toRedirect: true });
-  }
+    // this.setState({ toRedirect: true });
+    console.log('PROPS ARE:', this.props);
+    this.props.history.push("/successfulPayment");
+  };
 
   //pass list of vendors to function to categorize items
   separateItems = vendorList => {
@@ -72,7 +74,7 @@ class CartView extends Component {
 
     //store result of array of vendors available
     this.setState({
-      allVendors: currentVendorArray 
+      allVendors: currentVendorArray
     });
 
     //call function to separate items based on vendor
@@ -81,23 +83,26 @@ class CartView extends Component {
 
   //update list of items in user's cart after user removes item from cart
   //this function is passed down as props to CartItem, when CartItem removes item calls parent function
-  updateAfterDelete = (newItems) => {
-    this.setState({
-      currentCartItems: newItems
-    }, () => {
-      // console.log("separting vendors after delete");
-      this.separateVendors();
-      this.forceUpdate();
-    })
-  }
+  updateAfterDelete = newItems => {
+    this.setState(
+      {
+        currentCartItems: newItems
+      },
+      () => {
+        // console.log("separting vendors after delete");
+        this.separateVendors();
+        this.forceUpdate();
+      }
+    );
+  };
 
   //update which vendors to render in CartView
   //pass function down to child, let child update based on items in cart for vendor
-  updateVendorsView = (newVendors) => {
+  updateVendorsView = newVendors => {
     this.setState({
       allVendors: newVendors
-    })
-  }
+    });
+  };
 
   //separate items by vendors when component loads to page
   componentDidMount() {
@@ -105,7 +110,6 @@ class CartView extends Component {
   }
 
   render() {
-
     if (this.state.toRedirect === true) {
       const pageText =
         "Thanks for purchasing. Please check your e-mail inbox for an order receipt.";
@@ -118,28 +122,36 @@ class CartView extends Component {
     // if empty cart, display empty cart text
     else if (this.state.allVendors.length === 0) {
       var renderCarts = (
-        <div id='empty-cart'>
+        <div id="empty-cart">
           No items in cart. Click here to <Link to="/shop"> Shop </Link>
           {/* <AddShoppingCart style={{width: "400px", height: "400px"}}/> */}
         </div>
-      )
-    }
-   else {
-    //render carts for each vendor
-    var renderCarts = this.state.allVendors.map(vendor => {
-      //for each vendor, want to render a cart
-      for (let i = 0; i < this.state.vendorItemsSeparated.length; i++) {
-        var currentListItems = this.state.vendorItemsSeparated[i];
-        if(currentListItems[0].vid === vendor){
-          return(
-            <Cart key = {vendor} passedAllVendors = {this.state.allVendors} updateVendorsView = {this.updateVendorsView} passedItems = {currentListItems} passedVendor = {vendor} notifier = {this.props.notifier} updateAfterDelete = {this.updateAfterDelete} handleRedirect={this.handleRedirect} />
-          )
+      );
+    } else {
+      //render carts for each vendor
+      var renderCarts = this.state.allVendors.map(vendor => {
+        //for each vendor, want to render a cart
+        for (let i = 0; i < this.state.vendorItemsSeparated.length; i++) {
+          var currentListItems = this.state.vendorItemsSeparated[i];
+          if (currentListItems[0].vid === vendor) {
+            return (
+              <Cart
+                key={vendor}
+                passedAllVendors={this.state.allVendors}
+                updateVendorsView={this.updateVendorsView}
+                passedItems={currentListItems}
+                passedVendor={vendor}
+                notifier={this.props.notifier}
+                updateAfterDelete={this.updateAfterDelete}
+                handleRedirect={this.handleRedirect}
+              />
+            );
+          }
         }
-      }
-    });
-   }
+      });
+    }
 
-    return <div id = "cart-items">{renderCarts}</div>;
+    return <div id="cart-items">{renderCarts}</div>;
   }
 }
 
@@ -177,7 +189,10 @@ const mapStateToProps = state => {
   };
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(CartView);
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(CartView)
+);

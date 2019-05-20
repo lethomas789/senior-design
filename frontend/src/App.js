@@ -11,7 +11,7 @@ import Signup from "./components/Signup/Signup";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import ButtonAppBar from "./components/ButtonAppBar/ButtonAppBar";
-import Shop from "./components/Shop/Shop";
+import ShopView from "./components/ShopView/ShopView";
 // import Cart from "./components/Cart/Cart";
 import VendorView from "./components/VendorView/VendorView";
 import VendorSignup from "./components/VendorSignup/VendorSignup";
@@ -37,7 +37,7 @@ import AboutClub from "./components/AboutClub/AboutClub";
 import Clubs from "./components/Clubs/Clubs";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
-import GenericPage from './components/GenericPage/GenericPage'
+import GenericPage from "./components/GenericPage/GenericPage";
 import Terms from "./components/Terms/Terms";
 import Privacy from "./components/Privacy/Privacy";
 import Faq from "./components/Faq/Faq";
@@ -63,21 +63,24 @@ axios.interceptors.request.use(config => {
 */
 
 // on every response received by axios, check for 403
-axios.interceptors.response.use((res) => {
-  // if no error, pass on the response
-  return res;
-}, (err) => {
-  // if received a 403 forbidden, then token has expired
-  // redirect them to login
-  if(err.response.status === 403) {
-    history.push('/login');
+axios.interceptors.response.use(
+  res => {
+    // if no error, pass on the response
+    return res;
+  },
+  err => {
+    // if received a 403 forbidden, then token has expired
+    // redirect them to login
+    if (err.response.status === 403) {
+      history.push("/login");
+    }
+
+    // in hindsight, could have just called notifier error here rather than in
+    // components
+
+    return err.response;
   }
-
-  // in hindsight, could have just called notifier error here rather than in
-  // components
-
-  return err.response;
-});
+);
 
 class App extends Component {
   notificationDOMRef = React.createRef();
@@ -145,14 +148,13 @@ class App extends Component {
           <div>
             <ButtonAppBar notifier={this.addNotification} />
             <Switch>
-
               <Route exact path="/" component={Home} />
               <Route exact path="/about" component={About} />
               <Route
                 exact
                 path="/shop"
                 render={props => (
-                  <Shop {...props} notifier={this.addNotification} />
+                  <ShopView {...props} notifier={this.addNotification} />
                 )}
               />
 
@@ -306,29 +308,29 @@ class App extends Component {
                 )}
               />
 
-	    <Route 
-              exact 
-              path="/terms" 
-              render = {props => (
-                <Terms {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                exact
+                path="/terms"
+                render={props => (
+                  <Terms {...props} notifier={this.addNotification} />
+                )}
+              />
 
-	    <Route 
-              exact 
-              path="/privacy" 
-              render = {props => (
-                <Privacy {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                exact
+                path="/privacy"
+                render={props => (
+                  <Privacy {...props} notifier={this.addNotification} />
+                )}
+              />
 
-	    <Route 
-              exact 
-              path="/faq" 
-              render = {props => (
-                <Faq {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                exact
+                path="/faq"
+                render={props => (
+                  <Faq {...props} notifier={this.addNotification} />
+                )}
+              />
 
               <Route
                 render={props => (
@@ -339,7 +341,6 @@ class App extends Component {
                   />
                 )}
               />
-
             </Switch>
 
             <Footer />

@@ -145,6 +145,7 @@ class PaypalButton extends React.Component {
                 returnUrl: data.returnUrl
               };
 
+              this.setState({ showButton: false });
               onSuccess(payment);
             })
             .catch(err => {
