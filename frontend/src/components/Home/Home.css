@@ -59,7 +59,9 @@
 }
 
 .decorated {
-  font-family: 'Raleway';
+  font-family: 'Proxima Nova';
+  font-style: medium;
+  font-weight: 400;
 }
 
 h3 {
@@ -113,7 +115,7 @@ h3 {
   transform: translate(-50%, -50%);
   color: white;
   z-index: 6;
-  font-family: 'Raleway';
+  font-family: 'Proxima Nova';
 }
 
 p {
@@ -130,12 +132,14 @@ p {
 }
 
 .helv {
-  font-family: "Comfortaa";
+  font-family: 'Proxima Nova';
+  font-style: medium;
+  font-weight: 500;
   /* padding-top: 30px; */
 }
 
 .helvv {
-  font-family: "Raleway";
+  font-family: "Proxima Nova";
   padding-bottom: 30px;
 }
 

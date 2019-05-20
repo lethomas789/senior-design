@@ -196,8 +196,8 @@ class ApparelItemInfo extends Component {
           <Button
             variant="contained"
             size="small"
-            color="primary"
             onClick={addItem}
+            style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
           >
             Add To Cart
           </Button>
@@ -266,6 +266,7 @@ class ItemInfo extends Component {
             size="small"
             color="primary"
             onClick={addItem}
+            style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
           >
             Add To Cart
           </Button>

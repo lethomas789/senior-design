@@ -316,8 +316,8 @@ class Login extends Component {
             <div className="pushDown">
               <Button
                 variant="contained"
-                color="primary"
                 onClick={this.sendLogin}
+                style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
               >
                 Login
               </Button>
