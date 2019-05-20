@@ -472,7 +472,14 @@ class AddProduct extends Component {
               />
             </div>
 
-            <Button variant = "contained" color = "primary" onClick = {this.addProduct}> Add Product  </Button>
+            <Button variant = "contained" 
+            onClick = {this.addProduct}
+            style = {{backgroundColor:"#DAAA00",
+                  color: "white", 
+                  fontFamily: "Proxima Nova", 
+                  boxShadow: "none"}}> 
+                  Add Product  
+                  </Button>
             {/* </Paper> */}
       </div>
     );

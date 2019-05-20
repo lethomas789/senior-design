@@ -500,7 +500,11 @@ class EditItemView extends Component {
                   variant="contained"
                   size="small"
                   color="primary"
-                  onClick = {this.updateItemInfo}> 
+                  onClick = {this.updateItemInfo}
+                  style = {{backgroundColor:"#DAAA00",
+                  color: "white", 
+                  fontFamily: "Proxima Nova", 
+                  boxShadow: "none"}}> 
                   Update Item 
                 </Button>   
                 </div>    

@@ -194,7 +194,12 @@ class EditClubInfo extends Component {
         </form>
 
         <div className="btn-update-info">
-          <Button variant="contained" color="primary" onClick={this.sendEdit}>
+          <Button variant="contained" 
+          onClick={this.sendEdit}
+          style = {{backgroundColor:"#DAAA00",
+                  color: "white", 
+                  fontFamily: "Proxima Nova", 
+                  boxShadow: "none"}}>
             Update Club Info
           </Button>
         </div>
@@ -218,6 +223,10 @@ class EditClubInfo extends Component {
             variant="contained"
             color="primary"
             onClick={this.updateEmailPreferences}
+            style = {{backgroundColor:"#DAAA00",
+                  color: "white", 
+                  fontFamily: "Proxima Nova", 
+                  boxShadow: "none"}}
           >
             Update Email Preferences
           </Button>

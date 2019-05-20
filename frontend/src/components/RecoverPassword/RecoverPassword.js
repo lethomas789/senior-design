@@ -94,9 +94,11 @@ class RecoverPassword extends Component {
             variant="contained"
             color="primary"
             onClick={this.sendRecoverEmail}
-            style={{
-              marginTop: "20px"
-            }}
+            style = {{backgroundColor:"#DAAA00", 
+            color: "white", 
+            fontFamily: "Proxima Nova", 
+            marginTop: "20px",
+            boxShadow: "none"}}
           >
             Recover Password
           </Button>
