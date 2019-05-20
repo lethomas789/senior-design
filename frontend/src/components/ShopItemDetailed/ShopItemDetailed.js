@@ -443,7 +443,7 @@ class ShopItemDetailed extends Component {
       this.props.notifier({
         title: "Error",
         message: "Cannot add a quantity of 0 to cart.",
-        type: "danger"
+        type: "warning"
       });
     }
 
@@ -456,7 +456,7 @@ class ShopItemDetailed extends Component {
       //switch from alert to notifier
       this.props.notifier({
         title: "Error",
-        message: "Quantity selected exceeds stock.",
+        message: "Sorry, quantity selected exceeds stock.",
         type: "danger"
       });
 
@@ -473,7 +473,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
           //add item to cart
@@ -487,7 +487,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
           else {
@@ -501,7 +501,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
 
@@ -515,7 +515,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
 
@@ -529,7 +529,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
 
@@ -541,8 +541,8 @@ class ShopItemDetailed extends Component {
         default:
           this.props.notifier({
             title: "Error",
-            message: "Please select size!",
-            type: "danger"
+            message: "Please select a size.",
+            type: "warning"
           });
       }
     }
