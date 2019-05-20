@@ -19,6 +19,7 @@ class CartView extends Component {
       currentCartItems: this.props.items,
       toRedirect: false,
       displayPaypalButton: true,
+      emptyCart: false,
     };
   }
 
@@ -109,10 +110,15 @@ class CartView extends Component {
     this.setState(() => ({ displayPaypalButton: false }));
   }
 
+  handleEmptyCart = () => {
+    this.setState(() => ({ emptyCart: true }));
+  }
+
   //separate items by vendors when component loads to page
   componentDidMount() {
     this.separateVendors();
   }
+
 
   render() {
     if (this.state.toRedirect === true) {
@@ -151,6 +157,7 @@ class CartView extends Component {
                 handleRedirect={this.handleRedirect}
                 handlePaypalHide={this.handlePaypalHide}
                 displayPaypalButton={this.state.displayPaypalButton}
+                handleEmptyCart={this.handleEmptyCart}
               />
             );
           }

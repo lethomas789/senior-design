@@ -276,6 +276,14 @@ class Login extends Component {
       return <Redirect to="/shop" />
     }
 
+    // pass props from App js /logout route
+    // TODO make it state
+    if (this.props.logout === true) {
+      console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
+      this.props.updateLogout();
+      return <Redirect to="/login" />
+    }
+
     return (
       <div id="loginContainer">
         <div id="loginForms">
@@ -348,6 +356,11 @@ const mapDispatchToProps = dispatch => {
     updateLogin: () =>
       dispatch({
         type: actions.LOGGED_IN,
+      }),
+
+    updateLogout: () =>
+      dispatch({
+        type: actions.LOGGED_OUT
       }),
 
     //get user's cart from state after logging in

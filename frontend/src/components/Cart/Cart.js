@@ -86,8 +86,10 @@ class Cart extends Component {
         if (this.state.cart.length === 0) {
           //reload page only if no more items in cart for a vendor
           //work around for ppxo error, cleanup error for paypal when trying to unmount component?
-          window.location.reload();
+          // this.props.handleEmptyCart();
+          // window.location.reload();
           // this.forceUpdate();
+          this.props.handlePaypalHide();
 
           //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
           //error window clean up?

@@ -162,7 +162,7 @@ class ButtonAppBar extends Component {
       axios
         .post("/api/logout", { withCredentials: true })
         .then(res => {
-          console.log(res.message);
+          console.log(res.status);
         })
         .catch(err => {
           console.log(err);

@@ -72,7 +72,8 @@ axios.interceptors.response.use(
     // if received a 403 forbidden, then token has expired
     // redirect them to login
     if (err.response.status === 403) {
-      history.push("/login");
+      console.log("TOKEN EXPIRED");
+      history.push("/logout");
     }
 
     // in hindsight, could have just called notifier error here rather than in
@@ -169,6 +170,18 @@ class App extends Component {
                 path="/login"
                 render={props => (
                   <Login {...props} notifier={this.addNotification} />
+                )}
+              />
+
+              <Route
+                exact
+                path="/logout"
+                render={props => (
+                  <Login
+                    {...props}
+                    notifier={this.addNotification}
+                    logout={true}
+                  />
                 )}
               />
 
