@@ -17,7 +17,8 @@ class CartView extends Component {
       allVendors: [],
       vendorItemsSeparated: [],
       currentCartItems: this.props.items,
-      toRedirect: false
+      toRedirect: false,
+      displayPaypalButton: true,
     };
   }
 
@@ -104,6 +105,10 @@ class CartView extends Component {
     });
   };
 
+  handlePaypalHide = () => {
+    this.setState(() => ({ displayPaypalButton: false }));
+  }
+
   //separate items by vendors when component loads to page
   componentDidMount() {
     this.separateVendors();
@@ -144,6 +149,8 @@ class CartView extends Component {
                 notifier={this.props.notifier}
                 updateAfterDelete={this.updateAfterDelete}
                 handleRedirect={this.handleRedirect}
+                handlePaypalHide={this.handlePaypalHide}
+                displayPaypalButton={this.state.displayPaypalButton}
               />
             );
           }

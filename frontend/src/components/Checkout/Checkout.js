@@ -32,6 +32,7 @@ class Checkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      displayPaypal: true, // display paypal on mount; turn on on successful payment
       total: this.props.totalValue,
       env: process.env.REACT_APP_PAYPAL_ENV,
       currency: "USD",
@@ -265,7 +266,7 @@ class Checkout extends Component {
             if (res.data.success === true) {
               //update new items and redirect to successful payment page
               this.props.updateItems(res.data.data);
-              this.props.history.push('/successfulPayment');
+              this.props.history.push("/successfulPayment");
               // window.location = "/successfulPayment";
               // this.setState(() => ({ toRedirect: true }));
               // this.props.handleRedirect();
@@ -298,6 +299,10 @@ class Checkout extends Component {
     // console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cartItems[0].vid);
     const apiURL = "/api/orders";
+
+    // turn off display of paypal buttons to fix no response window error
+    // this.setState({ displayPaypal: false });
+    this.props.handlePaypalHide();
 
     //make post request to orders
     axios
@@ -425,22 +430,23 @@ class Checkout extends Component {
 
     return (
       <div>
-        <Fragment>
-          {/* <PaypalExpressBtn */}
-          <PaypalButton
-            env={this.state.env}
-            client={this.state.client}
-            currency={this.state.currency}
-            total={Number(this.props.totalValue)}
-            onError={this.onError}
-            onSuccess={this.onSuccess}
-            onCancel={this.onCancel}
-            shipping={1}
-            paymentOptions={this.state.paymentOptions}
-            items={this.props.items}
-            onNotEnoughStock={this.onNotEnoughStock}
-          />
-        </Fragment>
+        {this.props.displayPaypalButton && (
+          <Fragment>
+            <PaypalButton
+              env={this.state.env}
+              client={this.state.client}
+              currency={this.state.currency}
+              total={Number(this.props.totalValue)}
+              onError={this.onError}
+              onSuccess={this.onSuccess}
+              onCancel={this.onCancel}
+              shipping={1}
+              paymentOptions={this.state.paymentOptions}
+              items={this.props.items}
+              onNotEnoughStock={this.onNotEnoughStock}
+            />
+          </Fragment>
+        )}
       </div>
     );
   }

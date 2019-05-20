@@ -19,7 +19,7 @@ class Cart extends Component {
       total: 0,
       cart: this.props.passedItems,
       vendor: this.props.passedVendor,
-      vendorsInView: this.props.passedAllVendors
+      vendorsInView: this.props.passedAllVendors,
     };
   }
 
@@ -87,6 +87,7 @@ class Cart extends Component {
           //reload page only if no more items in cart for a vendor
           //work around for ppxo error, cleanup error for paypal when trying to unmount component?
           window.location.reload();
+          // this.forceUpdate();
 
           //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
           //error window clean up?
@@ -115,6 +116,7 @@ class Cart extends Component {
       }
     );
   };
+
 
   //get cart from server for user
   componentDidMount() {
@@ -202,6 +204,8 @@ class Cart extends Component {
             totalValue={this.state.total}
             notifier={this.props.notifier}
             handleRedirect={this.props.handleRedirect}
+            handlePaypalHide={this.props.handlePaypalHide}
+            displayPaypalButton={this.props.displayPaypalButton}
           />
         </div>
       </div>
