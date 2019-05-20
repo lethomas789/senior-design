@@ -431,7 +431,7 @@ class ShopItemDetailed extends Component {
       this.props.notifier({
         title: "Error",
         message: "Please login to add to cart.",
-        type: "danger"
+        type: "warning"
       });
     }
 
