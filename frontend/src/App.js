@@ -73,7 +73,7 @@ axios.interceptors.response.use(
     // redirect them to login
     if (err.response.status === 403) {
       console.log("TOKEN EXPIRED");
-      history.push("/logout");
+      history.push("/refreshLogin");
     }
 
     // in hindsight, could have just called notifier error here rather than in
@@ -92,17 +92,22 @@ class App extends Component {
     type = "danger",
     duration = 4500
   }) => {
-    this.notificationDOMRef.current.addNotification({
-      title: title,
-      message: message,
-      type: type,
-      insert: "top",
-      container: "bottom-left",
-      animationIn: ["animated", "fadeIn"],
-      animationOut: ["animated", "fadeOut"],
-      dismiss: { duration: duration },
-      dismissable: { click: true }
-    });
+    try {
+      this.notificationDOMRef.current.addNotification({
+        title: title,
+        message: message,
+        type: type,
+        insert: "top",
+        container: "bottom-left",
+        animationIn: ["animated", "fadeIn"],
+        animationOut: ["animated", "fadeOut"],
+        dismiss: { duration: duration },
+        dismissable: { click: true }
+      });
+    }
+    catch {
+      console.log('ERROR IN NOTIFIER');
+    }
   };
 
   //check token expiration if user was logged in
@@ -120,7 +125,7 @@ class App extends Component {
           //logout user and then display error message
           this.addNotification({
             title: "Error",
-            message: "Token Expired Please Login Again",
+            message: "Session Expired Please Login Again",
             type: "danger"
           });
 
@@ -169,13 +174,17 @@ class App extends Component {
                 exact
                 path="/login"
                 render={props => (
-                  <Login {...props} notifier={this.addNotification} />
+                  <Login
+                    {...props}
+                    notifier={this.addNotification}
+                    logout={false}
+                  />
                 )}
               />
 
               <Route
                 exact
-                path="/logout"
+                path="/refreshLogin"
                 render={props => (
                   <Login
                     {...props}

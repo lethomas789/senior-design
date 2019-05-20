@@ -270,19 +270,28 @@ class Login extends Component {
         });
       });
   };
+
+  componentDidMount() {
+    if (this.props.logout) {
+      console.log('LOGGING OUT FROM EXPIRED TOKEN');
+      this.props.updateLogout();
+    }
+  }
+
   render() {
     const { classes } = this.props;
+
     if (this.state.toShop === true) {
       return <Redirect to="/shop" />
     }
 
-    // pass props from App js /logout route
-    // TODO make it state
-    if (this.props.logout === true) {
-      console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
-      this.props.updateLogout();
-      return <Redirect to="/login" />
-    }
+    // // pass props from App js /logout route
+    // // TODO make it state
+    // if (this.props.logout === true) {
+    //   console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
+    //   this.props.updateLogout();
+    //   return <Redirect to="/login" />
+    // }
 
     return (
       <div id="loginContainer">
