@@ -192,7 +192,7 @@ class Login extends Component {
 
     //make api call to login with gmail
     axios
-      .get("/api/login/googleLogin", {
+      .post("/api/login/googleLogin", {
         params: {
           email: email,
           firstName: firstName,
@@ -214,6 +214,7 @@ class Login extends Component {
 
           //after updating login, get cart info
           this.getCart();
+          this.props.history.push("/shop");
 
           //display dialog for login successful
         } else if (res.data.success === true && res.data.isAdmin === true) {

@@ -192,11 +192,11 @@ router.post("/", (req, res) => {
     });
 });
 
-router.get("/googleLogin", (req, res) => {
-  if (req.query.params) {
-    var { email, firstName, lastName } = req.query.params;
+router.post("/googleLogin", (req, res) => {
+  if (req.body.params) {
+    var { email, firstName, lastName } = req.body.params;
   } else {
-    var { email, firstName, lastName } = req.query;
+    var { email, firstName, lastName } = req.body;
   }
 
   if (!email || !firstName || !lastName) {
