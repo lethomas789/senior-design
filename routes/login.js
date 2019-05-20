@@ -7,13 +7,8 @@ const validator = require("validator");
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 const jwtKey = require("../config/jwt.json");
+const cookieConfig = require("../config/config.json");
 
-const cookieConfig = { 
-  httpOnly: true,   // prevent frontend JS from reading cookies
-  // secure: true,     // force https
-  maxAge: 3600000,  // cookie expires in 1 hour
-  signed: true,
-}
 
 router.post("/", (req, res) => {
   //extract email and password from request

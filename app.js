@@ -10,6 +10,7 @@ const Email = require("email-templates");
 const jwt = require("jsonwebtoken");
 const jwtKey = require("./config/jwt.json");
 const cookieParser = require("cookie-parser");
+const cookieConfig = require("./config/config.json");
 
 require("dotenv").config();
 
@@ -39,13 +40,6 @@ app.use(cookieParser(process.env.COOKIE_SECRET));
 //serve react files
 app.use(express.static(path.join(__dirname, "/frontend/build")));
 
-const cookieConfig = {
-  httpOnly: true, // prevent frontend JS from reading cookies
-  // secure: true,     // force https
-  maxAge: 3600000, // cookie expires in 1 hour
-  signed: true
-};
-
 // middleware to extract and verify token from headers
 const checkToken = (req, res, next) => {
   if (!req.signedCookies.token) {
@@ -53,7 +47,7 @@ const checkToken = (req, res, next) => {
     console.log("Unauthorized. No token.");
     res.clearCookie("token", cookieConfig);
     // res.sendStatus(403);
-    res.json({
+    res.status(403).json({
       success: false,
       message: "Please login to view."
     });
@@ -83,7 +77,30 @@ const decodeToken = (req, res, next) => {
   );
 };
 
-global.tokenMiddleware = [checkToken, decodeToken];
+const refreshToken = (req, res, next) => {
+  const { user, vendors, isAdmin } = req.authorizedData;
+  const newPayload = { user, vendors, isAdmin };
+
+  jwt.sign(
+    newPayload,
+    process.env.JWT_SECRET,
+    { expiresIn: "1h" },
+    (err, token) => {
+      if (err) {
+        console.log(err);
+        return res.json({
+          success: false,
+          message: "Error in generating jwt."
+        });
+      }
+
+      res.cookie("token", token, cookieConfig);
+      next();
+    }
+  );
+};
+
+global.tokenMiddleware = [checkToken, decodeToken, refreshToken];
 
 //routes
 const router = express.Router();
