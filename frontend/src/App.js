@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import {
-  BrowserRouter as Router,
+  Router,
+  // BrowserRouter as Router,
   Route,
   Switch
 } from "react-router-dom";
@@ -42,7 +43,7 @@ import Privacy from "./components/Privacy/Privacy";
 import Faq from "./components/Faq/Faq";
 require("dotenv").config();
 
-// const history = createBrowserHistory();
+const history = createBrowserHistory();
 
 // const LocationDisplay = withRouter(({location}) => (
 //   <div data-testid="location-display">{location.pathname}</div>
@@ -61,6 +62,23 @@ axios.interceptors.request.use(config => {
 })
 */
 
+// on every response received by axios, check for 403
+axios.interceptors.response.use((res) => {
+  // if no error, pass on the response
+  return res;
+}, (err) => {
+  // if received a 403 forbidden, then token has expired
+  // redirect them to login
+  if(err.response.status === 403) {
+    history.push('/login');
+  }
+
+  // in hindsight, could have just called notifier error here rather than in
+  // components
+
+  return err.response;
+});
+
 class App extends Component {
   notificationDOMRef = React.createRef();
 
@@ -68,7 +86,7 @@ class App extends Component {
     title = "Error",
     message = "Sorry, an error occurred.",
     type = "danger",
-    duration = 3500
+    duration = 4500
   }) => {
     this.notificationDOMRef.current.addNotification({
       title: title,
@@ -122,7 +140,7 @@ class App extends Component {
 
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />
