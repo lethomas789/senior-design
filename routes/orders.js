@@ -148,7 +148,7 @@ router.post("/", tokenMiddleware, async (req, res) => {
             send: true, // set send to true when not testing
 
             //leaving this code commented out throws a process error on backend, preventing email from being sent
-            // preview: false,  // TODO turn off preview before production
+            preview: false,  // TODO turn off preview before production
 
             transport: {
               // host: 'localhost', // TODO update w/ website?

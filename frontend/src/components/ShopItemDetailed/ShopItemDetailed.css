@@ -20,6 +20,7 @@
   justify-self: center;
   display: flex;
   max-height: 60vh;
+  margin-right: 70px;
 }
 
 .item-info h2 {

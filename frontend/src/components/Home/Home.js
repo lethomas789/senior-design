@@ -52,7 +52,7 @@ export default class Home extends Component {
             <div className="colls">
               <Link to="/shop">
                 <div className="moreContainer">
-                  <img src={require("../../images/cows.jpg")} width="100%" />
+                  <img src={require("../../images/cows.jpg")} alt="Collection of Toy Cows" width="100%" />
                   {/* <a target="_blank" href="https://193ecommerce.com/shop">
                     <img src={require("../../images/cows.jpg")} width="100%" />
                   </a> */}
@@ -67,7 +67,7 @@ export default class Home extends Component {
             <div className="colls">
               <Link to="/clubs">
                 <div className="moreContainer">
-                  <img src={require("../../images/band.jpg")} width="100%" />
+                  <img src={require("../../images/band.jpg")} alt="UC Davis Band" width="100%" />
                   <div className="hero-textt">CLUBS</div>
                 </div>
               </Link>
@@ -76,7 +76,7 @@ export default class Home extends Component {
             <div className="colls">
               <Link to="/about">
                 <div className="moreContainer">
-                  <img src={require("../../images/bikes.jpg")} width="100%" />
+                  <img src={require("../../images/bikes.jpg")} alt="Bike Lane" width="100%" />
                   <div className="hero-textt">ABOUT</div>
                 </div>
               </Link>

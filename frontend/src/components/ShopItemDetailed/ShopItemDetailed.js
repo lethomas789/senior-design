@@ -11,7 +11,7 @@ import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
-import { Link, withRouter } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 class CarouselImage extends Component {
   handleClick = () => {
@@ -154,7 +154,7 @@ class ApparelItemInfo extends Component {
             </Fragment>
           )}
           <p>
-            <b>Club</b>:
+            <b>Club: </b>
             <Link to={`/vendorProducts/${this.props.vendorID}`}>
               {clubName}
             </Link>
@@ -239,7 +239,7 @@ class ItemInfo extends Component {
         <div>
           <b>Availability</b>: {displayStock()}
           <p>
-            <b>Club</b>:
+            <b>Club: </b>
             <Link to={`/vendorProducts/${this.props.vendorID}`}>
               {clubName}
             </Link>
@@ -341,9 +341,11 @@ class ShopItemDetailed extends Component {
     }
     // less than 10, greater than 0, display alert
     else if (totalStock > 0) {
-      text = `Only ${totalStock} items left!`;
+      text = `Only ${totalStock} item(s) left!`;
     } else if (totalStock === 0) {
       text = "Item out of stock.";
+    } else {
+      text = "Item out of stock."
     }
 
     return <span className="stock">{text}</span>;
@@ -357,9 +359,11 @@ class ShopItemDetailed extends Component {
     if (productStock > 10) {
       text = "In Stock";
     } else if (productStock > 0) {
-      text = `Only ${productStock} items left!`;
+      text = `Only ${productStock} item(s) left!`;
     } else if (productStock === 0) {
       text = "Item out of stock.";
+    } else {
+      text = "Item out of stock."
     }
     return <span className="stock">{text}</span>;
   };
@@ -422,13 +426,13 @@ class ShopItemDetailed extends Component {
   //add item to user's cart
   addItem = () => {
     //check if user is logged in
-    if (this.state.login === false) {
+    if (this.props.login === false) {
       // alert("please login to add to cart");
       //switch from alert to notifier
       this.props.notifier({
         title: "Error",
         message: "Please login to add to cart.",
-        type: "danger"
+        type: "warning"
       });
     }
 

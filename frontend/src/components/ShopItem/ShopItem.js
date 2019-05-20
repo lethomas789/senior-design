@@ -1,11 +1,10 @@
 import React, { Component } from "react";
 import "./ShopItem.css";
-import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
 import actions from "../../store/actions";
 import { connect } from "react-redux";
 import axios from "axios";
-import { withStyles } from "@material-ui/core/styles";
+// import { withStyles } from "@material-ui/core/styles";
 import { Link, withRouter } from "react-router-dom";
 
 //component to display product info
@@ -120,22 +119,33 @@ class ShopItem extends Component {
       <div className="shopitem-container">
         <div onClick={this.showDetailed} className="box">
           <div className="center">
-            <img src={this.props.imageSrc} alt="Item" width="100%" height="100%" />
+            <img
+              src={this.props.imageSrc}
+              alt="Item"
+              width="100%"
+              height="100%"
+            />
           </div>
         </div>
 
         <div className="resizing">
           <h5 className="shopitem-productname">{this.props.productName}</h5>
-          <div>
-            ${this.props.productPrice}
+          <div style={{ marginTop: "10px" }}>
+            <span style={{ color: "rgba(14, 138, 240, 0.822)" }}>
+              ${Number(this.props.productPrice).toFixed(2)}
+            </span>
             {/* <Button size="small" color="primary" onClick={this.addItem}>
               Add To Cart
             </Button> */}
-            <Button size="small" color="primary" onClick={this.updateVendor}>
-              <Link to={`/vendorProducts/${this.state.vendorID}`}>
-                More From Vendor
-              </Link>
-            </Button>
+            {this.props.displayLink ? (
+              <Button size="small" color="primary" onClick={this.updateVendor}>
+                <Link to={`/vendorProducts/${this.state.vendorID}`}>
+                  More From Vendor
+                </Link>
+              </Button>
+            ) : (
+              ""
+            )}
           </div>
         </div>
       </div>

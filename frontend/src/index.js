@@ -18,7 +18,7 @@ import cartReducer from './store/cartReducer';
 import vendorReducer from './store/vendorReducer';
 import shopItemReducer from './store/shopItemReducer';
 
-import 'typeface-roboto';
+// import 'typeface-roboto';
 
 
 

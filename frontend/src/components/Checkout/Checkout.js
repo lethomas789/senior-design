@@ -1,15 +1,15 @@
 import React, { Component, Fragment } from "react";
 import "./Checkout.css";
-import Grid from "@material-ui/core/Grid";
-import Button from "@material-ui/core/Button";
+// import Grid from "@material-ui/core/Grid";
+// import Button from "@material-ui/core/Button";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
-import PropTypes from "prop-types";
+// import PropTypes from "prop-types";
 import { withStyles } from "@material-ui/core/styles";
 // import PaypalExpressBtn from "react-paypal-express-checkout";
 import PaypalButton from "../PaypalButton/PaypalButton";
 import axios from "axios";
-import { withRouter, Redirect } from "react-router-dom";
+import { withRouter } from "react-router-dom";
 
 //styles for checkout button
 const styles = theme => ({
@@ -32,6 +32,7 @@ class Checkout extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      displayPaypal: true, // display paypal on mount; turn on on successful payment
       total: this.props.totalValue,
       env: process.env.REACT_APP_PAYPAL_ENV,
       currency: "USD",
@@ -265,7 +266,8 @@ class Checkout extends Component {
             if (res.data.success === true) {
               //update new items and redirect to successful payment page
               this.props.updateItems(res.data.data);
-              window.location = "/successfulPayment";
+              this.props.history.push("/successfulPayment");
+              // window.location = "/successfulPayment";
               // this.setState(() => ({ toRedirect: true }));
               // this.props.handleRedirect();
             } else {
@@ -297,6 +299,10 @@ class Checkout extends Component {
     // console.log("Payment successful!", payment);
     this.props.updateSelectedVendor(this.props.cartItems[0].vid);
     const apiURL = "/api/orders";
+
+    // turn off display of paypal buttons to fix no response window error
+    // this.setState({ displayPaypal: false });
+    this.props.handlePaypalHide();
 
     //make post request to orders
     axios
@@ -422,25 +428,25 @@ class Checkout extends Component {
   render() {
     const { classes } = this.props;
 
-
     return (
       <div>
-        <Fragment>
-          {/* <PaypalExpressBtn */}
-          <PaypalButton
-            env={this.state.env}
-            client={this.state.client}
-            currency={this.state.currency}
-            total={Number(this.props.totalValue)}
-            onError={this.onError}
-            onSuccess={this.onSuccess}
-            onCancel={this.onCancel}
-            shipping={1}
-            paymentOptions={this.state.paymentOptions}
-            items={this.props.items}
-            onNotEnoughStock={this.onNotEnoughStock}
-          />
-        </Fragment>
+        {this.props.displayPaypalButton && (
+          <Fragment>
+            <PaypalButton
+              env={this.state.env}
+              client={this.state.client}
+              currency={this.state.currency}
+              total={Number(this.props.totalValue)}
+              onError={this.onError}
+              onSuccess={this.onSuccess}
+              onCancel={this.onCancel}
+              shipping={1}
+              paymentOptions={this.state.paymentOptions}
+              items={this.props.items}
+              onNotEnoughStock={this.onNotEnoughStock}
+            />
+          </Fragment>
+        )}
       </div>
     );
   }

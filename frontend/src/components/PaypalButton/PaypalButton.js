@@ -145,6 +145,7 @@ class PaypalButton extends React.Component {
                 returnUrl: data.returnUrl
               };
 
+              this.setState({ showButton: false });
               onSuccess(payment);
             })
             .catch(err => {
@@ -193,6 +194,7 @@ class PaypalButton extends React.Component {
       */
     };
 
+
     return (
       <div>
         {showButton && (
@@ -205,11 +207,25 @@ class PaypalButton extends React.Component {
             onCancel={onCancel}
             onError={onError}
           />
-        )}
+        ) }
       </div>
     );
   }
 }
+
+      /* <div>
+        {showButton && this.props.displayPaypal ? (
+          <PPBtn
+            env={env}
+            client={client}
+            commit={commit}
+            payment={payment}
+            onAuthorize={onAuthorize}
+            onCancel={onCancel}
+            onError={onError}
+          />
+        ) : (<div></div>)}
+      </div> */
 
 PaypalButton.propTypes = {
   currency: PropTypes.string.isRequired,

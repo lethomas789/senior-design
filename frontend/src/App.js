@@ -1,8 +1,8 @@
 import React, { Component } from "react";
 import {
-  BrowserRouter as Router,
+  Router,
+  // BrowserRouter as Router,
   Route,
-  withRouter,
   Switch
 } from "react-router-dom";
 import "./App.css";
@@ -11,8 +11,8 @@ import Signup from "./components/Signup/Signup";
 import Home from "./components/Home/Home";
 import Login from "./components/Login/Login";
 import ButtonAppBar from "./components/ButtonAppBar/ButtonAppBar";
-import Shop from "./components/Shop/Shop";
-import Cart from "./components/Cart/Cart";
+import ShopView from "./components/ShopView/ShopView";
+// import Cart from "./components/Cart/Cart";
 import VendorView from "./components/VendorView/VendorView";
 import VendorSignup from "./components/VendorSignup/VendorSignup";
 import EditClubInfo from "./components/EditClubInfo/EditClubInfo";
@@ -27,7 +27,7 @@ import InputRecoveryPassword from "./components/InputRecoveryPassword/InputRecov
 import CartView from "./components/CartView/CartView";
 import EmailConfirmation from "./components/EmailConfirmation/EmailConfirmation";
 import ScrollToTop from "./components/ScrollToTop/ScrollToTop";
-import SuccessfulPayment from "./components/SuccesfulPayment/SuccessfulPayment";
+// import SuccessfulPayment from "./components/SuccesfulPayment/SuccessfulPayment";
 import { connect } from "react-redux";
 import actions from "./store/actions";
 import axios from "axios";
@@ -37,7 +37,7 @@ import AboutClub from "./components/AboutClub/AboutClub";
 import Clubs from "./components/Clubs/Clubs";
 import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
-import GenericPage from './components/GenericPage/GenericPage'
+import GenericPage from "./components/GenericPage/GenericPage";
 import Terms from "./components/Terms/Terms";
 import Privacy from "./components/Privacy/Privacy";
 import Faq from "./components/Faq/Faq";
@@ -62,6 +62,27 @@ axios.interceptors.request.use(config => {
 })
 */
 
+// on every response received by axios, check for 403
+axios.interceptors.response.use(
+  res => {
+    // if no error, pass on the response
+    return res;
+  },
+  err => {
+    // if received a 403 forbidden, then token has expired
+    // redirect them to login
+    if (err.response.status === 403) {
+      console.log("TOKEN EXPIRED");
+      history.push("/logout");
+    }
+
+    // in hindsight, could have just called notifier error here rather than in
+    // components
+
+    return err.response;
+  }
+);
+
 class App extends Component {
   notificationDOMRef = React.createRef();
 
@@ -69,7 +90,7 @@ class App extends Component {
     title = "Error",
     message = "Sorry, an error occurred.",
     type = "danger",
-    duration = 2500
+    duration = 4500
   }) => {
     this.notificationDOMRef.current.addNotification({
       title: title,
@@ -118,24 +139,23 @@ class App extends Component {
     // alert("testing to see if token needs to be refreshed");
     //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
     //if token is expired, logout user and redirect to login
-    this.checkIfTokenNeedsRefresh();
+    // this.checkIfTokenNeedsRefresh();
   }
 
   render() {
     return (
-      <Router>
+      <Router history={history}>
         <ScrollToTop>
           <div>
             <ButtonAppBar notifier={this.addNotification} />
             <Switch>
-
               <Route exact path="/" component={Home} />
               <Route exact path="/about" component={About} />
               <Route
                 exact
                 path="/shop"
                 render={props => (
-                  <Shop {...props} notifier={this.addNotification} />
+                  <ShopView {...props} notifier={this.addNotification} />
                 )}
               />
 
@@ -150,6 +170,18 @@ class App extends Component {
                 path="/login"
                 render={props => (
                   <Login {...props} notifier={this.addNotification} />
+                )}
+              />
+
+              <Route
+                exact
+                path="/logout"
+                render={props => (
+                  <Login
+                    {...props}
+                    notifier={this.addNotification}
+                    logout={true}
+                  />
                 )}
               />
 
@@ -289,29 +321,29 @@ class App extends Component {
                 )}
               />
 
-	    <Route 
-              exact 
-              path="/terms" 
-              render = {props => (
-                <Terms {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                exact
+                path="/terms"
+                render={props => (
+                  <Terms {...props} notifier={this.addNotification} />
+                )}
+              />
 
-	    <Route 
-              exact 
-              path="/privacy" 
-              render = {props => (
-                <Privacy {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                exact
+                path="/privacy"
+                render={props => (
+                  <Privacy {...props} notifier={this.addNotification} />
+                )}
+              />
 
-	    <Route 
-              exact 
-              path="/faq" 
-              render = {props => (
-                <Faq {...props} notifier = {this.addNotification}/>
-              )}
-            />
+              <Route
+                exact
+                path="/faq"
+                render={props => (
+                  <Faq {...props} notifier={this.addNotification} />
+                )}
+              />
 
               <Route
                 render={props => (
@@ -322,7 +354,6 @@ class App extends Component {
                   />
                 )}
               />
-
             </Switch>
 
             <Footer />

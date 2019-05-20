@@ -1,14 +1,13 @@
 import React, { Component } from "react";
 import "./Cart.css";
-import axios from "axios";
+// import axios from "axios";
 import { connect } from "react-redux";
 import actions from "../../store/actions";
-import Grid from "@material-ui/core/Grid";
 import CartItem from "../CartItem/CartItem";
 import Checkout from "../Checkout/Checkout";
-import { Link } from "react-router-dom";
-import EmptyItem from "../EmptyItem/EmptyItem";
-import ReactNotification from "react-notifications-component";
+// import { Link } from "react-router-dom";
+// import EmptyItem from "../EmptyItem/EmptyItem";
+// import ReactNotification from "react-notifications-component";
 import "react-notifications-component/dist/theme.css";
 
 //component to display user's cart
@@ -20,7 +19,7 @@ class Cart extends Component {
       total: 0,
       cart: this.props.passedItems,
       vendor: this.props.passedVendor,
-      vendorsInView: this.props.passedAllVendors
+      vendorsInView: this.props.passedAllVendors,
     };
   }
 
@@ -87,7 +86,10 @@ class Cart extends Component {
         if (this.state.cart.length === 0) {
           //reload page only if no more items in cart for a vendor
           //work around for ppxo error, cleanup error for paypal when trying to unmount component?
-          window.location.reload();
+          // this.props.handleEmptyCart();
+          // window.location.reload();
+          // this.forceUpdate();
+          this.props.handlePaypalHide();
 
           //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
           //error window clean up?
@@ -116,6 +118,7 @@ class Cart extends Component {
       }
     );
   };
+
 
   //get cart from server for user
   componentDidMount() {
@@ -203,6 +206,8 @@ class Cart extends Component {
             totalValue={this.state.total}
             notifier={this.props.notifier}
             handleRedirect={this.props.handleRedirect}
+            handlePaypalHide={this.props.handlePaypalHide}
+            displayPaypalButton={this.props.displayPaypalButton}
           />
         </div>
       </div>

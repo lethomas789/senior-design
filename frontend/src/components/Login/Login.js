@@ -7,14 +7,14 @@ import Paper from "@material-ui/core/Paper";
 import axios from "axios";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import Dialog from "@material-ui/core/Dialog";
-import DialogContent from "@material-ui/core/DialogContent";
-import DialogContentText from "@material-ui/core/DialogContentText";
-import { DialogActions } from "@material-ui/core";
+// import Dialog from "@material-ui/core/Dialog";
+// import DialogContent from "@material-ui/core/DialogContent";
+// import DialogContentText from "@material-ui/core/DialogContentText";
+// import { DialogActions } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import CircularProgress from "@material-ui/core/CircularProgress";
+// import CircularProgress from "@material-ui/core/CircularProgress";
 import PropTypes from "prop-types";
-import painting from "../../images/painting.jpg";
+// import painting from "../../images/painting.jpg";
 import { Link, Redirect } from "react-router-dom";
 
 const styles = theme => ({
@@ -192,7 +192,7 @@ class Login extends Component {
 
     //make api call to login with gmail
     axios
-      .get("/api/login/googleLogin", {
+      .post("/api/login/googleLogin", {
         params: {
           email: email,
           firstName: firstName,
@@ -214,6 +214,7 @@ class Login extends Component {
 
           //after updating login, get cart info
           this.getCart();
+          this.props.history.push("/shop");
 
           //display dialog for login successful
         } else if (res.data.success === true && res.data.isAdmin === true) {
@@ -275,6 +276,14 @@ class Login extends Component {
       return <Redirect to="/shop" />
     }
 
+    // pass props from App js /logout route
+    // TODO make it state
+    if (this.props.logout === true) {
+      console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
+      this.props.updateLogout();
+      return <Redirect to="/login" />
+    }
+
     return (
       <div id="loginContainer">
         <div id="loginForms">
@@ -317,7 +326,7 @@ class Login extends Component {
             <div className="pushDown2">
               <GoogleLogin
                 clientId={process.env.REACT_APP_GOOGLE_ID}
-                buttononText="Login"
+                buttonText="Login with Google"
                 onSuccess={this.responseGoogle}
                 onFailure={this.responseGoogle}
                 cookiePolicy={"single_host_origin"}
@@ -347,6 +356,11 @@ const mapDispatchToProps = dispatch => {
     updateLogin: () =>
       dispatch({
         type: actions.LOGGED_IN,
+      }),
+
+    updateLogout: () =>
+      dispatch({
+        type: actions.LOGGED_OUT
       }),
 
     //get user's cart from state after logging in

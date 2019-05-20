@@ -13,11 +13,11 @@ export default class Footer extends Component {
           <div className="footer-col-list">
             <ul>
               <li className="footer-link">
-                <Link to='/about'>
-                  About
-                </Link>
+                <Link to="/about">About</Link>
               </li>
-              <li className="footer-link">Contact</li>
+              <li className="footer-link">
+                <Link to="/faq">FAQ</Link>
+              </li>
               {/* <li className="footer-link">Link 3</li>
               <li className="footer-link">Link 4</li> */}
             </ul>
@@ -27,19 +27,19 @@ export default class Footer extends Component {
           <div className="footer-col-list">
             <ul>
               <li className="footer-link">
-                <Link to='/clubs'>
-                  About Clubs
-                </Link>
+                <Link to="/clubs">About Clubs</Link>
               </li>
               <li className="footer-link">
-                Privacy Policy
+                <Link to="/privacy">Privacy Policy</Link>
               </li>
               {/* <li className="footer-link">Link 3</li>
               <li className="footer-link">Link 4</li> */}
             </ul>
           </div>
         </div>
-        <div className="footer-col">Terms and Services</div>
+        <div className="footer-col">
+          <Link to="/terms">Terms and Services</Link>
+        </div>
       </footer>
     );
   }

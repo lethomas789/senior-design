@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import actions from '../../store/actions';
 import ShopItem from '../ShopItem/ShopItem';
 import Grid from '@material-ui/core/Grid';
+import "./VendorView.css";
 
 class VendorView extends Component {
   constructor(props){
@@ -69,14 +70,14 @@ class VendorView extends Component {
 
   render() {
     const items = this.state.products.map(result => {
-      return <ShopItem key = {result.pid} imageSrc = {result.productPicture[0]} vendorID = {result.vid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} />
+      return <ShopItem key = {result.pid} imageSrc = {result.productPicture[0]} vendorID = {result.vid} pid = {result.pid} productName = {result.productName} productPrice = {result.productPrice} stock = {result.stock} productInfo = {result.productInfo} displayLink={false} />
     });
 
     return (
       <div className = "grow">
-        <Grid container direction="column" justify="center"alignContent = "center" alignItems="center">
+        <Grid container direction="column" justify="center"alignContent = "center" alignItems="center" className="vendor-view-item">
           <h1> {this.state.vendorName} </h1>
-          <h3> <Link to={`/aboutClub/${this.props.vendor}`}> About Us </Link> </h3>
+          <h3> <Link to={`/aboutClub/${this.props.vendor}`}> About </Link> </h3>
           {/* <h3> Bio: {this.state.bio} </h3> */}
         </Grid>
 

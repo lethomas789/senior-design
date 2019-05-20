@@ -11,8 +11,8 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { createHashHistory, createBrowserHistory } from 'history';
-const history = createBrowserHistory();
+// import { createHashHistory, createBrowserHistory } from 'histor
+// const history = createBrowserHistory();
 
 //vendor confirmation
 

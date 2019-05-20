@@ -10,6 +10,7 @@ const jwtKey = require("../config/jwt.json");
 const saltRounds = 10;
 const Email = require("email-templates");
 const crypto = require("crypto");
+const passwordValidator = require("password-validator");
 
 function sendEmail(email, token) {
   // send email confirmation email
@@ -17,7 +18,9 @@ function sendEmail(email, token) {
   const title = `Account Confirmation`;
   const intro = `Thanks for signing up!. Please click the following link to activate your account: \n\n`;
 
-  const link = `http://localhost:3000/emailConfirmation/${token} \n\n`;
+  var host = "https://193ecommerce.com";
+
+  const link = `${host}/emailConfirmation/${token} \n\n`;
 
   const confirmEmail = new Email({
     message: {
@@ -76,6 +79,21 @@ router.post("/", (req, res) => {
   // emails case insensitive so lowercase them to save in DB
   email = email.toLowerCase();
 
+  var passwordSchema = new passwordValidator();
+
+  passwordSchema
+    .is()
+    .min(8)
+    .is()
+    .max(40)
+    .has()
+    .digits()
+    .has()
+    .letters()
+    .has()
+    .not()
+    .spaces();
+
   // validation, checking empty inputs
   if (
     firstName.trim() === "" ||
@@ -98,10 +116,11 @@ router.post("/", (req, res) => {
   }
 
   // checking password length
-  else if (validator.isLength(password, { min: 8, max: 20 }) === false) {
+  else if (!passwordSchema.validate(password)) {
     return res.json({
       success: false,
-      message: "Password must be at least 8 characters"
+      message:
+        "Password must be at least 8 characters and consist only of letters and numbers."
     });
   }
 
@@ -171,8 +190,7 @@ router.post("/", (req, res) => {
         });
       });
 
-      sendEmail(email, token)
-
+      sendEmail(email, token);
     })
     .catch(err => {
       // catch for ref.get
@@ -232,7 +250,6 @@ router.get("/confirmEmail", (req, res) => {
           emailToken: null,
           emailTokenExpires: null
         });
-
 
       console.log("Activated account:", email);
       return res.json({
@@ -294,7 +311,7 @@ router.post("/googleSignup", (req, res) => {
             isVerified: false,
             isOauth: true,
             emailToken: token,
-            emailTokenExpires: time,
+            emailTokenExpires: time
           },
           { merge: true }
         ) // merge just in casej
@@ -305,7 +322,7 @@ router.post("/googleSignup", (req, res) => {
             message: "Successfully made new account.",
             email
           });
-          sendEmail(email, token)
+          sendEmail(email, token);
         })
         .catch(err => {
           console.log("Server error for googleSignup route:", err);

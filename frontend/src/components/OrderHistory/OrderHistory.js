@@ -6,7 +6,7 @@ import actions from "../../store/actions";
 import axios from "axios";
 import OrderHistoryItem from "../OrderHistoryItem/OrderHistoryItem.js";
 import Button from "@material-ui/core/Button";
-import FormControl from "@material-ui/core/FormControl";
+// import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import InputLabel from "@material-ui/core/InputLabel";
 import MenuItem from "@material-ui/core/MenuItem";
@@ -129,7 +129,7 @@ class OrderHistory extends Component {
         minutes = "0" + minutes;
       }
 
-      let seconds = String(convertDate.getSeconds());
+      // let seconds = String(convertDate.getSeconds());
 
       let actualDate =
         convertDate.toDateString() +

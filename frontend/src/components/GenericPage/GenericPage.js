@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import "./GenericPage.css";
+import { log } from "util";
 
 export default class GenericPage extends Component {
   // static propTypes = {
@@ -9,11 +10,14 @@ export default class GenericPage extends Component {
   // };
 
   render() {
-    if (this.props.pageText == null) {
+    if (this.props == null) {
       var { pageText } = this.props.location.state;
     }
-    else {
+    else if (this.props.pageText) {
       var { pageText } = this.props;
+    }
+    else {
+      var pageText = "Error 404 Not Found"
     }
 
     return (
