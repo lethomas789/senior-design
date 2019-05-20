@@ -273,7 +273,7 @@ class ButtonAppBar extends Component {
       <nav className="root">
         <AppBar
           position="static"
-          style={{ backgroundImage: `url(${header})`, boxShadow: "none",  height: "56px"}}
+          style={{ backgroundImage: `url(${header})`, boxShadow: "none",  height: "53px"}}
         >
           <Toolbar>
             {/* MENU BUTTON */}

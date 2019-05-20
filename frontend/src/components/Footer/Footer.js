@@ -7,7 +7,7 @@ export default class Footer extends Component {
     return (
       <footer className="footer-container">
         <Link to='/'>
-          <h1 className="footer-header">ECS193 ECOMMERCE</h1>
+          <h1 className="footer-header">ECS193 E-Commerce</h1>
         </Link>
         <div className="footer-col footer-col--1">
           <div className="footer-col-list">
