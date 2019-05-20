@@ -17,7 +17,7 @@
   grid-column: 1 / span 3;
   justify-self: center;
   justify-items: center;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: 'Proxima Nova', sans-serif;
 }
 
 .about-main-image {
@@ -35,7 +35,7 @@
 
 .about-info {
   text-align: center;
-  font-family: 'Muli';
+  font-family: 'Proxima Nova';
   vertical-align: middle;
   padding: 65px;
   background-color:white;
@@ -74,7 +74,7 @@
   grid-column: 1 / span 3;
   justify-self: center;
   justify-items: center;
-  font-family: 'Comfortaa', sans-serif;
+  font-family: 'Proxima Nova', sans-serif;
 }
 
 @media (max-width: 40em) {

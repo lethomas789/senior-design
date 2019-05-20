@@ -21,11 +21,11 @@ export default class Home extends Component {
           alignContent="center"
           alignItems="center"
         >
-          <div className="helv">
+          {/* <div className="helv"> */}
           <header>
-            <h1> Welcome to ECS193 E-Commerce! </h1>
+            <h1 className = "helv"> Welcome to ECS193 E-Commerce! </h1>
             </header>
-          </div>
+          {/* </div> */}
 
           <div id="carouselContainer">
             <AliceCarousel

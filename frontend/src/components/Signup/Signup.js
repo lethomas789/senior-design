@@ -242,11 +242,12 @@ class Signup extends Component {
                 variant="contained"
                 color="primary"
                 onClick={this.sendSignup}
+                style = {{backgroundColor:"#DAAA00", color: "white", boxShadow: "none", fonFamily: "Proxima Nova"}}
               >
                 Sign Up
               </Button>
             </div>
-            <div className="pushDown">
+             
               <GoogleLogin
                 clientId={process.env.REACT_APP_GOOGLE_ID}
                 buttononText="Login"
@@ -254,7 +255,7 @@ class Signup extends Component {
                 onFailure={this.responseGoogle}
                 cookiePolicy={"single_host_origin"}
               />
-            </div>
+        
           </Paper>
         </div>
       </div>
