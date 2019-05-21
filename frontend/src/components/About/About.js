@@ -4,14 +4,18 @@ import "./About.css";
 export default class About extends Component {
   render() {
     return (
+      <div className="parallax">
       <div className = "full-height">
+      
       <div className = "greater-container">
       <div className="about-container">
         <header className="about-header">
           <div>About Us</div>
           {/* <div>4 students trying to inspire</div> */}
         </header>
+        
 
+        </div>
         </div>
       </div>
         <section className="about-info">
