@@ -1,14 +1,33 @@
+.full-height {
+  height: 100vh;
+}
+
 .greater-container {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 20px;
+
+     /* The image used */
+     background-image: url("../../images/water_tower.jpg");
+
+     /* Full height */
+     height: 50%; 
+   
+     /* Create the parallax scrolling effect */
+     background-attachment: fixed;
+     background-position: center;
+     background-repeat: no-repeat;
+     background-size: cover;
+
+     
 }
 
 .about-container {
   display: grid;
   width: 70vw;
   margin: 0 auto;  
+  
 }
 
 .about-header {
@@ -21,17 +40,16 @@
 }
 
 .about-main-image {
-  background-image: url(../../images/ourgroup.png);
   grid-column: 1 / span 3;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-
-  /* width: 60vw; */
-  /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
   height: 500px; 
   margin-bottom: 20px;
 }
+
+
+
 
 .about-info {
   text-align: center;
@@ -44,11 +62,9 @@
 }
 
 .hero-texttt {
-  /* text-align: center; */
   position: absolute;
   top: 50%;
   left: 50%;
-  /* overflow: hidden; */
   font-size: 25px;
   transform: translate(-50%, -50%);
   color: white;
@@ -99,16 +115,15 @@
   }
 
   .about-main-image {
-  background-image: url(../../images/ourgroup.png);
   grid-column: 1 / span 3;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-  /* width: 60vw; */
-  /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
   height: 300px; 
   margin-bottom: 20px;
 }
 
 
 }
+
+
