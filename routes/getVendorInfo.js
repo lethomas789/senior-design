@@ -26,7 +26,7 @@ router.get('/', (req, res) => {
       } = doc.data();
       vendors.push(vendorData);
     });
-    console.log('Successfully retrieved all vendor info.');
+    // console.log('Successfully retrieved all vendor info.');
     return res.status(200).json({
       success: true,
       message: 'Successfully retrieved all vendor info.',
@@ -71,7 +71,7 @@ router.get('/aboutClub', (req, res) => {
       });
     }
 
-    console.log('Retrieved vendor about info');
+    // console.log('Retrieved vendor about info');
 
     const { bio, vendorName, bioPictures} = doc.data();
 
