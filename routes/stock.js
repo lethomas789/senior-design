@@ -92,7 +92,7 @@ router.get("/", (req, res) => {
  * @param size - string indicatign stock size e.g "s_stock", "xs_stock" etc.
  * @param amt - amt user trying to purchase
  */
-router.patch("/", (req, res) => {
+router.patch("/", tokenMiddleware, (req, res) => {
   if (req.body.params) {
     var { pid, isApparel, size, amt } = req.body.params;
   } else {
@@ -147,74 +147,6 @@ router.patch("/", (req, res) => {
         message: "Sorry, a server error occurred. Please try again later."
       });
     });
-
-    /*
-  productRef
-    .get()
-    .then(doc => {
-      if (!doc) {
-        console.log("Error: no such product for given pid:", pid);
-        return res.json({
-          success: false,
-          message: "Error: no such product for given pid: " + pid
-        });
-      }
-
-      const pdata = doc.data();
-
-      // if apparel, check the size stock
-      if (isApparel === true) {
-        if (pdata[size] >= amt) {
-          console.log("Successfully checked for existing stock:", pdata[size]);
-
-          const newAmt = pdata[size] - amt;
-
-          productRef.update({ [size]: newAmt });
-
-          return res.json({
-            success: true,
-            message: "Successfullly checked for existing stock.",
-            availableStock: true
-          });
-        } else {
-          console.log("Successfully checked for existing stock:", pdata[size]);
-          return res.json({
-            success: true,
-            message: "Sorry not enough stock.",
-            availableStock: false
-          });
-        }
-      } else {
-        if (pdata.stock >= amt) {
-          console.log("Successfully checked for existing stock:", pdata.stock);
-
-          const newAmt = pdata.stock - amt;
-
-          productRef.update({ stock: newAmt });
-
-          return res.json({
-            success: true,
-            message: "Successfullly checked for existing stock.",
-            availableStock: true
-          });
-        } else {
-          console.log("Successfully checked for existing stock:", pdata.stock);
-          return res.json({
-            success: true,
-            message: "Sorry not enough stock.",
-            availableStock: false
-          });
-        }
-      }
-    })
-    .catch(err => {
-      console.log("Server error in checking product stock:", err);
-      return res.json({
-        success: false,
-        message: "Server error in checking product stock: " + err
-      });
-    });
-    */
 });
 
 module.exports = router;
