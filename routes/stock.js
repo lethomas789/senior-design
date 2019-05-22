@@ -45,14 +45,14 @@ router.get("/", (req, res) => {
       // if apparel, check the size stock
       if (isApparel === true) {
         if (pdata[size] >= amt) {
-          console.log("Successfully checked for existing stock:", pdata[size]);
+          // console.log("Successfully checked for existing stock:", pdata[size]);
           return res.json({
             success: true,
             message: "Successfullly checked for existing stock.",
             availableStock: true
           });
         } else {
-          console.log("Successfully checked for existing stock:", pdata[size]);
+          // console.log("Successfully checked for existing stock:", pdata[size]);
           return res.json({
             success: true,
             message: "Sorry not enough stock.",
@@ -61,7 +61,7 @@ router.get("/", (req, res) => {
         }
       } else {
         if (pdata.stock >= amt) {
-          console.log("Successfully checked for existing stock:", pdata.stock);
+          // console.log("Successfully checked for existing stock:", pdata.stock);
           return res.json({
             success: true,
             message: "Successfullly checked for existing stock.",
@@ -122,13 +122,13 @@ router.patch("/", tokenMiddleware, (req, res) => {
         if (isApparel === true) {
           const newAmt = pdata[size] - amt;
           t.update(productRef, { [size]: newAmt });
-          console.log("Successfully subtracted product stock.");
+          // console.log("Successfully subtracted product stock.");
           return Promise.resolve("Product stock subtracted.");
         } else {
           const newAmt = pdata.stock - amt;
 
           t.update(productRef, { stock: newAmt });
-          console.log("Successfully subtracted product stock.");
+          // console.log("Successfully subtracted product stock.");
           return Promise.resolve("Product stock subtracted.");
         }
       });
