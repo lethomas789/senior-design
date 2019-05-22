@@ -56,7 +56,7 @@ class CartView extends Component {
 
     //update state
     this.setState({
-      vendorItemsSeparated: itemsArray
+      vendorItemsSeparated: itemsArray,
     });
   };
 
@@ -111,7 +111,9 @@ class CartView extends Component {
   }
 
   handleEmptyCart = () => {
-    this.setState(() => ({ emptyCart: true }));
+    this.setState(() => ({ displayPaypalButton: false, emptyCart: true }));
+    this.separateVendors();
+    // this.setState(() => ({ emptyCart: true }));
   }
 
   //separate items by vendors when component loads to page

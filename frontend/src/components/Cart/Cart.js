@@ -19,7 +19,7 @@ class Cart extends Component {
       total: 0,
       cart: this.props.passedItems,
       vendor: this.props.passedVendor,
-      vendorsInView: this.props.passedAllVendors,
+      vendorsInView: this.props.passedAllVendors
     };
   }
 
@@ -77,6 +77,17 @@ class Cart extends Component {
   //update cart of items in current vendor if an item is removed from CartItem
   //function passed as prop to child, child calls parent function to update state of items in cart
   updateCartAfterDelete = newItems => {
+    // console.log(' NEW ITEMS ARE: ', newItems);
+    // if (newItems.length === 0) {
+    //   // console.log('IF STATEMENT RUN')
+    //   this.props.handlePaypalHide();
+    //   // this.props.handleEmptyCart();
+    // }
+    // else {
+    //   console.log('ELSE STATEMENT RUN')
+    //   return this.setState( { cart: newItems }, () => { this.updateTotal() });
+    // }
+
     this.setState(
       {
         cart: newItems
@@ -86,10 +97,10 @@ class Cart extends Component {
         if (this.state.cart.length === 0) {
           //reload page only if no more items in cart for a vendor
           //work around for ppxo error, cleanup error for paypal when trying to unmount component?
+          // this.props.handlePaypalHide();
           // this.props.handleEmptyCart();
-          // window.location.reload();
+          window.location.reload();
           // this.forceUpdate();
-          this.props.handlePaypalHide();
 
           //attempted to rerender based on new items/empty items for vendor, ran into ppxo error for paypal
           //error window clean up?
@@ -119,7 +130,6 @@ class Cart extends Component {
     );
   };
 
-
   //get cart from server for user
   componentDidMount() {
     //calculate running total of items
@@ -128,6 +138,11 @@ class Cart extends Component {
 
   //render cart items to cart view
   render() {
+    if (this.state.cart.length === 0) {
+      // return nothing
+      return <div />;
+    }
+
     //render each item in the cart
     const cart = this.state.cart.map(result => {
       if (result.size === undefined) {
@@ -178,9 +193,7 @@ class Cart extends Component {
         {/* TABLE HEADERS */}
         <span className="table-header table-row">
           <span>
-            <strong>
-              Cart ({this.state.cart.length})
-            </strong>
+            <strong>Cart ({this.state.cart.length})</strong>
           </span>
           <span>
             <strong>Price</strong>
