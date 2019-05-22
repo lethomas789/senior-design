@@ -135,8 +135,10 @@ class CartView extends Component {
     // if empty cart, display empty cart text
     else if (this.state.allVendors.length === 0) {
       var renderCarts = (
-        <div id="empty-cart">
-          No items in cart. Click here to <Link to="/shop"> Shop </Link>
+        <div id="empty-cart-container">
+          <h1>
+            No items in cart. Click here to <Link to="/shop"> Shop </Link>
+          </h1>
           {/* <AddShoppingCart style={{width: "400px", height: "400px"}}/> */}
         </div>
       );
