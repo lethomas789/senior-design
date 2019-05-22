@@ -424,10 +424,10 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
    */
 
   if (!vid || !user || !productInfo || !productName || !productPrice || !stock) {
-    console.log('Error: missing params for adding new product.');
+    console.log('Error: missing params for editing product.');
     return res.status(200).json({
       success: false,
-      message: 'Error: missing params for adding new product.'
+      message: 'Please fill out required forms before submitting.'
     });
   }
 
