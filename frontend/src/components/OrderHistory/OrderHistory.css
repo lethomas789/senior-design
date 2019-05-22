@@ -1,0 +1,59 @@
+.centerHeader {
+    text-align: center;
+}
+
+#order-history-container {
+    min-height: 90vh;
+}
+
+#order-history-filters-container {
+    display: flex;
+    /* width: 950px; */
+    /* justify-content: space-between; */
+    margin-top: 20px;
+    margin-bottom: 20px;
+}
+
+#order-history-items-container {
+    font-family: 'Raleway';
+    /* height: 95vh; */
+    min-height: 95vh;
+}
+
+.order-history-center {
+    text-align: center;
+}
+
+.unsearched-stretched {
+    width: 100vw;
+}
+
+.centerize {
+    align-items: center;
+    justify-self: center;
+    margin: auto;
+    width: 89.5%;
+    padding-top: 10px;
+    
+}
+
+@media (max-width: 40em) {
+    #order-history-container {
+        min-height: 90vh;
+        width: 80vw;
+    }
+
+    #order-history-filters-container {
+        display: flex;
+        /* width: 950px; */
+        /* justify-content: space-between; */
+        margin-top: 20px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+
+
+
+}
+
+

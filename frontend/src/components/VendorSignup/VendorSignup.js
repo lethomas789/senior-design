@@ -11,8 +11,8 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
-import { createHashHistory, createBrowserHistory } from 'history';
-const history = createBrowserHistory();
+// import { createHashHistory, createBrowserHistory } from 'histor
+// const history = createBrowserHistory();
 
 //vendor confirmation
 
@@ -46,6 +46,13 @@ class VendorSignup extends Component {
         this.setState({
           vendors: res.data.vendors
         })
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       })
   }
 
@@ -88,6 +95,7 @@ class VendorSignup extends Component {
     const apiURL = "/api/adminUser/addAdminUser";
 
     axios.post(apiURL, {
+
       params:{
         user: this.state.email,
         vid: this.state.vendorID,
@@ -103,9 +111,7 @@ class VendorSignup extends Component {
         //get the vids of vendors in which user is an admin of
         const adminsURL = "/api/adminUser";
         axios.get(adminsURL, {
-          params:{
-            user: this.state.email
-          }
+          withCredentials: true,
         })
         .then(res => {
           if(res.data.success === true){
@@ -122,37 +128,57 @@ class VendorSignup extends Component {
 
             //update redux store
             //update user's email, vendorID currently an admin of, list of vids of an admin of, and name of current
-            this.props.updateAdminLogin(this.state.email, this.state.vendorID, res.data.vendors,currentVendor);
-            alert("Admin verification succesful!");
+            this.props.updateAdminLogin(this.state.vendorID, res.data.vendors,currentVendor);
+            this.props.notifier({
+              title: "Success",
+              message: "Admin verification successful",
+              type: "success"
+            });
 
             //redirect user back home
             this.props.history.push('/');
           }
         })
         .catch(err => {
-          alert(err);
+          this.props.notifier({
+            title: "Error",
+            message: err.toString(),
+            type: "danger"
+          });
         })
       }
 
       //print why verification didn't work
       else{
-        alert(res.data.message);
+        this.props.notifier({
+          title: "Error",
+          message: res.data.message,
+          type: "danger"
+        });
       }
     })
     .catch(err => {
-      alert(err);
+      this.props.notifier({
+        title: "Error",
+        message: err.toString(),
+        type: "danger"
+      });
     })
   }
 
   render() {
+    if (this.state.vendors == null) {
+      return (<div></div>)
+    }
+
     const vendorList = this.state.vendors.map(result => {
       return <MenuItem key = {result.vid} value = {result.vid} name = {result.vendorName}> {result.vendorName} </MenuItem>
     });
 
     return (
       <div>
-        <Grid container direction = "column" justify = "center" alignItems = "center">
-          <Paper id = "signupPaperContainer">
+        <Grid container direction = "column" justify = "center" alignItems = "center" id="vendor-signup-container">
+          <Paper id = "vendorSignupPaperContainer">
             <h1> Admin Verification </h1>
             <div className = "textForm" id="row">
               <TextField
@@ -168,10 +194,12 @@ class VendorSignup extends Component {
                 type="password"
                 required="true"
                 onChange={(event) => this.setState({ code: event.target.value })}
+                style={{marginBottom: "15px"}}
               />
             </div>
 
             <h5> Select Vendor </h5>
+
             <div className = "textForm" id = "row">
               <FormControl id = "clubForm">
                 <InputLabel> {this.state.vendor} </InputLabel>
@@ -180,7 +208,7 @@ class VendorSignup extends Component {
                 </Select>
               </FormControl>
             </div>
-            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Verify  </Button>
+            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup} style={{marginTop: "10px"}}> Verify  </Button>
           </Paper>
         </Grid>
       </div>
@@ -194,7 +222,6 @@ const mapStateToProps = state => {
   return{
     items: state.cart.items,
     login: state.auth.login,
-    user: state.auth.user,
     vendors: state.vendor.vendors
   }
 }
@@ -203,9 +230,8 @@ const mapStateToProps = state => {
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
   return{
-    updateAdminLogin: (currentEmail, vendorID, adminsOf, vendor) => dispatch({
+    updateAdminLogin: (vendorID, adminsOf, vendor) => dispatch({
       type: actions.ADMIN_LOGGED_IN,
-      user: currentEmail,
       vid: vendorID,
       admins: adminsOf,
       currentVendor: vendor

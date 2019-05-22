@@ -1,3 +1,32 @@
+/* Normalize styles for browser consistency */
+@import '../node_modules/sanitize.css/sanitize.css';
+@import url('https://fonts.googleapis.com/css?family=Muli');
+@import url('https://fonts.googleapis.com/css?family=Comfortaa');
+@import url('https://fonts.googleapis.com/css?family=Raleway');
+
+*
+{
+  margin: 0;
+  padding: 0;
+} 
+
+html {
+  font-family: 'Roboto', sans-serif;
+  height: 100vh;
+}
+
+body {
+  /* background-color: #E8E8E8; */
+  font-family: 'Proxima Nova', sans-serif;
+  height: 100%;
+  /* background-color: #E5E9EF; */
+}
+
+
+
+
+
+/*
 body {
   margin: 0;
   padding: 0;
@@ -12,3 +41,4 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
+*/

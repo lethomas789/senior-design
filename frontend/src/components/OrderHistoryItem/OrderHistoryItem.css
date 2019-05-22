@@ -1,0 +1,38 @@
+
+.order-history-item-container {
+  display: flex;
+  font-family: 'Proxima Nova';
+  flex-direction: column;
+  margin: 0 auto;
+  width: 80vw;
+  
+}
+
+.order-summary-container {
+  display: flex;
+  flex-direction: column;
+  border: 1px solid grey;
+  margin-bottom: 60px;
+}
+
+.order-summary-row {
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1fr;
+  grid-column: 1/-1;
+  display: grid;
+  padding-top: 10px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid grey;
+  padding-left: 15px;
+}
+
+
+
+.order-summary-row-title {
+
+}
+
+.order-summary-item{
+  display: grid;
+  grid-template-columns: 2.5fr 1fr 1fr 1fr;
+}

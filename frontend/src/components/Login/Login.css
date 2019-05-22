@@ -1,46 +1,74 @@
-#loginContainer{
-    display:flex;
-    flex-direction: column;
-    justify-content: center;
+
+#loginContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(
+      to right,
+      /* rgba(111, 138, 183, 0.3),
+      rgba(97, 93, 108, 0.3) */
+    rgba(202, 229, 255, 0.4),
+    rgba(172, 237, 255, 0.4)
+    ),
+    url(../../images/hammock.jpg);
+  height: 95vh;
+  background-size: cover;
 }
 
-#loginForms{
-    display:flex;
-    flex-direction: column;
-    align-self: center;
+#loginContainer a {
+  /* see App.css for --color-link */
+  color: var(--color-link);
 }
 
-#loginButton{
-    align-self: center;
+#loginForms {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  opacity: 0.95;
 }
 
-.textForm{
-    padding: 10px;
+#loginButton {
+  align-self: center;
 }
 
-.paperContainer{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    height: 300px;
-    width: 410px;
-    margin-top: 50px;
+.textFormm {
+  padding: 10px;
 }
 
-.progressContainer{
-    display:flex;
-    flex-direction: column;
+.paperContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 350px;
+  width: 410px;
+  margin-top: 50px;
 }
 
-.loadingCircle{
-    align-self: center;
+.progressContainer {
+  display: flex;
+  flex-direction: column;
 }
 
-.circle{
-    align-self: center;
+.loadingCircle {
+  align-self: center;
+}
+
+.circle {
+  align-self: center;
 }
 
 .pushDown {
-    padding-top: 25px;
+  padding-top: 25px;
 }
 
+@media (max-width: 40em) {
+  .paperContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 350px;
+    width: 300px;
+    margin-top: 50px;
+  }
+
+}

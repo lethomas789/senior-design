@@ -1,17 +1,27 @@
 const express = require('express');
 const router = express.Router();
-const firebase = require('firebase');
 const admin = require('firebase-admin');
 const db = admin.firestore();
 
-router.get('/', (req,res) => {
-  // get user id
-  if (req.query.params) {
-    var user = req.query.params.user;
-  }
-  else {
-    var user = req.query.user;
-  }
+/**
+ * @param user = user id
+ * 
+ * 1. Check existing user
+ * 2. Get user cart ref in DB
+ * 3. Collect all cart items, and return
+ */
+router.get('/', tokenMiddleware, (req,res) => {
+
+  //passing user/email param through payload of token
+  var { user } = req.authorizedData;
+
+  //get user id
+  // if (req.query.params) {
+  //   var user = req.query.params.user;
+  // }
+  // else {
+  //   var user = req.query.user;
+  // }
 
   // return error if empty request
   if (!user) {
@@ -21,7 +31,7 @@ router.get('/', (req,res) => {
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   userRef.get().then(doc => {
     if (!doc.exists) {
@@ -33,9 +43,9 @@ router.get('/', (req,res) => {
 
     // get cart from user
     // cart id doc is user id
-    let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
+    const cartRef = userRef.collection('cart').doc(user).collection('cartItems');
 
-    let cartItems = [];
+    const cartItems = [];
 
     cartRef.get()
       .then(snapshot => {
@@ -68,25 +78,38 @@ router.get('/', (req,res) => {
   });  // end userRef.get()
 });
 
-router.post('/addItems', (req, res) => {
+/**
+ * @param user - user id
+ * @param pid - product id
+ * @param vendorID - vendor id
+ * @param imageLink = take out
+ * @param size - size of apparrel
+ * @param isApparel - bool
+ * @param amtPurchased - num items purchased
+ */
+router.post('/addItems', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params) {
-    // get user id and product id
-    var user = req.body.params.user;
-    var pid = req.body.params.pid;  // product id
+    var {
+      // user,
+      pid,
+      vendorID,
+      imageLink,
+      size,
+      isApparel
+    } = req.body.params;
     var amtPurchased = Number(req.body.params.amtPurchased);
-    var vendorID = req.body.params.vendorID;
-    var imageLink = req.body.params.image;
-    var size = req.body.params.size;
-    var isApparel = req.body.params.isApparel;
   }
   else {
-    var user = req.body.user;
-    var pid = req.body.pid;  // product id
+    var {
+      // user,
+      pid,
+      vendorID,
+      imageLink,
+      size,
+      isApparel
+    } = req.body;
     var amtPurchased = Number(req.body.amtPurchased);
-    var vendorID = req.body.vendorID;
-    var imageLink = req.body.image;
-    var size = req.body.size;
-    var isApparel = req.body.isApparel;
   }
 
   // return error if empty request
@@ -97,7 +120,7 @@ router.post('/addItems', (req, res) => {
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   userRef.get().then(doc => {
     if (!doc.exists) {
@@ -109,10 +132,10 @@ router.post('/addItems', (req, res) => {
 
     // get cart from user
     // cart id doc is user id
-    let cartRef = userRef.collection('cart').doc(user).collection('cartItems');
+    const cartRef = userRef.collection('cart').doc(user).collection('cartItems');
 
     // get product info from pid
-    let productInfoRef = db.collection('products').doc(pid);
+    const productInfoRef = db.collection('products').doc(pid);
 
     productInfoRef.get().then(doc => {
       if (!doc.exists) {
@@ -123,9 +146,16 @@ router.post('/addItems', (req, res) => {
         });
       }
       // else, get data
-      let productInfo = doc.data();
+      const productInfo = doc.data();
 
-      let cartItemRef = cartRef.doc(pid);
+      let itemID = pid;
+
+      // if item added is apparrel, the item id is pid-size
+      if (isApparel === true) {
+        itemID = `${pid}-${size}`
+      }
+
+      const cartItemRef = cartRef.doc(itemID);
 
       var transaction = db.runTransaction(t => {
         return t.get(cartItemRef).then(doc => {
@@ -145,8 +175,11 @@ router.post('/addItems', (req, res) => {
                 vid: vendorID,
                 image: imageLink,
                 size: size,
-                isApparel: isApparel
+                isApparel: isApparel,
+                itemID: itemID,
               }
+
+              // console.log("checking is apparel data", data);
             } 
 
             //if regular item, create data object with regular properties
@@ -159,12 +192,14 @@ router.post('/addItems', (req, res) => {
                 totalPrice: totalItemPrice,
                 vid: vendorID,
                 image: imageLink,
-                isApparel: isApparel
+                isApparel: isApparel,
+                itemID: itemID,
               };
+              // console.log("checking non apparel data", data);
             }
 
             // set new item(s) purchased into cart, with pid as doc identifier
-            cartRef.doc(pid).set(data);
+            cartRef.doc(itemID).set(data);
             console.log('Succesfully added to cart of user: ' + user);
             return res.status(200).json({
               success: true,
@@ -172,11 +207,11 @@ router.post('/addItems', (req, res) => {
             });
           }
 
-          //if the item does not exist
+          //if the item does exist
           else {
-            var oldItemAmt = doc.data().amtPurchased;
-            var newAmt = oldItemAmt + amtPurchased;
-            var totalItemPrice = newAmt * productInfo.productPrice;
+            const oldItemAmt = doc.data().amtPurchased;
+            const newAmt = oldItemAmt + amtPurchased;
+            const totalItemPrice = newAmt * productInfo.productPrice;
 
             var data;
 
@@ -189,7 +224,8 @@ router.post('/addItems', (req, res) => {
                 productPrice: productInfo.productPrice,
                 totalPrice: totalItemPrice,
                 vid: vendorID,
-                image: imageLink
+                image: imageLink,
+                itemID: itemID,
               };
             }
 
@@ -204,7 +240,8 @@ router.post('/addItems', (req, res) => {
                 vid: vendorID,
                 image: imageLink,
                 size: size,
-                isApparel: isApparel
+                isApparel: isApparel,
+                itemID: itemID,
               };
             }
 
@@ -246,25 +283,31 @@ router.post('/addItems', (req, res) => {
   });  // end userRef.get()
 });
 
-router.post('/deleteItems', (req,res) => {
+router.post('/deleteItems', tokenMiddleware, (req,res) => {
+  var { user } = req.authorizedData;
+
   if (req.body.params) {
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
     var pid = req.body.params.pid;
+    var isApparel = req.body.params.isApparel;
+    var size = req.body.params.size;
   }
   else {
-    var user = req.body.user;
+    // var user = req.body.user;
     var pid = req.body.pid;
+    var isApparel = req.body.isApparel;
+    var size = req.body.size;
   }
 
   // return error if empty request
-  if (user === '' || pid === '') {
+  if (user === '' || pid === '' || isApparel === '') {
     return res.status(200).json({
       success: false,
       message: 'Invalid request params'
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   // check to make sure existing user
   userRef.get().then(doc => {
@@ -276,7 +319,14 @@ router.post('/deleteItems', (req,res) => {
       });
     }
     
-    let cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(pid);
+    let itemID = pid;
+
+    // if item added is apparrel, the item id is pid-size
+    if (isApparel === true) {
+      itemID = `${pid}-${size}`
+    }
+
+    const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemID);
 
     // check to make sure item exists for deltion
     cartItemRef.get().then(doc => {
@@ -289,7 +339,7 @@ router.post('/deleteItems', (req,res) => {
       }
       // else delete the item from the cart
       let deleteDoc = cartItemRef.delete();
-      console.log('Deleted item from cart of user: ', user);
+      // console.log('Deleted item from cart of user: ', user);
       return res.status(200).json({
         success: true,
         message: 'Succesfully deleted item from cart'
@@ -313,16 +363,21 @@ router.post('/deleteItems', (req,res) => {
 });
 
 // update amt on user cart page
-router.post('/updateItems', (req, res) => {
+router.post('/updateItems', tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
   if (req.body.params) {
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
     var pid = req.body.params.pid;
     var amtPurchased = Number(req.body.params.amtPurchased);
+    var isApparel = req.body.params.isApparel;
+    var size = req.body.params.size;
   }
   else {
-    var user = req.body.user;
+    // var user = req.body.user;
     var pid = req.body.pid;
     var amtPurchased = Number(req.body.amtPurchased);
+    var isApparel = req.body.isApparel;
+    var size = req.body.size;
   }
 
   // return error if empty request
@@ -340,7 +395,16 @@ router.post('/updateItems', (req, res) => {
     });
   }
 
-  let cartItemRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems').doc(pid);
+  let itemID = pid;
+
+  // if item added is apparrel, the item id is pid-size
+  if (isApparel === true) {
+    itemID = `${pid}-${size}`
+  }
+  
+  const userRef = db.collection('users').doc(user);
+
+  const cartItemRef = userRef.collection('cart').doc(user).collection('cartItems').doc(itemID);
 
   let transaction = db.runTransaction(t => {
     return t.get(cartItemRef).then(doc => {
@@ -352,8 +416,8 @@ router.post('/updateItems', (req, res) => {
         });
       }
       else {
-        let productPrice = doc.data().productPrice;
-        let newTotalPrice = amtPurchased * productPrice;
+        const productPrice = doc.data().productPrice;
+        const newTotalPrice = amtPurchased * productPrice;
 
         t.update(cartItemRef, {
           amtPurchased: amtPurchased,
@@ -382,15 +446,18 @@ router.post('/updateItems', (req, res) => {
   });
 });
 
-router.post('/updateCart', (req,res) => {
+// route not used
+router.post('/updateCart', tokenMiddleware, (req,res) => {
+  var { user } = req.authorizedData;
+
   if (req.body.params) {
-    var user = req.body.params.user;
+    // var user = req.body.params.user;
     var cartTotalPrice = Number(req.body.params.cartTotalPrice);
     var itemsInCart = Number(req.body.params.itemsInCart);
     var vendorsInOrder = req.body.params.vendorsInOrder;
   }
   else {
-    var user = req.body.user;
+    // var user = req.body.user;
     var cartTotalPrice = Number(req.body.cartTotalPrice);
     var itemsInCart = Number(req.body.itemsInCart);
     var vendorsInOrder = req.body.vendorsInOrder;
@@ -403,7 +470,7 @@ router.post('/updateCart', (req,res) => {
     });
   }
 
-  let userRef = db.collection('users').doc(user);
+  const userRef = db.collection('users').doc(user);
 
   userRef.get().then(doc => {
     // if user doesnt exist, stop
@@ -416,9 +483,9 @@ router.post('/updateCart', (req,res) => {
     }
 
     // else update their cart
-    let userCartRef = db.collection('users').doc(user).collection('cart').doc(user);
+    const userCartRef = db.collection('users').doc(user).collection('cart').doc(user);
 
-    let data = {
+    const data = {
       cartTotalPrice: cartTotalPrice,
       itemsInCart: itemsInCart,
       vendorsInOrder: vendorsInOrder
@@ -441,18 +508,13 @@ router.post('/updateCart', (req,res) => {
 });
 
 /**
- * Clears cart of a user.
+ * Clears cart of a user. Route no longer used after split of cart changes.
  * 
  * @param user - email for user whose cart being cleared
  */
-router.delete('/clearCart', (req, res) => {
-  //params is in query parameter
-  if (req.body.params) {
-    var user = req.body.params.user;
-  }
-  else {
-    var user = req.query.user;
-  }
+router.delete('/clearCart', tokenMiddleware, (req, res) => {
+
+  var { user } = req.authorizedData;
 
   if (!user) {
     console.log('Error, missing request params in clearCart')
@@ -462,7 +524,7 @@ router.delete('/clearCart', (req, res) => {
     });
   }
 
-  let cartRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems');
+  const cartRef = db.collection('users').doc(user).collection('cart').doc(user).collection('cartItems');
   cartRef.get().then(snapshot => {
     if (snapshot.empty) {
       console.log('User cart successfully cleared.');
@@ -503,6 +565,5 @@ router.delete('/clearCart', (req, res) => {
     });
   });
 });
-
 
 module.exports = router;

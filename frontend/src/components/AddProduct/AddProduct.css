@@ -2,6 +2,10 @@
   padding: 10px;
 }
 
+.add-textForm {
+  padding: 10px;
+}
+
 .hideApparelSizes{
   display:none;
 }
@@ -10,6 +14,93 @@
   display:block;
 }
 
-#uploadImageText{
-  text-align: center;
+.hideItemStock{
+  display:none;
 }
+
+.showItemStock{
+  display:block;
+  padding: 10px;
+  padding-bottom: 50px;
+}
+
+.uploadImageText{
+  padding-top: 5px;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+.addProductContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-bottom: 20px;
+}
+
+.additem-info-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.smaller {
+  padding-top: 10px;
+}
+
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black; /* If you want dots under the hoverable text */
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  top: -5px;
+  left: 125%;
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px 0;
+  border-radius: 6px;
+ 
+  /* Position the tooltip text - see examples below! */
+  position: absolute;
+  z-index: 1;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+  
+@media (max-width: 40em) {
+
+  .addProductContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-bottom: 20px;
+    height: 150vh;
+
+  }
+
+  .additem-info-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;    
+  }
+
+  .add-textForm {
+    width: 90vw;
+  }
+
+  #row {
+    overflow: hidden;
+  }
+
+}
+

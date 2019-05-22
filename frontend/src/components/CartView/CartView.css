@@ -1,0 +1,10 @@
+#empty-cart-container {
+  height: 95vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#cart-items{
+  min-height: 95vh;
+}

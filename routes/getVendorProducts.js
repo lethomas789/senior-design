@@ -6,16 +6,16 @@ const db = admin.firestore();
 
 router.get('/', (req,res) => {
   if (req.query.params) {
-    var vendor = req.query.params.vendor;
+    var vid = req.query.params.vid;
   }
   else {
-    var vendor = req.query.vendor;
+    var vid = req.query.vid;
   }
 
   // can do db.doc('collection/pathToDoc');
 
   // require certain response params
-  if (!vendor) {
+  if (!vid) {
     return res.status(200).json({
       success: false,
       message: 'Invalid request params'
@@ -23,7 +23,7 @@ router.get('/', (req,res) => {
   }
 
   // get all products where vid == vendor 
-  db.collection('products').where('vid', '==', vendor).get().then(snapshot => {
+  db.collection('products').where('vid', '==', vid).get().then(snapshot => {
     let products = [];
     snapshot.forEach(doc => {
       products.push(doc.data());
@@ -43,52 +43,6 @@ router.get('/', (req,res) => {
       message: 'Server error in getting vendor products: ' + err
     });
   });
-
-  /*
-  // get vendor path
-  var vendorRef = db.collection('vendors').doc(vendor);
-
-  vendorRef.get()
-    .then(doc => {
-      // no such vendor 
-      if (!doc.exists) {
-        // console.log('No such vendor: ', vendor);
-        return res.status(200).json({
-          success: false,
-          message: 'No such vendor'
-        });
-      }
-      // else get vendor products
-      let productsRef = vendorRef.collection('products');
-      let products = [];
-      productsRef.get()
-        .then(snapshot => {
-          snapshot.forEach(doc => {
-            // push all product info into products array
-            products.push(doc.data());
-          });
-          // send back products info
-          return res.status(200).json({
-            success: true,
-            data: products
-          });
-        })
-        .catch(err => {  // catch for productsRef.get()
-          console.log('Error in getting vendor products:', err);
-          return res.status(200).json({
-            succes: false,
-            message: 'Error in getting vendor products'
-          });
-        })  // end productsRef.get() 
-    })
-    .catch(err => {  // catch for vendorRef.get()
-      console.log('Error getting vendor info:', err);
-      return res.status(200).json({
-        succes: false,
-        message: 'Error in getting vendor info'
-      });
-    });  // end vendorRef.get()
-    */
 })
 
 

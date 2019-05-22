@@ -11,12 +11,15 @@ const actions =  {
     REMOVE_CART:"REMOVE_CART",
     EMPTY_CART: "EMPTY_CART",
     UPDATE_TOTAL: "UPDATE_TOTAL",
+    UPDATE_CART: "UPDATE_CART",
+    UPDATE_AMOUNT_PURCHASED: "UPDATE_AMOUNT_PURCHASED",
+
     //vendor actions
     GET_VENDOR_PRODUCTS: "GET_VENDOR_PRODUCTS",
     GET_VENDORS: "GET_VENDORS",
     UPDATE_VENDOR_ID: "UPDATE_VENDOR_ID",
     //update selected item in shop view for detailed item info
-    UPDATE_SELECTED_ITEM: "UPDATE_SELECTED_ITEM"
+    UPDATE_SELECTED_ITEM: "UPDATE_SELECTED_ITEM",
 }
 
 export default actions;

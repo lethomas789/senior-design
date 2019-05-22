@@ -1,48 +1,84 @@
-#signupContainer{
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+#signupContainer {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-image: linear-gradient(
+      to right,
+      /* rgba(111, 138, 183, 0.3),
+      rgba(97, 93, 108, 0.3) */
+      rgba(202, 229, 255, 0.2),
+      rgba(172, 237, 255, 0.2)
+    ),
+    url(../../images/library.jpg);
+  height: 95vh;
+  background-size: cover;
 }
 
-#signupForms{
-    display:flex;
-    flex-direction: column;
-    align-self: center;
-    
+#signupForms {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
 }
 
-.signupPaperContainer{
-    display:flex;
-    flex-direction: column;
-    align-items: center;
-    height: 500px;
-    width: 500px;
-    margin-top: 50px;
+.signupPaperContainer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 600px;
+  width: 500px;
+  margin-top: 50px;
+  opacity: 0.90;
 }
 
-.textForm{
-    padding: 10px;
+.textForm {
+  padding: 10px;
 }
 
-#signupForms{
-    display:flex;
-    flex-direction: column;
-    align-self: center;
-    padding: 10px;
+#signupForms {
+  display: flex;
+  flex-direction: column;
+  align-self: center;
+  padding: 10px;
 }
 
-#signupButton{
-    align-self: center;
+#signupButton {
+  align-self: center;
 }
 
-.progressContainer{
-    display:flex;
+.progressContainer {
+  display: flex;
 }
 
-.loadingCircle{
-    align-self: center;
+.loadingCircle {
+  align-self: center;
 }
 
 .pushDown {
-    padding-top: 50px;
+  padding-top: 50px;
 }
+
+@media (max-width: 40em) {
+  .signupPaperContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    height: 550px;
+    width: 300px;
+    margin-top: 50px;
+    opacity: 0.90;
+  }
+
+  #signupForms {
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    padding: 10px;
+    /* padding-bottom: 100px; */
+    padding-bottom: 40px;
+  }
+
+
+}
+
+
+

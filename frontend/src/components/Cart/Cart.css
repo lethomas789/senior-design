@@ -1,0 +1,84 @@
+:root {
+  --table-columns: 2.5fr 1fr 1fr 1fr;
+  --blue: #6F8AB7;
+  --table-border-color: 1px solid var(--blue);
+}
+
+.cart-table-container {
+  display: grid;
+  grid-template-columns: var(--table-columns);
+  max-width: 980px;
+  margin: 50px auto;
+}
+
+.table-header {
+  border-bottom: var(--table-border-color);
+  padding: 15px 0;
+}
+
+.table-row {
+  grid-column: 1/-1;
+  display: grid;
+  grid-template-columns: var(--table-columns);
+  border-bottom: var(--table-border-color);
+}
+
+
+#total-text, #total-price{
+  grid-column: 3 / span 1;
+  padding: 20px 0;
+  font-size: 22px;
+}
+
+#total-price {
+  grid-column: 4 / span 1;
+}
+
+#btn-paypal {
+  grid-column: 3 / span 1;
+  padding: 20px 0;
+}
+
+
+/*
+.table-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.table {
+  width: 980px;
+  justify-content: space-between;
+  align-self: center;
+}
+*/
+@media (max-width: 40em) {
+
+  .cart-table-container {
+    display: grid;
+    grid-template-columns: var(--table-columns);
+    max-width: 980px;
+    margin: 50px auto;
+    height: 100vh;
+    padding-left: 20px;
+    padding-right: 20px;
+  }
+
+  #total-text {
+    font-size: 15px;
+  }
+
+  #total-price {
+    font-size: 15px;
+  }
+
+  .table-header {
+    font-size: 15px;
+  }
+  
+  .table-row {
+    font-size: 15px;
+  }
+
+}

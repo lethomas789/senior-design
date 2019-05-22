@@ -1,0 +1,171 @@
+@import "~slick-carousel/slick/slick.css";
+@import "~slick-carousel/slick/slick-theme.css";
+
+:root {
+  /* --color-primary-light: #2998ff; */
+  --color-primary-light: rgba(41, 152, 255);
+  --color-primary: #406efd;
+  /* --color-primary-dark: #5643fa; */
+  --color-primary-dark: rgba(86, 67, 250);
+}
+
+#about-club-container {
+  width: 70vw;
+  margin: 0 auto;
+  
+}
+
+.shop-now {
+  text-align: center;
+  font-size: 20px;
+  padding-bottom: 20px;
+}
+
+.events-now {
+  text-align: center;
+}
+
+.club-header {
+  text-align: center;
+  justify-self: center;
+  justify-content: center;
+}
+
+.club-pictures-container {
+  grid-column: 1 / span 3;
+  grid-row: 2 / span 3;
+  justify-self: center;
+  z-index: 500;
+  margin: 20px;
+}
+
+.club-pictures-container img {
+  min-height: 0;
+  min-width: 0;
+  width: 100%;
+  height: 100%;
+}
+
+.club-pictures-slider {
+  min-width: 0;
+  /* max-width: 500px; */
+}
+
+.club-picture {
+  min-width: 0;
+}
+
+.about-colls {
+  float: left;
+  width: 3%;
+  padding: 5px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.about-link-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100vw;
+}
+
+
+.club-center {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  align-items: center;
+
+}
+
+.roww:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.club-bio {
+  text-align: center;
+  vertical-align: middle;
+  width: 70vw;
+  padding: 50px;
+  background-color: white;
+  color: black;
+}
+
+.club-contacts {
+  font-size: 16px;
+  text-align: center;
+  padding-bottom: 20px;
+}
+
+.club-pick-up {
+  font-size: 16px;
+  text-align: center;
+}
+
+
+.extra {
+  margin-bottom: 30px;
+}
+
+.about-containerr {
+  display: grid;
+  width: 70vw;
+  margin: 0 auto;
+}
+
+.about-main-imagee {
+  /* background-image: url(../../images/ourgroup.png); */
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  position: relative;
+  /* width: 60vw; */
+  /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
+  height: 500px; 
+  margin-bottom: 20px;
+}
+
+@media (max-width: 767px) {
+  #about-club-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
+    margin: 0 auto;
+    justify-content: center;
+  }
+
+  .club-header {
+    align-self: center;
+    justify-self: center;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+
+  .club-bio {
+    padding: 20px;
+    margin-top: 30px;
+    margin-left: 0;
+  }
+
+  .club-links {
+    height: 200px;
+    margin-top: 30px;
+    margin-left: 0;
+  }
+
+  .club-meetings {
+    height: 200px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 0;
+  }
+
+  .extra {
+    display: none;
+  }
+
+}
