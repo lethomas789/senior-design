@@ -1,14 +1,16 @@
 const express = require("express");
 const router = express.Router();
-const firebase = require("firebase");
 const admin = require("firebase-admin");
 const db = admin.firestore();
-const nodemailer = require("nodemailer");
 const crypto = require("crypto");
 const bcrypt = require("bcrypt-nodejs");
 const saltRounds = 10;
 const Email = require("email-templates");
+const passwordValidator = require("password-validator");
 require('dotenv').config();
+
+// if user forgets their password, then they wont be able to login and wont be
+// able to get a token so we dont check for tokens on these routes
 
 router.post("/", (req, res) => {
   // var host = req.headers.host;
@@ -85,7 +87,7 @@ router.post("/", (req, res) => {
           to: email
         },
         send: true, // set send to true when not testing
-        preview: false, // TODO turn off preview before production
+        // preview: false, // TODO turn off preview before production
 
         transport: {
           tls: {
@@ -160,7 +162,7 @@ router.get("/checkToken", (req, res) => {
         console.log("No such token or expired:", resetPassToken);
         return res.json({
           success: false,
-          message: "Sorry, password reset link is invalid or has expired."
+          message: "invalid"
         });
       }
 
@@ -197,7 +199,30 @@ router.post("/updatePass", (req, res) => {
     console.log("Missing params for route.");
     return res.json({
       success: false,
-      message: "Missing parmas for route"
+      message: "Missing params for route"
+    });
+  }
+
+  var passwordSchema = new passwordValidator();
+
+  passwordSchema
+    .is()
+    .min(8)
+    .is()
+    .max(40)
+    .has()
+    .digits()
+    .has()
+    .letters()
+    .has()
+    .not()
+    .spaces();
+
+  if (!passwordSchema.validate(newPassword)) {
+    return res.json({
+      success: false,
+      message:
+        "Password must be at least 8 characters and consist only of letters and numbers."
     });
   }
 
@@ -219,7 +244,7 @@ router.post("/updatePass", (req, res) => {
           if (err) {
             return res.json({
               success: false,
-              message: "Server error hashing password"
+              message: "Sorry, there was a server error."
             });
           }
           userRef
@@ -232,14 +257,14 @@ router.post("/updatePass", (req, res) => {
               console.log("Successfully updated password.");
               return res.json({
                 success: true,
-                message: "Successfully updated password."
+                message: "Successfully updated password. You can now login."
               });
             })
             .catch(err => {
               console.log("Server error in updating DB:", err);
               return res.json({
                 success: false,
-                message: "Server error in updating DB: " + err
+                message: "Sorry, there was a server error."
               });
             });
         });
@@ -249,7 +274,7 @@ router.post("/updatePass", (req, res) => {
       console.log("Error in reset pass route:", err);
       return res.json({
         success: false,
-        message: "Server error: " + err
+        message: "Sorry, there was a server error."
       });
     });
 });

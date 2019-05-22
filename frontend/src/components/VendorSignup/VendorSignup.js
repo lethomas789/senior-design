@@ -167,14 +167,18 @@ class VendorSignup extends Component {
   }
 
   render() {
+    if (this.state.vendors == null) {
+      return (<div></div>)
+    }
+
     const vendorList = this.state.vendors.map(result => {
       return <MenuItem key = {result.vid} value = {result.vid} name = {result.vendorName}> {result.vendorName} </MenuItem>
     });
 
     return (
       <div>
-        <Grid container direction = "column" justify = "center" alignItems = "center">
-          <Paper id = "signupPaperContainer">
+        <Grid container direction = "column" justify = "center" alignItems = "center" id="vendor-signup-container">
+          <Paper id = "vendorSignupPaperContainer">
             <h1> Admin Verification </h1>
             <div className = "textForm" id="row">
               <TextField
@@ -190,10 +194,12 @@ class VendorSignup extends Component {
                 type="password"
                 required="true"
                 onChange={(event) => this.setState({ code: event.target.value })}
+                style={{marginBottom: "15px"}}
               />
             </div>
 
             <h5> Select Vendor </h5>
+
             <div className = "textForm" id = "row">
               <FormControl id = "clubForm">
                 <InputLabel> {this.state.vendor} </InputLabel>
@@ -202,7 +208,7 @@ class VendorSignup extends Component {
                 </Select>
               </FormControl>
             </div>
-            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup}> Verify  </Button>
+            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup} style={{marginTop: "10px"}}> Verify  </Button>
           </Paper>
         </Grid>
       </div>

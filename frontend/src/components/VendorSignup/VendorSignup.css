@@ -1,4 +1,9 @@
-#signupPaperContainer{
+#vendor-signup-container {
+  height: 95vh;
+
+}
+
+#vendorSignupPaperContainer{
   display:flex;
   flex-direction: column;
   align-items: center;

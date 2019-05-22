@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 // import CircularProgress from "@material-ui/core/CircularProgress";
 // import coffee from "../../images/coffee.jpg";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   progress: {
@@ -36,7 +36,6 @@ class Signup extends Component {
       progressVariant: "determinate",
       responseMessage: "",
       success: false,
-      toRedirect: false
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -89,7 +88,8 @@ class Signup extends Component {
                 "Signup successful, please check your email to activate your account.",
               type: "success"
             });
-            this.setState(() => ({ toRedirect: true }));
+            // this.setState(() => ({ toRedirect: true }));
+            this.props.history.push('/check-email')
           }
 
           //display error message
@@ -151,7 +151,8 @@ class Signup extends Component {
             type: "success",
             time: 5000
           });
-          this.setState(() => ({ toRedirect: true }));
+          // this.setState(() => ({ toRedirect: true }));
+          this.props.history.push('/check-email')
         }
 
         //display error message
@@ -175,15 +176,7 @@ class Signup extends Component {
   };
 
   render() {
-    if (this.state.toRedirect === true) {
-      const pageText =
-        "Thanks for signing up. Please check your email to verify your account.";
-      return (
-        <Redirect to={{ pathname: "/page/check-email", state: { pageText } }} />
-      );
-    }
-
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <div id="signupContainer">
         <div id="signupForms">

@@ -424,10 +424,10 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
    */
 
   if (!vid || !user || !productInfo || !productName || !productPrice || !stock) {
-    console.log('Error: missing params for adding new product.');
+    console.log('Error: missing params for editing product.');
     return res.status(200).json({
       success: false,
-      message: 'Error: missing params for adding new product.'
+      message: 'Please fill out required forms before submitting.'
     });
   }
 
@@ -463,19 +463,16 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
       //made edit, uploading name of image files to construct image url for product, requires image name
       //made edit, extract file name from image name array
       else {
-        console.log(productPicture);
         for(let i = 0; i < productPicture.length; ++i) {
           let link =
           `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${pid}%2F${productPicture[i].name}?alt=media`;
           // TODO, figure out order of push, in terms of what order vendors want
           // to show their pics
-          console.log(link);
           pictures.push(link);
         }
 
         //if user uploads new pictures, must assign productPictures to new array of picture links
         //if user does not upload new pictures, assign old links
-        console.log(newImages);
         if(newImages === true){
           productPicture = pictures;
         }
@@ -512,7 +509,6 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
       }
       // else, just save stock
       else {
-        console.log("updating item with new links, checking links", pictures);
         var productData = {
           productInfo,
           productName,

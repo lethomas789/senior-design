@@ -34,14 +34,14 @@ const homeRoute = "/";
 const aboutRoute = "/about";
 const signupRoute = "/signup";
 const loginRoute = "/login";
-const shopRoute = "/shop";
+// const shopRoute = "/shop";
 const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
 const editItemRoute = "/editItem";
 const orderHistoryRoute = "/orderHistory";
-const accountInfoRoute = "/accountInfo";
-const primary = "#6F8AB7";
+// const accountInfoRoute = "/accountInfo";
+// const primary = "#6F8AB7";
 
 //style for cart to display number of items
 const styles = theme => ({
@@ -70,7 +70,7 @@ class ButtonAppBar extends Component {
     anchorElAccount: null,
     anchorIconMenu: null,
     logout: false,
-    anchorShop: false
+    anchorShop: null 
   };
 
   //when navbar loads, get list of all vendors in database
@@ -273,8 +273,7 @@ class ButtonAppBar extends Component {
       <nav className="root">
         <AppBar
           position="static"
-          style={{ backgroundImage: `url(${header})`, 
-          backgroundSize: "cover", boxShadow: "none"}}
+          style={{ backgroundImage: `url(${header})`, backgroundSize: "cover", boxShadow: "none"}}
         >
           <Toolbar>
             {/* MENU BUTTON */}
@@ -487,7 +486,7 @@ class ButtonAppBar extends Component {
                       onClick={this.viewCartCheck}
                     >
                       <Badge
-                        badgeContent={this.props.cartLength}
+                        badgeContent={this.props.amountPurchased}
                         color="primary"
                         classes={{ badge: classes.badge }}
                       >
@@ -705,7 +704,7 @@ class ButtonAppBar extends Component {
                     onClick={this.viewCartCheck}
                   >
                     <Badge
-                      badgeContent={this.props.cartLength}
+                      badgeContent={this.props.amountPurchased}
                       color="primary"
                       classes={{ badge: classes.badge }}
                     >
@@ -791,7 +790,8 @@ const mapStateToProps = state => {
     adminsOf: state.auth.adminsOf,
     vendorID: state.auth.vendorID,
     vendors: state.vendor.vendors,
-    currentVendor: state.auth.currentVendor
+    currentVendor: state.auth.currentVendor,
+    amountPurchased: state.cart.itemsPurchased,
   };
 };
 

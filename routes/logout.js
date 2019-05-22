@@ -3,7 +3,7 @@ const router = express.Router();
 const cookieConfig = require('../config/config.json');
 
 // clear out cookies on logout
-router.post("/", (req, res) => {
+router.post("/", tokenMiddleware, (req, res) => {
   if (req.signedCookies.token) {
     res.clearCookie("token", cookieConfig);
   }

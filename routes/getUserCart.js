@@ -339,7 +339,7 @@ router.post('/deleteItems', tokenMiddleware, (req,res) => {
       }
       // else delete the item from the cart
       let deleteDoc = cartItemRef.delete();
-      console.log('Deleted item from cart of user: ', user);
+      // console.log('Deleted item from cart of user: ', user);
       return res.status(200).json({
         success: true,
         message: 'Succesfully deleted item from cart'
@@ -508,18 +508,13 @@ router.post('/updateCart', tokenMiddleware, (req,res) => {
 });
 
 /**
- * Clears cart of a user.
+ * Clears cart of a user. Route no longer used after split of cart changes.
  * 
  * @param user - email for user whose cart being cleared
  */
-router.delete('/clearCart', (req, res) => {
-  //params is in query parameter
-  if (req.body.params) {
-    var user = req.body.params.user;
-  }
-  else {
-    var user = req.query.user;
-  }
+router.delete('/clearCart', tokenMiddleware, (req, res) => {
+
+  var { user } = req.authorizedData;
 
   if (!user) {
     console.log('Error, missing request params in clearCart')

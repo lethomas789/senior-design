@@ -51,8 +51,17 @@ class Login extends Component {
         withCredentials: true
       })
       .then(res => {
+        var amtPurchased = 0;
+
+        for(let i = 0; i < res.data.data.length; i++){
+          amtPurchased = amtPurchased + res.data.data[i].amtPurchased
+        }
+
         //after getting cart info, update redux store container
         this.props.updateItems(res.data.data);
+
+        //update cart badge based on number of items in user's cart
+        this.props.updateAmountPurchased(amtPurchased);
 
         // switch to shop page
         this.setState(() => ({ toShop: true}));
@@ -270,19 +279,27 @@ class Login extends Component {
         });
       });
   };
+
+  componentDidMount() {
+    if (this.props.logout) {
+      this.props.updateLogout();
+    }
+  }
+
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
+
     if (this.state.toShop === true) {
       return <Redirect to="/shop" />
     }
 
-    // pass props from App js /logout route
-    // TODO make it state
-    if (this.props.logout === true) {
-      console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
-      this.props.updateLogout();
-      return <Redirect to="/login" />
-    }
+    // // pass props from App js /logout route
+    // // TODO make it state
+    // if (this.props.logout === true) {
+    //   console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
+    //   this.props.updateLogout();
+    //   return <Redirect to="/login" />
+    // }
 
     return (
       <div id="loginContainer">
@@ -377,6 +394,12 @@ const mapDispatchToProps = dispatch => {
         vid: vendorID,
         admins: adminsOf,
         currentVendor: vendor,
+      }),
+
+    updateAmountPurchased: amount => 
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount
       })
   };
 };

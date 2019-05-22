@@ -76,8 +76,20 @@ router.post("/", (req, res) => {
     var { firstName, lastName, email, password } = req.body;
   }
 
-  // emails case insensitive so lowercase them to save in DB
-  email = email.toLowerCase();
+  // firstName = firstName.trim().escape();
+  // lastName = lastName.trim().escape();
+
+  // // emails case insensitive so lowercase them to save in DB
+  // email = email.isEmail().normalizeEmail();
+  // password = password.trim().escape();
+
+
+  // console.log(firstName);
+  // console.log(lastName);
+  // console.log(email);
+  // console.log(password);
+
+  // return res.sendStatus(200);
 
   var passwordSchema = new passwordValidator();
 

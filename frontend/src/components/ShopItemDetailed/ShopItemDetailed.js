@@ -96,8 +96,8 @@ class ItemImageViewer extends Component {
               },
               largeImage: {
                 src: imageLink[this.state.currentImage],
-                width: 1200,
-                height: 1800,
+                width: 1600,
+                height: 1600,
                 enlargedImagePosition: "over"
               },
               enlargedImageContainerStyle: {
@@ -368,6 +368,16 @@ class ShopItemDetailed extends Component {
     return <span className="stock">{text}</span>;
   };
 
+  totalAmountPurchased = (items) => {
+    let amtPurchased = 0;
+    for(let i = 0; i < items.length; i++){
+      amtPurchased = amtPurchased + items[i].amtPurchased
+    }
+
+    //update cart badge based on number of items in user's cart
+    this.props.updateAmountPurchased(amtPurchased);
+  }
+
   addApparelToCart = () => {
     const apiURL = '/api/getUserCart/addItems';
     axios
@@ -398,6 +408,8 @@ class ShopItemDetailed extends Component {
             .then(res => {
               //after getting cart info, update redux store container
               this.props.updateItems(res.data.data);
+              this.totalAmountPurchased(res.data.data);
+
               //switch from alert to notifier
               this.props.notifier({
                 title: "Success",
@@ -443,7 +455,7 @@ class ShopItemDetailed extends Component {
       this.props.notifier({
         title: "Error",
         message: "Cannot add a quantity of 0 to cart.",
-        type: "danger"
+        type: "warning"
       });
     }
 
@@ -456,7 +468,7 @@ class ShopItemDetailed extends Component {
       //switch from alert to notifier
       this.props.notifier({
         title: "Error",
-        message: "Quantity selected exceeds stock.",
+        message: "Sorry, quantity selected exceeds stock.",
         type: "danger"
       });
 
@@ -473,7 +485,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
           //add item to cart
@@ -487,7 +499,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
           else {
@@ -501,7 +513,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
 
@@ -515,7 +527,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
 
@@ -529,7 +541,7 @@ class ShopItemDetailed extends Component {
             this.props.notifier({
               title: "Error",
               message: "Sorry, not enough stock.",
-              type: "danger"
+              type: "warning"
             });
           }
 
@@ -541,8 +553,8 @@ class ShopItemDetailed extends Component {
         default:
           this.props.notifier({
             title: "Error",
-            message: "Please select size!",
-            type: "danger"
+            message: "Please select a size.",
+            type: "warning"
           });
       }
     }
@@ -575,6 +587,7 @@ class ShopItemDetailed extends Component {
                 .then(res => {
                   //after getting cart info, update redux store container
                   this.props.updateItems(res.data.data);
+                  this.totalAmountPurchased(res.data.data);
                   this.props.notifier({
                     title: "Success",
                     message: "Item added to cart.",
@@ -631,6 +644,7 @@ class ShopItemDetailed extends Component {
                 .then(res => {
                   //after getting cart info, update redux store container
                   this.props.updateItems(res.data.data);
+                  this.totalAmountPurchased(res.data.data);
                   //switch from alert to notifier
                   this.props.notifier({
                     title: "Success",
@@ -858,7 +872,7 @@ const mapStateToProps = state => {
   return {
     pid: state.selectedItem.selectedItemID,
     login: state.auth.login,
-    vendorID: state.vendor.vendor
+    vendorID: state.vendor.vendor,
   };
 };
 
@@ -877,7 +891,13 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.GET_VENDOR_PRODUCTS,
         vendor: newVendor
-      })
+      }),
+
+    updateAmountPurchased: amount => 
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount,
+      }),
   };
 };
 

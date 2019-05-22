@@ -1,11 +1,10 @@
 const express = require("express");
 const router = express.Router();
-const firebase = require("firebase");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const nodemailer = require("nodemailer");
 const Email = require("email-templates");
-const jwt = require("jsonwebtoken");
+const crypto = require("crypto");
 require("dotenv").config();
 
 /**
@@ -80,132 +79,114 @@ router.post("/", tokenMiddleware, async (req, res) => {
         });
       }
 
-      // TODO save vendorName, pickup time, pickup location, etc.
       let date = admin.firestore.Timestamp.now();
-      console.log('ITEMS ARE:', items);
+      const oid = crypto.randomBytes(3).toString("hex");
 
       let orderData = {
         paymentID: paymentID,
         payerID: payerID,
         items: items,
         totalPrice: totalPrice,
-        vid: vid, 
+        vid: vid,
         date: date,
         paid: true, // if done through paypal express checkout, then paid
         pickedUp: false,
         name: doc.data().name,
         email: doc.data().email,
-        seenByVendor: false // init as false, for cron emailing purposes
+        seenByVendor: false, // init as false, for cron emailing purposes
+        oid: oid
       };
-
-      // TODO: have diff route if clubs want to do cash pickup
 
       let ordersRef = db.collection("orders");
 
       // write to user order history
       ordersRef
-        .add(orderData)
-        .then(orderDoc => {
-          var oid = orderDoc.id;
-          orderDoc.update({ oid: oid });
+        .doc(oid) // id the doc iwth our 6 char generated id
+        .set(orderData);
 
-          // TODO send emails
+      let firstName = doc.data().name.firstName;
+      let lastName = doc.data().name.lastName;
 
-          let firstName = doc.data().name.firstName;
-          let lastName = doc.data().name.lastName;
+      let newItems = [];
 
-          let newItems = [];
+      // convert paypal items numbers from strings to numbers to do calculations
+      for (let i = 0; i < items.length; ++i) {
+        let newItem = {
+          name: items[i].name,
+          price: Number(items[i].price).toFixed(2),
+          quantity: Number(items[i].quantity),
+          totalPrice: (
+            Number(items[i].price) * Number(items[i].quantity)
+          ).toFixed(2)
+        };
 
-          // convert paypal items numbers from strings to numbers to do calculations
-          for (let i = 0; i < items.length; ++i) {
-            let newItem = {
-              name: items[i].name,
-              price: Number(items[i].price).toFixed(2),
-              quantity: Number(items[i].quantity),
-              totalPrice: (
-                Number(items[i].price) * Number(items[i].quantity)
-              ).toFixed(2)
-            };
+        newItems.push(newItem);
+      }
 
-            newItems.push(newItem);
+      let emailSubject = "ECS193 E-commerce Order Recipt: " + oid;
+      let emailIntro =
+        "Hi " +
+        firstName +
+        " " +
+        lastName +
+        ", here is an order receipt for you to show the club when you pick up your order.";
+
+      const receiptEmail = new Email({
+        message: {
+          from: process.env.EMAIL,
+          // from: 'test@test.com',
+          subject: emailSubject,
+          to: doc.data().email
+        },
+        send: true, // set send to true when not testing
+        preview: false, // TODO turn off preview before production
+        transport: {
+          // host: 'localhost', // TODO update w/ website?
+          port: 465,
+          secure: true,
+          tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
+          },
+
+          // uncomment when actually sending emails
+          service: "gmail",
+          auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASS
           }
+        }
+      });
 
-          let emailSubject = "ECS193 E-commerce Order Recipt: " + oid;
-          let emailIntro =
-            "Hi " +
-            firstName +
-            " " +
-            lastName +
-            ", here is an order receipt for you to show the club when you pick up your order.";
-
-          const receiptEmail = new Email({
-            message: {
-              from: process.env.EMAIL,
-              // from: 'test@test.com',
-              subject: emailSubject,
-              to: doc.data().email
-            },
-            send: true, // set send to true when not testing
-
-            //leaving this code commented out throws a process error on backend, preventing email from being sent
-            preview: false,  // TODO turn off preview before production
-
-            transport: {
-              // host: 'localhost', // TODO update w/ website?
-              port: 465,
-              secure: true,
-              tls: {
-                // do not fail on invalid certs
-                rejectUnauthorized: false
-              },
-
-              // uncomment when actually sending emails
-              service: "gmail",
-              auth: {
-                user: process.env.EMAIL,
-                pass: process.env.EMAIL_PASS
-              }
-            }
-          });
-
-          receiptEmail
-            .send({
-              template: "receipt",
-              locals: {
-                items: newItems,
-                totalPrice: totalPrice,
-                pickupInfo: vendorData.data().pickupInfo + "\n \n", // newlines for email styling purposes
-                emailIntro: emailIntro,
-                oid: oid,
-                vendorName: vendorData.data().vendorName,
-                vid: vid
-              }
-            })
-            .then(() => {
-              console.log("Finished Sending Email.");
-            })
-            .catch(err => {
-              console.log(err);
-              res.status(200).json({
-                success: false,
-                message: "error sending confirmation email"
-              });
-            });
-
-          console.log("Finished saving new order:", oid);
-          return res.status(200).json({
-            success: true,
-            message: "Successfully saved new order: " + oid
-          });
+      receiptEmail
+        .send({
+          template: "receipt",
+          locals: {
+            items: newItems,
+            totalPrice: totalPrice,
+            pickupInfo: vendorData.data().pickupInfo + "\n \n", // newlines for email styling purposes
+            emailIntro: emailIntro,
+            oid: oid,
+            vendorName: vendorData.data().vendorName,
+            vid: vid
+          }
+        })
+        .then(() => {
+          console.log("Finished Sending Email.");
         })
         .catch(err => {
-          // catch for ordersRef
-          console.log("Error in adding new order:", err);
-          return res.status(200).json({
+          console.log(err);
+          res.status(200).json({
             success: false,
-            message: "Error in adding new order: " + err
+            message: "error sending confirmation email"
           });
         });
+
+      console.log("Finished saving new order:", oid);
+      return res.status(200).json({
+        success: true,
+        message: "Thanks for purchasing!"
+      });
     })
     .catch(err => {
       // catch for userRef get
@@ -319,15 +300,6 @@ router.post("/getVendorOrders", tokenMiddleware, (req, res) => {
  */
 
 router.get("/getUserOrders", tokenMiddleware, (req, res) => {
-  // if (req.query.params) {
-  //   // var user = req.query.params.user;
-  //   var token = req.query.params.token;
-  // }
-  // else {
-  //   // var user = req.query.user;
-  //   var token = req.query.token;
-  // }
-
   var { user } = req.authorizedData;
 
   if (!user) {
@@ -434,7 +406,7 @@ router.patch("/updateOrder", tokenMiddleware, (req, res) => {
     });
   }
 
-  let orderRef = db.collection("orders").doc(oid);
+  const orderRef = db.collection("orders").doc(oid);
   orderRef
     .get()
     .then(doc => {
@@ -452,7 +424,7 @@ router.patch("/updateOrder", tokenMiddleware, (req, res) => {
       orderRef.update({
         pickedUp: !doc.data().pickedUp,
         lastUpdate: lastUpdate,
-        lastUpdateUser: user,
+        lastUpdateUser: user
       });
 
       console.log("Successfully updated order.");

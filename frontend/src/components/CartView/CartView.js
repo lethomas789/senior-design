@@ -56,7 +56,7 @@ class CartView extends Component {
 
     //update state
     this.setState({
-      vendorItemsSeparated: itemsArray
+      vendorItemsSeparated: itemsArray,
     });
   };
 
@@ -111,7 +111,9 @@ class CartView extends Component {
   }
 
   handleEmptyCart = () => {
-    this.setState(() => ({ emptyCart: true }));
+    this.setState(() => ({ displayPaypalButton: false, emptyCart: true }));
+    this.separateVendors();
+    // this.setState(() => ({ emptyCart: true }));
   }
 
   //separate items by vendors when component loads to page
@@ -133,21 +135,34 @@ class CartView extends Component {
     // if empty cart, display empty cart text
     else if (this.state.allVendors.length === 0) {
       var renderCarts = (
-        <div id="empty-cart">
-          No items in cart. Click here to <Link to="/shop"> Shop </Link>
+        <div id="empty-cart-container">
+          <h1>
+            No items in cart. Click here to <Link to="/shop"> Shop </Link>
+          </h1>
           {/* <AddShoppingCart style={{width: "400px", height: "400px"}}/> */}
         </div>
       );
     } else {
       //render carts for each vendor
       var renderCarts = this.state.allVendors.map(vendor => {
+        let vendorGroupName = '';
+        let listOfVendors = this.props.vendors;
+  
+        //extract vendor name
+        for(let i = 0; i < listOfVendors.length; i++){
+          if(vendor === listOfVendors[i].vid){
+            vendorGroupName = listOfVendors[i].vendorName;
+            break;
+          }
+        }
         //for each vendor, want to render a cart
         for (let i = 0; i < this.state.vendorItemsSeparated.length; i++) {
-          var currentListItems = this.state.vendorItemsSeparated[i];
+          let currentListItems = this.state.vendorItemsSeparated[i];
           if (currentListItems[0].vid === vendor) {
             return (
               <Cart
                 key={vendor}
+                vendorName={vendorGroupName}
                 passedAllVendors={this.state.allVendors}
                 updateVendorsView={this.updateVendorsView}
                 passedItems={currentListItems}
@@ -199,7 +214,8 @@ const mapDispatchToProps = dispatch => {
 const mapStateToProps = state => {
   return {
     items: state.cart.items,
-    login: state.auth.login
+    login: state.auth.login,
+    vendors: state.vendor.vendors,
   };
 };
 

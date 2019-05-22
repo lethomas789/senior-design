@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import axios from "axios";
 import "./CartItem.css";
 import { connect } from "react-redux";
@@ -24,25 +24,26 @@ class CartItem extends Component {
   //when a CartItem renders, store the state of the stock
   //local stock checking used to quantity selector check
   componentDidMount() {
-    const apiURL = '/api/getProductInfo';
-    axios.get(apiURL, {
-      params:{
-        pid: this.props.pid
-      }
-    })
-    .then(res => {
-      //extract stock info and store , check local stock
-      this.setState({
-        stock: res.data.product.stock
+    const apiURL = "/api/getProductInfo";
+    axios
+      .get(apiURL, {
+        params: {
+          pid: this.props.pid
+        }
       })
-    })
-    .catch(err => {
-      this.props.notifier({
-        title: "Error",
-        message: err.toString(),
-        type: "danger"
+      .then(res => {
+        //extract stock info and store , check local stock
+        this.setState({
+          stock: res.data.product.stock
+        });
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
       });
-    })
   }
 
   handleChange = name => event => {
@@ -53,7 +54,7 @@ class CartItem extends Component {
   //want to update total value of both item in cart and total sum
   handleQuantityChange = event => {
     //if the user wants to change quantity selector, check if value exceeds current stock
-    if(event.target.value > this.state.stock){
+    if (event.target.value > this.state.stock) {
       //added notifier to indicate if user is exceeding stock of item based on quantity selector
       this.props.notifier({
         title: "Warning",
@@ -62,7 +63,7 @@ class CartItem extends Component {
       });
       //if exceeded, return
       return;
-    } 
+    }
 
     //if not exceeded, proceed with updating new total/amount in cart
     //user cannot select 0 or negative items to purchase, need at least 1
@@ -72,42 +73,56 @@ class CartItem extends Component {
     } else {
       //calculate new total of specific item, where total = value * price
       var newTotal = event.target.value * this.state.price;
-      this.setState({ 
-        amtPurchased: event.target.value,
-        total: newTotal
-      }, () => {
-        //update total in cart
-        //update total and amount based on pid
-        this.props.updateItemTotal(this.state.itemID, newTotal, newAmount);
-        
-        //update cart on server with new amount 
-        var updateURL = '/api/getUserCart/updateItems';
-        axios.post(updateURL, {
-          withCredentials: true,
-          params:{
-            pid: this.state.pid,
-            amtPurchased: newAmount,
-            isApparel: this.state.isApparel,
-            size: this.state.size
-          }
-        })
-        .then(res => {
-          if(res.data.success === false){
-            this.props.notifier({
-              title: "Error",
-              message: res.data.message.toString(),
-              type: "danger"
+      this.setState(
+        {
+          amtPurchased: event.target.value,
+          total: newTotal
+        },
+        () => {
+          //update total in cart
+          //update total and amount based on pid
+          this.props.updateItemTotal(this.state.itemID, newTotal, newAmount);
+
+          //update cart on server with new amount
+          var updateURL = "/api/getUserCart/updateItems";
+          axios
+            .post(updateURL, {
+              withCredentials: true,
+              params: {
+                pid: this.state.pid,
+                amtPurchased: newAmount,
+                isApparel: this.state.isApparel,
+                size: this.state.size
+              }
+            })
+            .then(res => {
+              //on successful item update from quantity select, recalculate total items purchased
+              if (res.data.success === true) {
+                var amtPurchased = 0;
+                for (let i = 0; i < this.props.items.length; i++) {
+                  amtPurchased =
+                    amtPurchased + Number(this.props.items[i].amtPurchased);
+                }
+
+                //update cart badge based on number of items in user's cart
+                this.props.updateAmountPurchased(amtPurchased);
+              } else if (res.data.success === false) {
+                this.props.notifier({
+                  title: "Error",
+                  message: res.data.message.toString(),
+                  type: "danger"
+                });
+              }
+            })
+            .catch(err => {
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
             });
-          }
-        })
-        .catch(err => {
-          this.props.notifier({
-            title: "Error",
-            message: err.toString(),
-            type: "danger"
-          });
-        })
-      });
+        }
+      );
     }
   };
 
@@ -128,7 +143,7 @@ class CartItem extends Component {
         //after successful deletion, get updated user's cart
         axios
           .get(getCart, {
-            withCredentials: true,
+            withCredentials: true
           })
           .then(res => {
             //after removing item from cart, update cart on server
@@ -137,10 +152,18 @@ class CartItem extends Component {
             //get all items related to this vendor and update vendor cart
             var newItemsAfterDeletion = [];
 
+            var amtPurchased = 0;
+            for (let i = 0; i < res.data.data.length; i++) {
+              amtPurchased = amtPurchased + res.data.data[i].amtPurchased;
+            }
+
+            //update cart badge based on number of items in user's cart
+            this.props.updateAmountPurchased(amtPurchased);
+
             //remove vendor from view if no more items
-            if(res.data.data.length != 0){
-              for(let i = 0; i < res.data.data.length; i++){
-                if (res.data.data[i].vid === this.state.vid){
+            if (res.data.data.length !== 0) {
+              for (let i = 0; i < res.data.data.length; i++) {
+                if (res.data.data[i].vid === this.state.vid) {
                   newItemsAfterDeletion.push(res.data.data[i]);
                 }
               }
@@ -148,7 +171,7 @@ class CartItem extends Component {
             }
 
             //update list of vendor items after item removal, no more items in vendor, empty
-            else{
+            else {
               this.props.updateCartAfterDelete(res.data.data);
             }
           })
@@ -195,10 +218,14 @@ class CartItem extends Component {
             ) : (
               ""
             )}
-            <Button size="small" color="primary" onClick={this.removeItem} id="btn-remove">
+            <Button
+              size="small"
+              color="primary"
+              onClick={this.removeItem}
+              id="btn-remove"
+            >
               Remove Item
             </Button>
-
           </div>
         </div>
 
@@ -209,7 +236,7 @@ class CartItem extends Component {
           value={amtPurchased}
           onChange={this.handleQuantityChange}
           type="number"
-          InputLabelProps={{ shrink: true}}
+          InputLabelProps={{ shrink: true }}
         />
 
         <div>${totalPrice}</div>
@@ -242,6 +269,12 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.UPDATE_TOTAL,
         total: sum
+      }),
+
+    updateAmountPurchased: amount =>
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount
       })
   };
 };
