@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 // import CircularProgress from "@material-ui/core/CircularProgress";
 // import coffee from "../../images/coffee.jpg";
 import PropTypes from "prop-types";
-// import { Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   progress: {
@@ -36,6 +36,7 @@ class Signup extends Component {
       progressVariant: "determinate",
       responseMessage: "",
       success: false,
+      toRedirect: false,
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -48,9 +49,9 @@ class Signup extends Component {
       open: false
     });
 
-    if (this.state.success === true) {
-      this.props.history.push("/login");
-    }
+    // if (this.state.success === true) {
+    //   this.props.history.push("/login");
+    // }
   }
 
   //send signup request
@@ -88,8 +89,8 @@ class Signup extends Component {
                 "Signup successful, please check your email to activate your account.",
               type: "success"
             });
-            // this.setState(() => ({ toRedirect: true }));
-            this.props.history.push('/check-email')
+            this.setState(() => ({ toRedirect: true }));
+            // this.props.history.push('/check-email')
           }
 
           //display error message
@@ -151,8 +152,8 @@ class Signup extends Component {
             type: "success",
             time: 5000
           });
-          // this.setState(() => ({ toRedirect: true }));
-          this.props.history.push('/check-email')
+          this.setState(() => ({ toRedirect: true }));
+          // this.props.history.push('/check-email')
         }
 
         //display error message
@@ -177,6 +178,12 @@ class Signup extends Component {
 
   render() {
     // const { classes } = this.props;
+    if (this.state.toRedirect === true) {
+      return (
+        <Redirect to='/check-email'/>
+      )
+    }
+
     return (
       <div id="signupContainer">
         <div id="signupForms">

@@ -56,7 +56,7 @@ export default class About extends Component {
         
         </div>
         </Hidden>
-        <Hidden MediumUp>
+        <Hidden mdUp>
         <section className="about-info">
 
             <h2>
