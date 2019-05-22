@@ -70,7 +70,7 @@ class ButtonAppBar extends Component {
     anchorElAccount: null,
     anchorIconMenu: null,
     logout: false,
-    anchorShop: false
+    anchorShop: null 
   };
 
   //when navbar loads, get list of all vendors in database
