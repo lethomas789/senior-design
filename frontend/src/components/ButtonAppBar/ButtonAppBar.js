@@ -34,14 +34,14 @@ const homeRoute = "/";
 const aboutRoute = "/about";
 const signupRoute = "/signup";
 const loginRoute = "/login";
-const shopRoute = "/shop";
+// const shopRoute = "/shop";
 const cartRoute = "/cart";
 const editClubRoute = "/editClubInfo";
 const addProductRoute = "/addProduct";
 const editItemRoute = "/editItem";
 const orderHistoryRoute = "/orderHistory";
-const accountInfoRoute = "/accountInfo";
-const primary = "#6F8AB7";
+// const accountInfoRoute = "/accountInfo";
+// const primary = "#6F8AB7";
 
 //style for cart to display number of items
 const styles = theme => ({

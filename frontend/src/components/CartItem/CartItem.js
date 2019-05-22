@@ -1,4 +1,4 @@
-import React, { Component, Fragment } from "react";
+import React, { Component } from "react";
 import axios from "axios";
 import "./CartItem.css";
 import { connect } from "react-redux";
@@ -161,7 +161,7 @@ class CartItem extends Component {
             this.props.updateAmountPurchased(amtPurchased);
 
             //remove vendor from view if no more items
-            if (res.data.data.length != 0) {
+            if (res.data.data.length !== 0) {
               for (let i = 0; i < res.data.data.length; i++) {
                 if (res.data.data[i].vid === this.state.vid) {
                   newItemsAfterDeletion.push(res.data.data[i]);

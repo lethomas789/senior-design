@@ -1,5 +1,4 @@
-import React, { Component, Fragment } from "react";
-import PropTypes from "prop-types";
+import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Clubs.css";
@@ -9,21 +8,20 @@ function DisplayClub(props) {
 
   return (
     <Link to={`/aboutClub/${vid}`} className="moreColls">
-    <figure>
-      <div className="roww">
-        <div className="moreContainer">
-          <img src={bioPicture} alt="Display Club" width="100%" />
-          <div className="hero-textt">{vendorName}</div>
+      <figure>
+        <div className="roww">
+          <div className="moreContainer">
+            <img src={bioPicture} alt="Display Club" width="100%" />
+            <div className="hero-textt">{vendorName}</div>
+          </div>
         </div>
-      </div>
-      <figcaption>
-      <Link className = "shopClub" to={`/vendorProducts/${vid}`}> See club's items.</Link>
-      </figcaption>
+        <figcaption>
+          <Link className="shopClub" to={`/vendorProducts/${vid}`}>
+            See club's items.
+          </Link>
+        </figcaption>
       </figure>
-      
     </Link>
-
-
   );
 }
 

@@ -1,14 +1,8 @@
 import React, { Component } from "react";
-import PropTypes from "prop-types";
 import Paper from "@material-ui/core/Paper";
 import "./GenericPage.css";
-import { log } from "util";
 
 export default class GenericPage extends Component {
-  // static propTypes = {
-  //   pageText: PropTypes.string.isRequired
-  // };
-
   render() {
     let pageText = this.props.pageText;
 

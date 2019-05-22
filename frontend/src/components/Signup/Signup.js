@@ -13,7 +13,7 @@ import { withStyles } from "@material-ui/core/styles";
 // import CircularProgress from "@material-ui/core/CircularProgress";
 // import coffee from "../../images/coffee.jpg";
 import PropTypes from "prop-types";
-import { Redirect } from "react-router-dom";
+// import { Redirect } from "react-router-dom";
 
 const styles = theme => ({
   progress: {
@@ -176,7 +176,7 @@ class Signup extends Component {
   };
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
     return (
       <div id="signupContainer">
         <div id="signupForms">

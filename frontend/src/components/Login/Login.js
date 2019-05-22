@@ -287,7 +287,7 @@ class Login extends Component {
   }
 
   render() {
-    const { classes } = this.props;
+    // const { classes } = this.props;
 
     if (this.state.toShop === true) {
       return <Redirect to="/shop" />
