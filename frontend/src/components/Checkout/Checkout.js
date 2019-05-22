@@ -375,8 +375,9 @@ class Checkout extends Component {
         } else {
           this.props.notifier({
             title: "Error",
-            message: "Payment Unsuccessful",
-            type: "danger"
+            message: "Payment Unsuccessful. Please contact support email.",
+            type: "danger",
+            duration: 8000,
           });
         }
       })
