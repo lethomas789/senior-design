@@ -8,9 +8,6 @@ import actions from "../../store/actions";
 import { withRouter } from "react-router-dom";
 
 class ShopView extends Component {
-  constructor(props) {
-    super(props);
-  }
 
   //get products from server after mounting to screen
   componentDidMount() {
