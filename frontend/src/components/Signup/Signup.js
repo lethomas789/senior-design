@@ -36,7 +36,6 @@ class Signup extends Component {
       progressVariant: "determinate",
       responseMessage: "",
       success: false,
-      toRedirect: false
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -89,7 +88,8 @@ class Signup extends Component {
                 "Signup successful, please check your email to activate your account.",
               type: "success"
             });
-            this.setState(() => ({ toRedirect: true }));
+            // this.setState(() => ({ toRedirect: true }));
+            this.props.history.push('/check-email')
           }
 
           //display error message
@@ -176,14 +176,6 @@ class Signup extends Component {
   };
 
   render() {
-    if (this.state.toRedirect === true) {
-      const pageText =
-        "Thanks for signing up. Please check your email to verify your account.";
-      return (
-        <Redirect to={{ pathname: "/page/check-email", state: { pageText } }} />
-      );
-    }
-
     const { classes } = this.props;
     return (
       <div id="signupContainer">
