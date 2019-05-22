@@ -282,7 +282,6 @@ class Login extends Component {
 
   componentDidMount() {
     if (this.props.logout) {
-      console.log('LOGGING OUT FROM EXPIRED TOKEN');
       this.props.updateLogout();
     }
   }
