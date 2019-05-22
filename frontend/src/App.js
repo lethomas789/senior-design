@@ -104,9 +104,8 @@ class App extends Component {
         dismiss: { duration: duration },
         dismissable: { click: true }
       });
-    }
-    catch {
-      console.log('ERROR IN NOTIFIER');
+    } catch {
+      console.log("ERROR IN NOTIFIER");
     }
   };
 
@@ -325,6 +324,34 @@ class App extends Component {
                     notifier={this.addNotification}
                     pageText={
                       "Thanks for purchasing. Please check your e-mail inbox for an order receipt."
+                    }
+                  />
+                )}
+              />
+
+              <Route
+                exact
+                path="/check-email"
+                render={props => (
+                  <GenericPage
+                    {...props}
+                    notifier={this.addNotification}
+                    pageText={
+                      "Thanks for signing up. Please check your email to verify your account."
+                    }
+                  />
+                )}
+              />
+
+              <Route
+                exact
+                path="/check-email/reset"
+                render={props => (
+                  <GenericPage
+                    {...props}
+                    notifier={this.addNotification}
+                    pageText={
+                      "Please check your email for a password reset link."
                     }
                   />
                 )}
