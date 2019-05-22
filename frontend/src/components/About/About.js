@@ -9,6 +9,7 @@ export default class About extends Component {
       
       <div className = "greater-container">
       <div className="about-container">
+      
         <header className="about-header">
           <div>About Us</div>
           {/* <div>4 students trying to inspire</div> */}
@@ -18,6 +19,8 @@ export default class About extends Component {
         </div>
         </div>
       </div>
+      <div className = "about-center">
+     
         <section className="about-info">
         <div className = "about-info-text">
             We are a group of Computer Science seniors and this website is our senior design final project.
@@ -25,6 +28,7 @@ export default class About extends Component {
             modern technologies such as React, Node, Firebase, and Google Cloud Services. 
             </div>
         </section>
+        </div>
 
         </div>
 

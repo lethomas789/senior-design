@@ -55,21 +55,32 @@
 .about-info {
   text-align: center;
   font-family: 'Proxima Nova';
-  vertical-align: middle;
   padding: 65px;
   background-color:white;
   color: black;
   position: relative;
-  height: 50vh;
-  width: 50vw;
-  opacity: 0.5;
+  opacity: 0.9;
+  display: block;
   
+}
+
+.about-center {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+  display: block;
+
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 .about-info-text {
   margin: auto;
-  width: 60%;
+
   padding: 10px;
+  display: block;
 
 }
 
