@@ -52,7 +52,9 @@ class ShopView extends Component {
       this.props.history.push("/404-error");
     }
 
+    const vendors = this.props.vendors;
     const items = this.props.products.map(result => {
+      let vendorObject = vendors.find(vendor => vendor.vid === result.vid);
       return (
         <ShopItem
           key={result.pid}
@@ -64,6 +66,7 @@ class ShopView extends Component {
           stock={result.stock}
           productInfo={result.productInfo}
           displayLink={true}
+          vendorName={vendorObject.vendorName}
         />
       );
     });
@@ -116,7 +119,8 @@ const mapDispatchToProps = dispatch => {
 //obtain state from store as props for component
 const mapStateToProps = state => {
   return {
-    products: state.getAllItems.products
+    products: state.getAllItems.products,
+    vendors: state.vendor.vendors,
   };
 };
 

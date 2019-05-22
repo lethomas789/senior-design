@@ -140,7 +140,7 @@ class ShopItem extends Component {
             {this.props.displayLink ? (
               <Button size="small" color="primary" onClick={this.updateVendor}>
                 <Link to={`/vendorProducts/${this.state.vendorID}`}>
-                  More From Vendor
+                  More From {this.props.vendorName}
                 </Link>
               </Button>
             ) : (
