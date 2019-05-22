@@ -151,7 +151,8 @@ class Signup extends Component {
             type: "success",
             time: 5000
           });
-          this.setState(() => ({ toRedirect: true }));
+          // this.setState(() => ({ toRedirect: true }));
+          this.props.history.push('/check-email')
         }
 
         //display error message
