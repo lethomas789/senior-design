@@ -436,113 +436,206 @@ class EditItemView extends Component {
                 onChange={this.handleStockChangeApparel("xlarge")}
               />
             </div>
-          </div>
+            
+              <div className = "textForm" id="row">
+                <TextField
+                    label="Product Name"
+                    required="true"
+                    value = {this.state.name}
+                    onChange={(event) => this.setState({ name: event.target.value })}
+                    style={style.field}
+                  />
+                </div>
 
-          <div id="column" className="tester">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vendorID + "/" + this.state.pid
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-              style={style.field}
-            />
-          </div>
+                <div className = "textFormEdit" id="row">
+                  <TextField
+                    label="Product Info"
+                    required="true"
+                    multiline={true}
+                    // rows={2}
+                    value = {this.state.info}
+                    onChange={(event) => this.setState({ info: event.target.value })}
+                    style={style.field}
+                  />
+                </div>
 
-          <div id="column" className="tester">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vendorID + "/" + this.state.pid
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-              style={style.field}
-            />
-          </div>
+                <div className = "textFormEdit" id="row">
+                  <TextField
+                    label="Pickup Location (Enter location and date/time)"
+                    required="true"
+                    value = {this.state.pickupLocation}
+                    onChange={(event) => this.setState({ pickupLocation: event.target.value })}
+                    style={style.field}
+                  />
+                </div>
 
-          <div id="column" className="tester">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vendorID + "/" + this.state.pid
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-              style={style.field}
-            />
-          </div>
+                <div className = "textFormEdit" id="row">
+                  <TextField
+                    label="Product Price"
+                    required="true"
+                    type="number"
+                    value = {this.state.price}
+                    onChange={(event) => this.setState({ price: event.target.value })}
+                    style={style.field}
+                  />
+                </div>
 
-          <div id="column" className="tester">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vendorID + "/" + this.state.pid
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-              style={style.field}
-            />
-          </div>
+                <div className = {this.state.itemStockCSS} id="row">
+                  <TextField
+                    label="Stock"
+                    required="true"
+                    type="number"
+                    value = {this.state.stock}
+                    onChange={(event) => this.setState({ stock: event.target.value })}
+                    style={style.field}
+                  />
+                </div>
 
-          <Button
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={this.updateItemInfo}
-          >
-            Update Item
-          </Button>
-        </div>
+                {/* add quantity for apparel sizes, toggel visibility if selected */}
+                <div className = {this.state.apparelCSS}>
+                  <div className = "textForm" id="row">
+                    <TextField
+                      label="Product Stock"
+                      type="number"
+                      value = {this.state.stock}
+                      disabled
+                    />
+                  </div>
+                  
+                  <div className = "textForm" id="row">
+                    <TextField
+                      label="Small Stock"
+                      required="false"
+                      type="number"
+                      value={this.state.small}
+                      onChange={
+                        this.handleStockChangeApparel("small")
+                      }
+                    />
+                  </div>
+
+                  <div className = "textForm" id="row">
+                    <TextField
+                      label="Medium Stock"
+                      required="false"
+                      type="number"
+                      value={this.state.medium}
+                      onChange={
+                        this.handleStockChangeApparel("medium")
+                      }
+                    />
+                  </div>
+
+                  <div className = "textForm" id="row">
+                    <TextField
+                      label="Large Stock"
+                      required="false"
+                      type="number"
+                      value={this.state.large}
+                      onChange={
+                        this.handleStockChangeApparel("large")
+                      }
+                    />
+                  </div>
+
+                  <div className = "textForm" id="row">
+                    <TextField
+                      label="X-Small Stock"
+                      required="false"
+                      type="number"
+                      value={this.state.xsmall}
+                      onChange={                    
+                        this.handleStockChangeApparel("xsmall")
+                      }
+                    />
+                  </div>
+
+                  <div className = "textForm" id="row">
+                    <TextField
+                      label="X-Large Stock"
+                      required="false"
+                      value={this.state.xlarge}
+                      type="number"
+                      onChange={
+                        this.handleStockChangeApparel("xlarge")
+                      }
+                    />
+                  </div>
+                </div>
+                
+                <div id ="column" className = "tester">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });
+                  }}                  
+                  style={style.field}
+                />
+                </div>
+               
+              <div id ="column" className = "tester">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });<<<<<<< about-page
+                  }}                  
+                  style={style.field}
+                />
+                </div>  
+
+                <div id ="column" className = "tester">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });
+                  }}                  
+                  style={style.field}
+                />
+                </div>
+
+                <div id ="column" className = "tester">
+                <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                  storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vendorID + '/' + this.state.pid)} ref = {instance => { this.fileUploader = instance; } }
+                  multiple
+                  onUploadError={(error) => {
+                    this.props.notifier({
+                      title: "Error",
+                      message: error.toString(),
+                      type: "danger"
+                    });
+                  }}                  
+                  style={style.field} 
+                />
+                </div>
+
+                <Button 
+                  variant="contained"
+                  size="small"
+                  color="primary"
+                  onClick = {this.updateItemInfo}
+                  style = {{backgroundColor:"#DAAA00",
+                  color: "white", 
+                  fontFamily: "Proxima Nova", 
+                  boxShadow: "none"}}> 
+                  Update Item 
+                </Button>   
+                </div>    
+
       </div>
     );
   }

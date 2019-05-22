@@ -1,6 +1,7 @@
 #editClubForm{
   display: flex;
   flex-direction: column;
+  height: 100vh;
 }
 
 .inputWidth{
@@ -47,33 +48,16 @@
 }
 
 @media (max-width: 40em) {
-
   #editClubForm{
     display: flex;
     flex-direction: column;
-    align-items: center;
-    
+    text-align: center;
   }
 
-  #edit-club-info-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-
-    /* padding-bottom: 20px; */
-    /* height: 100vh; */
-    
-  
+  .btn-update-info {
+    display: block;
   }
 
-  .inputWidth{
-    width: 100vw;
-    padding-bottom: 20px;
-    /* padding: 5px; */
-    /* height: 100px; */
-    /* display: inline-block;
-    padding-left: 10px;
-    padding-right: 10px; */
-  }
+
 
 }

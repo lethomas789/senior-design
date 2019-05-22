@@ -7,12 +7,6 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
-//import Card from '@material-ui/core/Card';
-//import CardActionArea from '@material-ui/core/CardActionArea';
-//import CardActions from '@material-ui/core/CardActions';
-//import CardContent from '@material-ui/core/CardContent';
-//import CardMedia from '@material-ui/core/CardMedia';
-// import Typography from "@material-ui/core/Typography";
 import Checkbox from "@material-ui/core/Checkbox";
 
 const styles = theme => ({

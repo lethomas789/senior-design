@@ -145,19 +145,20 @@ class EditClubInfo extends Component {
         <h6> Last Updated: {this.state.lastUpdate} </h6>
         <h6 id="goDown"> Last Edited By: {this.state.lastUpdateUser} </h6>
 
+      
         <form id="editClubForm">
+        <div className = "textForm" id = "row">
           <TextField
-            className="inputWidth"
-            label="Club Name"
             value={this.state.vendorName}
             onChange={event =>
               this.setState({ vendorName: event.target.value })
             }
-            style={{ paddingBottom: "20px" }}
+            style={{ paddingBottom: "20px", width: "35vw"}}
           />
+          </div>
 
+          <div className = "textForm" id = "row">
           <TextField
-            className="inputWidth"
             label="Biography"
             value={this.state.bio}
 
@@ -166,35 +167,44 @@ class EditClubInfo extends Component {
             
             rowsMax={Infinity}
 
-            style={{ paddingBottom: "20px" }}
+            style={{ paddingBottom: "20px", width: "35vw" }}
           />
+          </div>
 
+
+        <div className = "textForm" id = "row">
           <TextField
-            className="inputWidth"
             label="Item Pickup Info"
             value={this.state.pickupInfo}
 
             onChange={event => this.setState({ pickupInfo: event.target.value })}
             multiline={true}
-            style={{ paddingBottom: "20px"}}
+            style={{ paddingBottom: "20px", width: "35vw"}}
             
             rowsMax={Infinity}
           />
+          </div>
 
+          <div className = "textForm" id = "row">
           <TextField
-            className="inputWidth"
             label="Contact Email"
             type="email"
             value={this.state.email}
             onChange={event =>
               this.setState({ email: event.target.value })
             }
-            style={{ paddingBottom: "20px" }}
+            style={{ paddingBottom: "20px", width: "35vw" }}
           />
+          </div>
         </form>
 
         <div className="btn-update-info">
-          <Button variant="contained" color="primary" onClick={this.sendEdit}>
+          <Button variant="contained" 
+          onClick={this.sendEdit}
+          style = {{backgroundColor:"#DAAA00",
+                  color: "white", 
+                  fontFamily: "Proxima Nova", 
+                  boxShadow: "none"}}>
             Update Club Info
           </Button>
         </div>
@@ -218,6 +228,10 @@ class EditClubInfo extends Component {
             variant="contained"
             color="primary"
             onClick={this.updateEmailPreferences}
+            style = {{backgroundColor:"#DAAA00",
+                  color: "white", 
+                  fontFamily: "Proxima Nova", 
+                  boxShadow: "none"}}
           >
             Update Email Preferences
           </Button>

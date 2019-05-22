@@ -201,7 +201,9 @@ class OrderHistory extends Component {
     if (this.state.orders.length === 0) {
       return (
         <div id="order-history-container">
+        <div className = "order-history-center">
           <h1> No orders were made! </h1>
+          </div>
         </div>
       );
     }
@@ -239,6 +241,9 @@ class OrderHistory extends Component {
     return (
       <div>
         <h1 className="centerHeader"> Orders </h1>
+        <div className ="centerize">
+        <div className ="centerize">
+        
         {/**
          * TODO
          * take out paid,
@@ -251,10 +256,9 @@ class OrderHistory extends Component {
         {isAdmin ? (
           <Button
             variant="contained"
-            color="primary"
             onClick={() => this.setState({ show: "user" })}
             key="user"
-            style={{ marginLeft: "10px" }}
+            style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
           >
             User Orders
           </Button>
@@ -267,10 +271,9 @@ class OrderHistory extends Component {
           ? adminsOf.map(vendor => (
               <Button
                 variant="contained"
-                color="primary"
                 onClick={() => this.setState({ show: vendor.vid })}
                 key={vendor.vid}
-                style={{ marginLeft: "10px" }}
+                style = {{marginLeft: "10px", backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
               >
                 {vendor.vendorName} Orders
               </Button>
@@ -282,30 +285,30 @@ class OrderHistory extends Component {
         <div id="order-history-filters-container">
           {/* filter by date: asc/desc */}
           <form autoComplete="off">
-            <InputLabel htmlFor="date">Date:</InputLabel>
+            <InputLabel htmlFor="date" style = {{fontFamily: "Proxima Nova"}}>Date:</InputLabel>
             <Select
               value={this.state.date}
               onChange={this.handleChange}
               inputProps={{ name: "date", id: "date" }}
-              style={{ margin: "16px 10px 0px 10px" }}
+              style={{ margin: "16px 10px 0px 10px", fontFamily: "Proxima Nova" }}
             >
-              <MenuItem value="asc"> Ascending </MenuItem>
-              <MenuItem value="desc"> Descending </MenuItem>
+              <MenuItem value="asc" style = {{fontFamily: "Proxima Nova"}}> Ascending </MenuItem>
+              <MenuItem value="desc" style = {{fontFamily: "Proxima Nova"}}> Descending </MenuItem>
             </Select>
           </form>
 
           {/* filter by picked up true/false */}
           <form autoComplete="off">
-            <InputLabel htmlFor="pickedUp">Picked Up:</InputLabel>
+            <InputLabel htmlFor="pickedUp" style = {{fontFamily: "Proxima Nova"}}>Picked Up:</InputLabel>
             <Select
               value={this.state.pickedUp}
               onChange={this.handleChange}
               inputProps={{ name: "pickedUp", id: "pickedUp" }}
-              style={{ margin: "16px 10px 0px 10px" }}
+              style={{ margin: "16px 10px 0px 10px", fontFamily: "Proxima Nova" }}
             >
-              <MenuItem value="all"> Display All </MenuItem>
-              <MenuItem value={true}> Yes </MenuItem>
-              <MenuItem value={false}> No </MenuItem>
+              <MenuItem value="all" style = {{fontFamily: "Proxima Nova"}}> Display All </MenuItem>
+              <MenuItem value={true} style = {{fontFamily: "Proxima Nova"}}> Yes </MenuItem>
+              <MenuItem value={false} style = {{fontFamily: "Proxima Nova"}}> No </MenuItem>
             </Select>
           </form>
 
@@ -315,8 +318,11 @@ class OrderHistory extends Component {
               label="Search by Item Name"
               value={this.state.searchValue}
               onChange={this.handleSearch}
+              style = {{fontFamily: "Proxima Nova"}}
             />
           </form>
+        </div>
+        </div>
         </div>
 
         {/* below displays the actual order histories */}
@@ -332,6 +338,7 @@ class OrderHistory extends Component {
                 pickedUp={this.state.pickedUp}
                 search={this.state.search}
                 renderOrders={this.renderOrders}
+                style = {{fontFamily: "Proxima Nova"}}
               />
             ))
           : ""}
@@ -344,6 +351,7 @@ class OrderHistory extends Component {
         ) : (
           ""
         )}
+        
       </div>
     );
   }

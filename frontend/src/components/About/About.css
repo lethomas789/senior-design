@@ -1,3 +1,7 @@
+.full-height {
+  height: 100vh;
+}
+
 .greater-container {
   display: flex;
   flex-direction: column;
@@ -5,10 +9,26 @@
   padding-bottom: 20px;
 }
 
+.parallax {
+  /* The image used */
+  background-image: url("../../images/water_tower.jpg");
+
+  /* Set a specific height */
+  min-height: 100%; 
+
+  /* Create the parallax scrolling effect */
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;     
+
+}
+
 .about-container {
   display: grid;
   width: 70vw;
   margin: 0 auto;  
+  
 }
 
 .about-header {
@@ -21,14 +41,10 @@
 }
 
 .about-main-image {
-  background-image: url(../../images/ourgroup.png);
   grid-column: 1 / span 3;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
-
-  /* width: 60vw; */
-  /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
   height: 500px; 
   margin-bottom: 20px;
 }
@@ -36,19 +52,35 @@
 .about-info {
   text-align: center;
   font-family: 'Proxima Nova';
-  vertical-align: middle;
   padding: 65px;
   background-color:white;
   color: black;
   position: relative;
+  display: block;
+  height: 80vh;
+}
+
+.about-center {
+  margin: auto;
+  width: 60%;
+  padding: 10px;
+  display: block;
+
+  
+}
+
+.about-info-text {
+  margin: auto;
+  width: 40vw;
+  /* font-size: 16px; */
+  padding: 10px;
+  display: block;
 }
 
 .hero-texttt {
-  /* text-align: center; */
   position: absolute;
   top: 50%;
   left: 50%;
-  /* overflow: hidden; */
   font-size: 25px;
   transform: translate(-50%, -50%);
   color: white;
@@ -59,14 +91,12 @@
   grid-column: 2 / span 2;
 }
 
-
 .greater-containerr {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 20px;
 }
-
 
 .about-headerr {
   padding-top: 20px;
@@ -78,37 +108,23 @@
 }
 
 @media (max-width: 40em) {
-
-  .greater-container {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 20px;
-  }
-  
-  .about-container {
-    width: 90vw;
-  }
-
   .about-info {
     text-align: center;
-    font-family: 'Muli';
-    vertical-align: middle;
+    font-family: 'Proxima Nova';
     background-color:white;
     color: black;
     position: relative;
+    display: block;
+    height: 150vh;
   }
 
-  .about-main-image {
-  background-image: url(../../images/ourgroup.png);
-  grid-column: 1 / span 3;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  /* width: 60vw; */
-  /* TODO SIZE IMAGE PROPERLY; FOR NOW HARD CODE IN HEIGHT */
-  height: 300px; 
-  margin-bottom: 20px;
-}
+  .about-info-text {
+    margin: auto;
+    text-align: center;
+    display: block;
+  }
 
 
 }
+
+

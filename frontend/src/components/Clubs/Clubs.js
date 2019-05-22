@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import axios from "axios";
 import "./Clubs.css";
+import Hidden from "@material-ui/core/Hidden";
 
 function DisplayClub(props) {
   const { bio, vendorName, bioPicture, vid } = props;
