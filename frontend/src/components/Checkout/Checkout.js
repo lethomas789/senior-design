@@ -266,6 +266,15 @@ class Checkout extends Component {
             if (res.data.success === true) {
               //update new items and redirect to successful payment page
               this.props.updateItems(res.data.data);
+              var amtPurchased = 0;
+
+              for(let i = 0; i < res.data.data.length; i++){
+                amtPurchased = amtPurchased + res.data.data[i].amtPurchased
+              }
+      
+              //update cart badge based on number of items in user's cart
+              this.props.updateAmountPurchased(amtPurchased);
+
               this.props.history.push("/successfulPayment");
               // window.location = "/successfulPayment";
               // this.setState(() => ({ toRedirect: true }));
@@ -487,7 +496,14 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.UPDATE_TOTAL,
         total: value
+      }),
+
+    updateAmountPurchased: amount => 
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount
       })
+
   };
 };
 

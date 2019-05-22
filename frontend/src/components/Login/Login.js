@@ -51,8 +51,17 @@ class Login extends Component {
         withCredentials: true
       })
       .then(res => {
+        var amtPurchased = 0;
+
+        for(let i = 0; i < res.data.data.length; i++){
+          amtPurchased = amtPurchased + res.data.data[i].amtPurchased
+        }
+
         //after getting cart info, update redux store container
         this.props.updateItems(res.data.data);
+
+        //update cart badge based on number of items in user's cart
+        this.props.updateAmountPurchased(amtPurchased);
 
         // switch to shop page
         this.setState(() => ({ toShop: true}));
@@ -386,6 +395,12 @@ const mapDispatchToProps = dispatch => {
         vid: vendorID,
         admins: adminsOf,
         currentVendor: vendor,
+      }),
+
+    updateAmountPurchased: amount => 
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount
       })
   };
 };

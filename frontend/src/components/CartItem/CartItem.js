@@ -137,6 +137,15 @@ class CartItem extends Component {
             //get all items related to this vendor and update vendor cart
             var newItemsAfterDeletion = [];
 
+            var amtPurchased = 0;
+            for(let i = 0; i < res.data.data.length; i++){
+              amtPurchased = amtPurchased + res.data.data[i].amtPurchased
+            }
+
+            //update cart badge based on number of items in user's cart
+            this.props.updateAmountPurchased(amtPurchased);
+
+
             //remove vendor from view if no more items
             if(res.data.data.length != 0){
               for(let i = 0; i < res.data.data.length; i++){
@@ -242,7 +251,13 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.UPDATE_TOTAL,
         total: sum
-      })
+      }),
+
+    updateAmountPurchased: amount => 
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount
+      }),
   };
 };
 

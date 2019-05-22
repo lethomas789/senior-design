@@ -486,7 +486,7 @@ class ButtonAppBar extends Component {
                       onClick={this.viewCartCheck}
                     >
                       <Badge
-                        badgeContent={this.props.cartLength}
+                        badgeContent={this.props.amountPurchased}
                         color="primary"
                         classes={{ badge: classes.badge }}
                       >
@@ -704,7 +704,7 @@ class ButtonAppBar extends Component {
                     onClick={this.viewCartCheck}
                   >
                     <Badge
-                      badgeContent={this.props.cartLength}
+                      badgeContent={this.props.amountPurchased}
                       color="primary"
                       classes={{ badge: classes.badge }}
                     >
@@ -790,7 +790,8 @@ const mapStateToProps = state => {
     adminsOf: state.auth.adminsOf,
     vendorID: state.auth.vendorID,
     vendors: state.vendor.vendors,
-    currentVendor: state.auth.currentVendor
+    currentVendor: state.auth.currentVendor,
+    amountPurchased: state.cart.itemsPurchased,
   };
 };
 

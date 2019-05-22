@@ -192,6 +192,7 @@ class Cart extends Component {
       <div className="cart-table-container">
         {/* TABLE HEADERS */}
         <span className="table-header table-row">
+          <h4>Club: {this.props.vendorName} </h4>
           <span>
             <strong>Cart ({this.state.cart.length})</strong>
           </span>

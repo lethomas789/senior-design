@@ -368,6 +368,16 @@ class ShopItemDetailed extends Component {
     return <span className="stock">{text}</span>;
   };
 
+  totalAmountPurchased = (items) => {
+    let amtPurchased = 0;
+    for(let i = 0; i < items.length; i++){
+      amtPurchased = amtPurchased + items[i].amtPurchased
+    }
+
+    //update cart badge based on number of items in user's cart
+    this.props.updateAmountPurchased(amtPurchased);
+  }
+
   addApparelToCart = () => {
     const apiURL = '/api/getUserCart/addItems';
     axios
@@ -398,6 +408,8 @@ class ShopItemDetailed extends Component {
             .then(res => {
               //after getting cart info, update redux store container
               this.props.updateItems(res.data.data);
+              this.totalAmountPurchased(res.data.data);
+
               //switch from alert to notifier
               this.props.notifier({
                 title: "Success",
@@ -575,6 +587,7 @@ class ShopItemDetailed extends Component {
                 .then(res => {
                   //after getting cart info, update redux store container
                   this.props.updateItems(res.data.data);
+                  this.totalAmountPurchased(res.data.data);
                   this.props.notifier({
                     title: "Success",
                     message: "Item added to cart.",
@@ -631,6 +644,7 @@ class ShopItemDetailed extends Component {
                 .then(res => {
                   //after getting cart info, update redux store container
                   this.props.updateItems(res.data.data);
+                  this.totalAmountPurchased(res.data.data);
                   //switch from alert to notifier
                   this.props.notifier({
                     title: "Success",
@@ -858,7 +872,7 @@ const mapStateToProps = state => {
   return {
     pid: state.selectedItem.selectedItemID,
     login: state.auth.login,
-    vendorID: state.vendor.vendor
+    vendorID: state.vendor.vendor,
   };
 };
 
@@ -877,7 +891,13 @@ const mapDispatchToProps = dispatch => {
       dispatch({
         type: actions.GET_VENDOR_PRODUCTS,
         vendor: newVendor
-      })
+      }),
+
+    updateAmountPurchased: amount => 
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount,
+      }),
   };
 };
 
