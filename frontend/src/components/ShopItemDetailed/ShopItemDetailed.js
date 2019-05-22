@@ -96,8 +96,8 @@ class ItemImageViewer extends Component {
               },
               largeImage: {
                 src: imageLink[this.state.currentImage],
-                width: 1200,
-                height: 1800,
+                width: 1600,
+                height: 1600,
                 enlargedImagePosition: "over"
               },
               enlargedImageContainerStyle: {
