@@ -82,7 +82,7 @@ router.post("/", tokenMiddleware, async (req, res) => {
 
       // TODO save vendorName, pickup time, pickup location, etc.
       let date = admin.firestore.Timestamp.now();
-      console.log('ITEMS ARE:', items);
+      // console.log('ITEMS ARE:', items);
 
       let orderData = {
         paymentID: paymentID,
