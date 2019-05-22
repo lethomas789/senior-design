@@ -10,15 +10,7 @@ export default class GenericPage extends Component {
   // };
 
   render() {
-    if (this.props == null) {
-      var { pageText } = this.props.location.state;
-    }
-    else if (this.props.pageText) {
-      var { pageText } = this.props;
-    }
-    else {
-      var pageText = "Error 404 Not Found"
-    }
+    let pageText = this.props.pageText;
 
     return (
       <div id="generic-page-container">
