@@ -59,8 +59,8 @@
   background-color:white;
   color: black;
   position: relative;
-  opacity: 0.9;
   display: block;
+  height: 80vh;
   
 }
 
@@ -78,7 +78,8 @@
 
 .about-info-text {
   margin: auto;
-
+  width: 40vw;
+  /* font-size: 16px; */
   padding: 10px;
   display: block;
 

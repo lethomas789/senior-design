@@ -1,7 +1,7 @@
 
 .order-history-item-container {
   display: flex;
-  font-family: 'Muli';
+  font-family: 'Proxima Nova';
   flex-direction: column;
   margin: 0 auto;
   width: 80vw;
@@ -25,6 +25,8 @@
   border-bottom: 1px solid grey;
   padding-left: 15px;
 }
+
+
 
 .order-summary-row-title {
 
