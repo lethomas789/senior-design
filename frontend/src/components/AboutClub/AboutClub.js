@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import "./AboutClub.css";
 import axios from "axios";
+import { Link } from "react-router-dom";
 // import Slider from "react-slick";
 import testPicture from "../../images/wics2.png";
 // import Hidden from "@material-ui/core/Hidden";
@@ -16,32 +17,63 @@ class ClubInfo extends Component {
   render() {
     const { vendorName, bio, bioPictures } = this.props;
     return (
+      <div>
 
         <div id="about-club-container">
           <h1 className="club-header">{vendorName}</h1>
           {/* <div className="club-bio">{bio}</div> */}
+
+          <div className="about-colls">
+              <Link to="https://www.facebook.com/DavisWICS/">
+                  <img src={require("../../images/facebook.svg")} alt="Facebook" width="100%" />
+              </Link>
+            </div>
+
+            <div className="about-colls">
+              <Link to="https://www.instagram.com/wicsdavis/">
+                  <img src={require("../../images/instagram.svg")} alt="Instagram" width="100%" />
+              </Link>
+            </div>
+
+            <div className="about-colls">
+              <Link to="/shop">
+                  <img src={require("../../images/creative-market.svg")} alt="Shop" width="100%" />
+              </Link>
+            </div>
+  
           <ClubImages bioPictures={bioPictures} />
+          <Link to="https://www.facebook.com/DavisWICS/"
+         style= {{textDecoration: "none", color: "#C26E60"}}>
+          <div className = "events-now">
+            <h2>Events Every Thursday!</h2>
+           </div>
+         </Link>
 
           <div className="club-bio">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Delectus
-            modi rem quisquam non ullam voluptate, incidunt natus quibusdam odit
-            quasi voluptas nobis soluta, aspernatur, pariatur aliquid similique
-            alias libero quia!
-          </div>
-          {/* <div className="club-links">LINKS BOX</div> */}
+          Women in Computer Science (WiCS) is a community in Davis that motivates and prepares women for real life challenges in the field of computer science.
 
-          <div className="club-links">
-            <div className="hero-texttt">Events every week!</div>
-          </div>
-          {/* <div className="club-meetings">CLUB MEETINGS/PICKUP INFO BOX</div> */}
+          Women in Computer Science(WiCS) supports, empowers and motivates the growing community of women in computer science. 
+          We aim to prepare women for tech industry, 
+          in addition to inspiring women to explore educational and professional opportunities in computing through creating a powerful community, 
+          providing mentorship and helping them to succeed.
 
-          <div className="club-meetings">
-            <div className="hero-texttt">Shop our merch!</div>
+          We aim to grow, learn and spread the joy of computer science together! 
+          Our mission is to create a platform where we can share ideas about our personal projects, 
+          promote interest in programming and go to Hackathons. 
+          We want to create a community of girls helping each other learn to code and working together to solve problems.
           </div>
-          <div className="extra">
-            
+
+          <p className = "club-pick-up">
+          Pick-up Locations: Kemper Hall Lobby
+          </p>
+
+          <p className = "club-contacts">
+          Contact us: wicsdavis@gmail.com</p>
+
           </div>
-        </div>
+          
+          </div>
+
 
     );
   }

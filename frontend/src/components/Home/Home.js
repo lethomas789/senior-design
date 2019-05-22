@@ -53,13 +53,7 @@ export default class Home extends Component {
               <Link to="/shop">
                 <div className="moreContainer">
                   <img src={require("../../images/cows.jpg")} alt="Collection of Toy Cows" width="100%" />
-                  {/* <a target="_blank" href="https://193ecommerce.com/shop">
-                    <img src={require("../../images/cows.jpg")} width="100%" />
-                  </a> */}
                   <div className="hero-textt">SHOP</div>
-                  {/* <a target="_blank" href="https://193ecommerce.com/shop">
-                  <div className="hero-textt">SHOP</div>
-                </a> */}
                 </div>
               </Link>
             </div>

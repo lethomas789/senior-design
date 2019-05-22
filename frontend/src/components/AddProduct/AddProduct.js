@@ -255,7 +255,7 @@ class AddProduct extends Component {
       <div className = "addProductContainer">
       {/* <Paper className="addProductPaperContainer"> */}
             <h1> Add Product </h1>
-            <div className = "textForm" id="row">
+            <div className = "add-textForm" id="row">
               <TextField
                 label="Product Name"
                 required="true"
@@ -264,7 +264,7 @@ class AddProduct extends Component {
               />
             </div>
 
-            <div className = "textForm" id="row">
+            <div className = "add-textForm" id="row">
               <TextField
                 label="Product Info"
                 required="true"
@@ -275,7 +275,7 @@ class AddProduct extends Component {
               />
             </div>
 
-            <div className = "textForm" id="row">
+            <div className = "add-textForm" id="row">
               <TextField
                 label="Pickup Location (Enter location and date/time)"
                 required="true"
@@ -284,7 +284,7 @@ class AddProduct extends Component {
               />
             </div>
 
-            <div className = "textForm" id="row">
+            <div className = "add-textForm" id="row">
               <TextField
                 label="Product Price"
                 required="true"
@@ -299,7 +299,7 @@ class AddProduct extends Component {
             calculate running total if item is an apparel */}
             
             {/* <div className = {this.state.itemShowStock} id = "row"> */}
-            <div className = "textForm" id = "row">
+            <div className = "add-textForm" id = "row">
               <TextField
                 label="Product Stock"
                 required="true"
@@ -312,7 +312,7 @@ class AddProduct extends Component {
             {/* </div> */}
 
             <FormControl component="fieldset">
-            <div className = "textForm">
+            <div className = "add-textForm">
               <FormLabel component="legend" style={style.field}>Select Product Type </FormLabel>
               <RadioGroup
                 aria-label="gender"
@@ -345,7 +345,7 @@ class AddProduct extends Component {
 
             {/* add quantity for apparel sizes, toggel visibility if selected */}
             <div className = {this.state.apparelCSS}>
-              <div className = "textForm" id="row">
+              <div className = "add-textForm" id="row">
                 <TextField
                   label="Product Stock"
                   type="number"
@@ -354,7 +354,7 @@ class AddProduct extends Component {
                 />
               </div>
               
-              <div className = "textForm" id="row">
+              <div className = "add-textForm" id="row">
                 <TextField
                   label="Small Stock"
                   required="false"
@@ -366,7 +366,7 @@ class AddProduct extends Component {
                 />
               </div>
 
-              <div className = "textForm" id="row">
+              <div className = "add-textForm" id="row">
                 <TextField
                   label="Medium Stock"
                   required="false"
@@ -378,7 +378,7 @@ class AddProduct extends Component {
                 />
               </div>
 
-              <div className = "textForm" id="row">
+              <div className = "add-textForm" id="row">
                 <TextField
                   label="Large Stock"
                   required="false"
@@ -390,7 +390,7 @@ class AddProduct extends Component {
                 />
               </div>
 
-              <div className = "textForm" id="row">
+              <div className = "add-textForm" id="row">
                 <TextField
                   label="X-Small Stock"
                   required="false"
@@ -402,7 +402,7 @@ class AddProduct extends Component {
                 />
               </div>
 
-              <div className = "textForm" id="row">
+              <div className = "add-textForm" id="row">
                 <TextField
                   label="X-Large Stock"
                   required="false"
@@ -415,7 +415,7 @@ class AddProduct extends Component {
               </div>
             </div>
 
-            <div className = "textForm" id = "row">
+            <div className = "add-textForm" id = "row">
               <div class = "tooltip"> <span class="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span><h5 className = "uploadImageText"> Upload Images </h5> </div>
               <div id = "column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}

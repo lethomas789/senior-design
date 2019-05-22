@@ -49,9 +49,6 @@
   margin-bottom: 20px;
 }
 
-
-
-
 .about-info {
   text-align: center;
   font-family: 'Proxima Nova';
@@ -61,7 +58,6 @@
   position: relative;
   display: block;
   height: 80vh;
-  
 }
 
 .about-center {
@@ -70,10 +66,7 @@
   padding: 10px;
   display: block;
 
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  
 }
 
 .about-info-text {
@@ -82,7 +75,6 @@
   /* font-size: 16px; */
   padding: 10px;
   display: block;
-
 }
 
 .hero-texttt {
@@ -99,14 +91,12 @@
   grid-column: 2 / span 2;
 }
 
-
 .greater-containerr {
   display: flex;
   flex-direction: column;
   align-items: center;
   padding-bottom: 20px;
 }
-
 
 .about-headerr {
   padding-top: 20px;
@@ -118,34 +108,21 @@
 }
 
 @media (max-width: 40em) {
-
-  .greater-container {
-    display: flex;
-    flex-direction: column;
-    padding-bottom: 20px;
-  }
-  
-  .about-container {
-    width: 90vw;
-  }
-
   .about-info {
     text-align: center;
     font-family: 'Proxima Nova';
-    vertical-align: middle;
     background-color:white;
     color: black;
     position: relative;
+    display: block;
+    height: 150vh;
   }
 
-  .about-main-image {
-  grid-column: 1 / span 3;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  height: 300px; 
-  margin-bottom: 20px;
-}
+  .about-info-text {
+    margin: auto;
+    text-align: center;
+    display: block;
+  }
 
 
 }

@@ -2,7 +2,6 @@
 @import url("https://fonts.googleapis.com/css?family=Raleway");
 
 #homeContainer {
-  /* display:flex; */
   flex-direction: column;
   margin-left: 100px;
   margin-right: 100px;
@@ -195,7 +194,7 @@ p {
   }
 
    .helv {
-     font-size: 10px;
+     font-size: 16px;
    }
 
    .helvv {
@@ -255,12 +254,11 @@ p {
 
 }
 
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px) {
+  .hero-textt {
+    font-size: 30px;
+  }
 
-/*
-.hero-imagee {
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
 }
-*/

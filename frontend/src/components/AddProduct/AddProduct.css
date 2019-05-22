@@ -2,6 +2,10 @@
   padding: 10px;
 }
 
+.add-textForm {
+  padding: 10px;
+}
+
 .hideApparelSizes{
   display:none;
 }
@@ -81,8 +85,7 @@
     align-items: center;
     padding-bottom: 20px;
     height: 150vh;
-    padding: 10px;
-    
+
   }
 
   .additem-info-container {
@@ -91,8 +94,8 @@
     align-items: center;    
   }
 
-  .textForm {
-    width: 100vw;
+  .add-textForm {
+    width: 90vw;
   }
 
   #row {
