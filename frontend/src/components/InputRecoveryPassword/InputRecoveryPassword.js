@@ -33,9 +33,21 @@ class InputRecoveryPassword extends Component {
       .then(res => {
         //get email from matching token in database
         if (res.data.success === true) {
+          console.log("Successfully checked token.");
           this.setState({
             email: res.data.email
           });
+          // no notifier needed here
+        } else if (res.data.message === "invalid") {
+          console.log("Invalid/expired link.");
+          this.props.notifier({
+            title: "Error",
+            message:
+              "Sorry, the link you clicked has expired or is invalid. Please try again with a new link.",
+            type: "warning",
+            duration: 7000
+          });
+          this.props.history.push("/recoverPassword");
         }
       })
       .catch(err => {
@@ -57,7 +69,10 @@ class InputRecoveryPassword extends Component {
         type: "warning"
       });
       return;
-    } else if (
+    }
+
+    /* removed b/c we do more password checking on server
+    else if (
       this.state.password.length < 8 ||
       this.state.password.length > 20
     ) {
@@ -69,6 +84,7 @@ class InputRecoveryPassword extends Component {
       });
       return;
     }
+    */
 
     //check token from query param in url
     //after getting email from database and user inputs new password, update new password
@@ -85,6 +101,13 @@ class InputRecoveryPassword extends Component {
             title: "Success",
             message: res.data.message.toString(),
             type: "success"
+          });
+          this.props.history.push("/login");
+        } else {
+          this.props.notifier({
+            title: "Warning",
+            message: res.data.message.toString(),
+            type: "warning"
           });
         }
       })
@@ -118,32 +141,51 @@ class InputRecoveryPassword extends Component {
           <h2> Password Recovery </h2>
           <h3> Enter your new password: </h3>
           <form>
-            <TextField
-              label="Password"
-              required="true"
-              onChange={this.handlePasswordField}
-              type = "password"
-              style={{ marginBottom: "20px" }}
-            />
-          </form>
+            <div>
+              <TextField
+                label="Password"
+                required={true}
+                onChange={this.handlePasswordField}
+                type="password"
+                style={{ marginBottom: "20px" }}
+                onKeyPress={ev => {
+                  if (ev.key === "Enter") {
+                    // bug where pressing enter refreshes the page, so below is
+                    // done to force the enter key to call sendRecoverEmail()
+                    ev.preventDefault();
+                    this.updatePassword();
+                  }
+                }}
+              />
+            </div>
+            <div>
+              <TextField
+                label="Confirm Password"
+                required={true}
+                type="password"
+                onChange={this.handleConfirmPasswordField}
+                style={{ marginBottom: "20px" }}
+                onKeyPress={ev => {
+                  if (ev.key === "Enter") {
+                    // bug where pressing enter refreshes the page, so below is
+                    // done to force the enter key to call sendRecoverEmail()
+                    ev.preventDefault();
+                    this.updatePassword();
+                  }
+                }}
+              />
+            </div>
 
-          <form>
-            <TextField
-              label="Confirm Password"
-              required="true"
-              type = "password"
-              onChange={this.handleConfirmPasswordField}
-              style={{ marginBottom: "20px" }}
-            />
+            <div>
+              <Button
+                variant="contained"
+                color="primary"
+                onClick={this.updatePassword}
+              >
+                Change Password
+              </Button>
+            </div>
           </form>
-
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.updatePassword}
-          >
-            Change Password
-          </Button>
         </Paper>
       </div>
     );

@@ -11,7 +11,8 @@ class RecoverPassword extends Component {
     this.state = {
       email: "",
       password: "",
-      confirmPassword: ""
+      confirmPassword: "",
+      toRedirect: false,
     };
   }
 
@@ -47,6 +48,7 @@ class RecoverPassword extends Component {
             message: res.data.message.toString(),
             type: "success"
           });
+          this.props.history.push("/check-email/reset");
         } else {
           this.props.notifier({
             title: "Warning",
