@@ -339,7 +339,7 @@ router.post('/deleteItems', tokenMiddleware, (req,res) => {
       }
       // else delete the item from the cart
       let deleteDoc = cartItemRef.delete();
-      console.log('Deleted item from cart of user: ', user);
+      // console.log('Deleted item from cart of user: ', user);
       return res.status(200).json({
         success: true,
         message: 'Succesfully deleted item from cart'
