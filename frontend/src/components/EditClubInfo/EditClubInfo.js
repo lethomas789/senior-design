@@ -156,6 +156,7 @@ class EditClubInfo extends Component {
         <form id="editClubForm">
         <div className = "textForm" id = "row">
           <TextField
+            label="Club Name"
             value={this.state.vendorName}
             onChange={event =>
               this.setState({ vendorName: event.target.value })

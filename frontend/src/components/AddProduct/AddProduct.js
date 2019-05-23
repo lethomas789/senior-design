@@ -12,6 +12,7 @@ import FormControl from "@material-ui/core/FormControl";
 // import InputLabel from "@material-ui/core/InputLabel";
 // import MenuItem from "@material-ui/core/MenuItem";
 import FormLabel from "@material-ui/core/FormLabel";
+import InputAdornment from '@material-ui/core/InputAdornment';
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -284,6 +285,18 @@ class AddProduct extends Component {
                 label="Product Price"
                 required="true"
                 type="number"
+                //MaterialUI property to insert start text
+
+                //bold dollar sign
+                // InputProps={{
+                //   startAdornment: <InputAdornment position="start"> <strong> $ </strong> </InputAdornment>,
+                // }}
+
+                //regular dollar sign,
+                InputProps={{
+                  startAdornment: <InputAdornment position="start"> $ </InputAdornment>,
+                }}
+                
                 onChange={(event) => this.setState({ productPrice: event.target.value })}
                 style={style.field}
               />
