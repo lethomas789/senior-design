@@ -33,9 +33,50 @@ class CartItem extends Component {
       })
       .then(res => {
         //extract stock info and store , check local stock
-        this.setState({
-          stock: res.data.product.stock
-        });
+        //non-apparel stock check
+        if(res.data.product.isApparel === false){
+          this.setState({
+            stock: res.data.product.stock
+          });
+        }
+
+        //apparel stock check
+        else{
+          switch (this.state.size) {
+            case "Small":
+              this.setState({
+                stock:res.data.product.s_stock
+              })
+              break;
+    
+            case "Medium":
+              this.setState({
+                stock:res.data.product.m_stock
+              })
+              break;
+    
+            case "Large":
+              this.setState({
+                stock:res.data.product.l_stock
+              })
+              break;
+    
+            case "X-Large":
+              this.setState({
+                stock:res.data.product.xl_stock
+              })
+              break;
+    
+            case "X-Small":
+              this.setState({
+                stock:res.data.product.xs_stock
+              })
+              break;
+    
+            default:
+              break;
+          }
+        }
       })
       .catch(err => {
         this.props.notifier({
@@ -68,10 +109,18 @@ class CartItem extends Component {
     //if not exceeded, proceed with updating new total/amount in cart
     //user cannot select 0 or negative items to purchase, need at least 1
     var newAmount = event.target.value;
-    if (event.target.value < 1) {
-      this.setState({ amtPurchased: 1 });
-    } else {
+    if (event.target.value <= 0) {
+      this.setState({
+        amtPurchased: newAmount
+      })
+      this.props.notifier({
+        title: "Warning",
+        message: "Please enter a value greater than 0",
+        type: "warning"
+      });
+    } else if (event.target.value > 0){
       //calculate new total of specific item, where total = value * price
+      
       var newTotal = event.target.value * this.state.price;
       this.setState(
         {

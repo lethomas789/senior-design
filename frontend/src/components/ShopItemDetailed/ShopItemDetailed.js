@@ -448,13 +448,14 @@ class ShopItemDetailed extends Component {
       });
     }
 
-    //check if 0 products were purchased
-    else if (this.state.amtPurchased <= 0) {
+    //check if user entered negative number or just left negative sign
+    //must have 1 more items purchased
+    else if (this.state.amtPurchased <= 0 || this.state.amtPurchased == '-') {
       // alert("Sorry, cannot add a quantity of 0.");
       //switch from alert to notifier
       this.props.notifier({
         title: "Error",
-        message: "Cannot add a quantity of 0 to cart.",
+        message: "Please enter a value greater than 0",
         type: "warning"
       });
     }
@@ -711,13 +712,22 @@ class ShopItemDetailed extends Component {
     this.setState({ [name]: event.target.value });
   };
 
-  //user needs to purchase at least one item, can't have 0 or negative selected items
+  //EDIT allow user to type in number values
   handleQuantityChange = event => {
-    if (event.target.value < 1) {
-      this.setState({ amtPurchased: 1 });
-    } else {
-      this.setState({ amtPurchased: event.target.value });
-    }
+    this.setState({ amtPurchased: event.target.value });
+
+    // if(isNaN(Number(event.target.value)) === true){
+    //   alert("Please enter a value larger than 0");
+    // }
+
+    // else{
+    //   this.setState({ amtPurchased: event.target.value });
+    // }
+    // if (event.target.value < 1) {
+    //   this.setState({ amtPurchased: 1 });
+    // } else {
+    //   this.setState({ amtPurchased: event.target.value });
+    // }
   };
 
   //load item info by calling getProductInfo api and render to screen
