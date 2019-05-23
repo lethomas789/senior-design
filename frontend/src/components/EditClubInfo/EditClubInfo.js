@@ -68,6 +68,13 @@ class EditClubInfo extends Component {
     this.getClubInfo();
   }
 
+  //if user selects another admin to update, update component with new club data
+  componentDidUpdate(prevProps){
+    if(prevProps.vendorID != this.props.vendorID){
+      this.getClubInfo();
+    }   
+  }
+
   //update email preferences
   updateEmailPreferences = () => {
     const apiURL = "/api/adminVendor/emailSchedule";

@@ -57,9 +57,7 @@ class EditItemView extends Component {
     };
   }
 
-  //get items of vendor from database
-  //allow admin to view and select which item to edit
-  componentDidMount() {
+  getVendorProducts = () => {
     const apiURL = "/api/getVendorProducts";
 
     //get all products of current vendor based on vendor id
@@ -90,6 +88,47 @@ class EditItemView extends Component {
           type: "danger"
         });
       });
+  }
+
+  //get items of vendor from database
+  //allow admin to view and select which item to edit
+  componentDidMount() {
+    this.getVendorProducts();
+  }
+
+  //if vendor changes, get updated items
+  //restart component as if just rendered to handle new vendor items
+  //clears out previous item info from previous vendor
+  componentDidUpdate(prevProps){
+    if(prevProps.vendorID != this.props.vendorID){
+      this.getVendorProducts();
+      this.setState({
+        items: [],
+        name: "",
+        info: "",
+        pickupLocation: "",
+        stock: "",
+        price: "",
+        isApparel: false,
+        vid: this.props.vendorID,
+        pid: "",
+        lastUpdate: "",
+        lastUser: "",
+        user: this.props.user,
+        productPicture: [],
+        pickupTime: "",
+        small: 0,
+        medium: 0,
+        large: 0,
+        xsmall: 0,
+        xlarge: 0,
+        apparelCSS: "hideApparelSizes",
+        itemStockCSS: "showItemStock",
+        images: [],
+        imageNames: [],
+        newImages: false
+      })
+    }
   }
 
   //populate edit forms based on which item was selected
