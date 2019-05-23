@@ -44,7 +44,6 @@ class AddProduct extends Component {
       productName: "",
       productInfo: "",
       productPrice: "",
-      pickupLocation: "",
       stock: "",
       productID: "",
       isApparel: false,
@@ -173,6 +172,7 @@ class AddProduct extends Component {
     //handle if item being added is an apparel
     if (this.state.isApparel === true) {
       const apiURL = "/api/adminProducts/addNewProduct";
+
       axios
         .post(apiURL, {
           withCredentials: true,
@@ -239,6 +239,10 @@ class AddProduct extends Component {
               type: "success"
             });
           }
+          
+          else{
+            console.log("doesnt work");
+          }
         })
         .catch(err => {
           this.props.notifier({
@@ -271,15 +275,6 @@ class AddProduct extends Component {
                 multiline={true}
                 rows={2}
                 onChange={(event) => this.setState({ productInfo: event.target.value })}
-                style={style.field}
-              />
-            </div>
-
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Pickup Location (Enter location and date/time)"
-                required="true"
-                onChange={(event) => this.setState({ pickupLocation: event.target.value })}
                 style={style.field}
               />
             </div>
