@@ -48,19 +48,22 @@ class AddProduct extends Component {
       stock: "",
       productID: "",
       isApparel: false,
-      small: '',
-      medium: '',
-      large: '',
-      xsmall: '',
-      xlarge: '',
+      apparelStock: 0,
+      small: "",
+      medium: "",
+      large: "",
+      xsmall: "",
+      xlarge: "",
       apparelCSS: "hideApparelSizes",
       itemShowStock: "showItemStock",
       images: [],
-      imageNames: []
+      imageNames: [],
+      disableNonStockInput: false
     };
     this.addProduct = this.addProduct.bind(this);
     this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
+    // this.nonApparelStock = React.createRef();
   }
 
   //upload success
@@ -71,6 +74,37 @@ class AddProduct extends Component {
       .child(filename);
   };
 
+
+  //non apparel, account for empty field
+  handleStockChange = stock => {
+    //if user enters a negative stock value, set default to 0 in background
+    //display notifier
+    if(Number(stock.target.value) < 0){
+      this.setState({
+        stock: 0
+      });
+      this.props.notifier({
+        title: "Warning",
+        message: "Please enter stock value greater than or equal to 0",
+        type: "warning"
+      });
+    }
+
+    //if user doesn't type anything, set default to 0 in background
+    else if(stock.target.value == ""){
+      this.setState({
+        stock:0
+      });
+    }
+
+    //else, set stock to user's input
+    else{
+      this.setState({
+        stock: Number(stock.target.value)
+      })
+    }
+  }
+
   //handle stock change, update total stock values when user changes input
   handleStockChangeApparel = name => stock => {
     //if the user is setting the stock to a negative value, set default to 0
@@ -78,12 +112,22 @@ class AddProduct extends Component {
       this.setState({
         [name]: 0
       });
+      this.props.notifier({
+        title: "Warning",
+        message: "Please enter stock value greater than or equal to 0",
+        type: "warning"
+      });
     }
 
     //if the user presses delete or backspace, handle empty field
     else if (stock.target.value === "") {
+      // this.setState({
+      //   [name]: ""
+      // });
+
+      //set value to 0 in background
       this.setState({
-        [name]: ""
+        [name]: 0
       });
     }
 
@@ -99,20 +143,60 @@ class AddProduct extends Component {
         () => {
           //add running total of stocks when value is changed, callback function after state was updated
           var runningStockTotal = 0;
+          var smallValue = 0;
+          var mediumValue = 0;
+          var largeValue = 0;
+          var xsmallValue = 0;
+          var xlargeValue = 0;
+
+          //set default value to 0, if not empty space, assign number value
+          if(this.state.small != ""){
+            smallValue = this.state.small;
+          }
+
+          else if(this.state.medium != ""){
+            mediumValue = this.state.medium;
+          }
+
+          else if(this.state.large != ""){
+            largeValue = this.state.large;
+          }
+
+          else if(this.state.xsmall != ""){
+            xsmallValue = this.state.xsmall;
+          }
+
+          else if(this.state.xlarge != ""){
+            xlargeValue = this.state.xlarge;
+          }
+
+          // runningStockTotal =
+          //   Number(this.state.small) +
+          //   Number(this.state.medium) +
+          //   Number(this.state.large) +
+          //   Number(this.state.xsmall) +
+          //   Number(this.state.xlarge);
+
           runningStockTotal =
-            Number(this.state.small) +
-            Number(this.state.medium) +
-            Number(this.state.large) +
-            Number(this.state.xsmall) +
-            Number(this.state.xlarge);
+            Number(smallValue) +
+            Number(mediumValue) +
+            Number(largeValue) +
+            Number(xsmallValue) +
+            Number(xlargeValue);
+
           //update stock with running total
           this.setState({
-            stock: String(runningStockTotal)
+            apparelStock: Number(runningStockTotal)
           });
         }
       );
     }
   };
+
+  // setNonApparelStock = () => {
+  //   this.nonApparelStock.current.props.value = "";
+  //   console.log(this.nonApparelStock);
+  // }
 
   //detects when an image is uploaded from user
   //change number of files to upload
@@ -173,7 +257,13 @@ class AddProduct extends Component {
     //handle if item being added is an apparel
     if (this.state.isApparel === true) {
       const apiURL = "/api/adminProducts/addNewProduct";
-
+      var apparelStockValue;
+      if(this.state.apparelStock == ""){
+        apparelStockValue = 0;
+      }
+      else{
+        apparelStockValue = this.state.apparelStock;
+      }
       axios
         .post(apiURL, {
           withCredentials: true,
@@ -183,7 +273,8 @@ class AddProduct extends Component {
             productName: this.state.productName,
             productPrice: this.state.productPrice,
             pid: this.state.productID,
-            stock: this.state.stock,
+            // stock: this.state.stock,
+            stock: apparelStockValue,
             isApparel: this.state.isApparel,
             s_stock: this.state.small,
             m_stock: this.state.medium,
@@ -203,6 +294,15 @@ class AddProduct extends Component {
               type: "success"
             });
           }
+
+          //add product failed
+          else{
+            this.props.notifier({
+              title: "Error",
+              message: res.data.message.toString(),
+              type: "danger"
+            });
+          }
         })
         .catch(err => {
           this.props.notifier({
@@ -216,6 +316,13 @@ class AddProduct extends Component {
     //if the item is not an apparel
     else {
       const apiURL = "/api/adminProducts/addNewProduct";
+      var stockValue;
+      if(this.state.stock == ""){
+        stockValue = 0;
+      }
+      else{
+        stockValue = this.state.stock
+      }
       axios
         .post(apiURL, {
           withCredentials: true,
@@ -224,7 +331,7 @@ class AddProduct extends Component {
             productInfo: this.state.productInfo,
             productName: this.state.productName,
             productPrice: this.state.productPrice,
-            stock: this.state.stock,
+            stock: stockValue,
             pid: this.state.productID,
             isApparel: this.state.isApparel,
             productPicture: this.state.imageNames
@@ -241,8 +348,13 @@ class AddProduct extends Component {
             });
           }
           
+          //product failed to upload
           else{
-            console.log("doesnt work");
+            this.props.notifier({
+              title: "Error",
+              message: res.data.message.toString(),
+              type: "danger"
+            });
           }
         })
         .catch(err => {
@@ -283,7 +395,7 @@ class AddProduct extends Component {
             <div className = "add-textForm" id="row">
               <TextField
                 label="Product Price"
-                required="true"
+                required= {true}
                 type="number"
                 //MaterialUI property to insert start text
 
@@ -310,10 +422,14 @@ class AddProduct extends Component {
             <div className = "add-textForm" id = "row">
               <TextField
                 label="Product Stock"
-                required="true"
+                required= {true}
                 type="number"
                 value = {this.state.stock}
-                onChange={(event) => this.setState({ stock: event.target.value })}
+                //disable input for stock for non-apparel if user is inputting stock for apparel
+                disabled = {this.state.disableNonStockInput}
+                onChange={
+                  (event) => this.handleStockChange(event)
+                }
                 style={style.field}
               />
               </div>
@@ -335,29 +451,42 @@ class AddProduct extends Component {
                   value = "item"
                   label="Item"
                   // labelPlacement="start"
-                  onChange={() => this.setState({ isApparel: false, apparelCSS: 'hideApparelSizes', itemShowStock: 'showItemStock'})}
+                  onChange={() => 
+                    this.setState({ 
+                      isApparel: false, 
+                      apparelCSS: 'hideApparelSizes', 
+                      itemShowStock: 'showItemStock', 
+                      disableNonStockInput: false,
+                      apparelStock:0,
+                      small: "",
+                      medium: "",
+                      large: "",
+                      xsmall: "",
+                      xlarge: ""
+                  })}
                   style={style.field}
                 />
 
                 {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
                 <FormControlLabel
-                    control={<Radio color="primary" />}
-                    value = "apparel"
-                    label="Apparel"
-                    // labelPlacement="start"
-                    onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock'})}
+                  control={<Radio color="primary" />}
+                  value = "apparel"
+                  label="Apparel"
+                  // labelPlacement="start"
+                  onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock', stock: "", disableNonStockInput: true})}
                 />
               </RadioGroup>
               </div>
             </FormControl>
 
-            {/* add quantity for apparel sizes, toggel visibility if selected */}
+            {/* add quantity for apparel sizes, toggle visibility if selected */}
             <div className = {this.state.apparelCSS}>
               <div className = "add-textForm" id="row">
                 <TextField
-                  label="Product Stock"
+                  label="Apparel Product Stock"
                   type="number"
-                  value = {this.state.stock}
+                  // value = {this.state.stock}
+                  value = {this.state.apparelStock}
                   disabled
                 />
               </div>
