@@ -350,7 +350,6 @@ class AddProduct extends Component {
 
         {/* <div className = {this.state.itemShowStock} id = "row"> */}
         <div className="tooltip">
-          {" "}
           <span className="tooltiptext">In progress </span>
           <div className="add-textForm" id="row">
             <TextField
@@ -363,14 +362,13 @@ class AddProduct extends Component {
             />
           </div>
         </div>
-        {/* </div> */}
 
         <FormControl component="fieldset">
           <div className="add-textForm">
             <div className="tooltip">
               <span className="tooltiptext"> In Progresss </span>
               <FormLabel component="legend" style={style.field}>
-                Select Product Type{" "}
+                Select Product Type
               </FormLabel>
             </div>
             <RadioGroup
@@ -412,168 +410,6 @@ class AddProduct extends Component {
             </RadioGroup>
           </div>
         </FormControl>
-
-        {/* add quantity for apparel sizes, toggel visibility if selected */}
-        <div className={this.state.apparelCSS}>
-          <div className="add-textForm" id="row">
-            <TextField
-              label="Product Stock"
-              type="number"
-              value={this.state.stock}
-              disabled
-            />
-          </div>
-
-          <div className="add-textForm" id="row">
-            <TextField
-              label="Small Stock"
-              required="false"
-              type="number"
-              value={this.state.small}
-              onChange={this.handleStockChangeApparel("small")}
-            />
-          </div>
-
-          <div className="add-textForm" id="row">
-            <TextField
-              label="Medium Stock"
-              required="false"
-              type="number"
-              value={this.state.medium}
-              onChange={this.handleStockChangeApparel("medium")}
-            />
-          </div>
-
-          <div className="add-textForm" id="row">
-            <TextField
-              label="Large Stock"
-              required="false"
-              type="number"
-              value={this.state.large}
-              onChange={this.handleStockChangeApparel("large")}
-            />
-          </div>
-
-          <div className="add-textForm" id="row">
-            <TextField
-              label="X-Small Stock"
-              required="false"
-              type="number"
-              value={this.state.xsmall}
-              onChange={this.handleStockChangeApparel("xsmall")}
-            />
-          </div>
-
-          <div className="add-textForm" id="row">
-            <TextField
-              label="X-Large Stock"
-              required="false"
-              value={this.state.xlarge}
-              type="number"
-              onChange={this.handleStockChangeApparel("xlarge")}
-            />
-          </div>
-        </div>
-
-        <div className="add-textForm" id="row">
-          <div className="tooltip">
-            {" "}
-            <span className="tooltiptext">
-              First image uploaded on the left is default image displayed on
-              shop. Remaining images used in detail view{" "}
-            </span>
-            <h5 className="uploadImageText"> Upload Images </h5>{" "}
-          </div>
-          <div id="column">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-            />
-          </div>
-
-          <div id="column">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-            />
-          </div>
-
-          <div id="column">
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-            />
-          </div>
-
-          <FileUploader
-            accept="image/*"
-            onChange={this.handleFileChange}
-            storageRef={firebase
-              .storage()
-              .ref(
-                "/images" + "/" + this.props.vid + "/" + this.state.productID
-              )}
-            ref={instance => {
-              this.fileUploader = instance;
-            }}
-            multiple
-            onUploadError={error => {
-              this.props.notifier({
-                title: "Error",
-                message: error.toString(),
-                type: "danger"
-              });
-            }}
-          />
-        </div>
 
         {/* add quantity for apparel sizes, toggel visibility if selected */}
         <div className={this.state.apparelCSS}>
