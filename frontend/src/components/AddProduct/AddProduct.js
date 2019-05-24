@@ -255,6 +255,7 @@ class AddProduct extends Component {
       <div className = "addProductContainer">
       {/* <Paper className="addProductPaperContainer"> */}
             <h1> Add Product </h1>
+	    <div className = "tooltip"> <span className="tooltiptext">In progress </span>
             <div className = "add-textForm" id="row">
               <TextField
                 label="Product Name"
@@ -263,7 +264,9 @@ class AddProduct extends Component {
                 style={style.field}
               />
             </div>
+	    </div>
 
+            <div className = "tooltip"> <span className="tooltiptext">In progress </span>
             <div className = "add-textForm" id="row">
               <TextField
                 label="Product Info"
@@ -274,7 +277,9 @@ class AddProduct extends Component {
                 style={style.field}
               />
             </div>
+	    </div>
 
+            <div className = "tooltip"> <span className="tooltiptext">In progress </span>
             <div className = "add-textForm" id="row">
               <TextField
                 label="Pickup Location (Enter location and date/time)"
@@ -283,7 +288,9 @@ class AddProduct extends Component {
                 style={style.field}
               />
             </div>
+	    </div>
 
+            <div className = "tooltip"> <span className="tooltiptext">In progress </span>
             <div className = "add-textForm" id="row">
               <TextField
                 label="Product Price"
@@ -293,12 +300,13 @@ class AddProduct extends Component {
                 style={style.field}
               />
             </div>
-
+            </div>
             {/* toggle visibility of product stock
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
             
             {/* <div className = {this.state.itemShowStock} id = "row"> */}
+	    <div className = "tooltip"> <span className="tooltiptext">In progress </span>
             <div className = "add-textForm" id = "row">
               <TextField
                 label="Product Stock"
@@ -309,11 +317,14 @@ class AddProduct extends Component {
                 style={style.field}
               />
               </div>
+	    </div>
             {/* </div> */}
 
             <FormControl component="fieldset">
             <div className = "add-textForm">
+	      <div className = "tooltip"><span className="tooltiptext"> In Progresss </span>
               <FormLabel component="legend" style={style.field}>Select Product Type </FormLabel>
+	      </div>
               <RadioGroup
                 aria-label="gender"
                 name="gender2"
@@ -416,7 +427,7 @@ class AddProduct extends Component {
             </div>
 
             <div className = "add-textForm" id = "row">
-              <div class = "tooltip"> <span class="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span><h5 className = "uploadImageText"> Upload Images </h5> </div>
+              <div className = "tooltip"> <span className="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span><h5 className = "uploadImageText"> Upload Images </h5> </div>
               <div id = "column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
