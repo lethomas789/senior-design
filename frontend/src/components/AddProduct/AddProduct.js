@@ -209,6 +209,7 @@ class AddProduct extends Component {
     } = event;
 
     //TO DO modify file size
+    //check if image being uploaded exceeds max file size
     if(files[0].size > maxImageSize){
       this.props.notifier({
         title: "Error",
@@ -309,7 +310,6 @@ class AddProduct extends Component {
       //check to see if user inputted more than 2 spots for cents
       var checkCentValues = this.state.productPrice.split(".");
       //split into array of items before . and after .
-      // console.log(checkCentValues);
       if(checkCentValues[1].length != 2){
         this.props.notifier({
           title: "Error",
@@ -499,7 +499,7 @@ class AddProduct extends Component {
 
             <div className = "add-textForm" id="row">
               <TextField
-                label="Product Price ($D.CC)"
+                label="Product Price ($X.XX)"
                 required= {true}
                 //MaterialUI property to insert start text
 
