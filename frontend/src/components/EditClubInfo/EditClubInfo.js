@@ -17,7 +17,7 @@ class EditClubInfo extends Component {
     email: "",
     pickupInfo: "",
     facebook: "",
-    instagram: "",
+    instagram: ""
   };
 
   //get club info
@@ -40,7 +40,7 @@ class EditClubInfo extends Component {
             pickupInfo: res.data.pickupInfo,
             email: res.data.email,
             facebook: res.data.facebook,
-            instagram: res.data.instagram,
+            instagram: res.data.instagram
           });
         } else {
           this.props.notifier({
@@ -73,16 +73,19 @@ class EditClubInfo extends Component {
   }
 
   //if user selects another admin to update, update component with new club data
-  componentDidUpdate(prevProps){
-    if(prevProps.vendorID != this.props.vendorID){
+  componentDidUpdate(prevProps) {
+    if (prevProps.vendorID != this.props.vendorID) {
       this.getClubInfo();
-    }   
+    }
   }
 
   //update email preferences
   updateEmailPreferences = () => {
     //validator to make sure admin selected appropriate email schedule
-    if(this.state.emailSchedule === "" || this.state.emailSchedule === "select"){
+    if (
+      this.state.emailSchedule === "" ||
+      this.state.emailSchedule === "select"
+    ) {
       this.props.notifier({
         title: "Error",
         message: "Please select an email preference time.",
@@ -128,7 +131,7 @@ class EditClubInfo extends Component {
     //validator for inputs
 
     //check a club name was provided
-    if(this.state.vendorName === ""){
+    if (this.state.vendorName === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert club name",
@@ -138,7 +141,7 @@ class EditClubInfo extends Component {
     }
 
     //check a bio was provided
-    if(this.state.bio === ""){
+    if (this.state.bio === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert club biography",
@@ -148,7 +151,7 @@ class EditClubInfo extends Component {
     }
 
     //check if an email was provided
-    if(this.state.email === ""){
+    if (this.state.email === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert contact email",
@@ -158,7 +161,7 @@ class EditClubInfo extends Component {
     }
 
     //check if pickup info was provided
-    if(this.state.pickupInfo === ""){
+    if (this.state.pickupInfo === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert pickup information",
@@ -178,7 +181,7 @@ class EditClubInfo extends Component {
           email: this.state.email,
           pickupInfo: this.state.pickupInfo,
           facebook: this.state.facebook,
-          instagram: this.state.instagram,
+          instagram: this.state.instagram
         }
       })
       .then(res => {
@@ -190,9 +193,7 @@ class EditClubInfo extends Component {
             type: "success"
           });
           this.getClubInfo();
-        }
-
-        else{
+        } else {
           this.props.notifier({
             title: "Error",
             message: res.data.message.toString(),
@@ -219,7 +220,7 @@ class EditClubInfo extends Component {
 
         <form id="editClubForm">
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">Your club's name.</span>
             <div className="textForm" id="row">
               <TextField
                 label="Club Name"
@@ -234,7 +235,9 @@ class EditClubInfo extends Component {
           </div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">
+              Your biography will displayed on your club's about page.
+            </span>
             <div className="textForm" id="row">
               <TextField
                 label="Biography"
@@ -248,7 +251,11 @@ class EditClubInfo extends Component {
             </div>
           </div>
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">
+              The location and time to pickup your products. This information
+              will also be displayed on your club's about page, as well as in
+              any of your club's order emails.
+            </span>
             <div className="textForm" id="row">
               <TextField
                 label="Item Pickup Info"
@@ -265,7 +272,7 @@ class EditClubInfo extends Component {
           </div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">Link to your facebook.</span>
             <div className="textForm" id="row">
               <TextField
                 label="Facebook Link"
@@ -282,7 +289,7 @@ class EditClubInfo extends Component {
           </div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">Link to your Instagram. </span>
             <div className="textForm" id="row">
               <TextField
                 label="Instagram Link"
@@ -299,7 +306,11 @@ class EditClubInfo extends Component {
           </div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">
+              Contact email displayed in your club's about page. Also, this
+              email will be contacted periodically about the number of new
+              orders, if any.
+            </span>
             <div className="textForm" id="row">
               <TextField
                 label="Contact Email"
@@ -314,7 +325,7 @@ class EditClubInfo extends Component {
         </form>
 
         <div className="tooltip">
-          <span className="tooltiptext">In progress </span>
+          {/* <span className="tooltiptext">In progress </span> */}
           <div className="btn-update-info">
             <Button
               variant="contained"
@@ -355,7 +366,7 @@ class EditClubInfo extends Component {
             </select>
           </div>
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            {/* <span className="tooltiptext">In progress </span> */}
             <Button
               variant="contained"
               color="primary"

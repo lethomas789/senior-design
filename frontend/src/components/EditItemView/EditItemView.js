@@ -525,13 +525,13 @@ class EditItemView extends Component {
       <div>
         <div className="editItemContainer">
           <h1> Select Item To Edit </h1>
-          <h5>
+          {/* <h5>
             (If uploading new pictures, old pictures will be discarded/replaced)
-          </h5>
+          </h5> */}
           <div className="textForm">{products}</div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">Name of your product</span>
             <div className="textForm" id="row">
               <TextField
                 label="Product Name"
@@ -544,7 +544,10 @@ class EditItemView extends Component {
           </div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">
+              The product info that will be displayed on the item's product
+              page.
+            </span>
             <div className="textFormEdit" id="row">
               <TextField
                 label="Product Info"
@@ -559,7 +562,7 @@ class EditItemView extends Component {
           </div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">The product's price in USD.</span>
             <div className="textFormEdit" id="row">
               <TextField
                 label="Product Price"
@@ -577,7 +580,10 @@ class EditItemView extends Component {
           </div>
 
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            <span className="tooltiptext">
+              Your product's stock. The website will stop accepting orders for
+              that product once its stock is out.
+            </span>
             <div className={this.state.itemStockCSS} id="row">
               <TextField
                 label="Stock"

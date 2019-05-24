@@ -506,7 +506,7 @@ class AddProduct extends Component {
         {/* <Paper className="addProductPaperContainer"> */}
         <h1> Add Product </h1>
         <div className="tooltip">
-          <span className="tooltiptext">In progress </span>
+          <span className="tooltiptext">Name of your product.</span>
           <div className="add-textForm" id="row">
             <TextField
               label="Product Name"
@@ -520,7 +520,9 @@ class AddProduct extends Component {
         </div>
 
         <div className="tooltip">
-          <span className="tooltiptext">In progress </span>
+          <span className="tooltiptext">
+            The product info that will be displayed on the item's product page.
+          </span>
           <div className="add-textForm" id="row">
             <TextField
               label="Product Info"
@@ -535,7 +537,7 @@ class AddProduct extends Component {
           </div>
         </div>
 
-        <div className="tooltip">
+        {/* <div className="tooltip">
           <span className="tooltiptext">In progress </span>
           <div className="add-textForm" id="row">
             <TextField
@@ -547,10 +549,10 @@ class AddProduct extends Component {
               style={style.field}
             />
           </div>
-        </div>
+        </div> */}
 
         <div className="tooltip">
-          <span className="tooltiptext">In progress </span>
+          <span className="tooltiptext">The product's price in USD.</span>
           <div className="add-textForm" id="row">
             <TextField
               label="Product Price"
@@ -576,26 +578,13 @@ class AddProduct extends Component {
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
 
-        {/* <div className = {this.state.itemShowStock} id = "row"> */}
-        <div className="tooltip">
-          <span className="tooltiptext">In progress </span>
-          <div className="add-textForm" id="row">
-            <TextField
-              label="Product Stock"
-              required={true}
-              //remove type is number to allow user to enter backspace/delete character
-              //check for number by using isNaN on input change
-              value={this.state.stock}
-              onChange={event => this.handleStockChange(event)}
-              style={style.field}
-            />
-          </div>
-        </div>
-
         <FormControl component="fieldset">
           <div className="add-textForm">
             <div className="tooltip">
-              <span className="tooltiptext"> In Progresss </span>
+              <span className="tooltiptext">
+                Please select whether your product is a regular item on an
+                apparel item. Apparel items may have different sizes.
+              </span>
               <FormLabel component="legend" style={style.field}>
                 Select Product Type
               </FormLabel>
@@ -626,13 +615,6 @@ class AddProduct extends Component {
                     xlarge: ""
                   })
                 }
-                //                 onChange={() =>
-                //                   this.setState({
-                //                     isApparel: false,
-                //                     apparelCSS: "hideApparelSizes",
-                //                     itemShowStock: "showItemStock"
-                //                   })
-                //                 }
                 style={style.field}
               />
               <FormControlLabel
@@ -653,6 +635,25 @@ class AddProduct extends Component {
             </RadioGroup>
           </div>
         </FormControl>
+
+        {/* <div className = {this.state.itemShowStock} id = "row"> */}
+        <div className="tooltip">
+          <span className="tooltiptext">
+            Your product's stock. The website will stop accepting orders for
+            that product once its stock is out.
+          </span>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Product Stock"
+              required={true}
+              //remove type is number to allow user to enter backspace/delete character
+              //check for number by using isNaN on input change
+              value={this.state.stock}
+              onChange={event => this.handleStockChange(event)}
+              style={style.field}
+            />
+          </div>
+        </div>
 
         {/* add quantity for apparel sizes, toggel visibility if selected */}
         <div className={this.state.apparelCSS}>
@@ -715,8 +716,10 @@ class AddProduct extends Component {
         <div className="add-textForm" id="row">
           <div class="tooltip">
             <span class="tooltiptext">
-              First image uploaded on the left is default image displayed on
-              shop. Remaining images used in detail view
+              Upload the images for your product here, up to a maximum of four
+              pictures. NOTE: The first image uploaded will be the default image
+              displayed on shop. Remaining images used in the product's shop
+              page.
             </span>
             <h5 className="uploadImageText"> Upload Images </h5>
           </div>
