@@ -68,8 +68,24 @@ class EditClubInfo extends Component {
     this.getClubInfo();
   }
 
+  //if user selects another admin to update, update component with new club data
+  componentDidUpdate(prevProps){
+    if(prevProps.vendorID != this.props.vendorID){
+      this.getClubInfo();
+    }   
+  }
+
   //update email preferences
   updateEmailPreferences = () => {
+    //validator to make sure admin selected appropriate email schedule
+    if(this.state.emailSchedule === "" || this.state.emailSchedule === "select"){
+      this.props.notifier({
+        title: "Error",
+        message: "Please select an email preference time.",
+        type: "danger"
+      });
+      return;
+    }
     const apiURL = "/api/adminVendor/emailSchedule";
     axios
       .patch(apiURL, {
@@ -105,6 +121,48 @@ class EditClubInfo extends Component {
 
   //update club info on server
   sendEdit = () => {
+    //validator for inputs
+
+    //check a club name was provided
+    if(this.state.vendorName === ""){
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert club name",
+        type: "danger"
+      });
+      return;
+    }
+
+    //check a bio was provided
+    if(this.state.bio === ""){
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert club biography",
+        type: "danger"
+      });
+      return;
+    }
+
+    //check if an email was provided
+    if(this.state.email === ""){
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert contact email",
+        type: "danger"
+      });
+      return;
+    }
+
+    //check if pickup info was provided
+    if(this.state.pickupInfo === ""){
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert pickup information",
+        type: "danger"
+      });
+      return;
+    }
+
     const apiURL = "/api/adminVendor/editVendorInfo";
     axios
       .patch(apiURL, {
@@ -126,6 +184,14 @@ class EditClubInfo extends Component {
             type: "success"
           });
           this.getClubInfo();
+        }
+
+        else{
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message.toString(),
+            type: "danger"
+          });
         }
       })
       .catch(err => {
@@ -152,6 +218,7 @@ class EditClubInfo extends Component {
               <TextField
                 label="Club Name"
                 value={this.state.vendorName}
+                required={true}
                 onChange={event =>
                   this.setState({ vendorName: event.target.value })
                 }
@@ -166,6 +233,7 @@ class EditClubInfo extends Component {
               <TextField
                 label="Biography"
                 value={this.state.bio}
+                required={true}
                 onChange={event => this.setState({ bio: event.target.value })}
                 multiline={true}
                 rowsMax={Infinity}
@@ -179,6 +247,7 @@ class EditClubInfo extends Component {
               <TextField
                 label="Item Pickup Info"
                 value={this.state.pickupInfo}
+                required={true}
                 onChange={event =>
                   this.setState({ pickupInfo: event.target.value })
                 }
@@ -194,6 +263,7 @@ class EditClubInfo extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="Contact Email"
+                required={true}
                 type="email"
                 value={this.state.email}
                 onChange={event => this.setState({ email: event.target.value })}

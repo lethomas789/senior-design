@@ -119,6 +119,7 @@ router.post('/addNewProduct', tokenMiddleware, (req, res) => {
           // to show their pics
           pictures.push(link);
         }
+        productPicture = pictures; //EDIT to fix adding new item, shop item is looking for productPicture property instead of picture property
       }
 
       let lastUpdate = admin.firestore.Timestamp.now();
@@ -132,6 +133,7 @@ router.post('/addNewProduct', tokenMiddleware, (req, res) => {
           productPrice,
           vid,
           pictures,  // array of picture links
+          productPicture, //EDIT use this variable instead of pictures
 
           isApparel,
           stock,
@@ -156,6 +158,8 @@ router.post('/addNewProduct', tokenMiddleware, (req, res) => {
           productPrice,
           vid,
           pictures,  // array of picture links
+          productPicture, //EDIT use this variable instead of pictures
+
 
           isApparel,
           stock,
