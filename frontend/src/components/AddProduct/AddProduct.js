@@ -392,50 +392,19 @@ class AddProduct extends Component {
                 style={style.field}
               />
 
-            <div className = "add-textForm" id = "row">
-              <div class = "tooltip"> 
-              <span class="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span>
-              <h5 className = "uploadImageText"> Upload Images </h5> 
-              </div>
-              <div id = "column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }} 
-              />
-              </div>
-
-              <div id = "column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
-              </div>
-
-              <div id = "column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
+              <FormControlLabel
+                control={<Radio color="primary" />}
+                value="apparel"
+                label="Apparel"
+                // labelPlacement="start"
+                onChange={() =>
+                  this.setState({
+                    isApparel: true,
+                    apparelCSS: "showApparelSizes",
+                    itemShowStock: "hideItemStock"
+                  })
+                }
+                style={style.field}
               />
             </RadioGroup>
           </div>
@@ -499,6 +468,107 @@ class AddProduct extends Component {
               value={this.state.xlarge}
               type="number"
               onChange={this.handleStockChangeApparel("xlarge")}
+            />
+          </div>
+        </div>
+
+        <div className="add-textForm" id="row">
+          <div class="tooltip">
+            <span class="tooltiptext">
+              First image uploaded on the left is default image displayed on
+              shop. Remaining images used in detail view{" "}
+            </span>
+            <h5 className="uploadImageText"> Upload Images </h5>
+          </div>
+          <div id="column">
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+
+          <div id="column">
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+
+          <div id="column">
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+
+          <div id="column">
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
             />
           </div>
         </div>

@@ -320,71 +320,76 @@ class EditItemView extends Component {
           </h5>
           <div className="textForm">{products}</div>
 
-	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <div className="textForm" id="row">
-            <TextField
-              label="Product Name"
-              required={true}
-              value={this.state.name}
-              onChange={event => this.setState({ name: event.target.value })}
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Product Name"
+                required={true}
+                value={this.state.name}
+                onChange={event => this.setState({ name: event.target.value })}
+                style={style.field}
+              />
+            </div>
           </div>
-	  </div>
 
-	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <div className="textFormEdit" id="row">
-            <TextField
-              label="Product Info"
-              required={true}
-              multiline={true}
-              // rows={2}
-              value={this.state.info}
-              onChange={event => this.setState({ info: event.target.value })}
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textFormEdit" id="row">
+              <TextField
+                label="Product Info"
+                required={true}
+                multiline={true}
+                // rows={2}
+                value={this.state.info}
+                onChange={event => this.setState({ info: event.target.value })}
+                style={style.field}
+              />
+            </div>
           </div>
-	  </div>
 
-	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <div className="textFormEdit" id="row">
-            <TextField
-              label="Pickup Location (Enter location and date/time)"
-              required={true}
-              value={this.state.pickupLocation}
-              onChange={event =>
-                this.setState({ pickupLocation: event.target.value })
-              }
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textFormEdit" id="row">
+              <TextField
+                label="Pickup Location (Enter location and date/time)"
+                required={true}
+                value={this.state.pickupLocation}
+                onChange={event =>
+                  this.setState({ pickupLocation: event.target.value })
+                }
+                style={style.field}
+              />
+            </div>
           </div>
-	  </div>
 
-	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <div className="textFormEdit" id="row">
-            <TextField
-              label="Product Price"
-              required={true}
-              type="number"
-              value={this.state.price}
-              onChange={event => this.setState({ price: event.target.value })}
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textFormEdit" id="row">
+              <TextField
+                label="Product Price"
+                required={true}
+                type="number"
+                value={this.state.price}
+                onChange={event => this.setState({ price: event.target.value })}
+                style={style.field}
+              />
+            </div>
           </div>
-	  </div>
 
-	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <div className={this.state.itemStockCSS} id="row">
-            <TextField
-              label="Stock"
-              required={true}
-              type="number"
-              value={this.state.stock}
-              onChange={event => this.setState({ stock: event.target.value })}
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className={this.state.itemStockCSS} id="row">
+              <TextField
+                label="Stock"
+                required={true}
+                type="number"
+                value={this.state.stock}
+                onChange={event => this.setState({ stock: event.target.value })}
+                style={style.field}
+              />
+            </div>
           </div>
-	  </div>
 
           {/* add quantity for apparel sizes, toggel visibility if selected */}
           <div className={this.state.apparelCSS}>
@@ -447,10 +452,16 @@ class EditItemView extends Component {
               />
             </div>
           </div>
-	  <div className= "tooltip"> <span className="tooltiptext"> Note: Any new pictures for an item that are uploaded will overwrite all current pictures for the item. You will have to upload any old pictures again. </span>
-	  <div id="descriptor"> <p>To edit any of the pictures for an item please click below.</p>
-	  </div>
-	  </div>
+          <div className="tooltip">
+            <span className="tooltiptext">
+              Note: Any new pictures for an item that are uploaded will
+              overwrite all current pictures for the item. You will have to
+              upload any old pictures again.
+            </span>
+            <div id="descriptor">
+              <p>To edit any of the pictures for an item please click below.</p>
+            </div>
+          </div>
           <div id="column" className="tester">
             <FileUploader
               accept="image/*"
@@ -546,22 +557,23 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
-          <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <Button
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={this.updateItemInfo}
-            style={{
-              backgroundColor: "#DAAA00",
-              color: "white",
-              fontFamily: "Proxima Nova",
-              boxShadow: "none"
-            }}
-          >
-            Update Item
-          </Button>
-	  </div>
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={this.updateItemInfo}
+              style={{
+                backgroundColor: "#DAAA00",
+                color: "white",
+                fontFamily: "Proxima Nova",
+                boxShadow: "none"
+              }}
+            >
+              Update Item
+            </Button>
+          </div>
         </div>
       </div>
     );
