@@ -22,7 +22,7 @@ export default class EmailConfirmation extends Component {
           this.setState(() => ({ isConfirmed: true }));
           setTimeout(() => {
             this.setState(() => ({ toLogin: true }));
-          }, 5000);
+          }, 8000);
         } else {
           this.setState(() => ({ errorMessage: res.data.message }));
         }

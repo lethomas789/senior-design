@@ -201,7 +201,7 @@ class Login extends Component {
 
     //make api call to login with gmail
     axios
-      .post("/api/login/googleLogin", {
+      .post("/api/login/gmail", {
         params: {
           email: email,
           firstName: firstName,
@@ -292,14 +292,6 @@ class Login extends Component {
     if (this.state.toShop === true) {
       return <Redirect to="/shop" />
     }
-
-    // // pass props from App js /logout route
-    // // TODO make it state
-    // if (this.props.logout === true) {
-    //   console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
-    //   this.props.updateLogout();
-    //   return <Redirect to="/login" />
-    // }
 
     return (
       <div id="loginContainer">

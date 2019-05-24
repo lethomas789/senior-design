@@ -36,9 +36,9 @@ export default class Home extends Component {
               style={{ height: "100vh" }}
             > 
             {/* must disable the carousel, cannot override library's responsive design */}
-              <img className="slideImage" src={image1} />
-              <img className="slideImage" src={image2} />
-              <img className="slideImage" src={image3} />
+              <img className="slideImage" alt="UCD 1" src={image1} />
+              <img className="slideImage" alt="UCD 2" src={image2} />
+              <img className="slideImage" alt="UCD 3" src={image3} />
             </AliceCarousel>
           </div>
 
