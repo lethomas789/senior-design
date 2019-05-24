@@ -120,12 +120,14 @@ class ShopItem extends Component {
       <div className="shopitem-container">
         <div onClick={this.showDetailed} className="box">
           <div className="center">
+            <div className="darken">
             <img
               src={this.props.imageSrc}
               alt="Item"
               width="100%"
               height="100%"            
             />
+            </div>
           </div>
         </div>
 

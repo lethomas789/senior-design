@@ -1,5 +1,5 @@
-@import url("https://fonts.googleapis.com/css?family=Comfortaa");
-@import url("https://fonts.googleapis.com/css?family=Raleway");
+/* @import url("https://fonts.googleapis.com/css?family=Comfortaa");
+@import url("https://fonts.googleapis.com/css?family=Raleway"); */
 
 #homeContainer {
   flex-direction: column;
@@ -48,6 +48,9 @@
 .slideImage {
   width: 100%;
   height: 100%;
+  /* width: 1600px;
+  height: 750px; */
+  /* height: 80vh; */
   margin-left: auto;
   margin-right: auto;
 }
