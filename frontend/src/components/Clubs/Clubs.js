@@ -11,23 +11,21 @@ function DisplayClub(props) {
   const shopLink = `/vendorProducts/${vid}`;
 
   return (
-    <Link to={shopLink} className="moreColls">
-
-     <figure>
+    <div className="moreColls">
+      <figure>
         <div className="roww">
-          <div className="moreContainer">
-            <img src={bioPicture} alt="Display Club" width="100%" />
-            <div className="hero-textt">Shop {vendorName}</div>
-          </div>
-        </div>
-        <figcaption className="shopClub" >
-          <Link to={aboutLink}>
-            Learn More About {vendorName}
+          <Link to={shopLink}>
+            <div className="moreContainer">
+              <img src={bioPicture} alt="Display Club" width="100%" />
+              <div className="hero-textt">Shop {vendorName}</div>
+            </div>
           </Link>
+        </div>
+        <figcaption className="shopClub">
+          <Link to={aboutLink}>Learn More About {vendorName}</Link>
         </figcaption>
       </figure>
- 
-    </Link>
+    </div>
   );
 }
 
