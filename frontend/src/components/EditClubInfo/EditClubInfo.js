@@ -41,7 +41,7 @@ class EditClubInfo extends Component {
         } else {
           this.props.notifier({
             title: "Error",
-            message: "Error in getting club info.",
+            message: "Must be logged in and an admin to view.",
             type: "danger"
           });
         }
@@ -247,7 +247,8 @@ const mapStateToProps = state => {
   return {
     items: state.cart.items,
     login: state.auth.login,
-    vendorID: state.auth.vendorID
+    vendorID: state.auth.vendorID,
+    isAdmin: state.auth.isAdmin,
   };
 };
 

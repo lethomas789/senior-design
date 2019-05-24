@@ -250,237 +250,322 @@ class AddProduct extends Component {
     }
   }
 
+  componentDidMount() {
+    // call a route to check if they are logged in and an admin
+    const apiURL = "/api/adminUser/checkAdmin";
+    axios
+      .get(apiURL, {
+        withCredentials: true,
+      })
+      .then(res => {
+        // user not an admin
+        if (res.data.success === false) {
+          this.props.notifier({
+            title: "Warning",
+            message: "Not an admin. Access denied.",
+            type: "warning"
+          });
+          this.props.history.push('/login');
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  }
+
   render() {
     return (
-      <div className = "addProductContainer">
-      {/* <Paper className="addProductPaperContainer"> */}
-            <h1> Add Product </h1>
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Product Name"
-                required="true"
-                onChange={(event) => this.setState({ productName: event.target.value })}
-                style={style.field}
-              />
-            </div>
+      <div className="addProductContainer">
+        {/* <Paper className="addProductPaperContainer"> */}
+        <h1> Add Product </h1>
+        <div className="add-textForm" id="row">
+          <TextField
+            label="Product Name"
+            required="true"
+            onChange={event =>
+              this.setState({ productName: event.target.value })
+            }
+            style={style.field}
+          />
+        </div>
 
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Product Info"
-                required="true"
-                multiline={true}
-                rows={2}
-                onChange={(event) => this.setState({ productInfo: event.target.value })}
-                style={style.field}
-              />
-            </div>
+        <div className="add-textForm" id="row">
+          <TextField
+            label="Product Info"
+            required="true"
+            multiline={true}
+            rows={2}
+            onChange={event =>
+              this.setState({ productInfo: event.target.value })
+            }
+            style={style.field}
+          />
+        </div>
 
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Pickup Location (Enter location and date/time)"
-                required="true"
-                onChange={(event) => this.setState({ pickupLocation: event.target.value })}
-                style={style.field}
-              />
-            </div>
+        <div className="add-textForm" id="row">
+          <TextField
+            label="Pickup Location (Enter location and date/time)"
+            required="true"
+            onChange={event =>
+              this.setState({ pickupLocation: event.target.value })
+            }
+            style={style.field}
+          />
+        </div>
 
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Product Price"
-                required="true"
-                type="number"
-                onChange={(event) => this.setState({ productPrice: event.target.value })}
-                style={style.field}
-              />
-            </div>
+        <div className="add-textForm" id="row">
+          <TextField
+            label="Product Price"
+            required="true"
+            type="number"
+            onChange={event =>
+              this.setState({ productPrice: event.target.value })
+            }
+            style={style.field}
+          />
+        </div>
 
-            {/* toggle visibility of product stock
+        {/* toggle visibility of product stock
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
-            
-            {/* <div className = {this.state.itemShowStock} id = "row"> */}
-            <div className = "add-textForm" id = "row">
-              <TextField
-                label="Product Stock"
-                required="true"
-                type="number"
-                value = {this.state.stock}
-                onChange={(event) => this.setState({ stock: event.target.value })}
+
+        {/* <div className = {this.state.itemShowStock} id = "row"> */}
+        <div className="add-textForm" id="row">
+          <TextField
+            label="Product Stock"
+            required="true"
+            type="number"
+            value={this.state.stock}
+            onChange={event => this.setState({ stock: event.target.value })}
+            style={style.field}
+          />
+        </div>
+        {/* </div> */}
+
+        <FormControl component="fieldset">
+          <div className="add-textForm">
+            <FormLabel component="legend" style={style.field}>
+              Select Product Type{" "}
+            </FormLabel>
+            <RadioGroup
+              aria-label="gender"
+              name="gender2"
+              value={this.state.value}
+              onChange={this.handleChange}
+            >
+              {/* if user selects item, hide apparel selections, toggle css */}
+              <FormControlLabel
+                control={<Radio color="primary" />}
+                value="item"
+                label="Item"
+                // labelPlacement="start"
+                onChange={() =>
+                  this.setState({
+                    isApparel: false,
+                    apparelCSS: "hideApparelSizes",
+                    itemShowStock: "showItemStock"
+                  })
+                }
                 style={style.field}
               />
-              </div>
-            {/* </div> */}
 
-            <FormControl component="fieldset">
-            <div className = "add-textForm">
-              <FormLabel component="legend" style={style.field}>Select Product Type </FormLabel>
-              <RadioGroup
-                aria-label="gender"
-                name="gender2"
-                value={this.state.value}
-                onChange={this.handleChange}
-              >
-            
-                {/* if user selects item, hide apparel selections, toggle css */}
-                <FormControlLabel
-                  control={<Radio color="primary" />}
-                  value = "item"
-                  label="Item"
-                  // labelPlacement="start"
-                  onChange={() => this.setState({ isApparel: false, apparelCSS: 'hideApparelSizes', itemShowStock: 'showItemStock'})}
-                  style={style.field}
-                />
-
-                {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
-                <FormControlLabel
-                    control={<Radio color="primary" />}
-                    value = "apparel"
-                    label="Apparel"
-                    // labelPlacement="start"
-                    onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock'})}
-                />
-              </RadioGroup>
-              </div>
-            </FormControl>
-
-            {/* add quantity for apparel sizes, toggel visibility if selected */}
-            <div className = {this.state.apparelCSS}>
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="Product Stock"
-                  type="number"
-                  value = {this.state.stock}
-                  disabled
-                />
-              </div>
-              
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="Small Stock"
-                  required="false"
-                  type="number"
-                  value={this.state.small}
-                  onChange={
-                    this.handleStockChangeApparel("small")
-                  }
-                />
-              </div>
-
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="Medium Stock"
-                  required="false"
-                  type="number"
-                  value={this.state.medium}
-                  onChange={
-                    this.handleStockChangeApparel("medium")
-                  }
-                />
-              </div>
-
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="Large Stock"
-                  required="false"
-                  type="number"
-                  value={this.state.large}
-                  onChange={
-                    this.handleStockChangeApparel("large")
-                  }
-                />
-              </div>
-
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="X-Small Stock"
-                  required="false"
-                  type="number"
-                  value={this.state.xsmall}
-                  onChange={                    
-                    this.handleStockChangeApparel("xsmall")
-                  }
-                />
-              </div>
-
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="X-Large Stock"
-                  required="false"
-                  value={this.state.xlarge}
-                  type="number"
-                  onChange={
-                    this.handleStockChangeApparel("xlarge")
-                  }
-                />
-              </div>
-            </div>
-
-            <div className = "add-textForm" id = "row">
-              <div class = "tooltip"> <span class="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span><h5 className = "uploadImageText"> Upload Images </h5> </div>
-              <div id = "column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }} 
+              {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
+              <FormControlLabel
+                control={<Radio color="primary" />}
+                value="apparel"
+                label="Apparel"
+                // labelPlacement="start"
+                onChange={() =>
+                  this.setState({
+                    isApparel: true,
+                    apparelCSS: "showApparelSizes",
+                    itemShowStock: "hideItemStock"
+                  })
+                }
               />
-              </div>
+            </RadioGroup>
+          </div>
+        </FormControl>
 
-              <div id = "column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
-              </div>
+        {/* add quantity for apparel sizes, toggel visibility if selected */}
+        <div className={this.state.apparelCSS}>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Product Stock"
+              type="number"
+              value={this.state.stock}
+              disabled
+            />
+          </div>
 
-              <div id = "column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
-              </div>
-          
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
-            </div>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Small Stock"
+              required="false"
+              type="number"
+              value={this.state.small}
+              onChange={this.handleStockChangeApparel("small")}
+            />
+          </div>
 
-            <Button variant = "contained" 
-            onClick = {this.addProduct}
-            style = {{backgroundColor:"#DAAA00",
-                  color: "white", 
-                  fontFamily: "Proxima Nova", 
-                  boxShadow: "none"}}> 
-                  Add Product  
-                  </Button>
-            {/* </Paper> */}
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Medium Stock"
+              required="false"
+              type="number"
+              value={this.state.medium}
+              onChange={this.handleStockChangeApparel("medium")}
+            />
+          </div>
+
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Large Stock"
+              required="false"
+              type="number"
+              value={this.state.large}
+              onChange={this.handleStockChangeApparel("large")}
+            />
+          </div>
+
+          <div className="add-textForm" id="row">
+            <TextField
+              label="X-Small Stock"
+              required="false"
+              type="number"
+              value={this.state.xsmall}
+              onChange={this.handleStockChangeApparel("xsmall")}
+            />
+          </div>
+
+          <div className="add-textForm" id="row">
+            <TextField
+              label="X-Large Stock"
+              required="false"
+              value={this.state.xlarge}
+              type="number"
+              onChange={this.handleStockChangeApparel("xlarge")}
+            />
+          </div>
+        </div>
+
+        <div className="add-textForm" id="row">
+          <div class="tooltip">
+            {" "}
+            <span class="tooltiptext">
+              First image uploaded on the left is default image displayed on
+              shop. Remaining images used in detail view{" "}
+            </span>
+            <h5 className="uploadImageText"> Upload Images </h5>{" "}
+          </div>
+          <div id="column">
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+
+          <div id="column">
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+
+          <div id="column">
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+
+          <FileUploader
+            accept="image/*"
+            onChange={this.handleFileChange}
+            storageRef={firebase
+              .storage()
+              .ref(
+                "/images" + "/" + this.props.vid + "/" + this.state.productID
+              )}
+            ref={instance => {
+              this.fileUploader = instance;
+            }}
+            multiple
+            onUploadError={error => {
+              this.props.notifier({
+                title: "Error",
+                message: error.toString(),
+                type: "danger"
+              });
+            }}
+          />
+        </div>
+
+        <Button
+          variant="contained"
+          onClick={this.addProduct}
+          style={{
+            backgroundColor: "#DAAA00",
+            color: "white",
+            fontFamily: "Proxima Nova",
+            boxShadow: "none"
+          }}
+        >
+          Add Product
+        </Button>
+        {/* </Paper> */}
       </div>
     );
   }
