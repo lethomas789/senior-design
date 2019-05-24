@@ -116,6 +116,7 @@ class ShopItem extends Component {
 
   render() {
     return (
+
       <div className="shopitem-container">
         <div onClick={this.showDetailed} className="box">
           <div className="center">
@@ -123,10 +124,11 @@ class ShopItem extends Component {
               src={this.props.imageSrc}
               alt="Item"
               width="100%"
-              height="100%"
+              height="100%"            
             />
           </div>
         </div>
+
 
         <div className="resizing">
           <h5 className="shopitem-productname">{this.props.productName}</h5>
