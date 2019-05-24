@@ -1,3 +1,4 @@
+
 .clubHeader {
   /* padding-top: 20px; */
   font-family: 'Proxima Nova';
@@ -5,8 +6,7 @@
 }
 
 #display-clubs-container {
-  
-  height: 100vh;
+  height: 150vh;
   width: 80vw;
   display: flex;
   flex-direction: column;
@@ -64,9 +64,10 @@
 }
 
 .shopClub{
-  text-decoration: none;
-  font-size: 20px;
+  padding-top: 10px;
   text-align: center;
+  text-decoration: none;
+  font-size: 30px;
   font-family: 'Proxima Nova';
 }
 

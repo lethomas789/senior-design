@@ -9,19 +9,21 @@ function DisplayClub(props) {
 
   return (
     <Link to={`/aboutClub/${vid}`} className="moreColls">
-      <figure>
+
+     <figure>
         <div className="roww">
           <div className="moreContainer">
             <img src={bioPicture} alt="Display Club" width="100%" />
-            <div className="hero-textt">{vendorName}</div>
+            <div className="hero-textt">Shop {vendorName}</div>
           </div>
         </div>
-        <figcaption>
-          <Link className="shopClub" to={`/vendorProducts/${vid}`}>
-            See club's items.
+        <figcaption className="shopClub" >
+          <Link to={`/vendorProducts/${vid}`}>
+            Learn More About {vendorName}
           </Link>
         </figcaption>
       </figure>
+ 
     </Link>
   );
 }

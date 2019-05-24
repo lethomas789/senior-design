@@ -116,6 +116,7 @@ class ShopItem extends Component {
 
   render() {
     return (
+
       <div className="shopitem-container">
         <div onClick={this.showDetailed} className="box">
           <div className="center">
@@ -124,16 +125,17 @@ class ShopItem extends Component {
               src={this.props.imageSrc}
               alt="Item"
               width="100%"
-              height="100%"
+              height="100%"            
             />
             </div>
           </div>
         </div>
 
+
         <div className="resizing">
           <h5 className="shopitem-productname">{this.props.productName}</h5>
           <div style={{ marginTop: "10px" }}>
-            <span style={{ color: "rgba(14, 138, 240, 0.822)" }}>
+            <span style={{ color: "#DEB31A" }}>
               ${Number(this.props.productPrice).toFixed(2)}
             </span>
             {/* <Button size="small" color="primary" onClick={this.addItem}>
@@ -141,7 +143,9 @@ class ShopItem extends Component {
             </Button> */}
             {this.props.displayLink ? (
               <Button size="small" color="primary" onClick={this.updateVendor}>
-                <Link to={`/vendorProducts/${this.state.vendorID}`}>
+                <Link to={`/vendorProducts/${this.state.vendorID}`}
+                style = {{color: "#1A3E68"}}
+                >
                   More From {this.props.vendorName}
                 </Link>
               </Button>
