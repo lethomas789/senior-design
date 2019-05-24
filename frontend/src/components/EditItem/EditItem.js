@@ -1,5 +1,6 @@
 import React, { Component } from "react";
 import "./EditItem.css";
+import axios from "axios";
 // import axios from 'axios';
 import { connect } from "react-redux";
 // import actions from "../../store/actions";
@@ -26,6 +27,33 @@ class EditItem extends Component {
   updateFormAferClicked = () => {
     this.props.clickFunction(this.state.name);
   };
+
+  componentDidMount() {
+    // call a route to check if they are logged in and an admin
+    const apiURL = "/api/adminUser/checkAdmin";
+    axios
+      .get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+        // user not an admin
+        if (res.data.success === false) {
+          this.props.notifier({
+            title: "Warning",
+            message: "Not an admin. Access denied.",
+            type: "warning"
+          });
+          this.props.history.push("/login");
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  }
 
   render() {
     return (

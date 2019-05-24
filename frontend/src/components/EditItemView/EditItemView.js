@@ -26,7 +26,7 @@ const style = {
   field: { width: "500px" }
 };
 
-const maxImageSize = 100000;
+const maxImageSize = 1000000;
 
 class EditItemView extends Component {
   constructor(props) {
@@ -97,6 +97,30 @@ class EditItemView extends Component {
   //get items of vendor from database
   //allow admin to view and select which item to edit
   componentDidMount() {
+    // call a route to check if they are logged in and an admin
+    const apiURL = "/api/adminUser/checkAdmin";
+    axios
+      .get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+        // user not an admin
+        if (res.data.success === false) {
+          this.props.notifier({
+            title: "Warning",
+            message: "Not an admin. Access denied.",
+            type: "warning"
+          });
+          this.props.history.push("/login");
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
     this.getVendorProducts();
   }
 

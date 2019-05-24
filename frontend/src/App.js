@@ -149,7 +149,9 @@ class App extends Component {
               <Route
                 exact
                 path="/signup"
-                render={() => <Signup notifier={this.addNotification} />}
+                render={props => (
+                  <Signup {...props} notifier={this.addNotification} />
+                )}
               />
 
               <Route

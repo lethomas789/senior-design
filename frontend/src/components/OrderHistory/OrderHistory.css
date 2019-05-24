@@ -28,6 +28,16 @@
     width: 100vw;
 }
 
+.order-history-vendor-name {
+    margin: 0 auto;
+    margin: 30px;
+}
+
+.no-orders {
+    display: flex;
+    justify-content: center;
+}
+
 .centerize {
     align-items: center;
     justify-self: center;

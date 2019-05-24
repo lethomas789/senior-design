@@ -64,6 +64,7 @@ class OrderHistory extends Component {
     this.state = {
       orders: [],
       show: "user", // which order history to show
+      displayName: "User",
       date: "asc", // default date to ascending order
       pickedUp: "all",
       search: "",
@@ -108,7 +109,11 @@ class OrderHistory extends Component {
     let renderedOrders;
 
     if (orders.length === 0 || orders === undefined) {
-      return <div id="order-history-container">None</div>;
+      return (
+        <h2 id="order-history-container" className="no-orders">
+          No Orders
+        </h2>
+      );
     }
 
     renderedOrders = orders.map(order => {
@@ -166,7 +171,6 @@ class OrderHistory extends Component {
 
   componentDidMount() {
     const apiURL = "/api/orders/getUserOrders";
-    console.log('HISTORY MOUNTED');
 
     axios
       .get(apiURL, {
@@ -201,8 +205,8 @@ class OrderHistory extends Component {
     if (this.state.orders.length === 0) {
       return (
         <div id="order-history-container">
-        <div className = "order-history-center">
-          <h1> No orders were made! </h1>
+          <div className="order-history-center">
+            <h1> No orders were made! </h1>
           </div>
         </div>
       );
@@ -240,89 +244,135 @@ class OrderHistory extends Component {
 
     return (
       <div>
-        <h1 className="centerHeader"> Orders </h1>
-        <div className ="centerize">
-        <div className ="centerize">
-        
-        {/**
-         * TODO
-         * take out paid,
-         * put in email
-         * differentiate user orders vs club orders for admin
-         * filter/search order history
-         */}
+        <h1 className="centerHeader"> {this.state.displayName} Orders </h1>
+        <div className="centerize">
+          <div className="centerize">
+            {/**
+             * TODO
+             * take out paid,
+             * put in email
+             * differentiate user orders vs club orders for admin
+             * filter/search order history
+             */}
 
-        {/* if admin, display button to switch to logged in user orders */}
-        {isAdmin ? (
-          <Button
-            variant="contained"
-            onClick={() => this.setState({ show: "user" })}
-            key="user"
-            style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
-          >
-            User Orders
-          </Button>
-        ) : (
-          ""
-        )}
-
-        {/* if admin, display buttons to switch to club orders */}
-        {isAdmin
-          ? adminsOf.map(vendor => (
+            {/* if admin, display button to switch to logged in user orders */}
+            {isAdmin ? (
               <Button
                 variant="contained"
-                onClick={() => this.setState({ show: vendor.vid })}
-                key={vendor.vid}
-                style = {{marginLeft: "10px", backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
+                onClick={() =>
+                  this.setState({ show: "user", displayName: "User" })
+                }
+                key="user"
+                style={{
+                  backgroundColor: "#DAAA00",
+                  color: "white",
+                  fontFamily: "Proxima Nova",
+                  boxShadow: "none"
+                }}
               >
-                {vendor.vendorName} Orders
+                User Orders
               </Button>
-            ))
-          : ""}
+            ) : (
+              ""
+            )}
 
-        {/********* filter buttons ********************/}
+            {/* if admin, display buttons to switch to club orders */}
+            {isAdmin
+              ? adminsOf.map(vendor => (
+                  <Button
+                    variant="contained"
+                    onClick={() =>
+                      this.setState({
+                        show: vendor.vid,
+                        displayName: vendor.vendorName
+                      })
+                    }
+                    key={vendor.vid}
+                    style={{
+                      marginLeft: "10px",
+                      backgroundColor: "#DAAA00",
+                      color: "white",
+                      fontFamily: "Proxima Nova",
+                      boxShadow: "none"
+                    }}
+                  >
+                    {vendor.vendorName} Orders
+                  </Button>
+                ))
+              : ""}
 
-        <div id="order-history-filters-container">
-          {/* filter by date: asc/desc */}
-          <form autoComplete="off">
-            <InputLabel htmlFor="date" style = {{fontFamily: "Proxima Nova"}}>Date:</InputLabel>
-            <Select
-              value={this.state.date}
-              onChange={this.handleChange}
-              inputProps={{ name: "date", id: "date" }}
-              style={{ margin: "16px 10px 0px 10px", fontFamily: "Proxima Nova" }}
-            >
-              <MenuItem value="asc" style = {{fontFamily: "Proxima Nova"}}> Ascending </MenuItem>
-              <MenuItem value="desc" style = {{fontFamily: "Proxima Nova"}}> Descending </MenuItem>
-            </Select>
-          </form>
+            {/********* filter buttons ********************/}
 
-          {/* filter by picked up true/false */}
-          <form autoComplete="off">
-            <InputLabel htmlFor="pickedUp" style = {{fontFamily: "Proxima Nova"}}>Picked Up:</InputLabel>
-            <Select
-              value={this.state.pickedUp}
-              onChange={this.handleChange}
-              inputProps={{ name: "pickedUp", id: "pickedUp" }}
-              style={{ margin: "16px 10px 0px 10px", fontFamily: "Proxima Nova" }}
-            >
-              <MenuItem value="all" style = {{fontFamily: "Proxima Nova"}}> Display All </MenuItem>
-              <MenuItem value={true} style = {{fontFamily: "Proxima Nova"}}> Yes </MenuItem>
-              <MenuItem value={false} style = {{fontFamily: "Proxima Nova"}}> No </MenuItem>
-            </Select>
-          </form>
+            <div id="order-history-filters-container">
+              {/* filter by date: asc/desc */}
+              <form autoComplete="off">
+                <InputLabel
+                  htmlFor="date"
+                  style={{ fontFamily: "Proxima Nova" }}
+                >
+                  Date:
+                </InputLabel>
+                <Select
+                  value={this.state.date}
+                  onChange={this.handleChange}
+                  inputProps={{ name: "date", id: "date" }}
+                  style={{
+                    margin: "16px 10px 0px 10px",
+                    fontFamily: "Proxima Nova"
+                  }}
+                >
+                  <MenuItem value="asc" style={{ fontFamily: "Proxima Nova" }}>
+                    Ascending
+                  </MenuItem>
+                  <MenuItem value="desc" style={{ fontFamily: "Proxima Nova" }}>
+                    Descending
+                  </MenuItem>
+                </Select>
+              </form>
 
-          {/* search by item name in order */}
-          <form noValidate autoComplete="off">
-            <TextField
-              label="Search by Item Name"
-              value={this.state.searchValue}
-              onChange={this.handleSearch}
-              style = {{fontFamily: "Proxima Nova"}}
-            />
-          </form>
-        </div>
-        </div>
+              {/* filter by picked up true/false */}
+              <form autoComplete="off">
+                <InputLabel
+                  htmlFor="pickedUp"
+                  style={{ fontFamily: "Proxima Nova" }}
+                >
+                  Picked Up:
+                </InputLabel>
+                <Select
+                  value={this.state.pickedUp}
+                  onChange={this.handleChange}
+                  inputProps={{ name: "pickedUp", id: "pickedUp" }}
+                  style={{
+                    margin: "16px 10px 0px 10px",
+                    fontFamily: "Proxima Nova"
+                  }}
+                >
+                  <MenuItem value="all" style={{ fontFamily: "Proxima Nova" }}>
+                    Display All
+                  </MenuItem>
+                  <MenuItem value={true} style={{ fontFamily: "Proxima Nova" }}>
+                    Yes
+                  </MenuItem>
+                  <MenuItem
+                    value={false}
+                    style={{ fontFamily: "Proxima Nova" }}
+                  >
+                    No
+                  </MenuItem>
+                </Select>
+              </form>
+
+              {/* search by item name in order */}
+              <form noValidate autoComplete="off">
+                <TextField
+                  label="Search by Item Name"
+                  value={this.state.searchValue}
+                  onChange={this.handleSearch}
+                  style={{ fontFamily: "Proxima Nova" }}
+                />
+              </form>
+            </div>
+          </div>
         </div>
 
         {/* below displays the actual order histories */}
@@ -338,7 +388,7 @@ class OrderHistory extends Component {
                 pickedUp={this.state.pickedUp}
                 search={this.state.search}
                 renderOrders={this.renderOrders}
-                style = {{fontFamily: "Proxima Nova"}}
+                style={{ fontFamily: "Proxima Nova" }}
               />
             ))
           : ""}
@@ -351,7 +401,6 @@ class OrderHistory extends Component {
         ) : (
           ""
         )}
-        
       </div>
     );
   }
@@ -451,7 +500,7 @@ class ClubOrders extends Component {
 
     return (
       <div id="order-history-container">
-        {vendorName}
+        {/* <h3 className="order-history-vendor-name">{vendorName} Orders</h3> */}
         {filteredOrders}
       </div>
     );

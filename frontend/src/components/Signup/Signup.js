@@ -5,6 +5,8 @@ import Paper from "@material-ui/core/Paper";
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
 import "./Signup.css";
+import { connect } from "react-redux";
+import actions from "../../store/actions";
 // import Dialog from "@material-ui/core/Dialog";
 // import DialogContent from "@material-ui/core/DialogContent";
 // import DialogContentText from "@material-ui/core/DialogContentText";
@@ -36,7 +38,7 @@ class Signup extends Component {
       progressVariant: "determinate",
       responseMessage: "",
       success: false,
-      toRedirect: false,
+      toRedirect: false
     };
     this.sendSignup = this.sendSignup.bind(this);
     this.handleClose = this.handleClose.bind(this);
@@ -120,6 +122,133 @@ class Signup extends Component {
     }
   }
 
+  //get logged in user's cart info
+  getCart() {
+    const apiURL = "/api/getUserCart";
+    axios
+      .get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+        var amtPurchased = 0;
+
+        for (let i = 0; i < res.data.data.length; i++) {
+          amtPurchased = amtPurchased + res.data.data[i].amtPurchased;
+        }
+
+        //after getting cart info, update redux store container
+        this.props.updateItems(res.data.data);
+
+        //update cart badge based on number of items in user's cart
+        this.props.updateAmountPurchased(amtPurchased);
+
+        // switch to shop page
+        this.setState(() => ({ toShop: true }));
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  }
+
+  //response values after oauth returns with email login and password
+  responseGoogle = response => {
+    //after getting response from google, proceed with login process of redux state
+    //send login parameters to backend
+    var email = response.w3.U3;
+    var firstName = response.w3.ofa;
+    var lastName = response.w3.wea;
+
+    //update email of user logged in by modifying state
+    this.setState({
+      email: email
+    });
+
+    //make api call to login with gmail
+    axios
+      .post("/api/login/gmail", {
+        params: {
+          email: email,
+          firstName: firstName,
+          lastName: lastName
+        }
+      })
+      .then(res => {
+        console.log(res);
+        //check for login success status
+        if (res.data.success === true && res.data.isAdmin === false) {
+          //dispatch update login action to update login state
+          this.props.updateLogin();
+
+          this.props.notifier({
+            title: "Success",
+            message: "Login Successful",
+            type: "success"
+          });
+
+          //after updating login, get cart info
+          this.getCart();
+          this.props.history.push("/shop");
+
+          //display dialog for login successful
+        } else if (res.data.success === true && res.data.isAdmin === true) {
+          const vendorURL = "/api/adminUser";
+          axios
+            .get(vendorURL, {
+              withCredentials: true
+            })
+            .then(res => {
+              let currentVendorID = res.data.vendors[0].vid;
+              let currentVendors = res.data.vendors;
+              let currentVendorName = res.data.vendors[0].vendorName;
+
+              //update redux store state
+              this.props.updateAdminLogin(
+                currentVendorID,
+                currentVendors,
+                currentVendorName
+              );
+
+              //after updating login, get cart info
+              this.getCart();
+
+              //display dialog for login successful
+              this.props.notifier({
+                title: "Success",
+                message: "Login Successful",
+                type: "success"
+              });
+              this.props.history.push("/shop");
+            })
+            .catch(err => {
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
+            });
+        } // end of admin login
+        else {
+          this.props.notifier({
+            title: "Warning",
+            message: res.data.message.toString(),
+            type: "warning"
+          });
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  };
+
+  /*
   //response values after oauth returns with email login and password
   responseGoogle = response => {
     //after getting response from google, proceed with login process of redux state
@@ -175,13 +304,12 @@ class Signup extends Component {
         });
       });
   };
+  */
 
   render() {
     // const { classes } = this.props;
     if (this.state.toRedirect === true) {
-      return (
-        <Redirect to='/check-email'/>
-      )
+      return <Redirect to="/check-email" />;
     }
 
     return (
@@ -244,20 +372,24 @@ class Signup extends Component {
                 variant="contained"
                 color="primary"
                 onClick={this.sendSignup}
-                style = {{backgroundColor:"#DAAA00", color: "white", boxShadow: "none", fonFamily: "Proxima Nova"}}
+                style={{
+                  backgroundColor: "#DAAA00",
+                  color: "white",
+                  boxShadow: "none",
+                  fonFamily: "Proxima Nova"
+                }}
               >
                 Sign Up
               </Button>
             </div>
-             
-              <GoogleLogin
-                clientId={process.env.REACT_APP_GOOGLE_ID}
-                buttonText="Sign Up with Google"
-                onSuccess={this.responseGoogle}
-                onFailure={this.responseGoogle}
-                cookiePolicy={"single_host_origin"}
-              />
-        
+
+            <GoogleLogin
+              clientId={process.env.REACT_APP_GOOGLE_ID}
+              buttonText="Login in with Google"
+              onSuccess={this.responseGoogle}
+              onFailure={this.responseGoogle}
+              cookiePolicy={"single_host_origin"}
+            />
           </Paper>
         </div>
       </div>
@@ -265,8 +397,53 @@ class Signup extends Component {
   }
 }
 
-Signup.propTypes = {
-  classes: PropTypes.object.isRequired
+//obtain state from store as props for component
+//get cart items, login value, and user email
+const mapStateToProps = state => {
+  return {
+    login: state.auth.login
+  };
 };
 
-export default withStyles(styles)(Signup);
+//redux, dispatch action to reducer to update state
+const mapDispatchToProps = dispatch => {
+  return {
+    //update logged in values
+    updateLogin: () =>
+      dispatch({
+        type: actions.LOGGED_IN
+      }),
+
+    updateLogout: () =>
+      dispatch({
+        type: actions.LOGGED_OUT
+      }),
+
+    //get user's cart from state after logging in
+    updateItems: response =>
+      dispatch({
+        type: actions.GET_CART,
+        cart: response
+      }),
+
+    //update admin login
+    updateAdminLogin: (vendorID, adminsOf, vendor) =>
+      dispatch({
+        type: actions.ADMIN_LOGGED_IN,
+        vid: vendorID,
+        admins: adminsOf,
+        currentVendor: vendor
+      }),
+
+    updateAmountPurchased: amount =>
+      dispatch({
+        type: actions.UPDATE_AMOUNT_PURCHASED,
+        amountPurchased: amount
+      })
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(withStyles(styles)(Signup));
