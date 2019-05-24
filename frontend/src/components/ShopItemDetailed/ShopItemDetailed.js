@@ -354,10 +354,14 @@ class ShopItemDetailed extends Component {
     // less than 10, greater than 0, display alert
     else if (totalStock > 0) {
       text = `Only ${totalStock} item(s) left!`;
+      return <span className="out-of-stock">{text}</span>;
     } else if (totalStock === 0) {
       text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
+      
     } else {
       text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
     }
 
     return <span className="stock">{text}</span>;
@@ -372,10 +376,13 @@ class ShopItemDetailed extends Component {
       text = "In Stock";
     } else if (productStock > 0) {
       text = `Only ${productStock} item(s) left!`;
+      return <span className="out-of-stock">{text}</span>;
     } else if (productStock === 0) {
       text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
     } else {
       text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
     }
     return <span className="stock">{text}</span>;
   };
