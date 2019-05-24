@@ -416,7 +416,10 @@ class AddProduct extends Component {
             </div>
 
             <div className = "add-textForm" id = "row">
-              <div class = "tooltip"> <span class="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span><h5 className = "uploadImageText"> Upload Images </h5> </div>
+              <div class = "tooltip"> 
+              <span class="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span>
+              <h5 className = "uploadImageText"> Upload Images </h5> 
+              </div>
               <div id = "column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
