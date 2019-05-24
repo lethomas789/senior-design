@@ -1,3 +1,19 @@
-.vendor-view-item a {
+.vendor-items-view-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 95vh;
+}
+
+.vendor-items-headers {
+  justify-self: center;
+  align-self: center;
+}
+
+.vendor-items-container {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.vendor-items-view-container a {
   color: var(--color-link);
 }
