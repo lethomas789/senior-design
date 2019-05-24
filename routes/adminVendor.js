@@ -3,6 +3,7 @@ const router = express.Router();
 const firebase = require("firebase");
 const admin = require("firebase-admin");
 const db = admin.firestore();
+const validator = require("validator");
 require("dotenv").config();
 
 // const schedule = require('node-schedule');
@@ -126,6 +127,14 @@ router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
     return res.status(200).json({
       success: false,
       message: "Error: missing params for editVendorInfo."
+    });
+  }
+
+  //check if user sent a valid contact email
+  if (validator.isEmail(email) === false) {
+    return res.json({
+      success: false,
+      message: "Invalid Email"
     });
   }
 
