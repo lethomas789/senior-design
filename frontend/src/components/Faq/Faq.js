@@ -14,7 +14,7 @@ export default class Privacy extends Component {
             <h2> Where do I go to pick up my products? </h2>
             <p>
               Products purchased on this website are picked up on campus unless
-              otherwise noted by the vendor
+              otherwise noted by the vendor.
             </p>
           </div>
 
@@ -22,7 +22,7 @@ export default class Privacy extends Component {
             <h2> Is there a refund policy? </h2>
             <p>
               There is no refund policy, products are not returnable after
-              purchase
+              purchase.
             </p>
           </div>
 
@@ -33,7 +33,7 @@ export default class Privacy extends Component {
             </h2>
             <p>
               Please contact the club/vendor directly if there any questions or
-              issues with the product
+              issues with the product.
             </p>
           </div>
 
@@ -43,7 +43,7 @@ export default class Privacy extends Component {
             </h2>
             <p>
               Thank you for your interest, please send us an email at
-              ecs193.ecommerce@gmail.com to initiate the settup process.
+              ecs193.ecommerce@gmail.com to initiate the setup process.
             </p>
           </div>
 
