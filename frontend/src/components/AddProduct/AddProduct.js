@@ -37,6 +37,8 @@ const style = {
   field: { width: "500px" }
 };
 
+const maxImageSize = 100000;
+
 //component to allow admin to add products for purchase
 class AddProduct extends Component {
   constructor(props) {
@@ -49,6 +51,7 @@ class AddProduct extends Component {
       stock: "",
       productID: "",
       isApparel: false,
+      isItem:false,
       apparelStock: 0,
       small: "",
       medium: "",
@@ -73,11 +76,27 @@ class AddProduct extends Component {
       .child(filename);
   };
 
+  //handle input change for product price
+  handlePriceChange = price => {
+    //if user types a non-number or doesn't press delete/backspace, don't register input change
+    if(isNaN(price.target.value) === true && price.target.value != ""){
+      return;
+    }
+
+    //else change value
+    else{
+      this.setState({
+        productPrice: price.target.value
+      })
+    }
+  }
+
 
   //non apparel, account for empty field
   handleStockChange = stock => {
     //if the user backspaces or presses delete, create empty input for user to enter number
-    //converting "" to number using Number(stock) converts "" to 0 
+    //converting "" to number using Number(stock) converts "" to 0
+    //if user tries to type a letter, just convert it to 0 or "" 
     if(isNaN(stock.target.value) === true || stock.target.value == "" ){
       this.setState({
         stock: ""
@@ -124,6 +143,7 @@ class AddProduct extends Component {
       () => {
         //still add new running total if user removes value
         //add running total of stocks when value is changed, callback function after state was updated
+        //when user adds "", records value as 0
         var runningStockTotal = 0;
         runningStockTotal =
           Number(this.state.small) +
@@ -188,13 +208,28 @@ class AddProduct extends Component {
       target: { files }
     } = event;
 
+    //TO DO modify file size
+    if(files[0].size > maxImageSize){
+      this.props.notifier({
+        title: "Error",
+        message: "Please upload image less than 1MB",
+        type: "danger"
+      });
+
+      //if file exceeds file size, cancel upload and set file input to null
+      //this is as if no file was uploaded
+      event.target.value = null;
+      return;
+    }
+
+    //if file size is acceptable, proceed saving file in array of images to upload to server
+
     //store image names
     // const filesToStore = [];
     const filesToStore = this.state.imageNames;
 
     //store actual image files
     const actualImages = this.state.images;
-    // console.log(files);
     // console.log(files[0]);
 
     //store image name as an object
@@ -236,8 +271,88 @@ class AddProduct extends Component {
   //add product that is an apparel type
   //add product to vendor's collection in database
   addProduct() {
+    //validators for input fields, making sure user has typed something
+
+    //product name
+    if(this.state.productName === ""){
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert name for product",
+        type: "danger"
+      });
+      return;
+    }
+
+    //product info
+    if(this.state.productInfo === ""){
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert info for product",
+        type: "danger"
+      });
+      return;
+    }
+
+    //product price
+    if(this.state.productPrice === ""){
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert price for product",
+        type: "danger"
+      });
+      return;
+    }
+
+    //check to see if user inserted correct price format $D.CC
+    //if user enters money in format $D, then okay proceed
+    if(this.state.productPrice.includes(".") === true){
+      //check to see if user inputted more than 2 spots for cents
+      var checkCentValues = this.state.productPrice.split(".");
+      //split into array of items before . and after .
+      // console.log(checkCentValues);
+      if(checkCentValues[1].length != 2){
+        this.props.notifier({
+          title: "Error",
+          message: "Please insert correct price format",
+          type: "danger"
+        });
+        return;
+      }
+    }
+
+    //user needs to select item or apparel
+    if(this.state.isApparel === false && this.state.isItem === false){
+      this.props.notifier({
+        title: "Error",
+        message: "Please select an item type",
+        type: "danger"
+      });
+      return;
+    }
+
     //handle if item being added is an apparel
     if (this.state.isApparel === true) {
+      //check if apparel stock is greater than 0
+      if(Number(this.state.apparelStock) === 0){
+        this.props.notifier({
+          title: "Error",
+          message: "Please insert stock for apparel items",
+          type: "danger"
+        });
+        return;
+      }
+
+      //check for at least one image was uploaded for product
+      if(this.state.images.length === 0 && this.state.imageNames.length === 0){
+        this.props.notifier({
+          title: "Error",
+          message: "Please upload at least one image for product",
+          type: "danger"
+        });
+        return;
+      }
+
+      //proceed with adding product
       const apiURL = "/api/adminProducts/addNewProduct";
 
       //EDIT stock value is apparelStock, total apparel stock value summed from different sizes of apparel
@@ -290,7 +405,28 @@ class AddProduct extends Component {
     }
 
     //if the item is not an apparel
-    else {
+    else if (this.state.isItem === true) {
+      //check if stock is greater than 0
+      if(Number(this.state.stock) === 0){
+        this.props.notifier({
+          title: "Error",
+          message: "Please insert stock greater than 0 for item product",
+          type: "danger"
+        });
+        return;
+      }
+      
+      //check that at least one image was uploaded
+      if(this.state.images.length === 0 && this.state.imageNames.length === 0){
+        this.props.notifier({
+          title: "Error",
+          message: "Please upload at least one image for product",
+          type: "danger"
+        });
+        return;
+      }
+
+      //proceed with adding product
       const apiURL = "/api/adminProducts/addNewProduct";
       axios
         .post(apiURL, {
@@ -363,9 +499,8 @@ class AddProduct extends Component {
 
             <div className = "add-textForm" id="row">
               <TextField
-                label="Product Price"
+                label="Product Price ($D.CC)"
                 required= {true}
-                type="number"
                 //MaterialUI property to insert start text
 
                 //bold dollar sign
@@ -378,7 +513,9 @@ class AddProduct extends Component {
                   startAdornment: <InputAdornment position="start"> $ </InputAdornment>,
                 }}
                 
-                onChange={(event) => this.setState({ productPrice: event.target.value })}
+                // onChange={(event) => this.setState({ productPrice: event.target.value })}
+                value = {this.state.productPrice}
+                onChange = { (event) => this.handlePriceChange(event) }
                 style={style.field}
               />
             </div>
@@ -422,7 +559,8 @@ class AddProduct extends Component {
                   // labelPlacement="start"
                   onChange={() => 
                     this.setState({ 
-                      isApparel: false, 
+                      isApparel: false,
+                      isItem: true, 
                       apparelCSS: 'hideApparelSizes', 
                       itemShowStock: 'showItemStock', 
                       apparelStock:0,
@@ -441,7 +579,7 @@ class AddProduct extends Component {
                   value = "apparel"
                   label="Apparel"
                   // labelPlacement="start"
-                  onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock', stock: ""})}
+                  onChange={() => this.setState({ isApparel: true, isItem: false, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock', stock: ""})}
                 />
               </RadioGroup>
               </div>
