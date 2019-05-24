@@ -78,7 +78,9 @@ router.get("/", tokenMiddleware, (req, res) => {
             vendorName: vendorData.vendorName,
             email: vendorData.email,
             emailSchedule: vendorData.emailSchedule,
-            pickupInfo: vendorData.pickupInfo
+            pickupInfo: vendorData.pickupInfo,
+            facebook: vendorData.facebook,
+            instagram: vendorData.instagram,
           });
         })
         .catch(err => {
@@ -115,9 +117,25 @@ router.get("/", tokenMiddleware, (req, res) => {
 router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
   var { user } = req.authorizedData;
   if (req.body.params) {
-    var { vid, vendorName, bio, email, pickupInfo } = req.body.params;
+    var {
+      vid,
+      vendorName,
+      bio,
+      email,
+      pickupInfo,
+      facebook,
+      instagram
+    } = req.body.params;
   } else {
-    var { vid, vendorName, bio, email, pickupInfo } = req.body;
+    var {
+      vid,
+      vendorName,
+      bio,
+      email,
+      pickupInfo,
+      facebook,
+      instagram
+    } = req.body;
   }
 
   // must include editing user and vid; bio and vendorName not always edited
@@ -178,12 +196,14 @@ router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
             lastUpdate: lastUpdate,
             lastUpdateUser: lastUpdateUser,
             email: email,
-            pickupInfo: pickupInfo
+            pickupInfo: pickupInfo,
+            facebook: facebook,
+            instagram: instagram
           });
 
-          console.log("Succesfully updated vendor info.");
-          console.log("Vendor:", vendorName);
-          console.log("User:", user);
+          // console.log("Succesfully updated vendor info.");
+          // console.log("Vendor:", vendorName);
+          // console.log("User:", user);
 
           return res.status(200).json({
             success: true,

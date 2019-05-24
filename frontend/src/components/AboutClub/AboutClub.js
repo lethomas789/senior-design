@@ -4,7 +4,7 @@ import "./AboutClub.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 // import Slider from "react-slick";
-import testPicture from "../../images/wics2.png";
+// import testPicture from "../../images/wics2.png";
 // import Hidden from "@material-ui/core/Hidden";
 
 class ClubInfo extends Component {
@@ -15,7 +15,17 @@ class ClubInfo extends Component {
   };
 
   render() {
-    const { vendorName, bio, bioPictures, pickupInfo, email } = this.props;
+    const {
+      vendorName,
+      bio,
+      bioPictures,
+      pickupInfo,
+      email,
+      facebook,
+      instagram,
+      vid,
+    } = this.props;
+
     return (
       <div>
         <div id="about-club-container">
@@ -24,7 +34,7 @@ class ClubInfo extends Component {
 
           <ClubImages bioPictures={bioPictures} />
           <Link
-            to="https://www.facebook.com/DavisWICS/"
+            to={facebook}
             style={{ textDecoration: "none", color: "#C26E60" }}
           >
             <div className="events-now">
@@ -51,27 +61,27 @@ class ClubInfo extends Component {
           <div className="small-width">
             <div className="roww">
               <div className="colls">
-                <Link to="https://www.facebook.com/DavisWICS/">
+                <a href={facebook}>
                   <img
                     src={require("../../images/facebook.svg")}
                     alt="Facebook"
                     width="100%"
                   />
-                </Link>
+                </a>
               </div>
 
               <div className="colls">
-                <Link to="https://www.instagram.com/wicsdavis/">
+                <a href={instagram}>
                   <img
                     src={require("../../images/instagram.svg")}
                     alt="Instagram"
                     width="100%"
                   />
-                </Link>
+                </a>
               </div>
 
               <div className="colls">
-                <Link to="/shop">
+                <Link to={`/vendorProducts/${vid}`}>
                   <img
                     src={require("../../images/creative-market.svg")}
                     alt="Shop"
@@ -135,8 +145,8 @@ export default class AboutClub extends Component {
     bioPictures: [],
     pickupInfo: "",
     email: "",
-    // TODO more stuff
-    // TODO also change backend
+    facebook: "",
+    instagram: ""
   };
 
   componentDidMount() {
@@ -155,13 +165,23 @@ export default class AboutClub extends Component {
       })
       .then(res => {
         if (res.data.success) {
-          const { vendorName, bio, bioPictures, pickupInfo, email } = res.data;
+          const {
+            vendorName,
+            bio,
+            bioPictures,
+            pickupInfo,
+            email,
+            facebook,
+            instagram,
+          } = res.data;
           this.setState({
             vendorName,
             bio,
             bioPictures,
             pickupInfo,
-            email
+            email,
+            facebook,
+            instagram,
           });
         } else {
           this.props.notifier({
@@ -182,7 +202,17 @@ export default class AboutClub extends Component {
 
   // TODO style about us page
   render() {
-    const { vendorName, bio, bioPictures, pickupInfo, email } = this.state;
+    const vid = this.props.match.params.vid;
+
+    const {
+      vendorName,
+      bio,
+      bioPictures,
+      pickupInfo,
+      email,
+      facebook,
+      instagram,
+    } = this.state;
 
     return (
       // <div id="about-club-container">
@@ -192,6 +222,9 @@ export default class AboutClub extends Component {
         bioPictures={bioPictures}
         pickupInfo={pickupInfo}
         email={email}
+        facebook={facebook}
+        instagram={instagram}
+        vid={vid}
       />
       // </div>
     );

@@ -15,7 +15,9 @@ class EditClubInfo extends Component {
     vendorName: "",
     emailSchedule: "",
     email: "",
-    pickupInfo: ""
+    pickupInfo: "",
+    facebook: "",
+    instagram: "",
   };
 
   //get club info
@@ -36,7 +38,9 @@ class EditClubInfo extends Component {
             lastUpdateUser: res.data.lastUpdateUser,
             vendorName: res.data.vendorName,
             pickupInfo: res.data.pickupInfo,
-            email: res.data.email
+            email: res.data.email,
+            facebook: res.data.facebook,
+            instagram: res.data.instagram,
           });
         } else {
           this.props.notifier({
@@ -172,7 +176,9 @@ class EditClubInfo extends Component {
           vendorName: this.state.vendorName,
           bio: this.state.bio,
           email: this.state.email,
-          pickupInfo: this.state.pickupInfo
+          pickupInfo: this.state.pickupInfo,
+          facebook: this.state.facebook,
+          instagram: this.state.instagram,
         }
       })
       .then(res => {
@@ -250,6 +256,40 @@ class EditClubInfo extends Component {
                 required={true}
                 onChange={event =>
                   this.setState({ pickupInfo: event.target.value })
+                }
+                multiline={true}
+                style={{ paddingBottom: "20px", width: "35vw" }}
+                rowsMax={Infinity}
+              />
+            </div>
+          </div>
+
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Facebook Link"
+                value={this.state.facebook}
+                required={true}
+                onChange={event =>
+                  this.setState({ facebook: event.target.value })
+                }
+                multiline={false}
+                style={{ paddingBottom: "20px", width: "35vw" }}
+                rowsMax={Infinity}
+              />
+            </div>
+          </div>
+
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Instagram Link"
+                value={this.state.instagram}
+                required={false}
+                onChange={event =>
+                  this.setState({ instagram: event.target.value })
                 }
                 multiline={true}
                 style={{ paddingBottom: "20px", width: "35vw" }}
