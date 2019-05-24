@@ -225,7 +225,8 @@ class EditClubInfo extends Component {
           <div className="tooltip">
             <span className="tooltiptext">
               Your club's contact email will be notified every X hours about the
-              number of any new incoming orders.
+              number of any new incoming orders. If there are no new orders
+              within the selected time period, no email will be sent.
             </span>
             <select
               id="emailSelect"
@@ -235,6 +236,7 @@ class EditClubInfo extends Component {
               }}
             >
               <option value="select"> Select your email preference </option>
+              <option value="none"> None </option>
               <option value="0 */1 * * *"> Every 1 Hour </option>
               <option value="0 */2 * * *"> Every 2 Hours </option>
               <option value="0 */4 * * *"> Every 4 Hours </option>
