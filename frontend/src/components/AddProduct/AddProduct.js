@@ -41,6 +41,7 @@ const style = {
 class AddProduct extends Component {
   constructor(props) {
     super(props);
+    //EDIT, converting "" to Number results in 0, so default values set to "" to allow user to remove/delete input
     this.state = {
       productName: "",
       productInfo: "",
@@ -57,13 +58,11 @@ class AddProduct extends Component {
       apparelCSS: "hideApparelSizes",
       itemShowStock: "showItemStock",
       images: [],
-      imageNames: [],
-      disableNonStockInput: false
+      imageNames: []
     };
     this.addProduct = this.addProduct.bind(this);
     this.handleUploadSuccess = this.handleUploadSuccess.bind(this);
     this.uploadFiles = this.uploadFiles.bind(this);
-    // this.nonApparelStock = React.createRef();
   }
 
   //upload success
@@ -77,12 +76,22 @@ class AddProduct extends Component {
 
   //non apparel, account for empty field
   handleStockChange = stock => {
-    //if user enters a negative stock value, set default to 0 in background
-    //display notifier
-    if(Number(stock.target.value) < 0){
+    //if the user backspaces or presses delete, create empty input for user to enter number
+    //converting "" to number using Number(stock) converts "" to 0 
+    if(isNaN(stock.target.value) === true || stock.target.value == "" ){
       this.setState({
-        stock: 0
+        stock: ""
+      })
+      return;
+    }
+
+    //if user enters a negative stock value, set default to "" in background
+    //display notifier
+    else if(Number(stock.target.value) < 0){
+      this.setState({
+        stock: ""
       });
+
       this.props.notifier({
         title: "Warning",
         message: "Please enter stock value greater than or equal to 0",
@@ -90,14 +99,7 @@ class AddProduct extends Component {
       });
     }
 
-    //if user doesn't type anything, set default to 0 in background
-    else if(stock.target.value == ""){
-      this.setState({
-        stock:0
-      });
-    }
-
-    //else, set stock to user's input
+    //else, set stock to user's input of number
     else{
       this.setState({
         stock: Number(stock.target.value)
@@ -107,27 +109,45 @@ class AddProduct extends Component {
 
   //handle stock change, update total stock values when user changes input
   handleStockChangeApparel = name => stock => {
-    //if the user is setting the stock to a negative value, set default to 0
-    if (Number(stock.target.value) < 0) {
+
+    //check if user is trying to type non-number or letter
+    if(isNaN(stock.target.value) === true && stock.target.value != ""){
+      return;
+    }
+
+    //if the user backspaces or presses delete, create empty input for user to enter number
+    //checks if user types a number, if user types a non-number set default value to "", or 0
+    else if(isNaN(stock.target.value) === true || stock.target.value == "" ){
       this.setState({
-        [name]: 0
+        [name]: ""
+      }, 
+      () => {
+        //still add new running total if user removes value
+        //add running total of stocks when value is changed, callback function after state was updated
+        var runningStockTotal = 0;
+        runningStockTotal =
+          Number(this.state.small) +
+          Number(this.state.medium) +
+          Number(this.state.large) +
+          Number(this.state.xsmall) +
+          Number(this.state.xlarge);
+
+        //update stock with running total
+        this.setState({
+          apparelStock: Number(runningStockTotal)
+        });
+      })
+    }
+
+    //if the user is setting the stock to a negative value, set default to 0
+    else if (Number(stock.target.value) < 0) {
+      this.setState({
+        [name]: ""
       });
       this.props.notifier({
         title: "Warning",
         message: "Please enter stock value greater than or equal to 0",
         type: "warning"
-      });
-    }
-
-    //if the user presses delete or backspace, handle empty field
-    else if (stock.target.value === "") {
-      // this.setState({
-      //   [name]: ""
-      // });
-
-      //set value to 0 in background
-      this.setState({
-        [name]: 0
       });
     }
 
@@ -143,46 +163,13 @@ class AddProduct extends Component {
         () => {
           //add running total of stocks when value is changed, callback function after state was updated
           var runningStockTotal = 0;
-          var smallValue = 0;
-          var mediumValue = 0;
-          var largeValue = 0;
-          var xsmallValue = 0;
-          var xlargeValue = 0;
-
-          //set default value to 0, if not empty space, assign number value
-          if(this.state.small != ""){
-            smallValue = this.state.small;
-          }
-
-          else if(this.state.medium != ""){
-            mediumValue = this.state.medium;
-          }
-
-          else if(this.state.large != ""){
-            largeValue = this.state.large;
-          }
-
-          else if(this.state.xsmall != ""){
-            xsmallValue = this.state.xsmall;
-          }
-
-          else if(this.state.xlarge != ""){
-            xlargeValue = this.state.xlarge;
-          }
-
-          // runningStockTotal =
-          //   Number(this.state.small) +
-          //   Number(this.state.medium) +
-          //   Number(this.state.large) +
-          //   Number(this.state.xsmall) +
-          //   Number(this.state.xlarge);
 
           runningStockTotal =
-            Number(smallValue) +
-            Number(mediumValue) +
-            Number(largeValue) +
-            Number(xsmallValue) +
-            Number(xlargeValue);
+            Number(this.state.small) +
+            Number(this.state.medium) +
+            Number(this.state.large) +
+            Number(this.state.xsmall) +
+            Number(this.state.xlarge);
 
           //update stock with running total
           this.setState({
@@ -192,11 +179,6 @@ class AddProduct extends Component {
       );
     }
   };
-
-  // setNonApparelStock = () => {
-  //   this.nonApparelStock.current.props.value = "";
-  //   console.log(this.nonApparelStock);
-  // }
 
   //detects when an image is uploaded from user
   //change number of files to upload
@@ -257,13 +239,9 @@ class AddProduct extends Component {
     //handle if item being added is an apparel
     if (this.state.isApparel === true) {
       const apiURL = "/api/adminProducts/addNewProduct";
-      var apparelStockValue;
-      if(this.state.apparelStock == ""){
-        apparelStockValue = 0;
-      }
-      else{
-        apparelStockValue = this.state.apparelStock;
-      }
+
+      //EDIT stock value is apparelStock, total apparel stock value summed from different sizes of apparel
+      //differs from stock by itself, which is total stock of non-apparel item
       axios
         .post(apiURL, {
           withCredentials: true,
@@ -273,8 +251,7 @@ class AddProduct extends Component {
             productName: this.state.productName,
             productPrice: this.state.productPrice,
             pid: this.state.productID,
-            // stock: this.state.stock,
-            stock: apparelStockValue,
+            stock: this.state.apparelStock,
             isApparel: this.state.isApparel,
             s_stock: this.state.small,
             m_stock: this.state.medium,
@@ -294,7 +271,6 @@ class AddProduct extends Component {
               type: "success"
             });
           }
-
           //add product failed
           else{
             this.props.notifier({
@@ -316,13 +292,6 @@ class AddProduct extends Component {
     //if the item is not an apparel
     else {
       const apiURL = "/api/adminProducts/addNewProduct";
-      var stockValue;
-      if(this.state.stock == ""){
-        stockValue = 0;
-      }
-      else{
-        stockValue = this.state.stock
-      }
       axios
         .post(apiURL, {
           withCredentials: true,
@@ -331,7 +300,7 @@ class AddProduct extends Component {
             productInfo: this.state.productInfo,
             productName: this.state.productName,
             productPrice: this.state.productPrice,
-            stock: stockValue,
+            stock: this.state.stock,
             pid: this.state.productID,
             isApparel: this.state.isApparel,
             productPicture: this.state.imageNames
@@ -419,14 +388,14 @@ class AddProduct extends Component {
             calculate running total if item is an apparel */}
             
             {/* <div className = {this.state.itemShowStock} id = "row"> */}
-            <div className = "add-textForm" id = "row">
+            <div className = "add-textForm" className = {this.state.itemShowStock} id = "row">
               <TextField
                 label="Product Stock"
                 required= {true}
-                type="number"
+                //remove type is number to allow user to enter backspace/delete character
+                //check for number by using isNaN on input change
+                // type="number"
                 value = {this.state.stock}
-                //disable input for stock for non-apparel if user is inputting stock for apparel
-                disabled = {this.state.disableNonStockInput}
                 onChange={
                   (event) => this.handleStockChange(event)
                 }
@@ -456,7 +425,6 @@ class AddProduct extends Component {
                       isApparel: false, 
                       apparelCSS: 'hideApparelSizes', 
                       itemShowStock: 'showItemStock', 
-                      disableNonStockInput: false,
                       apparelStock:0,
                       small: "",
                       medium: "",
@@ -473,7 +441,7 @@ class AddProduct extends Component {
                   value = "apparel"
                   label="Apparel"
                   // labelPlacement="start"
-                  onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock', stock: "", disableNonStockInput: true})}
+                  onChange={() => this.setState({ isApparel: true, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock', stock: ""})}
                 />
               </RadioGroup>
               </div>
@@ -485,7 +453,7 @@ class AddProduct extends Component {
                 <TextField
                   label="Apparel Product Stock"
                   type="number"
-                  // value = {this.state.stock}
+                  //EDIT show value of apparel stock, which differs from regular stock total
                   value = {this.state.apparelStock}
                   disabled
                 />
@@ -495,7 +463,9 @@ class AddProduct extends Component {
                 <TextField
                   label="Small Stock"
                   required="false"
-                  type="number"
+                  //remove type is number to allow user to enter backspace/delete character
+                  //check for number by using isNaN on input change
+                  // type="number"
                   value={this.state.small}
                   onChange={
                     this.handleStockChangeApparel("small")
@@ -507,7 +477,9 @@ class AddProduct extends Component {
                 <TextField
                   label="Medium Stock"
                   required="false"
-                  type="number"
+                  //remove type is number to allow user to enter backspace/delete character
+                  //check for number by using isNaN on input change
+                  // type="number"
                   value={this.state.medium}
                   onChange={
                     this.handleStockChangeApparel("medium")
@@ -519,7 +491,9 @@ class AddProduct extends Component {
                 <TextField
                   label="Large Stock"
                   required="false"
-                  type="number"
+                  //remove type is number to allow user to enter backspace/delete character
+                  //check for number by using isNaN on input change
+                  // type="number"
                   value={this.state.large}
                   onChange={
                     this.handleStockChangeApparel("large")
@@ -531,7 +505,9 @@ class AddProduct extends Component {
                 <TextField
                   label="X-Small Stock"
                   required="false"
-                  type="number"
+                  //remove type is number to allow user to enter backspace/delete character
+                  //check for number by using isNaN on input change
+                  // type="number"
                   value={this.state.xsmall}
                   onChange={                    
                     this.handleStockChangeApparel("xsmall")
@@ -544,7 +520,9 @@ class AddProduct extends Component {
                   label="X-Large Stock"
                   required="false"
                   value={this.state.xlarge}
-                  type="number"
+                  //remove type is number to allow user to enter backspace/delete character
+                  //check for number by using isNaN on input change
+                  // type="number"
                   onChange={
                     this.handleStockChangeApparel("xlarge")
                   }
