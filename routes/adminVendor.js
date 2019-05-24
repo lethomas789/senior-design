@@ -67,9 +67,9 @@ router.get("/", tokenMiddleware, (req, res) => {
 
           // else good to send back data
 
-          console.log("Succesfully retrieved vendor info.");
-          console.log("Vendor:", vendorData.vendorName);
-          console.log("User:", user);
+          // console.log("Succesfully retrieved vendor info.");
+          // console.log("Vendor:", vendorData.vendorName);
+          // console.log("User:", user);
           return res.status(200).json({
             success: true,
             bio: vendorData.bio,

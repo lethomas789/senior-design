@@ -73,7 +73,7 @@ router.get('/aboutClub', (req, res) => {
 
     // console.log('Retrieved vendor about info');
 
-    const { bio, vendorName, bioPictures} = doc.data();
+    const { bio, vendorName, bioPictures, pickupInfo, email } = doc.data();
 
     return res.json({
       success: true,
@@ -81,6 +81,8 @@ router.get('/aboutClub', (req, res) => {
       bio,
       vendorName,
       bioPictures,
+      pickupInfo,
+      email,
     });
   })
   .catch(err => {

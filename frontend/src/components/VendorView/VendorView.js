@@ -13,7 +13,8 @@ class VendorView extends Component {
     this.state = {
       products: [],
       vendorName: "",
-      bio: ""
+      bio: "",
+      vid: "",
     };
   }
 
@@ -52,7 +53,8 @@ class VendorView extends Component {
                   this.setState({
                     products: res.data.data,
                     vendorName: this.props.vendors[i].vendorName,
-                    bio: this.props.vendors[i].bio
+                    bio: this.props.vendors[i].bio,
+                    vid: this.props.vendors[i].vid,
                   });
                   break;
                 }
@@ -90,7 +92,7 @@ class VendorView extends Component {
       <div className="vendor-items-view-container">
         <h1 className="vendor-items-headers"> {this.state.vendorName} </h1>
         <h3>
-          <Link to={`/aboutClub/${this.props.vendor}`}> About </Link>
+          <Link to={`/aboutClub/${this.state.vid}`}> About </Link>
         </h3>
         {/* <h3> Bio: {this.state.bio} </h3> */}
 
