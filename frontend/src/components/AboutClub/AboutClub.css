@@ -23,6 +23,7 @@
 
 .events-now {
   text-align: center;
+  padding-top: 20px;
 }
 
 .club-header {
@@ -32,11 +33,7 @@
 }
 
 .club-pictures-container {
-  grid-column: 1 / span 3;
-  grid-row: 2 / span 3;
   justify-self: center;
-  z-index: 500;
-  margin: 20px;
 }
 
 .club-pictures-container img {
@@ -56,12 +53,15 @@
 }
 
 .about-colls {
-  float: left;
-  width: 3%;
-  padding: 5px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  /* float: left; */
+  width: 10%;
+  padding: 10px;
+}
+
+.small-width {
+  width: 12vw;
+  margin: auto;
+  clear: both;
 }
 
 .about-link-center {
@@ -77,14 +77,17 @@
   margin-left: auto;
   margin-right: auto;
   align-items: center;
+  
 
 }
 
 .roww:after {
+  float: left;
   content: "";
-  display: table;
+  display: block;
   clear: both;
 }
+
 
 .club-bio {
   text-align: center;
@@ -104,6 +107,8 @@
 .club-pick-up {
   font-size: 16px;
   text-align: center;
+  clear: both;
+  padding-top: 20px;
 }
 
 
@@ -111,11 +116,6 @@
   margin-bottom: 30px;
 }
 
-.about-containerr {
-  display: grid;
-  width: 70vw;
-  margin: 0 auto;
-}
 
 .about-main-imagee {
   /* background-image: url(../../images/ourgroup.png); */
