@@ -6,7 +6,7 @@ import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
 import FormControl from "@material-ui/core/FormControl";
 import FormLabel from "@material-ui/core/FormLabel";
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from "@material-ui/core/InputAdornment";
 import Radio from "@material-ui/core/Radio";
 import RadioGroup from "@material-ui/core/RadioGroup";
 import FormControlLabel from "@material-ui/core/FormControlLabel";
@@ -45,7 +45,7 @@ class AddProduct extends Component {
       stock: "",
       productID: "",
       isApparel: false,
-      isItem:false,
+      isItem: false,
       apparelStock: 0,
       small: "",
       medium: "",
@@ -73,34 +73,33 @@ class AddProduct extends Component {
   //handle input change for product price
   handlePriceChange = price => {
     //if user types a non-number or doesn't press delete/backspace, don't register input change
-    if(isNaN(price.target.value) === true && price.target.value != ""){
+    if (isNaN(price.target.value) === true && price.target.value != "") {
       return;
     }
 
     //else change value
-    else{
+    else {
       this.setState({
         productPrice: price.target.value
-      })
+      });
     }
-  }
-
+  };
 
   //non apparel, account for empty field
   handleStockChange = stock => {
     //if the user backspaces or presses delete, create empty input for user to enter number
     //converting "" to number using Number(stock) converts "" to 0
-    //if user tries to type a letter, just convert it to 0 or "" 
-    if(isNaN(stock.target.value) === true || stock.target.value == "" ){
+    //if user tries to type a letter, just convert it to 0 or ""
+    if (isNaN(stock.target.value) === true || stock.target.value == "") {
       this.setState({
         stock: ""
-      })
+      });
       return;
     }
 
     //if user enters a negative stock value, set default to "" in background
     //display notifier
-    else if(Number(stock.target.value) < 0){
+    else if (Number(stock.target.value) < 0) {
       this.setState({
         stock: ""
       });
@@ -113,44 +112,45 @@ class AddProduct extends Component {
     }
 
     //else, set stock to user's input of number
-    else{
+    else {
       this.setState({
         stock: Number(stock.target.value)
-      })
+      });
     }
-  }
+  };
 
   //handle stock change, update total stock values when user changes input
   handleStockChangeApparel = name => stock => {
-
     //check if user is trying to type non-number or letter, if so don't register change
-    if(isNaN(stock.target.value) === true && stock.target.value != ""){
+    if (isNaN(stock.target.value) === true && stock.target.value != "") {
       return;
     }
 
     //if the user backspaces or presses delete, create empty input for user to enter number
     //checks if user types a number, if user types a non-number set default value to "", or 0
-    else if(isNaN(stock.target.value) === true || stock.target.value == "" ){
-      this.setState({
-        [name]: ""
-      }, 
-      () => {
-        //still add new running total if user removes value
-        //add running total of stocks when value is changed, callback function after state was updated
-        //when user adds "", records value as 0 and update new running total
-        var runningStockTotal = 0;
-        runningStockTotal =
-          Number(this.state.small) +
-          Number(this.state.medium) +
-          Number(this.state.large) +
-          Number(this.state.xsmall) +
-          Number(this.state.xlarge);
+    else if (isNaN(stock.target.value) === true || stock.target.value == "") {
+      this.setState(
+        {
+          [name]: ""
+        },
+        () => {
+          //still add new running total if user removes value
+          //add running total of stocks when value is changed, callback function after state was updated
+          //when user adds "", records value as 0 and update new running total
+          var runningStockTotal = 0;
+          runningStockTotal =
+            Number(this.state.small) +
+            Number(this.state.medium) +
+            Number(this.state.large) +
+            Number(this.state.xsmall) +
+            Number(this.state.xlarge);
 
-        //update stock with running total
-        this.setState({
-          apparelStock: Number(runningStockTotal)
-        });
-      })
+          //update stock with running total
+          this.setState({
+            apparelStock: Number(runningStockTotal)
+          });
+        }
+      );
     }
 
     //if the user is setting the stock to a negative value, set default to 0
@@ -204,7 +204,7 @@ class AddProduct extends Component {
 
     //TO DO modify file size
     //check if image being uploaded exceeds max file size
-    if(files[0].size > maxImageSize){
+    if (files[0].size > maxImageSize) {
       this.props.notifier({
         title: "Error",
         message: "Please upload image less than 1MB",
@@ -269,7 +269,7 @@ class AddProduct extends Component {
     //validators for input fields, making sure user has typed something
 
     //product name
-    if(this.state.productName === ""){
+    if (this.state.productName === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert name for product",
@@ -279,7 +279,7 @@ class AddProduct extends Component {
     }
 
     //product info
-    if(this.state.productInfo === ""){
+    if (this.state.productInfo === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert info for product",
@@ -289,7 +289,7 @@ class AddProduct extends Component {
     }
 
     //product price
-    if(this.state.productPrice === ""){
+    if (this.state.productPrice === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert price for product",
@@ -301,11 +301,11 @@ class AddProduct extends Component {
     //check to see if user inserted correct price format $D.CC
     //if user enters money in format $D, then okay proceed
     //throw an error if invalid money format such as $D.CCCCC or $D. or $D.C
-    if(this.state.productPrice.includes(".") === true){
+    if (this.state.productPrice.includes(".") === true) {
       //check to see if user inputted more than 2 spots for cents
       var checkCentValues = this.state.productPrice.split(".");
       //split into array of items before . and after .
-      if(checkCentValues[1].length != 2){
+      if (checkCentValues[1].length != 2) {
         this.props.notifier({
           title: "Error",
           message: "Please insert correct price format",
@@ -316,7 +316,7 @@ class AddProduct extends Component {
     }
 
     //user needs to select item or apparel
-    if(this.state.isApparel === false && this.state.isItem === false){
+    if (this.state.isApparel === false && this.state.isItem === false) {
       this.props.notifier({
         title: "Error",
         message: "Please select an item type",
@@ -328,7 +328,7 @@ class AddProduct extends Component {
     //handle if item being added is an apparel
     if (this.state.isApparel === true) {
       //check if apparel stock is greater than 0
-      if(Number(this.state.apparelStock) === 0){
+      if (Number(this.state.apparelStock) === 0) {
         this.props.notifier({
           title: "Error",
           message: "Please insert stock for apparel items",
@@ -338,7 +338,10 @@ class AddProduct extends Component {
       }
 
       //check for at least one image was uploaded for product
-      if(this.state.images.length === 0 && this.state.imageNames.length === 0){
+      if (
+        this.state.images.length === 0 &&
+        this.state.imageNames.length === 0
+      ) {
         this.props.notifier({
           title: "Error",
           message: "Please upload at least one image for product",
@@ -382,7 +385,7 @@ class AddProduct extends Component {
             });
           }
           //add product failed
-          else{
+          else {
             this.props.notifier({
               title: "Error",
               message: res.data.message.toString(),
@@ -402,7 +405,7 @@ class AddProduct extends Component {
     //if the item is not an apparel
     else if (this.state.isItem === true) {
       //check if stock is greater than 0
-      if(Number(this.state.stock) === 0){
+      if (Number(this.state.stock) === 0) {
         this.props.notifier({
           title: "Error",
           message: "Please insert stock greater than 0 for item product",
@@ -410,9 +413,12 @@ class AddProduct extends Component {
         });
         return;
       }
-      
+
       //check that at least one image was uploaded
-      if(this.state.images.length === 0 && this.state.imageNames.length === 0){
+      if (
+        this.state.images.length === 0 &&
+        this.state.imageNames.length === 0
+      ) {
         this.props.notifier({
           title: "Error",
           message: "Please upload at least one image for product",
@@ -447,9 +453,9 @@ class AddProduct extends Component {
               type: "success"
             });
           }
-          
+
           //product failed to upload
-          else{
+          else {
             this.props.notifier({
               title: "Error",
               message: res.data.message.toString(),
@@ -547,19 +553,22 @@ class AddProduct extends Component {
           <span className="tooltiptext">In progress </span>
           <div className="add-textForm" id="row">
             <TextField
-              label="Product Price ($X.XX)"
+              label="Product Price"
               required={true}
-//               type="number"
-//               onChange={event =>
-//                 this.setState({ productPrice: event.target.value })
-//               }
-//               style={style.field}
-                //regular dollar sign,
-                InputProps={{
-                  startAdornment: <InputAdornment position="start"> $ </InputAdornment>,
-                }}
-                value = {this.state.productPrice}
-                onChange = { (event) => this.handlePriceChange(event) }
+              //               type="number"
+              //               onChange={event =>
+              //                 this.setState({ productPrice: event.target.value })
+              //               }
+              //               style={style.field}
+              //regular dollar sign,
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start"> $ </InputAdornment>
+                )
+              }}
+              value={this.state.productPrice}
+              onChange={event => this.handlePriceChange(event)}
+              style={style.field}
             />
           </div>
         </div>
@@ -572,15 +581,13 @@ class AddProduct extends Component {
           <span className="tooltiptext">In progress </span>
           <div className="add-textForm" id="row">
             <TextField
-                label="Product Stock"
-                required= {true}
-                //remove type is number to allow user to enter backspace/delete character
-                //check for number by using isNaN on input change
-                value = {this.state.stock}
-                onChange={
-                  (event) => this.handleStockChange(event)
-                }
-                style={style.field}
+              label="Product Stock"
+              required={true}
+              //remove type is number to allow user to enter backspace/delete character
+              //check for number by using isNaN on input change
+              value={this.state.stock}
+              onChange={event => this.handleStockChange(event)}
+              style={style.field}
             />
           </div>
         </div>
@@ -604,36 +611,45 @@ class AddProduct extends Component {
                 control={<Radio color="primary" />}
                 value="item"
                 label="Item"
-                  // labelPlacement="start"
-                  onChange={() => 
-                    this.setState({ 
-                      isApparel: false,
-                      isItem: true, 
-                      apparelCSS: 'hideApparelSizes', 
-                      itemShowStock: 'showItemStock', 
-                      apparelStock:0,
-                      small: "",
-                      medium: "",
-                      large: "",
-                      xsmall: "",
-                      xlarge: ""
-                  })}
-//                 onChange={() =>
-//                   this.setState({
-//                     isApparel: false,
-//                     apparelCSS: "hideApparelSizes",
-//                     itemShowStock: "showItemStock"
-//                   })
-//                 }
+                // labelPlacement="start"
+                onChange={() =>
+                  this.setState({
+                    isApparel: false,
+                    isItem: true,
+                    apparelCSS: "hideApparelSizes",
+                    itemShowStock: "showItemStock",
+                    apparelStock: 0,
+                    small: "",
+                    medium: "",
+                    large: "",
+                    xsmall: "",
+                    xlarge: ""
+                  })
+                }
+                //                 onChange={() =>
+                //                   this.setState({
+                //                     isApparel: false,
+                //                     apparelCSS: "hideApparelSizes",
+                //                     itemShowStock: "showItemStock"
+                //                   })
+                //                 }
                 style={style.field}
               />
-                <FormControlLabel
-                  control={<Radio color="primary" />}
-                  value = "apparel"
-                  label="Apparel"
-                  // labelPlacement="start"
-                  onChange={() => this.setState({ isApparel: true, isItem: false, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock', stock: ""})}
-                />
+              <FormControlLabel
+                control={<Radio color="primary" />}
+                value="apparel"
+                label="Apparel"
+                // labelPlacement="start"
+                onChange={() =>
+                  this.setState({
+                    isApparel: true,
+                    isItem: false,
+                    apparelCSS: "showApparelSizes",
+                    itemShowStock: "hideItemStock",
+                    stock: ""
+                  })
+                }
+              />
             </RadioGroup>
           </div>
         </FormControl>
@@ -641,13 +657,13 @@ class AddProduct extends Component {
         {/* add quantity for apparel sizes, toggel visibility if selected */}
         <div className={this.state.apparelCSS}>
           <div className="add-textForm" id="row">
-                <TextField
-                  label="Apparel Product Stock"
-                  type="number"
-                  //EDIT show value of apparel stock, which differs from regular stock total
-                  value = {this.state.apparelStock}
-                  disabled
-                />
+            <TextField
+              label="Apparel Product Stock"
+              type="number"
+              //EDIT show value of apparel stock, which differs from regular stock total
+              value={this.state.apparelStock}
+              disabled
+            />
           </div>
 
           <div className="add-textForm" id="row">
@@ -700,65 +716,100 @@ class AddProduct extends Component {
           <div class="tooltip">
             <span class="tooltiptext">
               First image uploaded on the left is default image displayed on
-              shop. Remaining images used in detail view{" "}
+              shop. Remaining images used in detail view
             </span>
             <h5 className="uploadImageText"> Upload Images </h5>
           </div>
           <div id="column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
-
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
           </div>
 
           <div id="column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
           </div>
 
           <div id="column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
           </div>
 
           <div id="column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }}              
-              />
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
           </div>
         </div>
 

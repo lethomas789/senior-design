@@ -7,7 +7,7 @@ import { connect } from "react-redux";
 // import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
-import InputAdornment from '@material-ui/core/InputAdornment';
+import InputAdornment from "@material-ui/core/InputAdornment";
 import FileUploader from "react-firebase-file-uploader";
 import firebase from "firebase";
 // import firebaseConfig from '../../config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json';
@@ -27,7 +27,6 @@ const style = {
 };
 
 const maxImageSize = 100000;
-
 
 class EditItemView extends Component {
   constructor(props) {
@@ -93,7 +92,7 @@ class EditItemView extends Component {
           type: "danger"
         });
       });
-  }
+  };
 
   //get items of vendor from database
   //allow admin to view and select which item to edit
@@ -104,8 +103,8 @@ class EditItemView extends Component {
   //if vendor changes, get updated items
   //restart component as if just rendered to handle new vendor items
   //clears out previous item info from previous vendor
-  componentDidUpdate(prevProps){
-    if(prevProps.vendorID != this.props.vendorID){
+  componentDidUpdate(prevProps) {
+    if (prevProps.vendorID != this.props.vendorID) {
       this.getVendorProducts();
       this.setState({
         items: [],
@@ -131,7 +130,7 @@ class EditItemView extends Component {
         imageNames: [],
         newImages: false,
         itemSelected: false
-      })
+      });
     }
   }
 
@@ -186,34 +185,34 @@ class EditItemView extends Component {
   //handle input change for product price
   handlePriceChange = price => {
     //if user types a non-number or doesn't press delete/backspace, don't register input change
-    if(isNaN(price.target.value) === true && price.target.value != ""){
+    if (isNaN(price.target.value) === true && price.target.value != "") {
       return;
     }
 
     //else change value
-    else{
+    else {
       this.setState({
         price: price.target.value
-      })
+      });
     }
-  }
+  };
 
   //handle stock change for non apparel items
   //non apparel, account for empty field
   handleStockChange = stock => {
     //if the user backspaces or presses delete, create empty input for user to enter number
     //converting "" to number using Number(stock) converts "" to 0
-    //if user tries to type a letter, just convert it to 0 or "" 
-    if(isNaN(stock.target.value) === true || stock.target.value == "" ){
+    //if user tries to type a letter, just convert it to 0 or ""
+    if (isNaN(stock.target.value) === true || stock.target.value == "") {
       this.setState({
         stock: ""
-      })
+      });
       return;
     }
 
     //if user enters a negative stock value, set default to "" in background
     //display notifier
-    else if(Number(stock.target.value) < 0){
+    else if (Number(stock.target.value) < 0) {
       this.setState({
         stock: ""
       });
@@ -226,44 +225,45 @@ class EditItemView extends Component {
     }
 
     //else, set stock to user's input of number
-    else{
+    else {
       this.setState({
         stock: Number(stock.target.value)
-      })
+      });
     }
-  }
+  };
 
   //handle stock change for apparel items, update total stock values when user changes input
   handleStockChangeApparel = name => stock => {
-
     //check if user is trying to type non-number or letter
-    if(isNaN(stock.target.value) === true && stock.target.value != ""){
+    if (isNaN(stock.target.value) === true && stock.target.value != "") {
       return;
     }
 
     //if the user backspaces or presses delete, create empty input for user to enter number
     //checks if user types a number, if user types a non-number set default value to "", or 0
-    else if(isNaN(stock.target.value) === true || stock.target.value == "" ){
-      this.setState({
-        [name]: ""
-      }, 
-      () => {
-        //still add new running total if user removes value
-        //add running total of stocks when value is changed, callback function after state was updated
-        //when user adds "", records value as 0
-        var runningStockTotal = 0;
-        runningStockTotal =
-          Number(this.state.small) +
-          Number(this.state.medium) +
-          Number(this.state.large) +
-          Number(this.state.xsmall) +
-          Number(this.state.xlarge);
+    else if (isNaN(stock.target.value) === true || stock.target.value == "") {
+      this.setState(
+        {
+          [name]: ""
+        },
+        () => {
+          //still add new running total if user removes value
+          //add running total of stocks when value is changed, callback function after state was updated
+          //when user adds "", records value as 0
+          var runningStockTotal = 0;
+          runningStockTotal =
+            Number(this.state.small) +
+            Number(this.state.medium) +
+            Number(this.state.large) +
+            Number(this.state.xsmall) +
+            Number(this.state.xlarge);
 
-        //update stock with running total
-        this.setState({
-          stock: Number(runningStockTotal)
-        });
-      })
+          //update stock with running total
+          this.setState({
+            stock: Number(runningStockTotal)
+          });
+        }
+      );
     }
 
     //if the user is setting the stock to a negative value, set default to 0
@@ -328,7 +328,7 @@ class EditItemView extends Component {
 
     //TO DO modify file size
     //check if image being uploaded exceeds max file size
-    if(files[0].size > maxImageSize){
+    if (files[0].size > maxImageSize) {
       this.props.notifier({
         title: "Error",
         message: "Please upload image less than 1MB",
@@ -372,7 +372,7 @@ class EditItemView extends Component {
     //validators to check for proper input
 
     //user needs to select item first
-    if(this.state.itemSelected === false){
+    if (this.state.itemSelected === false) {
       this.props.notifier({
         title: "Error",
         message: "Please select an item to edit from the list",
@@ -382,7 +382,7 @@ class EditItemView extends Component {
     }
 
     //product name
-    if(this.state.name === ""){
+    if (this.state.name === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert product name",
@@ -392,7 +392,7 @@ class EditItemView extends Component {
     }
 
     //product info
-    if(this.state.info === ""){
+    if (this.state.info === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert product info",
@@ -402,7 +402,7 @@ class EditItemView extends Component {
     }
 
     //product price
-    if(this.state.price === ""){
+    if (this.state.price === "") {
       this.props.notifier({
         title: "Error",
         message: "Please insert product price",
@@ -413,11 +413,11 @@ class EditItemView extends Component {
 
     //check to see if user inserted correct price format $D.CC
     //if user enters money in format $D, then okay proceed
-    if(this.state.price.includes(".") === true){
+    if (this.state.price.includes(".") === true) {
       //check to see if user inputted more than 2 spots for cents
       var checkCentValues = this.state.price.split(".");
       //split into array of items before . and after .
-      if(checkCentValues[1].length != 2){
+      if (checkCentValues[1].length != 2) {
         this.props.notifier({
           title: "Error",
           message: "Please insert correct price format",
@@ -428,7 +428,7 @@ class EditItemView extends Component {
     }
 
     //check product stock greater than 0
-    if(Number(this.state.stock) === 0){
+    if (Number(this.state.stock) === 0) {
       this.props.notifier({
         title: "Error",
         message: "Please insert stock greater than 0",
@@ -562,13 +562,14 @@ class EditItemView extends Component {
             <span className="tooltiptext">In progress </span>
             <div className="textFormEdit" id="row">
               <TextField
-                label="Product Price ($X.XX)"
+                label="Product Price"
                 required={true}
                 value={this.state.price}
                 InputProps={{
-                  startAdornment: <InputAdornment position="start"> $ </InputAdornment>,
+                  startAdornment: (
+                    <InputAdornment position="start"> $ </InputAdornment>
+                  )
                 }}
-               
                 onChange={event => this.handlePriceChange(event)}
                 style={style.field}
               />
@@ -583,7 +584,6 @@ class EditItemView extends Component {
                 required={true}
                 value={this.state.stock}
                 onChange={event => this.handleStockChange(event)}
-                
                 style={style.field}
               />
             </div>
