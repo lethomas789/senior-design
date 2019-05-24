@@ -570,7 +570,6 @@ class EditItemView extends Component {
             <TextField
               label="Stock"
               required={true}
-              type="number"
               value={this.state.stock}
               onChange={event => this.handleStockChange(event)}
               style={style.field}
@@ -582,7 +581,6 @@ class EditItemView extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="Product Stock"
-                type="number"
                 value={this.state.stock}
                 disabled
               />
@@ -592,7 +590,6 @@ class EditItemView extends Component {
               <TextField
                 label="Small Stock"
                 required="false"
-                type="number"
                 value={this.state.small}
                 onChange={this.handleStockChangeApparel("small")}
               />
@@ -602,7 +599,6 @@ class EditItemView extends Component {
               <TextField
                 label="Medium Stock"
                 required="false"
-                type="number"
                 value={this.state.medium}
                 onChange={this.handleStockChangeApparel("medium")}
               />
@@ -612,7 +608,6 @@ class EditItemView extends Component {
               <TextField
                 label="Large Stock"
                 required="false"
-                type="number"
                 value={this.state.large}
                 onChange={this.handleStockChangeApparel("large")}
               />
@@ -622,7 +617,6 @@ class EditItemView extends Component {
               <TextField
                 label="X-Small Stock"
                 required="false"
-                type="number"
                 value={this.state.xsmall}
                 onChange={this.handleStockChangeApparel("xsmall")}
               />
@@ -633,7 +627,6 @@ class EditItemView extends Component {
                 label="X-Large Stock"
                 required="false"
                 value={this.state.xlarge}
-                type="number"
                 onChange={this.handleStockChangeApparel("xlarge")}
               />
             </div>
