@@ -712,6 +712,7 @@ class ShopItemDetailed extends Component {
 
   //EDIT allow user to type in number values
   handleQuantityChange = event => {
+    //if user types a non-number or not trying to delete, don't record input
     if(isNaN(event.target.value) === true && event.target.value != ""){
       return;
     }
@@ -719,19 +720,6 @@ class ShopItemDetailed extends Component {
     else{
       this.setState({ amtPurchased: event.target.value });
     }
-
-    // if(isNaN(Number(event.target.value)) === true){
-    //   alert("Please enter a value larger than 0");
-    // }
-
-    // else{
-    //   this.setState({ amtPurchased: event.target.value });
-    // }
-    // if (event.target.value < 1) {
-    //   this.setState({ amtPurchased: 1 });
-    // } else {
-    //   this.setState({ amtPurchased: event.target.value });
-    // }
   };
 
   //load item info by calling getProductInfo api and render to screen

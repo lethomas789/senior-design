@@ -1,16 +1,10 @@
 import React, { Component } from "react";
 import "./AddProduct.css";
 import { connect } from "react-redux";
-// import actions from "../../store/actions";
 import axios from "axios";
-// import Grid from "@material-ui/core/Grid";
-// import Paper from "@material-ui/core/Paper";
 import Button from "@material-ui/core/Button";
 import TextField from "@material-ui/core/TextField";
-// import Select from "@material-ui/core/Select";
 import FormControl from "@material-ui/core/FormControl";
-// import InputLabel from "@material-ui/core/InputLabel";
-// import MenuItem from "@material-ui/core/MenuItem";
 import FormLabel from "@material-ui/core/FormLabel";
 import InputAdornment from '@material-ui/core/InputAdornment';
 import Radio from "@material-ui/core/Radio";
@@ -129,7 +123,7 @@ class AddProduct extends Component {
   //handle stock change, update total stock values when user changes input
   handleStockChangeApparel = name => stock => {
 
-    //check if user is trying to type non-number or letter
+    //check if user is trying to type non-number or letter, if so don't register change
     if(isNaN(stock.target.value) === true && stock.target.value != ""){
       return;
     }
@@ -143,7 +137,7 @@ class AddProduct extends Component {
       () => {
         //still add new running total if user removes value
         //add running total of stocks when value is changed, callback function after state was updated
-        //when user adds "", records value as 0
+        //when user adds "", records value as 0 and update new running total
         var runningStockTotal = 0;
         runningStockTotal =
           Number(this.state.small) +
@@ -306,6 +300,7 @@ class AddProduct extends Component {
 
     //check to see if user inserted correct price format $D.CC
     //if user enters money in format $D, then okay proceed
+    //throw an error if invalid money format such as $D.CCCCC or $D. or $D.C
     if(this.state.productPrice.includes(".") === true){
       //check to see if user inputted more than 2 spots for cents
       var checkCentValues = this.state.productPrice.split(".");
@@ -472,6 +467,7 @@ class AddProduct extends Component {
     }
   }
 
+  //EDIT removed type=number field in text fields, typing "e" is considered number value, want to prevent letters in number input
   render() {
     return (
       <div className = "addProductContainer">
@@ -512,8 +508,6 @@ class AddProduct extends Component {
                 InputProps={{
                   startAdornment: <InputAdornment position="start"> $ </InputAdornment>,
                 }}
-                
-                // onChange={(event) => this.setState({ productPrice: event.target.value })}
                 value = {this.state.productPrice}
                 onChange = { (event) => this.handlePriceChange(event) }
                 style={style.field}
@@ -524,22 +518,19 @@ class AddProduct extends Component {
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
             
-            {/* <div className = {this.state.itemShowStock} id = "row"> */}
             <div className = "add-textForm" className = {this.state.itemShowStock} id = "row">
               <TextField
                 label="Product Stock"
                 required= {true}
                 //remove type is number to allow user to enter backspace/delete character
                 //check for number by using isNaN on input change
-                // type="number"
                 value = {this.state.stock}
                 onChange={
                   (event) => this.handleStockChange(event)
                 }
                 style={style.field}
               />
-              </div>
-            {/* </div> */}
+            </div>
 
             <FormControl component="fieldset">
             <div className = "add-textForm">
@@ -603,7 +594,6 @@ class AddProduct extends Component {
                   required="false"
                   //remove type is number to allow user to enter backspace/delete character
                   //check for number by using isNaN on input change
-                  // type="number"
                   value={this.state.small}
                   onChange={
                     this.handleStockChangeApparel("small")
@@ -617,7 +607,6 @@ class AddProduct extends Component {
                   required="false"
                   //remove type is number to allow user to enter backspace/delete character
                   //check for number by using isNaN on input change
-                  // type="number"
                   value={this.state.medium}
                   onChange={
                     this.handleStockChangeApparel("medium")
@@ -631,7 +620,6 @@ class AddProduct extends Component {
                   required="false"
                   //remove type is number to allow user to enter backspace/delete character
                   //check for number by using isNaN on input change
-                  // type="number"
                   value={this.state.large}
                   onChange={
                     this.handleStockChangeApparel("large")
@@ -645,7 +633,6 @@ class AddProduct extends Component {
                   required="false"
                   //remove type is number to allow user to enter backspace/delete character
                   //check for number by using isNaN on input change
-                  // type="number"
                   value={this.state.xsmall}
                   onChange={                    
                     this.handleStockChangeApparel("xsmall")
@@ -660,7 +647,6 @@ class AddProduct extends Component {
                   value={this.state.xlarge}
                   //remove type is number to allow user to enter backspace/delete character
                   //check for number by using isNaN on input change
-                  // type="number"
                   onChange={
                     this.handleStockChangeApparel("xlarge")
                   }
