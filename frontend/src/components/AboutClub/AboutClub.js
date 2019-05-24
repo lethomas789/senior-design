@@ -15,7 +15,7 @@ class ClubInfo extends Component {
   };
 
   render() {
-    const {
+    let {
       vendorName,
       bio,
       bioPictures,
@@ -26,6 +26,13 @@ class ClubInfo extends Component {
       vid,
     } = this.props;
 
+    if (facebook == "") {
+      facebook = "none";
+    }
+    else {
+      instagram = "none";
+    }
+
     return (
       <div>
         <div id="about-club-container">
@@ -33,14 +40,14 @@ class ClubInfo extends Component {
           {/* <div className="club-bio">{bio}</div> */}
 
           <ClubImages bioPictures={bioPictures} />
-          <Link
-            to={facebook}
+          <a
+            href={facebook}
             style={{ textDecoration: "none", color: "#C26E60" }}
           >
             <div className="events-now">
               <h2>Events Every Thursday!</h2>
             </div>
-          </Link>
+          </a>
 
           <div className="club-bio">
             {bio}
@@ -174,6 +181,7 @@ export default class AboutClub extends Component {
             facebook,
             instagram,
           } = res.data;
+
           this.setState({
             vendorName,
             bio,
@@ -226,7 +234,6 @@ export default class AboutClub extends Component {
         instagram={instagram}
         vid={vid}
       />
-      // </div>
     );
   }
 }
