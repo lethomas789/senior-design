@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const firebase = require("firebase");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 require("dotenv").config();
@@ -261,85 +260,95 @@ router.patch("/emailSchedule", tokenMiddleware, (req, res) => {
           // when updating emailSchedule, must first kill previous job with old
           // schedule
           var oldJob = schedule.scheduledJobs[vdoc.id];
-          oldJob.cancel();
 
-          // now, create new job with new emailSchedule
-          var j = schedule.scheduleJob(vdoc.id, emailSchedule, function() {
-            db.collection("orders")
-              .where("vid", "==", vdoc.id)
-              .where("seenByVendor", "==", false)
-              .orderBy("date", "asc")
-              .get()
-              .then(ordersSnapshot => {
-                console.log("Email job for:", vdoc.id);
-                console.log("Ran at time:", Date.now());
-                // do not send emails if no new orders
-                if (!ordersSnapshot.empty) {
-                  let orderCount = 0;
-                  ordersSnapshot.forEach(odoc => {
-                    db.collection("orders")
-                      .doc(odoc.id)
-                      .update({ seenByVendor: true });
+          // cancel only if there was an old job
+          if (oldJob != undefined) {
+            oldJob.cancel();
+          }
 
-                    // NOTE: for our own sanity, we are just gonna send a count of
-                    // items and a link to order history page.
-                    orderCount += 1;
-                  });
+          // if none, do not schedule a new task
+          if (emailSchedule !== "none") {
+            // now, create new job with new emailSchedule
+            var j = schedule.scheduleJob(vdoc.id, emailSchedule, function() {
+              db.collection("orders")
+                .where("vid", "==", vdoc.id)
+                .where("seenByVendor", "==", false)
+                .orderBy("date", "asc")
+                .get()
+                .then(ordersSnapshot => {
+                  console.log("Email job for:", vdoc.id);
+                  console.log("Ran at time:", Date.now());
+                  // do not send emails if no new orders
+                  if (!ordersSnapshot.empty) {
+                    let orderCount = 0;
+                    ordersSnapshot.forEach(odoc => {
+                      db.collection("orders")
+                        .doc(odoc.id)
+                        .update({ seenByVendor: true });
 
-                  // once obtained the orders
-                  let emailSubject =
-                    "You've got new orders from ECS193 E-commerce";
+                      // NOTE: for our own sanity, we are just gonna send a count of
+                      // items and a link to order history page.
+                      orderCount += 1;
+                    });
 
-                  const vendorEmail = new Email({
-                    message: {
-                      from: process.env.EMAIL,
-                      // from: 'test@test.com',
-                      subject: emailSubject,
-                      to: vdoc.data().email
-                    },
-                    send: false, // set send to true when not testing
-                    // preview: false,  // TODO turn off preview before production
+                    // once obtained the orders
+                    let emailSubject =
+                      "You've got new orders from ECS193 E-commerce";
 
-                    // TODO
-                    transport: {
-                      // uncomment when actually sending emails
-                      service: "gmail",
-                      auth: {
-                        user: process.env.EMAIL,
-                        pass: process.env.EMAIL_PASS
+                    const vendorEmail = new Email({
+                      message: {
+                        from: process.env.EMAIL,
+                        // from: 'test@test.com',
+                        subject: emailSubject,
+                        to: vdoc.data().email
+                      },
+                      send: false, // set send to true when not testing
+                      // preview: false,  // TODO turn off preview before production
+
+                      // TODO
+                      transport: {
+                        // uncomment when actually sending emails
+                        service: "gmail",
+                        auth: {
+                          user: process.env.EMAIL,
+                          pass: process.env.EMAIL_PASS
+                        }
                       }
-                    }
+                    });
+
+                    let emailIntro =
+                      "Hello, you have " +
+                      orderCount +
+                      " new orders. Please go to your admin order history page to see more details.";
+
+                    vendorEmail
+                      .send({
+                        template: "ordersNotification",
+                        locals: {
+                          location: "Test club location here.",
+                          emailIntro: emailIntro
+                        }
+                      })
+                      .then(() => {
+                        console.log("Finished Sending Email to:", vdoc.id);
+                      })
+                      // TODO send error email to shared account
+                      .catch(console.log);
+                  }
+                })
+                .catch(err => {
+                  // catch for orders ref
+                  console.log(
+                    "Error in getting user orders for emailing:",
+                    err
+                  );
+                  return res.status(200).json({
+                    success: false,
+                    message: "Error in updating email schedule" + err
                   });
-
-                  let emailIntro =
-                    "Hello, you have " +
-                    orderCount +
-                    " new orders. Please go to your admin order history page to see more details.";
-
-                  vendorEmail
-                    .send({
-                      template: "ordersNotification",
-                      locals: {
-                        location: "Test club location here.",
-                        emailIntro: emailIntro
-                      }
-                    })
-                    .then(() => {
-                      console.log("Finished Sending Email to:", vdoc.id);
-                    })
-                    // TODO send error email to shared account
-                    .catch(console.log);
-                }
-              })
-              .catch(err => {
-                // catch for orders ref
-                console.log("Error in getting user orders for emailing:", err);
-                return res.status(200).json({
-                  success: false,
-                  message: "Error in updating email schedule" + err
                 });
-              });
-          }); // end function for job schedule
+            }); // end function for job schedule
+          }
 
           // once done scheduling new task, update DB
           db.collection("vendors")
