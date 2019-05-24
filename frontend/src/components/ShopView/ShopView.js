@@ -73,19 +73,7 @@ class ShopView extends Component {
         <header>
           <h1> Shop </h1>
         </header>
-        <Hidden smDown>
-          <div className="shop-hero-image-container">
-            <div className="hero-image">
-              <img
-                src={require("../../images/farmersmarket.jpg")}
-                width="100%"
-                height="60%"
-                alt="Shop Hero"
-              />
-            </div>
-            <div className="hero-text">UCD CLUBS</div>
-          </div>
-        </Hidden>
+
         <div id="shopview-item-container">{items}</div>
       </div>
     );
