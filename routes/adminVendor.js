@@ -102,6 +102,18 @@ router.get("/", tokenMiddleware, (req, res) => {
     });
 }); // END GET /
 
+router.patch("editClubPictures", tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
+  if (req.body.params) {
+    var { bioPictures } = req.body.params;
+  }
+  else {
+    var { bioPictures } = req.body;
+  }
+  
+
+});
+
 /**
  * For params, assume that when an admin goes to the edit page, frontend does a
  * GET on the vendor's old info. Even if the admin makes only one change, this

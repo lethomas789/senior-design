@@ -45,6 +45,18 @@
   min-height: 95vh;
 }
 
+.club-bio-picture-uploader {
+  margin-top: 30px;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+
+.file-uploader {
+  margin-top: 10px;
+  margin-bottom: 10px;
+}
+
 .tooltip {
   position: relative;
   display: inline-block;

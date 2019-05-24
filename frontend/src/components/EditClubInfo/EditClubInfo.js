@@ -6,6 +6,8 @@ import { connect } from "react-redux";
 import TextField from "@material-ui/core/TextField";
 // import Grid from "@material-ui/core/Grid";
 import Button from "@material-ui/core/Button";
+import firebase from "firebase";
+import FileUploader from "react-firebase-file-uploader";
 
 class EditClubInfo extends Component {
   state = {
@@ -58,6 +60,77 @@ class EditClubInfo extends Component {
         });
       });
   };
+
+  //detects when an image is uploaded from user
+  //change number of files to upload
+  handleFileChange = event => {
+    //extract file from upload component
+    const {
+      target: { files }
+    } = event;
+
+    const maxImageSize = 100000;
+
+    //TO DO modify file size
+    //check if image being uploaded exceeds max file size
+    if (files[0].size > maxImageSize) {
+      this.props.notifier({
+        title: "Error",
+        message: "Please upload image less than 1MB",
+        type: "danger"
+      });
+
+      //if file exceeds file size, cancel upload and set file input to null
+      //this is as if no file was uploaded
+      event.target.value = null;
+      return;
+    }
+
+    //if file size is acceptable, proceed saving file in array of images to upload to server
+
+    //store image names
+    // const filesToStore = [];
+    const filesToStore = this.state.imageNames;
+
+    //store actual image files
+    const actualImages = this.state.images;
+    // console.log(files[0]);
+
+    //store image name as an object
+    let imageName = {};
+    imageName.name = files[0].name;
+
+    //push values to arrays
+    filesToStore.push(imageName);
+    actualImages.push(files[0]);
+
+    //generate vid to match product with image
+    let randomText = "";
+    const possible =
+      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+    for (let i = 0; i < 20; i++) {
+      randomText += possible.charAt(
+        Math.floor(Math.random() * possible.length)
+      );
+    }
+
+    //set state of component
+    this.setState({
+      images: actualImages,
+      productID: randomText,
+      imageNames: filesToStore
+    });
+  };
+
+  //upload images to database
+  uploadFiles() {
+    //for each file in images array, upload to database
+    const files = this.state.images;
+    files.forEach(file => {
+      this.fileUploader.startUpload(file);
+    });
+  }
 
   //handle select when user chooses email preference
   handleSelect = () => {
@@ -340,6 +413,81 @@ class EditClubInfo extends Component {
               Update Club Info
             </Button>
           </div>
+        </div>
+
+        <div className="club-bio-picture-uploader">
+          <h4>Upload club pictures to display on your club's about page.</h4>
+
+          <div id="column" className="file-uploader tooltip">
+
+            <span className="tooltiptext">
+              The first picture will be the main image displayed on your club's
+              about page.
+            </span>
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+
+          <div id="column" className="file-uploader tooltip">
+            <span className="tooltiptext">
+              The second picture will be the image displayed alongside the list
+              of other club's on our website. See https://193ecommerce.com/clubs
+            </span>
+            <FileUploader
+              accept="image/*"
+              onChange={this.handleFileChange}
+              storageRef={firebase
+                .storage()
+                .ref(
+                  "/images" + "/" + this.props.vid + "/" + this.state.productID
+                )}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+          <div className="tooltip">
+            {/* <span className="tooltiptext">In progress </span> */}
+            <Button
+              variant="contained"
+              color="primary"
+              style={{
+                backgroundColor: "#DAAA00",
+                color: "white",
+                fontFamily: "Proxima Nova",
+                boxShadow: "none"
+              }}
+            >
+              Update pictures.
+            </Button>
+          </div>
+
         </div>
 
         <div id="updateEmailsContainer">
