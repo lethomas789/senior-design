@@ -15,7 +15,7 @@ class EditClubInfo extends Component {
     vendorName: "",
     emailSchedule: "",
     email: "",
-    pickupInfo: "",
+    pickupInfo: ""
   };
 
   //get club info
@@ -30,13 +30,13 @@ class EditClubInfo extends Component {
       })
       .then(res => {
         if (res.data.success === true) {
-          this.setState({ 
+          this.setState({
             bio: res.data.bio,
             lastUpdate: res.data.lastUpdate,
             lastUpdateUser: res.data.lastUpdateUser,
             vendorName: res.data.vendorName,
             pickupInfo: res.data.pickupInfo,
-            email: res.data.email,
+            email: res.data.email
           });
         } else {
           this.props.notifier({
@@ -114,7 +114,7 @@ class EditClubInfo extends Component {
           vendorName: this.state.vendorName,
           bio: this.state.bio,
           email: this.state.email,
-          pickupInfo: this.state.pickupInfo,
+          pickupInfo: this.state.pickupInfo
         }
       })
       .then(res => {
@@ -141,113 +141,124 @@ class EditClubInfo extends Component {
     return (
       <div id="edit-club-info-container">
         <h1> Edit Club Info </h1>
-        
+
         <h6> Last Updated: {this.state.lastUpdate} </h6>
         <h6 id="goDown"> Last Edited By: {this.state.lastUpdateUser} </h6>
 
-      
         <form id="editClubForm">
-	<div className = "tooltip"> <span className="tooltiptext">In progress </span>
-        <div className = "textForm" id = "row">
-          <TextField
-            value={this.state.vendorName}
-            onChange={event =>
-              this.setState({ vendorName: event.target.value })
-            }
-            style={{ paddingBottom: "20px", width: "35vw"}}
-          />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Club Name"
+                value={this.state.vendorName}
+                onChange={event =>
+                  this.setState({ vendorName: event.target.value })
+                }
+                style={{ paddingBottom: "20px", width: "35vw" }}
+              />
+            </div>
           </div>
-        </div>
 
-	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <div className = "textForm" id = "row">
-          <TextField
-            label="Biography"
-            value={this.state.bio}
-
-            onChange={event => this.setState({ bio: event.target.value })}
-            multiline={true}
-            
-            rowsMax={Infinity}
-
-            style={{ paddingBottom: "20px", width: "35vw" }}
-          />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Biography"
+                value={this.state.bio}
+                onChange={event => this.setState({ bio: event.target.value })}
+                multiline={true}
+                rowsMax={Infinity}
+                style={{ paddingBottom: "20px", width: "35vw" }}
+              />
+            </div>
           </div>
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Item Pickup Info"
+                value={this.state.pickupInfo}
+                onChange={event =>
+                  this.setState({ pickupInfo: event.target.value })
+                }
+                multiline={true}
+                style={{ paddingBottom: "20px", width: "35vw" }}
+                rowsMax={Infinity}
+              />
+            </div>
           </div>
-        <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-        <div className = "textForm" id = "row">
-          <TextField
-            label="Item Pickup Info"
-            value={this.state.pickupInfo}
 
-            onChange={event => this.setState({ pickupInfo: event.target.value })}
-            multiline={true}
-            style={{ paddingBottom: "20px", width: "35vw"}}
-            
-            rowsMax={Infinity}
-          />
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Contact Email"
+                type="email"
+                value={this.state.email}
+                onChange={event => this.setState({ email: event.target.value })}
+                style={{ paddingBottom: "20px", width: "35vw" }}
+              />
+            </div>
           </div>
-	</div>
-
-          <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <div className = "textForm" id = "row">
-          <TextField
-            label="Contact Email"
-            type="email"
-            value={this.state.email}
-            onChange={event =>
-              this.setState({ email: event.target.value })
-            }
-            style={{ paddingBottom: "20px", width: "35vw" }}
-          />
-          </div>
-	  </div>
-
         </form>
 
-        <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-        <div className="btn-update-info">
-          <Button variant="contained" 
-          onClick={this.sendEdit}
-          style = {{backgroundColor:"#DAAA00",
-                  color: "white", 
-                  fontFamily: "Proxima Nova", 
-                  boxShadow: "none"}}>
-            Update Club Info
-          </Button>
+        <div className="tooltip">
+          <span className="tooltiptext">In progress </span>
+          <div className="btn-update-info">
+            <Button
+              variant="contained"
+              onClick={this.sendEdit}
+              style={{
+                backgroundColor: "#DAAA00",
+                color: "white",
+                fontFamily: "Proxima Nova",
+                boxShadow: "none"
+              }}
+            >
+              Update Club Info
+            </Button>
+          </div>
         </div>
-        </div>
+
         <div id="updateEmailsContainer">
-	  <div className = "tooltip"> <span className="tooltiptext">Your club's contact email will be notified every X hours about the number of any new incoming orders. </span>
-          <select
-            id="emailSelect"
-            onChange={this.handleSelect}
-            ref={select => {
-              this.selectedPreference = select;
-            }}
-          >
-            <option value="select"> Select your email preference </option>
-            <option value="0 */1 * * *"> Every 1 Hour </option>
-            <option value="0 */2 * * *"> Every 2 Hours </option>
-            <option value="0 */4 * * *"> Every 4 Hours </option>
-            <option value="0 */8 * * *"> Every 8 Hours</option>
-            <option value="0 */24 * * *"> Every 24 Hours </option>
-          </select>
-	  </div>
-	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
-          <Button
-            variant="contained"
-            color="primary"
-            onClick={this.updateEmailPreferences}
-            style = {{backgroundColor:"#DAAA00",
-                  color: "white", 
-                  fontFamily: "Proxima Nova", 
-                  boxShadow: "none"}}
-          >
-            Update Email Preferences
-          </Button>
-	  </div>
-	</div>
+          <div className="tooltip">
+            <span className="tooltiptext">
+              Your club's contact email will be notified every X hours about the
+              number of any new incoming orders.
+            </span>
+            <select
+              id="emailSelect"
+              onChange={this.handleSelect}
+              ref={select => {
+                this.selectedPreference = select;
+              }}
+            >
+              <option value="select"> Select your email preference </option>
+              <option value="0 */1 * * *"> Every 1 Hour </option>
+              <option value="0 */2 * * *"> Every 2 Hours </option>
+              <option value="0 */4 * * *"> Every 4 Hours </option>
+              <option value="0 */8 * * *"> Every 8 Hours</option>
+              <option value="0 */24 * * *"> Every 24 Hours </option>
+            </select>
+          </div>
+          <div className="tooltip">
+            <span className="tooltiptext">In progress </span>
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={this.updateEmailPreferences}
+              style={{
+                backgroundColor: "#DAAA00",
+                color: "white",
+                fontFamily: "Proxima Nova",
+                boxShadow: "none"
+              }}
+            >
+              Update Email Preferences
+            </Button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -260,7 +271,7 @@ const mapStateToProps = state => {
     items: state.cart.items,
     login: state.auth.login,
     vendorID: state.auth.vendorID,
-    isAdmin: state.auth.isAdmin,
+    isAdmin: state.auth.isAdmin
   };
 };
 
