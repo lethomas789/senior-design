@@ -307,19 +307,12 @@ router.post("/googleLogin", (req, res) => {
 });
 
 //extract email parameter from google oauth
-router.get("/gmail", (req, res) => {
-  //database parameters are passed through query
-  var query = req.query;
-  var email = "";
-  var firstName = "";
-  var lastName = "";
-  var vendors = [];
-
-  //trim for white spaces from parameter
-  email = query.email.trim();
-  firstName = query.firstName.trim();
-  lastName = query.lastName.trim();
-
+router.post("/gmail", (req, res) => {
+  if (req.body.params) {
+    var { email, firstName, lastName } = req.body.params;
+  } else {
+    var { email, firstName, lastName } = req.body;
+  }
   //find email, similar logic as regular login
   //main difference is extracting login credentials using gmail params
   const userRef = db.collection("users").doc(email);
