@@ -27,7 +27,6 @@ class CartView extends Component {
   handleRedirect = () => {
     // this.setState(() => ({ toRedirect: true }));
     // this.setState({ toRedirect: true });
-    console.log('PROPS ARE:', this.props);
     this.props.history.push("/successfulPayment");
   };
 

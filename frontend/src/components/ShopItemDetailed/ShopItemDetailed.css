@@ -23,18 +23,30 @@
   margin-right: 70px;
 }
 
+.item-info {
+  margin-top: 30px;
+}
+
 .item-info h2 {
   text-align: start;
 }
 
 .price {
-  color: rgba(14, 138, 240, 0.822);
+  color: #DEB31A;
   font-size: 24px;
-  height: 50px;
+  margin-top: 10px;
 }
 
 .stock {
   color: rgba(14, 138, 240, 0.822);
+}
+
+.item-availability {
+  margin-top: 20px;
+}
+
+.item-club-link {
+  margin-top: 15px;
 }
 
 .description {

@@ -155,80 +155,84 @@ var initSchedules = db
     snapshot.forEach(vdoc => {
       // job name === doc.vid
       // job schedule === doc.emailSchedule
-      let j = schedule.scheduleJob(
-        vdoc.data().vid,
-        vdoc.data().emailSchedule,
-        function() {
-          db.collection("orders")
-            .where("vid", "==", vdoc.id)
-            .where("seenByVendor", "==", false)
-            .orderBy("date", "asc")
-            .get()
-            .then(ordersSnapshot => {
-              console.log("Email job ran for:", vdoc.data().vid);
-              console.log("Ran at time:", Date.now());
-              // do not send emails if no new orders
-              if (!ordersSnapshot.empty) {
-                let orderCount = 0;
-                ordersSnapshot.forEach(odoc => {
-                  db.collection("orders")
-                    .doc(odoc.id)
-                    .update({ seenByVendor: true });
 
-                  // NOTE: for our own sanity, we are just gonna send a count of items
-                  // and a link to order history page.
-                  orderCount += 1;
-                });
+      // only schedule jobs if there exists an emailSchedule setting
+      if (vdoc.data().emailSchedule !== "none") {
+        let j = schedule.scheduleJob(
+          vdoc.data().vid,
+          vdoc.data().emailSchedule,
+          function() {
+            db.collection("orders")
+              .where("vid", "==", vdoc.id)
+              .where("seenByVendor", "==", false)
+              .orderBy("date", "asc")
+              .get()
+              .then(ordersSnapshot => {
+                console.log("Email job ran for:", vdoc.data().vid);
+                console.log("Ran at time:", Date.now());
+                // do not send emails if no new orders
+                if (!ordersSnapshot.empty) {
+                  let orderCount = 0;
+                  ordersSnapshot.forEach(odoc => {
+                    db.collection("orders")
+                      .doc(odoc.id)
+                      .update({ seenByVendor: true });
 
-                // once obtained the orders
-                let emailSubject =
-                  "You've got new orders from ECS193 E-commerce";
+                    // NOTE: for our own sanity, we are just gonna send a count of items
+                    // and a link to order history page.
+                    orderCount += 1;
+                  });
 
-                const vendorEmail = new Email({
-                  message: {
-                    from: process.env.EMAIL,
-                    // from: 'test@test.com',
-                    subject: emailSubject,
-                    to: vdoc.data().email
-                  },
-                  send: false, // set send to true when not testing
-                  preview: false, // TODO turn off preview before production
+                  // once obtained the orders
+                  let emailSubject =
+                    "You've got new orders from ECS193 E-commerce";
 
-                  transport: {
-                    // uncomment when actually sending emails
-                    service: "gmail",
-                    auth: {
-                      user: process.env.EMAIL,
-                      pass: process.env.EMAIL_PASS
+                  const vendorEmail = new Email({
+                    message: {
+                      from: process.env.EMAIL,
+                      // from: 'test@test.com',
+                      subject: emailSubject,
+                      to: vdoc.data().email
+                    },
+                    send: false, // set send to true when not testing
+                    preview: false, // TODO turn off preview before production
+
+                    transport: {
+                      // uncomment when actually sending emails
+                      service: "gmail",
+                      auth: {
+                        user: process.env.EMAIL,
+                        pass: process.env.EMAIL_PASS
+                      }
                     }
-                  }
-                });
+                  });
 
-                let emailIntro =
-                  "Hello, you have " +
-                  orderCount +
-                  " new orders. Please go to your admin order history page to see more details.";
+                  let emailIntro =
+                    "Hello, you have " +
+                    orderCount +
+                    " new orders. Please go to your admin order history page to see more details.";
 
-                vendorEmail
-                  .send({
-                    template: "ordersNotification",
-                    locals: {
-                      location: "Test club location here.",
-                      emailIntro: emailIntro
-                    }
-                  })
-                  .then(() => {
-                    console.log("Finished Sending Email to:", vdoc.id);
-                  })
-                  .catch(console.log);
-              }
-            })
-            .catch(err => {
-              // catch for orders ref
-              console.log("Error in getting user orders for emailing:", err);
-            });
-        }
-      ); // end function for each job schedule
+                  vendorEmail
+                    .send({
+                      template: "ordersNotification",
+                      locals: {
+                        location: "Test club location here.",
+                        emailIntro: emailIntro
+                      }
+                    })
+                    .then(() => {
+                      console.log("Finished Sending Email to:", vdoc.id);
+                    })
+                    .catch(console.log);
+                }
+              })
+              .catch(err => {
+                // catch for orders ref
+                console.log("Error in getting user orders for emailing:", err);
+              });
+          }
+        ); // end function for each job schedule
+      }
     }); // END snapshot.forEach vdoc
   })
   .catch(err => {

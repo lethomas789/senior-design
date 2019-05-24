@@ -16,10 +16,8 @@ router.post('/addNewProduct', tokenMiddleware, (req, res) => {
       // user,
       productInfo,
       productName,
-      productPicture,  // TODO: ask how this is being sent again
+      productPicture,  
       pid,
-      // pickupLocation, //EDIT removed pickupLocation 
-      // pickupTime
     } = req.body.params;
 
     var productPrice = Number(req.body.params.productPrice);
@@ -48,8 +46,6 @@ router.post('/addNewProduct', tokenMiddleware, (req, res) => {
       productName,
       productPicture,
       pid,
-      // pickupLocation, EDIT removed pickup location
-      // pickupTime
     } = req.body;
 
     var productPrice = Number(req.body.productPrice);
@@ -152,8 +148,6 @@ router.post('/addNewProduct', tokenMiddleware, (req, res) => {
           lastUpdateUser,
 
           pid,
-          // pickupLocation, EDIT removed pickupLocation
-          // pickupTime
         };
       }
       // else, just save stock
@@ -175,8 +169,6 @@ router.post('/addNewProduct', tokenMiddleware, (req, res) => {
           lastUpdateUser,
 
           pid,
-          // pickupLocation,// EDIT removed pickup location
-          // pickupTime
         };
       }
 
@@ -233,14 +225,12 @@ router.get('/getProduct', tokenMiddleware, (req, res) => {
   if (req.query.params) {
     var {
       vid,
-      // user,
       pid
     } = req.query.params;
   }
   else {
     var {
       vid,
-      // user,
       pid
     } = req.query;
   }
@@ -367,8 +357,6 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
       productName,
       productPicture,  // TODO: ask how this is being sent again
       pid,
-      // pickupLocation,// EDIT removed pickupLocation
-      // pickupTime,
       newImages
     } = req.body.params;
 
@@ -398,8 +386,6 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
       productName,
       productPicture,
       pid,
-      // pickupLocation, EDIT removed pickupLocation
-      // pickupTime,
       newImages
     } = req.body;
 
@@ -507,8 +493,6 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
           lastUpdateUser,
 
           pid,
-          // pickupLocation, //EDIT remove pickupLocation
-          // pickupTime,
         };
       }
       // else, just save stock
@@ -530,8 +514,6 @@ router.patch('/editProduct', tokenMiddleware, (req, res) => {
           lastUpdateUser,
 
           pid,
-          // pickupLocation, EDIT removed pickupLocation
-          // pickupTime,
         };
       }
 

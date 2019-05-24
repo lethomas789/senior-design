@@ -22,24 +22,6 @@ class ClubInfo extends Component {
         <div id="about-club-container">
           <h1 className="club-header">{vendorName}</h1>
           {/* <div className="club-bio">{bio}</div> */}
-
-          <div className="about-colls">
-              <Link to="https://www.facebook.com/DavisWICS/">
-                  <img src={require("../../images/facebook.svg")} alt="Facebook" width="100%" />
-              </Link>
-            </div>
-
-            <div className="about-colls">
-              <Link to="https://www.instagram.com/wicsdavis/">
-                  <img src={require("../../images/instagram.svg")} alt="Instagram" width="100%" />
-              </Link>
-            </div>
-
-            <div className="about-colls">
-              <Link to="/shop">
-                  <img src={require("../../images/creative-market.svg")} alt="Shop" width="100%" />
-              </Link>
-            </div>
   
           <ClubImages bioPictures={bioPictures} />
           <Link to="https://www.facebook.com/DavisWICS/"
@@ -62,6 +44,28 @@ class ClubInfo extends Component {
           promote interest in programming and go to Hackathons. 
           We want to create a community of girls helping each other learn to code and working together to solve problems.
           </div>
+          <div className = "small-width">
+          <div className = "roww">
+            <div className="colls">
+                <Link to="https://www.facebook.com/DavisWICS/">
+                    <img src={require("../../images/facebook.svg")} alt="Facebook" width="100%" />
+                </Link>
+              </div>
+
+              <div className="colls">
+                <Link to="https://www.instagram.com/wicsdavis/">
+                    <img src={require("../../images/instagram.svg")} alt="Instagram" width="100%" />
+                </Link>
+              </div>
+
+              <div className="colls">
+                <Link to="/shop">
+                    <img src={require("../../images/creative-market.svg")} alt="Shop" width="100%" />
+                </Link>
+              </div>
+              </div>
+              </div>
+
 
           <p className = "club-pick-up">
           Pick-up Locations: Kemper Hall Lobby
@@ -71,6 +75,7 @@ class ClubInfo extends Component {
           Contact us: wicsdavis@gmail.com</p>
 
           </div>
+          
           
           </div>
 

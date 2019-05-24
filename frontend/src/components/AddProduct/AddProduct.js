@@ -468,58 +468,110 @@ class AddProduct extends Component {
   }
 
   //EDIT removed type=number field in text fields, typing "e" is considered number value, want to prevent letters in number input
+  componentDidMount() {
+    // call a route to check if they are logged in and an admin
+    const apiURL = "/api/adminUser/checkAdmin";
+    axios
+      .get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+        // user not an admin
+        if (res.data.success === false) {
+          this.props.notifier({
+            title: "Warning",
+            message: "Not an admin. Access denied.",
+            type: "warning"
+          });
+          this.props.history.push("/login");
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+  }
   render() {
     return (
-      <div className = "addProductContainer">
-      {/* <Paper className="addProductPaperContainer"> */}
-            <h1> Add Product </h1>
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Product Name"
-                required="true"
-                onChange={(event) => this.setState({ productName: event.target.value })}
-                style={style.field}
-              />
-            </div>
+      <div className="addProductContainer">
+        {/* <Paper className="addProductPaperContainer"> */}
+        <h1> Add Product </h1>
+        <div className="tooltip">
+          <span className="tooltiptext">In progress </span>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Product Name"
+              required="true"
+              onChange={event =>
+                this.setState({ productName: event.target.value })
+              }
+              style={style.field}
+            />
+          </div>
+        </div>
 
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Product Info"
-                required="true"
-                multiline={true}
-                rows={2}
-                onChange={(event) => this.setState({ productInfo: event.target.value })}
-                style={style.field}
-              />
-            </div>
+        <div className="tooltip">
+          <span className="tooltiptext">In progress </span>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Product Info"
+              required="true"
+              multiline={true}
+              rows={2}
+              onChange={event =>
+                this.setState({ productInfo: event.target.value })
+              }
+              style={style.field}
+            />
+          </div>
+        </div>
 
-            <div className = "add-textForm" id="row">
-              <TextField
-                label="Product Price ($X.XX)"
-                required= {true}
-                //MaterialUI property to insert start text
+        <div className="tooltip">
+          <span className="tooltiptext">In progress </span>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Pickup Location (Enter location and date/time)"
+              required="true"
+              onChange={event =>
+                this.setState({ pickupLocation: event.target.value })
+              }
+              style={style.field}
+            />
+          </div>
+        </div>
 
-                //bold dollar sign
-                // InputProps={{
-                //   startAdornment: <InputAdornment position="start"> <strong> $ </strong> </InputAdornment>,
-                // }}
-
+        <div className="tooltip">
+          <span className="tooltiptext">In progress </span>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Product Price ($X.XX)"
+              required={true}
+//               type="number"
+//               onChange={event =>
+//                 this.setState({ productPrice: event.target.value })
+//               }
+//               style={style.field}
                 //regular dollar sign,
                 InputProps={{
                   startAdornment: <InputAdornment position="start"> $ </InputAdornment>,
                 }}
                 value = {this.state.productPrice}
                 onChange = { (event) => this.handlePriceChange(event) }
-                style={style.field}
-              />
-            </div>
-
-            {/* toggle visibility of product stock
+            />
+          </div>
+        </div>
+        {/* toggle visibility of product stock
             if user is adding regular item, allow user to enter input
             calculate running total if item is an apparel */}
-            
-            <div className = "add-textForm" className = {this.state.itemShowStock} id = "row">
-              <TextField
+
+        {/* <div className = {this.state.itemShowStock} id = "row"> */}
+        <div className="tooltip">
+          <span className="tooltiptext">In progress </span>
+          <div className="add-textForm" id="row">
+            <TextField
                 label="Product Stock"
                 required= {true}
                 //remove type is number to allow user to enter backspace/delete character
@@ -529,24 +581,29 @@ class AddProduct extends Component {
                   (event) => this.handleStockChange(event)
                 }
                 style={style.field}
-              />
-            </div>
+            />
+          </div>
+        </div>
 
-            <FormControl component="fieldset">
-            <div className = "add-textForm">
-              <FormLabel component="legend" style={style.field}>Select Product Type </FormLabel>
-              <RadioGroup
-                aria-label="gender"
-                name="gender2"
-                value={this.state.value}
-                onChange={this.handleChange}
-              >
-            
-                {/* if user selects item, hide apparel selections, toggle css */}
-                <FormControlLabel
-                  control={<Radio color="primary" />}
-                  value = "item"
-                  label="Item"
+        <FormControl component="fieldset">
+          <div className="add-textForm">
+            <div className="tooltip">
+              <span className="tooltiptext"> In Progresss </span>
+              <FormLabel component="legend" style={style.field}>
+                Select Product Type
+              </FormLabel>
+            </div>
+            <RadioGroup
+              aria-label="gender"
+              name="gender2"
+              value={this.state.value}
+              onChange={this.handleChange}
+            >
+              {/* if user selects item, hide apparel selections, toggle css */}
+              <FormControlLabel
+                control={<Radio color="primary" />}
+                value="item"
+                label="Item"
                   // labelPlacement="start"
                   onChange={() => 
                     this.setState({ 
@@ -561,10 +618,15 @@ class AddProduct extends Component {
                       xsmall: "",
                       xlarge: ""
                   })}
-                  style={style.field}
-                />
-
-                {/* if user selects apparel, display apparel options, hide product stock for item, display apparel version instead */}
+//                 onChange={() =>
+//                   this.setState({
+//                     isApparel: false,
+//                     apparelCSS: "hideApparelSizes",
+//                     itemShowStock: "showItemStock"
+//                   })
+//                 }
+                style={style.field}
+              />
                 <FormControlLabel
                   control={<Radio color="primary" />}
                   value = "apparel"
@@ -572,13 +634,13 @@ class AddProduct extends Component {
                   // labelPlacement="start"
                   onChange={() => this.setState({ isApparel: true, isItem: false, apparelCSS: 'showApparelSizes', itemShowStock: 'hideItemStock', stock: ""})}
                 />
-              </RadioGroup>
-              </div>
-            </FormControl>
+            </RadioGroup>
+          </div>
+        </FormControl>
 
-            {/* add quantity for apparel sizes, toggle visibility if selected */}
-            <div className = {this.state.apparelCSS}>
-              <div className = "add-textForm" id="row">
+        {/* add quantity for apparel sizes, toggel visibility if selected */}
+        <div className={this.state.apparelCSS}>
+          <div className="add-textForm" id="row">
                 <TextField
                   label="Apparel Product Stock"
                   type="number"
@@ -586,91 +648,63 @@ class AddProduct extends Component {
                   value = {this.state.apparelStock}
                   disabled
                 />
-              </div>
-              
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="Small Stock"
-                  required="false"
-                  //remove type is number to allow user to enter backspace/delete character
-                  //check for number by using isNaN on input change
-                  value={this.state.small}
-                  onChange={
-                    this.handleStockChangeApparel("small")
-                  }
-                />
-              </div>
+          </div>
 
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="Medium Stock"
-                  required="false"
-                  //remove type is number to allow user to enter backspace/delete character
-                  //check for number by using isNaN on input change
-                  value={this.state.medium}
-                  onChange={
-                    this.handleStockChangeApparel("medium")
-                  }
-                />
-              </div>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Small Stock"
+              required={false}
+              value={this.state.small}
+              onChange={this.handleStockChangeApparel("small")}
+            />
+          </div>
 
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="Large Stock"
-                  required="false"
-                  //remove type is number to allow user to enter backspace/delete character
-                  //check for number by using isNaN on input change
-                  value={this.state.large}
-                  onChange={
-                    this.handleStockChangeApparel("large")
-                  }
-                />
-              </div>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Medium Stock"
+              required={false}
+              value={this.state.medium}
+              onChange={this.handleStockChangeApparel("medium")}
+            />
+          </div>
 
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="X-Small Stock"
-                  required="false"
-                  //remove type is number to allow user to enter backspace/delete character
-                  //check for number by using isNaN on input change
-                  value={this.state.xsmall}
-                  onChange={                    
-                    this.handleStockChangeApparel("xsmall")
-                  }
-                />
-              </div>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="Large Stock"
+              required={false}
+              value={this.state.large}
+              onChange={this.handleStockChangeApparel("large")}
+            />
+          </div>
 
-              <div className = "add-textForm" id="row">
-                <TextField
-                  label="X-Large Stock"
-                  required="false"
-                  value={this.state.xlarge}
-                  //remove type is number to allow user to enter backspace/delete character
-                  //check for number by using isNaN on input change
-                  onChange={
-                    this.handleStockChangeApparel("xlarge")
-                  }
-                />
-              </div>
-            </div>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="X-Small Stock"
+              required={false}
+              value={this.state.xsmall}
+              onChange={this.handleStockChangeApparel("xsmall")}
+            />
+          </div>
 
-            <div className = "add-textForm" id = "row">
-              <div class = "tooltip"> <span class="tooltiptext">First image uploaded on the left is default image displayed on shop. Remaining images used in detail view </span><h5 className = "uploadImageText"> Upload Images </h5> </div>
-              <div id = "column">
-              <FileUploader accept="image/*" onChange = {this.handleFileChange}
-                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
-                multiple
-                onUploadError={(error) => {
-                  this.props.notifier({
-                    title: "Error",
-                    message: error.toString(),
-                    type: "danger"
-                  });
-                }} 
-              />
-              </div>
+          <div className="add-textForm" id="row">
+            <TextField
+              label="X-Large Stock"
+              required={false}
+              value={this.state.xlarge}
+              onChange={this.handleStockChangeApparel("xlarge")}
+            />
+          </div>
+        </div>
 
-              <div id = "column">
+        <div className="add-textForm" id="row">
+          <div class="tooltip">
+            <span class="tooltiptext">
+              First image uploaded on the left is default image displayed on
+              shop. Remaining images used in detail view{" "}
+            </span>
+            <h5 className="uploadImageText"> Upload Images </h5>
+          </div>
+          <div id="column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
@@ -682,9 +716,10 @@ class AddProduct extends Component {
                   });
                 }}              
               />
-              </div>
 
-              <div id = "column">
+          </div>
+
+          <div id="column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
@@ -696,8 +731,9 @@ class AddProduct extends Component {
                   });
                 }}              
               />
-              </div>
-          
+          </div>
+
+          <div id="column">
               <FileUploader accept="image/*" onChange = {this.handleFileChange}
                 storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
                 multiple
@@ -709,17 +745,35 @@ class AddProduct extends Component {
                   });
                 }}              
               />
-            </div>
+          </div>
 
-            <Button variant = "contained" 
-            onClick = {this.addProduct}
-            style = {{backgroundColor:"#DAAA00",
-                  color: "white", 
-                  fontFamily: "Proxima Nova", 
-                  boxShadow: "none"}}> 
-                  Add Product  
-                  </Button>
-            {/* </Paper> */}
+          <div id="column">
+              <FileUploader accept="image/*" onChange = {this.handleFileChange}
+                storageRef =  {firebase.storage().ref('/images' + '/' + this.props.vid + '/' + this.state.productID)} ref = {instance => { this.fileUploader = instance; } }
+                multiple
+                onUploadError={(error) => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}              
+              />
+          </div>
+        </div>
+
+        <Button
+          variant="contained"
+          onClick={this.addProduct}
+          style={{
+            backgroundColor: "#DAAA00",
+            color: "white",
+            fontFamily: "Proxima Nova",
+            boxShadow: "none"
+          }}
+        >
+          Add Product
+        </Button>
       </div>
     );
   }

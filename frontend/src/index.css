@@ -1,30 +1,38 @@
 /* Normalize styles for browser consistency */
-@import '../node_modules/sanitize.css/sanitize.css';
-@import url('https://fonts.googleapis.com/css?family=Muli');
-@import url('https://fonts.googleapis.com/css?family=Comfortaa');
-@import url('https://fonts.googleapis.com/css?family=Raleway');
+@import "../node_modules/sanitize.css/sanitize.css";
+/* @import url("https://fonts.googleapis.com/css?family=Muli");
+@import url("https://fonts.googleapis.com/css?family=Comfortaa");
+@import url("https://fonts.googleapis.com/css?family=Raleway"); */
+/* @import "./proxima_ssv/ProximaNova-Regular.otf"; */
 
-*
-{
+@font-face {
+  font-family: "Proxima Nova";
+  src: url("./proxima_ssv/ProximaNova-Regular.woff") format("woff"),
+    url("./proxima_ssv/ProximaNova-Regular.ttf") format("truetype");
+}
+
+* {
   margin: 0;
   padding: 0;
-} 
+}
 
 html {
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
   height: 100vh;
 }
 
 body {
   /* background-color: #E8E8E8; */
-  font-family: 'Proxima Nova', sans-serif;
+  font-family: "Proxima Nova", sans-serif;
   height: 100%;
   /* background-color: #E5E9EF; */
 }
 
-
-
-
+a {
+  color: #1A3E68;
+  text-decoration: none;
+  /* rec pool blue boiz */
+}
 
 /*
 body {
