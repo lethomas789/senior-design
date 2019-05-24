@@ -209,7 +209,6 @@ router.post("/googleLogin", (req, res) => {
       }
 
       if (doc.data().isVerified === false) {
-        console.log("No such account for provided email:", email);
         return res.json({
           success: false,
           message:
@@ -330,7 +329,8 @@ router.post("/gmail", (req, res) => {
             lastName
           },
           email,
-          isAdmin: false
+          isAdmin: false,
+          isVerified: true,
         };
 
         //create new user in database with parameters passed from google login oauth
