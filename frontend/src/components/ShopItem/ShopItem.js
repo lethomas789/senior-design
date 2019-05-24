@@ -144,7 +144,7 @@ class ShopItem extends Component {
             {this.props.displayLink ? (
               <Button size="small" color="primary" onClick={this.updateVendor}>
                 <Link to={`/vendorProducts/${this.state.vendorID}`}
-                style = {{color: "#1A3E68"}}
+                style = {{color: "#00B5E2"}}
                 >
                   More From {this.props.vendorName}
                 </Link>

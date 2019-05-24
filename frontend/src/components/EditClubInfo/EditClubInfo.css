@@ -83,6 +83,17 @@
     display: block;
   }
 
-
-
+  .tooltip {
+    display: none;
+  }
+  
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    display: none;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    display: none;
+  }
 }
