@@ -320,6 +320,7 @@ class EditItemView extends Component {
           </h5>
           <div className="textForm">{products}</div>
 
+	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <div className="textForm" id="row">
             <TextField
               label="Product Name"
@@ -329,7 +330,9 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
+	  </div>
 
+	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <div className="textFormEdit" id="row">
             <TextField
               label="Product Info"
@@ -341,7 +344,9 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
+	  </div>
 
+	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <div className="textFormEdit" id="row">
             <TextField
               label="Pickup Location (Enter location and date/time)"
@@ -353,7 +358,9 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
+	  </div>
 
+	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <div className="textFormEdit" id="row">
             <TextField
               label="Product Price"
@@ -364,7 +371,9 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
+	  </div>
 
+	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <div className={this.state.itemStockCSS} id="row">
             <TextField
               label="Stock"
@@ -375,6 +384,7 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
+	  </div>
 
           {/* add quantity for apparel sizes, toggel visibility if selected */}
           <div className={this.state.apparelCSS}>
@@ -437,7 +447,10 @@ class EditItemView extends Component {
               />
             </div>
           </div>
-
+	  <div className= "tooltip"> <span className="tooltiptext"> Note: Any new pictures for an item that are uploaded will overwrite all current pictures for the item. You will have to upload any old pictures again. </span>
+	  <div id="descriptor"> <p>To edit any of the pictures for an item please click below.</p>
+	  </div>
+	  </div>
           <div id="column" className="tester">
             <FileUploader
               accept="image/*"
@@ -533,7 +546,7 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
-
+          <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <Button
             variant="contained"
             size="small"
@@ -548,6 +561,7 @@ class EditItemView extends Component {
           >
             Update Item
           </Button>
+	  </div>
         </div>
       </div>
     );

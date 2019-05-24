@@ -147,6 +147,7 @@ class EditClubInfo extends Component {
 
       
         <form id="editClubForm">
+	<div className = "tooltip"> <span className="tooltiptext">In progress </span>
         <div className = "textForm" id = "row">
           <TextField
             value={this.state.vendorName}
@@ -156,7 +157,9 @@ class EditClubInfo extends Component {
             style={{ paddingBottom: "20px", width: "35vw"}}
           />
           </div>
+        </div>
 
+	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <div className = "textForm" id = "row">
           <TextField
             label="Biography"
@@ -170,8 +173,8 @@ class EditClubInfo extends Component {
             style={{ paddingBottom: "20px", width: "35vw" }}
           />
           </div>
-
-
+          </div>
+        <div className = "tooltip"> <span className="tooltiptext">In progress </span>
         <div className = "textForm" id = "row">
           <TextField
             label="Item Pickup Info"
@@ -184,7 +187,9 @@ class EditClubInfo extends Component {
             rowsMax={Infinity}
           />
           </div>
+	</div>
 
+          <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <div className = "textForm" id = "row">
           <TextField
             label="Contact Email"
@@ -196,8 +201,11 @@ class EditClubInfo extends Component {
             style={{ paddingBottom: "20px", width: "35vw" }}
           />
           </div>
+	  </div>
+
         </form>
 
+        <div className = "tooltip"> <span className="tooltiptext">In progress </span>
         <div className="btn-update-info">
           <Button variant="contained" 
           onClick={this.sendEdit}
@@ -208,8 +216,9 @@ class EditClubInfo extends Component {
             Update Club Info
           </Button>
         </div>
-
+        </div>
         <div id="updateEmailsContainer">
+	  <div className = "tooltip"> <span className="tooltiptext">Your club's contact email will be notified every X hours about the number of any new incoming orders. </span>
           <select
             id="emailSelect"
             onChange={this.handleSelect}
@@ -217,13 +226,15 @@ class EditClubInfo extends Component {
               this.selectedPreference = select;
             }}
           >
-            <option value="select"> Select </option>
+            <option value="select"> Select your email preference </option>
             <option value="0 */1 * * *"> Every 1 Hour </option>
             <option value="0 */2 * * *"> Every 2 Hours </option>
             <option value="0 */4 * * *"> Every 4 Hours </option>
             <option value="0 */8 * * *"> Every 8 Hours</option>
             <option value="0 */24 * * *"> Every 24 Hours </option>
           </select>
+	  </div>
+	  <div className = "tooltip"> <span className="tooltiptext">In progress </span>
           <Button
             variant="contained"
             color="primary"
@@ -235,7 +246,8 @@ class EditClubInfo extends Component {
           >
             Update Email Preferences
           </Button>
-        </div>
+	  </div>
+	</div>
       </div>
     );
   }

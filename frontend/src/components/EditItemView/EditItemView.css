@@ -8,6 +8,17 @@
   flex-direction: row;
 }
 
+#descriptor{
+  padding-bottom:25px;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/*See EditClubInfo.css for the tooltip css*/
+
 @media (max-width: 40em) {
 
   #editViewContainer{
