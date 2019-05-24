@@ -28,6 +28,10 @@ body {
   /* background-color: #E5E9EF; */
 }
 
+a {
+  text-decoration: none;
+}
+
 /*
 body {
   margin: 0;
