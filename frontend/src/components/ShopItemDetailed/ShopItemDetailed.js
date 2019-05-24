@@ -185,7 +185,6 @@ class ApparelItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
-            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -253,7 +252,6 @@ class ItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
-            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -714,7 +712,13 @@ class ShopItemDetailed extends Component {
 
   //EDIT allow user to type in number values
   handleQuantityChange = event => {
-    this.setState({ amtPurchased: event.target.value });
+    if(isNaN(event.target.value) === true && event.target.value != ""){
+      return;
+    }
+
+    else{
+      this.setState({ amtPurchased: event.target.value });
+    }
 
     // if(isNaN(Number(event.target.value)) === true){
     //   alert("Please enter a value larger than 0");

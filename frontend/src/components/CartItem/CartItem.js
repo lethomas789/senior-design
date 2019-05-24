@@ -99,7 +99,7 @@ class CartItem extends Component {
       //added notifier to indicate if user is exceeding stock of item based on quantity selector
       this.props.notifier({
         title: "Warning",
-        message: "Quantity exceeds stock",
+        message: "Quantity you're selecting exceeds available stock for item",
         type: "warning"
       });
       //if exceeded, return
@@ -107,11 +107,55 @@ class CartItem extends Component {
     }
 
     //if not exceeded, proceed with updating new total/amount in cart
-    //user cannot select 0 or negative items to purchase, need at least 1
+    //user cannot select 0 or negative items to purchase, need at least 1 for purchase
+    //set default value to 1 item to be purchased if user types 0 or empties input field
     var newAmount = event.target.value;
-    if (event.target.value <= 0) {
+    if (Number(event.target.value) <= 0 || event.target.value == "") {
       this.setState({
-        amtPurchased: newAmount
+        amtPurchased: ""
+      }, () => {
+        //update total in cart
+        //update total and amount based on pid
+        this.props.updateItemTotal(this.state.itemID, this.state.price, 1);
+
+        //update cart on server with new amount
+        var updateURL = "/api/getUserCart/updateItems";
+        axios
+          .post(updateURL, {
+            withCredentials: true,
+            params: {
+              pid: this.state.pid,
+              amtPurchased: 1,
+              isApparel: this.state.isApparel,
+              size: this.state.size
+            }
+          })
+          .then(res => {
+            //on successful item update from quantity select, recalculate total items purchased
+            if (res.data.success === true) {
+              var amtPurchased = 0;
+              for (let i = 0; i < this.props.items.length; i++) {
+                amtPurchased =
+                  amtPurchased + Number(this.props.items[i].amtPurchased);
+              }
+
+              //update cart badge based on number of items in user's cart
+              this.props.updateAmountPurchased(amtPurchased);
+            } else if (res.data.success === false) {
+              this.props.notifier({
+                title: "Error",
+                message: res.data.message.toString(),
+                type: "danger"
+              });
+            }
+          })
+          .catch(err => {
+            this.props.notifier({
+              title: "Error",
+              message: err.toString(),
+              type: "danger"
+            });
+          });
       })
       this.props.notifier({
         title: "Warning",
