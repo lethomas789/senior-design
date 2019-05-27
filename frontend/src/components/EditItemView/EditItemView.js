@@ -674,8 +674,8 @@ class EditItemView extends Component {
               />
             </div>
           </div>
-          <div className="tooltip">
-            <span className="tooltiptext">
+          <div className="edit-image-tooltip">
+            <span className="edit-image-tooltiptext">
               Note: Any new pictures for an item that are uploaded will
               overwrite all current pictures for the item. You will have to
               upload any old pictures again.

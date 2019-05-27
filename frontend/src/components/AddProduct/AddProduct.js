@@ -579,12 +579,13 @@ class AddProduct extends Component {
             calculate running total if item is an apparel */}
 
         <FormControl component="fieldset">
-          <div className="add-textForm">
-            <div className="tooltip">
-              <span className="tooltiptext">
-                Please select whether your product is a regular item on an
+        <div className="tooltip">
+        <span className="tooltiptext">
+        Please select whether your product is a regular item on an
                 apparel item. Apparel items may have different sizes.
               </span>
+          <div className="add-textForm">
+                
               <FormLabel component="legend" style={style.field}>
                 Select Product Type
               </FormLabel>
@@ -714,8 +715,8 @@ class AddProduct extends Component {
         </div>
 
         <div className="add-textForm" id="row">
-          <div class="tooltip">
-            <span class="tooltiptext">
+          <div class="upload-image-tooltip">
+            <span class="upload-image-tooltiptext">
               Upload the images for your product here, up to a maximum of four
               pictures. NOTE: The first image uploaded will be the default image
               displayed on shop. Remaining images used in the product's shop

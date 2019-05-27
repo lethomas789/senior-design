@@ -82,6 +82,11 @@
   /* left: 20%; */
 }
 
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
 .file-uploader-tooltip {
   position: relative;
   display: inline-block;
@@ -108,10 +113,7 @@
   visibility: visible;
 }
 
-/* Show the tooltip text when you mouse over the tooltip container */
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-}
+
 
 .update-email-tooltip {
   position: relative;

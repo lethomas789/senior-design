@@ -17,6 +17,35 @@
   display: inline-block;
 }
 
+.edit-image-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.edit-image-tooltip .edit-image-tooltiptext {
+  /* top: 10px; */
+
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  position: absolute;
+  z-index: 1;
+  top: -10px;
+  left: -70%;
+  /* left: 20%; */
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.edit-image-tooltip:hover .edit-image-tooltiptext {
+  visibility: visible;
+}
+
 /*See EditClubInfo.css for the tooltip css*/
 
 @media (max-width: 40em) {
