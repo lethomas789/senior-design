@@ -318,7 +318,7 @@ class Login extends Component {
                 onKeyDown={this.handleEnter}
               />
               <Link to="/recoverPassword">
-                <h6> Recover Password </h6>
+                <h6 className = "bringDown"> Recover Password </h6>
               </Link>
             </div>
 
@@ -326,7 +326,11 @@ class Login extends Component {
               <Button
                 variant="contained"
                 onClick={this.sendLogin}
-                style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
+                style = {{backgroundColor:"#DAAA00", 
+                color: "white", 
+                fontFamily: "Proxima Nova",
+                marginBottom: "15px", 
+                boxShadow: "none"}}
               >
                 Login
               </Button>

@@ -35,6 +35,10 @@
   padding: 10px;
 }
 
+.bringDown {
+  padding-top: 5px;
+}
+
 .paperContainer {
   display: flex;
   flex-direction: column;
