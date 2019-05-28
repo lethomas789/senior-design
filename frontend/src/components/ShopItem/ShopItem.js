@@ -124,8 +124,8 @@ class ShopItem extends Component {
             <img
               src={this.props.imageSrc}
               alt="Item"
-              width="100%"
-              height="100%"            
+              width="300px"
+              height="300px"            
             />
             </div>
           </div>

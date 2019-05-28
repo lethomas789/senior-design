@@ -23,13 +23,15 @@ class ClubInfo extends Component {
       email,
       facebook,
       instagram,
-      vid,
+      vid
     } = this.props;
 
-    if (facebook == "") {
+    console.log("FACEBOOK IS:", facebook);
+
+    if (facebook == undefined) {
       facebook = "none";
     }
-    else {
+    if (instagram == undefined) {
       instagram = "none";
     }
 
@@ -40,59 +42,63 @@ class ClubInfo extends Component {
           {/* <div className="club-bio">{bio}</div> */}
 
           <ClubImages bioPictures={bioPictures} />
-          <a
+          {/* <a
             href={facebook}
             style={{ textDecoration: "none", color: "#C26E60" }}
           >
             <div className="events-now">
               <h2>Events Every Thursday!</h2>
             </div>
-          </a>
+          </a> */}
 
-          <div className="club-bio">
-            {bio}
-            {/* Women in Computer Science (WiCS) is a community in Davis that
-            motivates and prepares women for real life challenges in the field
-            of computer science. Women in Computer Science(WiCS) supports,
-            empowers and motivates the growing community of women in computer
-            science. We aim to prepare women for tech industry, in addition to
-            inspiring women to explore educational and professional
-            opportunities in computing through creating a powerful community,
-            providing mentorship and helping them to succeed. We aim to grow,
-            learn and spread the joy of computer science together! Our mission
-            is to create a platform where we can share ideas about our personal
-            projects, promote interest in programming and go to Hackathons. We
-            want to create a community of girls helping each other learn to code
-            and working together to solve problems. */}
-          </div>
-          <div className="small-width">
-            <div className="roww">
-              <div className="colls">
-                <a href={facebook}>
-                  <img
-                    src={require("../../images/facebook.svg")}
-                    alt="Facebook"
-                    width="100%"
-                  />
-                </a>
-              </div>
+          <div className="club-bio">{bio}</div>
 
-              <div className="colls">
-                <a href={instagram}>
-                  <img
-                    src={require("../../images/instagram.svg")}
-                    alt="Instagram"
-                    width="100%"
-                  />
-                </a>
-              </div>
+          <div className="small-width ">
+            {/* <div className="roww"> */}
+            <div className="club-media-links">
+              {facebook != "none" ? (
+                <div>
+                  {/* <div className="club-media-links"> */}
+                  {/* <div className="colls"> */}
+                  <a href={facebook}>
+                    <img
+                      src={require("../../images/facebook.svg")}
+                      alt="Facebook"
+                      width="70px"
+                      height="70px"
+                    />
+                  </a>
+                </div>
+              ) : (
+                ""
+              )}
 
-              <div className="colls">
+              {instagram != "none" ? (
+                <div>
+                  {/* <div className="club-media-links"> */}
+                  {/* <div className="colls"> */}
+                  <a href={instagram}>
+                    <img
+                      src={require("../../images/instagram.svg")}
+                      alt="Instagram"
+                      width="70px"
+                      height="70px"
+                    />
+                  </a>
+                </div>
+              ) : (
+                ""
+              )}
+
+              {/* <div className="colls"> */}
+              <div>
+                {/* <div className="club-media-links"> */}
                 <Link to={`/vendorProducts/${vid}`}>
                   <img
                     src={require("../../images/creative-market.svg")}
                     alt="Shop"
-                    width="100%"
+                    width="70px"
+                    height="70px"
                   />
                 </Link>
               </div>
@@ -179,7 +185,7 @@ export default class AboutClub extends Component {
             pickupInfo,
             email,
             facebook,
-            instagram,
+            instagram
           } = res.data;
 
           this.setState({
@@ -189,7 +195,7 @@ export default class AboutClub extends Component {
             pickupInfo,
             email,
             facebook,
-            instagram,
+            instagram
           });
         } else {
           this.props.notifier({
@@ -219,7 +225,7 @@ export default class AboutClub extends Component {
       pickupInfo,
       email,
       facebook,
-      instagram,
+      instagram
     } = this.state;
 
     return (

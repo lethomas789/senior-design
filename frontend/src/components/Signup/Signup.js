@@ -161,6 +161,7 @@ class Signup extends Component {
     var email = response.w3.U3;
     var firstName = response.w3.ofa;
     var lastName = response.w3.wea;
+    // var lastName = response.w3.wea;
 
     //update email of user logged in by modifying state
     this.setState({
@@ -248,63 +249,61 @@ class Signup extends Component {
       });
   };
 
-  /*
-  //response values after oauth returns with email login and password
-  responseGoogle = response => {
-    //after getting response from google, proceed with login process of redux state
-    //send login parameters to backend
-    var email = response.w3.U3;
-    var firstName = response.w3.ofa;
-    var lastName = response.w3.wea;
+  // //response values after oauth returns with email login and password
+  // responseGoogle = response => {
+  //   //after getting response from google, proceed with login process of redux state
+  //   //send login parameters to backend
+  //   var email = response.w3.U3;
+  //   var firstName = response.w3.ofa;
+  //   var lastName = response.w3.wea;
 
-    //update email of user logged in by modifying state
-    this.setState({
-      email: email
-    });
+  //   //update email of user logged in by modifying state
+  //   this.setState({
+  //     email: email
+  //   });
 
-    //make api call to login with gmail
-    axios
-      .post("/api/signup/googleSignup", {
-        params: {
-          email: email,
-          firstName: firstName,
-          lastName: lastName
-        }
-      })
-      .then(res => {
-        //if signup is successful, display success message
-        if (res.data.success === true) {
-          this.props.notifier({
-            title: "Success",
-            message:
-              "Signup successful. Please check your email for a confirmation link.",
-            type: "success",
-            time: 5000
-          });
-          this.setState(() => ({ toRedirect: true }));
-          // this.props.history.push('/check-email')
-        }
+  //   //make api call to login with gmail
+  //   axios
+  //     .post("/api/signup/googleSignup", {
+  //       params: {
+  //         email: email,
+  //         firstName: firstName,
+  //         lastName: lastName
+  //       }
+  //     })
+  //     .then(res => {
+  //       //if signup is successful, display success message
+  //       if (res.data.success === true) {
+  //         this.props.notifier({
+  //           title: "Success",
+  //           message:
+  //             "Signup successful. Please check your email for a confirmation link.",
+  //           type: "success",
+  //           time: 5000
+  //         });
+  //         this.setState(() => ({ toRedirect: true }));
+  //         // this.props.history.push('/check-email')
+  //       }
 
-        //display error message
-        else {
-          this.props.notifier({
-            title: "Error",
-            message: res.data.message + " Please try again.",
-            type: "warning",
-            time: 5000
-          });
-        }
-      })
-      .catch(err => {
-        this.props.notifier({
-          title: "Error",
-          message: err.toString(),
-          type: "danger",
-          time: 5000,
-        });
-      });
-  };
-  */
+  //       //display error message
+  //       else {
+  //         this.props.notifier({
+  //           title: "Error",
+  //           message: res.data.message + " Please try again.",
+  //           type: "warning",
+  //           time: 5000
+  //         });
+  //       }
+  //     })
+  //     .catch(err => {
+  //       this.props.notifier({
+  //         title: "Error",
+  //         message: err.toString(),
+  //         type: "danger",
+  //         time: 5000,
+  //       });
+  //     });
+  // };
 
   render() {
     // const { classes } = this.props;

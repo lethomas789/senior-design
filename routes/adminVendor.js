@@ -80,7 +80,7 @@ router.get("/", tokenMiddleware, (req, res) => {
             emailSchedule: vendorData.emailSchedule,
             pickupInfo: vendorData.pickupInfo,
             facebook: vendorData.facebook,
-            instagram: vendorData.instagram,
+            instagram: vendorData.instagram
           });
         })
         .catch(err => {
@@ -102,16 +102,112 @@ router.get("/", tokenMiddleware, (req, res) => {
     });
 }); // END GET /
 
-router.patch("editClubPictures", tokenMiddleware, (req, res) => {
+router.patch("/editClubPictures0", tokenMiddleware, (req, res) => {
   var { user } = req.authorizedData;
   if (req.body.params) {
-    var { bioPictures } = req.body.params;
+    var { picture, vid } = req.body.params;
+  } else {
+    var { picture, vid } = req.body;
   }
-  else {
-    var { bioPictures } = req.body;
-  }
-  
 
+  if (user == undefined || picture == undefined || vid == undefined) {
+    console.log("Missing params for route.");
+    return res.json({
+      success: false,
+      message: "Missing params for route."
+    });
+  }
+
+  console.log(vid);
+
+  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${
+    picture
+  }?alt=media`;
+
+  const vendorRef = db.collection("vendors").doc(vid);
+  vendorRef
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log("No such vendor for given vid.");
+        return res.json({
+          success: false,
+          message: "Sorry, a server error occurred. Please try again later."
+        });
+      }
+
+      let oldPictures = doc.data().bioPictures;
+      if (oldPictures[0] !== link) {
+        oldPictures[0] = link;
+      }
+
+      vendorRef.update({ bioPictures: oldPictures });
+
+      return res.json({
+        success: true,
+        message: "Successfully updated club pictures."
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.json({
+        success: false,
+        message: "Sorry, a server error occurred. Please try again later."
+      });
+    });
+});
+
+router.patch("/editClubPictures1", tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
+  if (req.body.params) {
+    var { picture, vid } = req.body.params;
+  } else {
+    var { picture, vid } = req.body;
+  }
+
+  if (user == undefined || picture == undefined || vid == undefined) {
+    console.log("Missing params for route.");
+    return res.json({
+      success: false,
+      message: "Missing params for route."
+    });
+  }
+
+  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${
+    picture
+  }?alt=media`;
+
+  const vendorRef = db.collection("vendors").doc(vid);
+  vendorRef
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log("No such vendor for given vid.");
+        return res.json({
+          success: false,
+          message: "Sorry, a server error occurred. Please try again later."
+        });
+      }
+
+      let oldPictures = doc.data().bioPictures;
+      if (oldPictures[1] !== link) {
+        oldPictures[1] = link;
+      }
+
+      vendorRef.update({ bioPictures: oldPictures });
+
+      return res.json({
+        success: true,
+        message: "Successfully updated club pictures."
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.json({
+        success: false,
+        message: "Sorry, a server error occurred. Please try again later."
+      });
+    });
 });
 
 /**

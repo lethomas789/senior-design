@@ -19,7 +19,12 @@ class EditClubInfo extends Component {
     email: "",
     pickupInfo: "",
     facebook: "",
-    instagram: ""
+    instagram: "",
+    images: [],
+    imageNames: [],
+    productID: "",
+    picture0: "",
+    picture1: ""
   };
 
   //get club info
@@ -69,7 +74,7 @@ class EditClubInfo extends Component {
       target: { files }
     } = event;
 
-    const maxImageSize = 100000;
+    const maxImageSize = 100000000;
 
     //TO DO modify file size
     //check if image being uploaded exceeds max file size
@@ -104,33 +109,78 @@ class EditClubInfo extends Component {
     filesToStore.push(imageName);
     actualImages.push(files[0]);
 
-    //generate vid to match product with image
-    let randomText = "";
-    const possible =
-      "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-    for (let i = 0; i < 20; i++) {
-      randomText += possible.charAt(
-        Math.floor(Math.random() * possible.length)
-      );
-    }
-
     //set state of component
     this.setState({
       images: actualImages,
-      productID: randomText,
       imageNames: filesToStore
     });
   };
 
   //upload images to database
-  uploadFiles() {
+  uploadFiles = () => {
     //for each file in images array, upload to database
     const files = this.state.images;
     files.forEach(file => {
       this.fileUploader.startUpload(file);
     });
-  }
+  };
+
+  // num may be 0 or 1 for pic0 or pic 1
+  editPictures = num => {
+    const apiURL = `/api/adminVendor/editClubPictures${num}`;
+    console.log("NUM IS:", num);
+    console.log("PICTURE IS:", this.state[`picture${num}`].name);
+
+    axios
+      .patch(apiURL, {
+        withCredentials: true,
+        params: {
+          picture: this.state[`picture${num}`].name,
+          vid: this.props.vendorID
+        }
+      })
+      .then(res => {
+        if (res.data.success) {
+          this.props.notifier({
+            title: "Success",
+            message: res.data.message,
+            type: "success"
+          });
+          let file = this.state[`picture${num}`];
+          this.fileUploader.startUpload(file);
+        } else {
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message,
+            type: "warning"
+          });
+        }
+      })
+      .catch(err => {
+        console.log(err);
+          this.props.notifier({
+            title: "Error",
+            message: "An error occurred. Please try again.",
+            type: "warning"
+          });
+      });
+  };
+
+  handlePictureChange0 = event => {
+    const {
+      target: { files }
+    } = event;
+
+    this.setState({ picture0: files[0] });
+  };
+
+  handlePictureChange1 = event => {
+    const {
+      target: { files }
+    } = event;
+
+    this.setState({ picture1: files[0] });
+  };
 
   //handle select when user chooses email preference
   handleSelect = () => {
@@ -265,7 +315,7 @@ class EditClubInfo extends Component {
             message: res.data.message.toString(),
             type: "success"
           });
-          this.getClubInfo();
+          // this.getClubInfo();j
         } else {
           this.props.notifier({
             title: "Error",
@@ -427,41 +477,10 @@ class EditClubInfo extends Component {
             </span>
             <FileUploader
               accept="image/*"
-              onChange={this.handleFileChange}
+              onChange={this.handlePictureChange0}
               storageRef={firebase
                 .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-            />
-          </div>
-          </div>
-
-          <div id="column" className="file-uploader">
-          <div className = "file-uploader-tooltip">
-            <span className="file-uploader-tooltiptext">
-              The second picture will be the image displayed alongside the list
-              of other club's on our website. See https://193ecommerce.com/clubs
-            </span>
-            <FileUploader
-              accept="image/*"
-              onChange={this.handleFileChange}
-              storageRef={firebase
-                .storage()
-                .ref(
-                  "/images" + "/" + this.props.vid + "/" + this.state.productID
-                )}
+                .ref("/images" + "/" + this.props.vendorID + "/")}
               ref={instance => {
                 this.fileUploader = instance;
               }}
@@ -483,6 +502,7 @@ class EditClubInfo extends Component {
             <Button
               variant="contained"
               color="primary"
+              onClick={() => this.editPictures(0)}
               style={{
                 backgroundColor: "#DAAA00",
                 color: "white",
@@ -490,11 +510,54 @@ class EditClubInfo extends Component {
                 boxShadow: "none"
               }}
             >
-              Update pictures
+              Update picture 1
             </Button>
           </div>
-          
 
+          <div id="column" className="file-uploader">
+          <div className = "file-uploader-tooltip">
+            <span className="file-uploader-tooltiptext">
+              The second picture will be the image displayed alongside the list
+              of other club's on our website. See https://193ecommerce.com/clubs
+            </span>
+            <FileUploader
+              accept="image/*"
+              onChange={this.handlePictureChange1}
+              storageRef={firebase
+                .storage()
+                .ref("/images" + "/" + this.props.vendorID + "/")}
+              ref={instance => {
+                this.fileUploader = instance;
+              }}
+              multiple
+              onUploadError={error => {
+                this.props.notifier({
+                  title: "Error",
+                  message: error.toString(),
+                  type: "danger"
+                });
+              }}
+            />
+          </div>
+          </div>
+
+
+          <div className="tooltip">
+            {/* <span className="tooltiptext">In progress </span> */}
+            <Button
+              variant="contained"
+              color="primary"
+              onClick={() => this.editPictures(1)}
+              style={{
+                backgroundColor: "#DAAA00",
+                color: "white",
+                fontFamily: "Proxima Nova",
+                boxShadow: "none"
+              }}
+            >
+              Update picture 2
+            </Button>
+          </div>
         </div>
 
         <div id="updateEmailsContainer">
