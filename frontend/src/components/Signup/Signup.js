@@ -375,7 +375,8 @@ class Signup extends Component {
                   backgroundColor: "#DAAA00",
                   color: "white",
                   boxShadow: "none",
-                  fonFamily: "Proxima Nova"
+                  fonFamily: "Proxima Nova",
+                  marginBottom: "15px"
                 }}
               >
                 Sign Up

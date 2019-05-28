@@ -468,8 +468,10 @@ class EditClubInfo extends Component {
         <div className="club-bio-picture-uploader">
           <h4>Upload club pictures to display on your club's about page.</h4>
 
-          <div id="column" className="file-uploader tooltip">
-            <span className="tooltiptext">
+          <div id="column" className="file-uploader">
+          <div className = "file-uploader-tooltip">
+
+            <span className="file-uploader-tooltiptext">
               The first picture will be the main image displayed on your club's
               about page.
             </span>
@@ -492,6 +494,8 @@ class EditClubInfo extends Component {
               }}
             />
           </div>
+          </div>
+
 
           <div className="tooltip">
             {/* <span className="tooltiptext">In progress </span> */}
@@ -510,8 +514,9 @@ class EditClubInfo extends Component {
             </Button>
           </div>
 
-          <div id="column" className="file-uploader tooltip">
-            <span className="tooltiptext">
+          <div id="column" className="file-uploader">
+          <div className = "file-uploader-tooltip">
+            <span className="file-uploader-tooltiptext">
               The second picture will be the image displayed alongside the list
               of other club's on our website. See https://193ecommerce.com/clubs
             </span>
@@ -534,6 +539,9 @@ class EditClubInfo extends Component {
               }}
             />
           </div>
+          </div>
+
+
           <div className="tooltip">
             {/* <span className="tooltiptext">In progress </span> */}
             <Button
@@ -553,8 +561,8 @@ class EditClubInfo extends Component {
         </div>
 
         <div id="updateEmailsContainer">
-          <div className="tooltip">
-            <span className="tooltiptext">
+          <div className="update-email-tooltip">
+            <span className="update-email-tooltiptext">
               Your club's contact email will be notified every X hours about the
               number of any new incoming orders. If there are no new orders
               within the selected time period, no email will be sent.
