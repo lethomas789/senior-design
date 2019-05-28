@@ -312,6 +312,14 @@ router.post("/gmail", (req, res) => {
   } else {
     var { email, firstName, lastName } = req.body;
   }
+
+  if (firstName == undefined) {
+    firstName = "empty"
+  }
+  if (lastName == undefined) {
+    lastName = "empty"
+  }
+
   //find email, similar logic as regular login
   //main difference is extracting login credentials using gmail params
   const userRef = db.collection("users").doc(email);

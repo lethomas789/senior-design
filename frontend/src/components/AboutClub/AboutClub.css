@@ -15,6 +15,13 @@
   
 }
 
+.club-media-links {
+  display: flex;
+  justify-self: center;
+  width: 150px;
+  justify-content: space-between;
+}
+
 .shop-now {
   text-align: center;
   font-size: 20px;
