@@ -26,7 +26,7 @@ class ClubInfo extends Component {
       vid
     } = this.props;
 
-    console.log('FACEBOOK IS:', facebook);
+    console.log("FACEBOOK IS:", facebook);
 
     if (facebook == undefined) {
       facebook = "none";
@@ -42,31 +42,30 @@ class ClubInfo extends Component {
           {/* <div className="club-bio">{bio}</div> */}
 
           <ClubImages bioPictures={bioPictures} />
-          <a
+          {/* <a
             href={facebook}
             style={{ textDecoration: "none", color: "#C26E60" }}
           >
             <div className="events-now">
               <h2>Events Every Thursday!</h2>
             </div>
-          </a>
+          </a> */}
 
-          <div className="club-bio">
-            {bio}
-          </div>
+          <div className="club-bio">{bio}</div>
 
           <div className="small-width ">
-            <div className="roww">
-            {/* <div className="club-media-links"> */}
-
-              {facebook != "" ? (
-                <div className="colls">
-                {/* <div> */}
+            {/* <div className="roww"> */}
+            <div className="club-media-links">
+              {facebook != "none" ? (
+                <div>
+                  {/* <div className="club-media-links"> */}
+                  {/* <div className="colls"> */}
                   <a href={facebook}>
                     <img
                       src={require("../../images/facebook.svg")}
                       alt="Facebook"
-                      width="100%"
+                      width="70px"
+                      height="70px"
                     />
                   </a>
                 </div>
@@ -74,14 +73,16 @@ class ClubInfo extends Component {
                 ""
               )}
 
-              {instagram != "" ? (
-                <div className="colls">
-                {/* <div> */}
+              {instagram != "none" ? (
+                <div>
+                  {/* <div className="club-media-links"> */}
+                  {/* <div className="colls"> */}
                   <a href={instagram}>
                     <img
                       src={require("../../images/instagram.svg")}
                       alt="Instagram"
-                      width="100%"
+                      width="70px"
+                      height="70px"
                     />
                   </a>
                 </div>
@@ -89,14 +90,15 @@ class ClubInfo extends Component {
                 ""
               )}
 
-              <div className="colls">
-                {/* <div> */}
+              {/* <div className="colls"> */}
+              <div>
+                {/* <div className="club-media-links"> */}
                 <Link to={`/vendorProducts/${vid}`}>
                   <img
                     src={require("../../images/creative-market.svg")}
                     alt="Shop"
-                    width="100%"
-                    height="100%"
+                    width="70px"
+                    height="70px"
                   />
                 </Link>
               </div>

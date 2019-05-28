@@ -3,13 +3,14 @@
   flex-direction: column;
 }
 
-#editItemsContainer{
+.editItemContainer{
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  min-height: 95vh;
 }
 
 #descriptor{
-  padding-bottom:25px;
+  padding-bottom: 25px;
 }
 
 .tooltip {

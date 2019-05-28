@@ -24,9 +24,6 @@ const config = {
 
 firebase.initializeApp(config);
 
-//image location for firestore upload
-const imageLocation = "images/vendors";
-
 const style = {
   field: { width: "500px" }
 };
@@ -204,18 +201,18 @@ class AddProduct extends Component {
 
     //TO DO modify file size
     //check if image being uploaded exceeds max file size
-    if (files[0].size > maxImageSize) {
-      this.props.notifier({
-        title: "Error",
-        message: "Please upload image less than 1MB",
-        type: "danger"
-      });
+    // if (files[0].size > maxImageSize) {
+    //   this.props.notifier({
+    //     title: "Error",
+    //     message: "Please upload image less than 1MB",
+    //     type: "danger"
+    //   });
 
-      //if file exceeds file size, cancel upload and set file input to null
-      //this is as if no file was uploaded
-      event.target.value = null;
-      return;
-    }
+    //   //if file exceeds file size, cancel upload and set file input to null
+    //   //this is as if no file was uploaded
+    //   event.target.value = null;
+    //   return;
+    // }
 
     //if file size is acceptable, proceed saving file in array of images to upload to server
 
