@@ -780,7 +780,7 @@ class EditItemView extends Component {
             />
           </div>
           <div className="tooltip">
-            <span className="tooltiptext">In progress </span>
+            {/* <span className="tooltiptext">In progress </span> */}
             <Button
               variant="contained"
               size="small"
