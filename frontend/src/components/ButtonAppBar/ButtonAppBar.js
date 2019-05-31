@@ -606,63 +606,6 @@ class ButtonAppBar extends Component {
 
                 {/* BUTTONS FOR ALL USERS */}
                 <Button
-                  component={Link}
-                  to={aboutRoute}
-                  color="inherit"
-                  style={{ fontFamily: "Proxima Nova" }}
-                >
-                  About
-                </Button>
-
-                <Button
-                  component={Link}
-                  to="/clubs"
-                  color="inherit"
-                  style={{ fontFamily: "Proxima Nova" }}
-                >
-                  Clubs
-                </Button>
-
-                {/* display signup if not logged in */}
-                {!this.props.loginValue ? (
-                  <Button
-                    component={Link}
-                    to={signupRoute}
-                    color="inherit"
-                    style={{ fontFamily: "Proxima Nova" }}
-                  >
-                    Sign Up
-                  </Button>
-                ) : (
-                  <Fragment />
-                )}
-
-                {/* ACCOUNT BUTTON? */}
-                {this.props.loginValue ? (
-                  <Button
-                    component={Link}
-                    to={orderHistoryRoute}
-                    color="inherit"
-                    style={{ fontFamily: "Proxima Nova" }}
-                  >
-                    Order History
-                  </Button>
-                ) : (
-                  ""
-                )}
-
-                {/*LOGIN/LOGOUT BUTTON*/}
-                <Button
-                  style={{ fontFamily: "Proxima Nova" }}
-                  component={Link}
-                  to={loginRoute}
-                  color="inherit"
-                  onClick={this.logoutUser}
-                >
-                  {this.props.loginText}
-                </Button>
-
-                <Button
                   onClick={this.handleShopClick}
                   color="inherit"
                   style={{ fontFamily: "Proxima Nova" }}
@@ -693,6 +636,65 @@ class ButtonAppBar extends Component {
                     All Items
                   </MenuItem>
                 </Menu>
+
+                <Button
+                  component={Link}
+                  to="/clubs"
+                  color="inherit"
+                  style={{ fontFamily: "Proxima Nova" }}
+                >
+                  Clubs
+                </Button>
+
+                <Button
+                  component={Link}
+                  to={aboutRoute}
+                  color="inherit"
+                  style={{ fontFamily: "Proxima Nova" }}
+                >
+                  About
+                </Button>
+
+                {/* display signup if not logged in */}
+                {!this.props.loginValue ? (
+                  <Button
+                    component={Link}
+                    to={signupRoute}
+                    color="inherit"
+                    style={{ fontFamily: "Proxima Nova" }}
+                  >
+                    Sign Up
+                  </Button>
+                ) : (
+                  <Fragment />
+                )}
+
+                {/*LOGIN/LOGOUT BUTTON*/}
+                <Button
+                  style={{ fontFamily: "Proxima Nova" }}
+                  component={Link}
+                  to={loginRoute}
+                  color="inherit"
+                  onClick={this.logoutUser}
+                >
+                  {this.props.loginText}
+                </Button>
+
+                {/* ACCOUNT BUTTON? */}
+                {this.props.loginValue ? (
+                  <Button
+                    component={Link}
+                    to={orderHistoryRoute}
+                    color="inherit"
+                    style={{ fontFamily: "Proxima Nova" }}
+                  >
+                    Order History
+                  </Button>
+                ) : (
+                  ""
+                )}
+
+                
 
                 {/* CART BUTTON */}
                 {this.props.loginValue ? (

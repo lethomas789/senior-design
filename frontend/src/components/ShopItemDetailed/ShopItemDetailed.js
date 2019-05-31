@@ -143,8 +143,9 @@ class ApparelItemInfo extends Component {
       <section className="item-info">
         <h2> {productName} </h2>
         <div className="price">${Number(productPrice).toFixed(2)}</div>
-        <div>
-          {this.props.size === "None" ? ( 
+
+        <div className="item-availability">
+          {this.props.size === "None" ? (
             <Fragment>
               <b>Availability</b>: Please select a size first.
             </Fragment>
@@ -153,13 +154,13 @@ class ApparelItemInfo extends Component {
               <b>Availability</b>: {displayApparelStock()}
             </Fragment>
           )}
-          <p>
-            <b>Club: </b>
-            <Link to={`/vendorProducts/${this.props.vendorID}`}>
-              {clubName}
-            </Link>
-          </p>
         </div>
+
+        <div className="item-club-link">
+          <b>Club: </b>
+          <Link to={`/vendorProducts/${this.props.vendorID}`}>{clubName}</Link>
+        </div>
+
         <p className="description">{productInfo}</p>
 
         <div className="select-container">
@@ -185,7 +186,6 @@ class ApparelItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
-            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -197,7 +197,12 @@ class ApparelItemInfo extends Component {
             variant="contained"
             size="small"
             onClick={addItem}
-            style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
+            style={{
+              backgroundColor: "#DAAA00",
+              color: "white",
+              fontFamily: "Proxima Nova",
+              boxShadow: "none"
+            }}
           >
             Add To Cart
           </Button>
@@ -236,15 +241,16 @@ class ItemInfo extends Component {
       <section className="item-info">
         <h2> {productName} </h2>
         <div className="price">${Number(productPrice).toFixed(2)}</div>
-        <div>
+
+        <div className="item-availability">
           <b>Availability</b>: {displayStock()}
-          <p>
-            <b>Club: </b>
-            <Link to={`/vendorProducts/${this.props.vendorID}`}>
-              {clubName}
-            </Link>
-          </p>
         </div>
+
+        <div className="item-club-link">
+          <b>Club: </b>
+          <Link to={`/vendorProducts/${this.props.vendorID}`}>{clubName}</Link>
+        </div>
+
         <p className="description">{productInfo}</p>
 
         <div className="select-container">
@@ -253,7 +259,6 @@ class ItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
-            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -266,7 +271,12 @@ class ItemInfo extends Component {
             size="small"
             color="primary"
             onClick={addItem}
-            style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
+            style={{
+              backgroundColor: "#DAAA00",
+              color: "white",
+              fontFamily: "Proxima Nova",
+              boxShadow: "none"
+            }}
           >
             Add To Cart
           </Button>
@@ -307,24 +317,24 @@ class ShopItemDetailed extends Component {
     var totalStock = xs_stock + s_stock + m_stock + l_stock + xl_stock;
 
     //display stock based on size selected
-    switch(this.state.size){
-      case 'Small':
+    switch (this.state.size) {
+      case "Small":
         totalStock = s_stock;
         break;
 
-      case 'Medium':
+      case "Medium":
         totalStock = m_stock;
         break;
 
-      case 'Large':
+      case "Large":
         totalStock = l_stock;
         break;
 
-      case 'X-Small':
+      case "X-Small":
         totalStock = xs_stock;
         break;
 
-      case 'X-Large':
+      case "X-Large":
         totalStock = xl_stock;
         break;
 
@@ -342,10 +352,14 @@ class ShopItemDetailed extends Component {
     // less than 10, greater than 0, display alert
     else if (totalStock > 0) {
       text = `Only ${totalStock} item(s) left!`;
+      return <span className="out-of-stock">{text}</span>;
     } else if (totalStock === 0) {
       text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
+      
     } else {
-      text = "Item out of stock."
+      text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
     }
 
     return <span className="stock">{text}</span>;
@@ -360,26 +374,29 @@ class ShopItemDetailed extends Component {
       text = "In Stock";
     } else if (productStock > 0) {
       text = `Only ${productStock} item(s) left!`;
+      return <span className="out-of-stock">{text}</span>;
     } else if (productStock === 0) {
       text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
     } else {
-      text = "Item out of stock."
+      text = "Item out of stock.";
+      return <span className="out-of-stock">{text}</span>;
     }
     return <span className="stock">{text}</span>;
   };
 
-  totalAmountPurchased = (items) => {
+  totalAmountPurchased = items => {
     let amtPurchased = 0;
-    for(let i = 0; i < items.length; i++){
-      amtPurchased = amtPurchased + items[i].amtPurchased
+    for (let i = 0; i < items.length; i++) {
+      amtPurchased = amtPurchased + items[i].amtPurchased;
     }
 
     //update cart badge based on number of items in user's cart
     this.props.updateAmountPurchased(amtPurchased);
-  }
+  };
 
   addApparelToCart = () => {
-    const apiURL = '/api/getUserCart/addItems';
+    const apiURL = "/api/getUserCart/addItems";
     axios
       .post(apiURL, {
         withCredentials: true,
@@ -424,16 +441,16 @@ class ShopItemDetailed extends Component {
                 type: "danger"
               });
             });
-          }
-        })
-        .catch(err => {
-          this.props.notifier({
-            title: "Error",
-            message: err.toString(),
-            type: "danger"
-          });
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
         });
-  }
+      });
+  };
 
   //add item to user's cart
   addItem = () => {
@@ -448,13 +465,14 @@ class ShopItemDetailed extends Component {
       });
     }
 
-    //check if 0 products were purchased
-    else if (this.state.amtPurchased <= 0) {
+    //check if user entered negative number or just left negative sign
+    //must have 1 more items purchased
+    else if (this.state.amtPurchased <= 0 || this.state.amtPurchased == '-') {
       // alert("Sorry, cannot add a quantity of 0.");
       //switch from alert to notifier
       this.props.notifier({
         title: "Error",
-        message: "Cannot add a quantity of 0 to cart.",
+        message: "Please enter a value greater than 0",
         type: "warning"
       });
     }
@@ -489,7 +507,7 @@ class ShopItemDetailed extends Component {
             });
           }
           //add item to cart
-          else{
+          else {
             this.addApparelToCart();
           }
           break;
@@ -501,8 +519,7 @@ class ShopItemDetailed extends Component {
               message: "Sorry, not enough stock.",
               type: "warning"
             });
-          }
-          else {
+          } else {
             // TODO add item
             this.addApparelToCart();
           }
@@ -515,9 +532,7 @@ class ShopItemDetailed extends Component {
               message: "Sorry, not enough stock.",
               type: "warning"
             });
-          }
-
-          else{
+          } else {
             this.addApparelToCart();
           }
           break;
@@ -529,9 +544,7 @@ class ShopItemDetailed extends Component {
               message: "Sorry, not enough stock.",
               type: "warning"
             });
-          }
-
-          else{
+          } else {
             this.addApparelToCart();
           }
           break;
@@ -543,9 +556,7 @@ class ShopItemDetailed extends Component {
               message: "Sorry, not enough stock.",
               type: "warning"
             });
-          }
-
-          else{
+          } else {
             this.addApparelToCart();
           }
           break;
@@ -711,11 +722,14 @@ class ShopItemDetailed extends Component {
     this.setState({ [name]: event.target.value });
   };
 
-  //user needs to purchase at least one item, can't have 0 or negative selected items
+  //EDIT allow user to type in number values
   handleQuantityChange = event => {
-    if (event.target.value < 1) {
-      this.setState({ amtPurchased: 1 });
-    } else {
+    //if user types a non-number or not trying to delete, don't record input
+    if(isNaN(event.target.value) === true && event.target.value != ""){
+      return;
+    }
+
+    else{
       this.setState({ amtPurchased: event.target.value });
     }
   };
@@ -740,7 +754,7 @@ class ShopItemDetailed extends Component {
           //extract param values from URL
           //match object contains parameter values
           const handle = this.props.match.params;
-          
+
           //update vid for redux, link to about page
           this.props.updateVendor(handle.vid);
           this.setState({
@@ -872,7 +886,7 @@ const mapStateToProps = state => {
   return {
     pid: state.selectedItem.selectedItemID,
     login: state.auth.login,
-    vendorID: state.vendor.vendor,
+    vendorID: state.vendor.vendor
   };
 };
 
@@ -893,11 +907,11 @@ const mapDispatchToProps = dispatch => {
         vendor: newVendor
       }),
 
-    updateAmountPurchased: amount => 
+    updateAmountPurchased: amount =>
       dispatch({
         type: actions.UPDATE_AMOUNT_PURCHASED,
-        amountPurchased: amount,
-      }),
+        amountPurchased: amount
+      })
   };
 };
 

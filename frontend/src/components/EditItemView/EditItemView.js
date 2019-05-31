@@ -7,8 +7,8 @@ import { connect } from "react-redux";
 // import Grid from '@material-ui/core/Grid';
 import TextField from "@material-ui/core/TextField";
 import Button from "@material-ui/core/Button";
+import InputAdornment from "@material-ui/core/InputAdornment";
 import FileUploader from "react-firebase-file-uploader";
-
 import firebase from "firebase";
 // import firebaseConfig from '../../config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json';
 
@@ -25,6 +25,8 @@ import firebase from "firebase";
 const style = {
   field: { width: "500px" }
 };
+
+const maxImageSize = 1000000;
 
 class EditItemView extends Component {
   constructor(props) {
@@ -53,13 +55,13 @@ class EditItemView extends Component {
       itemStockCSS: "showItemStock",
       images: [],
       imageNames: [],
-      newImages: false
+      newImages: false,
+      itemSelected: false
     };
   }
 
-  //get items of vendor from database
-  //allow admin to view and select which item to edit
-  componentDidMount() {
+  //get all items from vendor, display to allow admin to edit item
+  getVendorProducts = () => {
     const apiURL = "/api/getVendorProducts";
 
     //get all products of current vendor based on vendor id
@@ -90,6 +92,70 @@ class EditItemView extends Component {
           type: "danger"
         });
       });
+  };
+
+  //get items of vendor from database
+  //allow admin to view and select which item to edit
+  componentDidMount() {
+    // call a route to check if they are logged in and an admin
+    const apiURL = "/api/adminUser/checkAdmin";
+    axios
+      .get(apiURL, {
+        withCredentials: true
+      })
+      .then(res => {
+        // user not an admin
+        if (res.data.success === false) {
+          this.props.notifier({
+            title: "Warning",
+            message: "Not an admin. Access denied.",
+            type: "warning"
+          });
+          this.props.history.push("/login");
+        }
+      })
+      .catch(err => {
+        this.props.notifier({
+          title: "Error",
+          message: err.toString(),
+          type: "danger"
+        });
+      });
+    this.getVendorProducts();
+  }
+
+  //if vendor changes, get updated items
+  //restart component as if just rendered to handle new vendor items
+  //clears out previous item info from previous vendor
+  componentDidUpdate(prevProps) {
+    if (prevProps.vendorID != this.props.vendorID) {
+      this.getVendorProducts();
+      this.setState({
+        items: [],
+        name: "",
+        info: "",
+        stock: "",
+        price: "",
+        isApparel: false,
+        vid: this.props.vendorID,
+        pid: "",
+        lastUpdate: "",
+        lastUser: "",
+        user: this.props.user,
+        productPicture: [],
+        small: 0,
+        medium: 0,
+        large: 0,
+        xsmall: 0,
+        xlarge: 0,
+        apparelCSS: "hideApparelSizes",
+        itemStockCSS: "showItemStock",
+        images: [],
+        imageNames: [],
+        newImages: false,
+        itemSelected: false
+      });
+    }
   }
 
   //populate edit forms based on which item was selected
@@ -105,13 +171,14 @@ class EditItemView extends Component {
           this.setState({
             name: name,
             info: currentItem.productInfo,
-            price: currentItem.productPrice,
+            price: String(currentItem.productPrice),
             stock: currentItem.stock,
             pid: currentItem.pid,
             productPicture: currentItem.productPicture,
             isApparel: currentItem.isApparel,
             apparelCSS: "hideApparelSizes",
-            itemStockCSS: "showItemStock"
+            itemStockCSS: "showItemStock",
+            itemSelected: true
           });
         }
 
@@ -120,7 +187,7 @@ class EditItemView extends Component {
           this.setState({
             name: name,
             info: currentItem.productInfo,
-            price: currentItem.productPrice,
+            price: String(currentItem.productPrice),
             stock: currentItem.stock,
             pid: currentItem.pid,
             productPicture: currentItem.productPicture,
@@ -131,26 +198,107 @@ class EditItemView extends Component {
             xsmall: currentItem.xs_stock,
             xlarge: currentItem.xl_stock,
             apparelCSS: "showApparelSizes",
-            itemStockCSS: "hideItemStock"
+            itemStockCSS: "hideItemStock",
+            itemSelected: true
           });
         }
       }
     }
   };
 
-  //handle stock change, update total stock values when user changes input
-  handleStockChangeApparel = name => stock => {
-    //if the user is setting the stock to a negative value, set default to 0
-    if (Number(stock.target.value) < 0) {
+  //handle input change for product price
+  handlePriceChange = price => {
+    //if user types a non-number or doesn't press delete/backspace, don't register input change
+    if (isNaN(price.target.value) === true && price.target.value != "") {
+      return;
+    }
+
+    //else change value
+    else {
       this.setState({
-        [name]: 0
+        price: price.target.value
+      });
+    }
+  };
+
+  //handle stock change for non apparel items
+  //non apparel, account for empty field
+  handleStockChange = stock => {
+    //if the user backspaces or presses delete, create empty input for user to enter number
+    //converting "" to number using Number(stock) converts "" to 0
+    //if user tries to type a letter, just convert it to 0 or ""
+    if (isNaN(stock.target.value) === true || stock.target.value == "") {
+      this.setState({
+        stock: ""
+      });
+      return;
+    }
+
+    //if user enters a negative stock value, set default to "" in background
+    //display notifier
+    else if (Number(stock.target.value) < 0) {
+      this.setState({
+        stock: ""
+      });
+
+      this.props.notifier({
+        title: "Warning",
+        message: "Please enter stock value greater than or equal to 0",
+        type: "warning"
       });
     }
 
-    //if the user presses delete or backspace, handle empty field
-    else if (stock.target.value === "") {
+    //else, set stock to user's input of number
+    else {
+      this.setState({
+        stock: Number(stock.target.value)
+      });
+    }
+  };
+
+  //handle stock change for apparel items, update total stock values when user changes input
+  handleStockChangeApparel = name => stock => {
+    //check if user is trying to type non-number or letter
+    if (isNaN(stock.target.value) === true && stock.target.value != "") {
+      return;
+    }
+
+    //if the user backspaces or presses delete, create empty input for user to enter number
+    //checks if user types a number, if user types a non-number set default value to "", or 0
+    else if (isNaN(stock.target.value) === true || stock.target.value == "") {
+      this.setState(
+        {
+          [name]: ""
+        },
+        () => {
+          //still add new running total if user removes value
+          //add running total of stocks when value is changed, callback function after state was updated
+          //when user adds "", records value as 0
+          var runningStockTotal = 0;
+          runningStockTotal =
+            Number(this.state.small) +
+            Number(this.state.medium) +
+            Number(this.state.large) +
+            Number(this.state.xsmall) +
+            Number(this.state.xlarge);
+
+          //update stock with running total
+          this.setState({
+            stock: Number(runningStockTotal)
+          });
+        }
+      );
+    }
+
+    //if the user is setting the stock to a negative value, set default to 0
+    else if (Number(stock.target.value) < 0) {
       this.setState({
         [name]: ""
+      });
+      this.props.notifier({
+        title: "Warning",
+        message: "Please enter stock value greater than or equal to 0",
+        type: "warning"
       });
     }
 
@@ -166,15 +314,17 @@ class EditItemView extends Component {
         () => {
           //add running total of stocks when value is changed, callback function after state was updated
           var runningStockTotal = 0;
+
           runningStockTotal =
             Number(this.state.small) +
             Number(this.state.medium) +
             Number(this.state.large) +
             Number(this.state.xsmall) +
             Number(this.state.xlarge);
+
           //update stock with running total
           this.setState({
-            stock: String(runningStockTotal)
+            stock: Number(runningStockTotal)
           });
         }
       );
@@ -199,6 +349,21 @@ class EditItemView extends Component {
     const {
       target: { files }
     } = event;
+
+    //TO DO modify file size
+    //check if image being uploaded exceeds max file size
+    if (files[0].size > maxImageSize) {
+      this.props.notifier({
+        title: "Error",
+        message: "Please upload image less than 1MB",
+        type: "danger"
+      });
+
+      //if file exceeds file size, cancel upload and set file input to null
+      //this is as if no file was uploaded
+      event.target.value = null;
+      return;
+    }
 
     //store image names
     // const filesToStore = [];
@@ -228,6 +393,75 @@ class EditItemView extends Component {
 
   //update item info, update information about item in database
   updateItemInfo = () => {
+    //validators to check for proper input
+
+    //user needs to select item first
+    if (this.state.itemSelected === false) {
+      this.props.notifier({
+        title: "Error",
+        message: "Please select an item to edit from the list",
+        type: "danger"
+      });
+      return;
+    }
+
+    //product name
+    if (this.state.name === "") {
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert product name",
+        type: "danger"
+      });
+      return;
+    }
+
+    //product info
+    if (this.state.info === "") {
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert product info",
+        type: "danger"
+      });
+      return;
+    }
+
+    //product price
+    if (this.state.price === "") {
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert product price",
+        type: "danger"
+      });
+      return;
+    }
+
+    //check to see if user inserted correct price format $D.CC
+    //if user enters money in format $D, then okay proceed
+    if (this.state.price.includes(".") === true) {
+      //check to see if user inputted more than 2 spots for cents
+      var checkCentValues = this.state.price.split(".");
+      //split into array of items before . and after .
+      if (checkCentValues[1].length != 2) {
+        this.props.notifier({
+          title: "Error",
+          message: "Please insert correct price format",
+          type: "danger"
+        });
+        return;
+      }
+    }
+
+    //check product stock greater than 0
+    if (Number(this.state.stock) === 0) {
+      this.props.notifier({
+        title: "Error",
+        message: "Please insert stock greater than 0",
+        type: "danger"
+      });
+      return;
+    }
+
+    //proceed with edit item process
     const apiURL = "/api/adminProducts/editProduct";
     var imagesToUpload;
     var newImages = false;
@@ -315,65 +549,74 @@ class EditItemView extends Component {
       <div>
         <div className="editItemContainer">
           <h1> Select Item To Edit </h1>
-          <h5>
+          {/* <h5>
             (If uploading new pictures, old pictures will be discarded/replaced)
-          </h5>
+          </h5> */}
           <div className="textForm">{products}</div>
 
-          <div className="textForm" id="row">
-            <TextField
-              label="Product Name"
-              required={true}
-              value={this.state.name}
-              onChange={event => this.setState({ name: event.target.value })}
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">Name of your product</span>
+            <div className="textForm" id="row">
+              <TextField
+                label="Product Name"
+                required={true}
+                value={this.state.name}
+                onChange={event => this.setState({ name: event.target.value })}
+                style={style.field}
+              />
+            </div>
           </div>
 
-          <div className="textFormEdit" id="row">
-            <TextField
-              label="Product Info"
-              required={true}
-              multiline={true}
-              // rows={2}
-              value={this.state.info}
-              onChange={event => this.setState({ info: event.target.value })}
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">
+              The product info that will be displayed on the item's product
+              page.
+            </span>
+            <div className="textFormEdit" id="row">
+              <TextField
+                label="Product Info"
+                required={true}
+                multiline={true}
+                // rows={2}
+                value={this.state.info}
+                onChange={event => this.setState({ info: event.target.value })}
+                style={style.field}
+              />
+            </div>
           </div>
 
-          <div className="textFormEdit" id="row">
-            <TextField
-              label="Pickup Location (Enter location and date/time)"
-              required={true}
-              value={this.state.pickupLocation}
-              onChange={event =>
-                this.setState({ pickupLocation: event.target.value })
-              }
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">The product's price in USD.</span>
+            <div className="textFormEdit" id="row">
+              <TextField
+                label="Product Price"
+                required={true}
+                value={this.state.price}
+                InputProps={{
+                  startAdornment: (
+                    <InputAdornment position="start"> $ </InputAdornment>
+                  )
+                }}
+                onChange={event => this.handlePriceChange(event)}
+                style={style.field}
+              />
+            </div>
           </div>
 
-          <div className="textFormEdit" id="row">
-            <TextField
-              label="Product Price"
-              required={true}
-              type="number"
-              value={this.state.price}
-              onChange={event => this.setState({ price: event.target.value })}
-              style={style.field}
-            />
-          </div>
-
-          <div className={this.state.itemStockCSS} id="row">
-            <TextField
-              label="Stock"
-              required={true}
-              type="number"
-              value={this.state.stock}
-              onChange={event => this.setState({ stock: event.target.value })}
-              style={style.field}
-            />
+          <div className="tooltip">
+            <span className="tooltiptext">
+              Your product's stock. The website will stop accepting orders for
+              that product once its stock is out.
+            </span>
+            <div className={this.state.itemStockCSS} id="row">
+              <TextField
+                label="Stock"
+                required={true}
+                value={this.state.stock}
+                onChange={event => this.handleStockChange(event)}
+                style={style.field}
+              />
+            </div>
           </div>
 
           {/* add quantity for apparel sizes, toggel visibility if selected */}
@@ -381,7 +624,6 @@ class EditItemView extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="Product Stock"
-                type="number"
                 value={this.state.stock}
                 disabled
               />
@@ -391,7 +633,6 @@ class EditItemView extends Component {
               <TextField
                 label="Small Stock"
                 required="false"
-                type="number"
                 value={this.state.small}
                 onChange={this.handleStockChangeApparel("small")}
               />
@@ -401,7 +642,6 @@ class EditItemView extends Component {
               <TextField
                 label="Medium Stock"
                 required="false"
-                type="number"
                 value={this.state.medium}
                 onChange={this.handleStockChangeApparel("medium")}
               />
@@ -411,7 +651,6 @@ class EditItemView extends Component {
               <TextField
                 label="Large Stock"
                 required="false"
-                type="number"
                 value={this.state.large}
                 onChange={this.handleStockChangeApparel("large")}
               />
@@ -421,7 +660,6 @@ class EditItemView extends Component {
               <TextField
                 label="X-Small Stock"
                 required="false"
-                type="number"
                 value={this.state.xsmall}
                 onChange={this.handleStockChangeApparel("xsmall")}
               />
@@ -432,12 +670,20 @@ class EditItemView extends Component {
                 label="X-Large Stock"
                 required="false"
                 value={this.state.xlarge}
-                type="number"
                 onChange={this.handleStockChangeApparel("xlarge")}
               />
             </div>
           </div>
-
+          <div className="edit-image-tooltip">
+            <span className="edit-image-tooltiptext">
+              Note: Any new pictures for an item that are uploaded will
+              overwrite all current pictures for the item. You will have to
+              upload any old pictures again.
+            </span>
+            <div id="descriptor">
+              <p>To edit any of the pictures for an item please click below.</p>
+            </div>
+          </div>
           <div id="column" className="tester">
             <FileUploader
               accept="image/*"
@@ -533,21 +779,23 @@ class EditItemView extends Component {
               style={style.field}
             />
           </div>
-
-          <Button
-            variant="contained"
-            size="small"
-            color="primary"
-            onClick={this.updateItemInfo}
-            style={{
-              backgroundColor: "#DAAA00",
-              color: "white",
-              fontFamily: "Proxima Nova",
-              boxShadow: "none"
-            }}
-          >
-            Update Item
-          </Button>
+          <div className="tooltip">
+            {/* <span className="tooltiptext">In progress </span> */}
+            <Button
+              variant="contained"
+              size="small"
+              color="primary"
+              onClick={this.updateItemInfo}
+              style={{
+                backgroundColor: "#DAAA00",
+                color: "white",
+                fontFamily: "Proxima Nova",
+                boxShadow: "none"
+              }}
+            >
+              Update Item
+            </Button>
+          </div>
         </div>
       </div>
     );

@@ -1,8 +1,8 @@
 const express = require("express");
 const router = express.Router();
-const firebase = require("firebase");
 const admin = require("firebase-admin");
 const db = admin.firestore();
+const validator = require("validator");
 require("dotenv").config();
 
 // const schedule = require('node-schedule');
@@ -67,9 +67,9 @@ router.get("/", tokenMiddleware, (req, res) => {
 
           // else good to send back data
 
-          console.log("Succesfully retrieved vendor info.");
-          console.log("Vendor:", vendorData.vendorName);
-          console.log("User:", user);
+          // console.log("Succesfully retrieved vendor info.");
+          // console.log("Vendor:", vendorData.vendorName);
+          // console.log("User:", user);
           return res.status(200).json({
             success: true,
             bio: vendorData.bio,
@@ -78,7 +78,9 @@ router.get("/", tokenMiddleware, (req, res) => {
             vendorName: vendorData.vendorName,
             email: vendorData.email,
             emailSchedule: vendorData.emailSchedule,
-            pickupInfo: vendorData.pickupInfo
+            pickupInfo: vendorData.pickupInfo,
+            facebook: vendorData.facebook,
+            instagram: vendorData.instagram
           });
         })
         .catch(err => {
@@ -100,6 +102,114 @@ router.get("/", tokenMiddleware, (req, res) => {
     });
 }); // END GET /
 
+router.patch("/editClubPictures0", tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
+  if (req.body.params) {
+    var { picture, vid } = req.body.params;
+  } else {
+    var { picture, vid } = req.body;
+  }
+
+  if (user == undefined || picture == undefined || vid == undefined) {
+    console.log("Missing params for route.");
+    return res.json({
+      success: false,
+      message: "Missing params for route."
+    });
+  }
+
+  console.log(vid);
+
+  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${
+    picture
+  }?alt=media`;
+
+  const vendorRef = db.collection("vendors").doc(vid);
+  vendorRef
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log("No such vendor for given vid.");
+        return res.json({
+          success: false,
+          message: "Sorry, a server error occurred. Please try again later."
+        });
+      }
+
+      let oldPictures = doc.data().bioPictures;
+      if (oldPictures[0] !== link) {
+        oldPictures[0] = link;
+      }
+
+      vendorRef.update({ bioPictures: oldPictures });
+
+      return res.json({
+        success: true,
+        message: "Successfully updated club pictures."
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.json({
+        success: false,
+        message: "Sorry, a server error occurred. Please try again later."
+      });
+    });
+});
+
+router.patch("/editClubPictures1", tokenMiddleware, (req, res) => {
+  var { user } = req.authorizedData;
+  if (req.body.params) {
+    var { picture, vid } = req.body.params;
+  } else {
+    var { picture, vid } = req.body;
+  }
+
+  if (user == undefined || picture == undefined || vid == undefined) {
+    console.log("Missing params for route.");
+    return res.json({
+      success: false,
+      message: "Missing params for route."
+    });
+  }
+
+  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${
+    picture
+  }?alt=media`;
+
+  const vendorRef = db.collection("vendors").doc(vid);
+  vendorRef
+    .get()
+    .then(doc => {
+      if (!doc.exists) {
+        console.log("No such vendor for given vid.");
+        return res.json({
+          success: false,
+          message: "Sorry, a server error occurred. Please try again later."
+        });
+      }
+
+      let oldPictures = doc.data().bioPictures;
+      if (oldPictures[1] !== link) {
+        oldPictures[1] = link;
+      }
+
+      vendorRef.update({ bioPictures: oldPictures });
+
+      return res.json({
+        success: true,
+        message: "Successfully updated club pictures."
+      });
+    })
+    .catch(err => {
+      console.log(err);
+      return res.json({
+        success: false,
+        message: "Sorry, a server error occurred. Please try again later."
+      });
+    });
+});
+
 /**
  * For params, assume that when an admin goes to the edit page, frontend does a
  * GET on the vendor's old info. Even if the admin makes only one change, this
@@ -115,9 +225,25 @@ router.get("/", tokenMiddleware, (req, res) => {
 router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
   var { user } = req.authorizedData;
   if (req.body.params) {
-    var { vid, vendorName, bio, email, pickupInfo } = req.body.params;
+    var {
+      vid,
+      vendorName,
+      bio,
+      email,
+      pickupInfo,
+      facebook,
+      instagram
+    } = req.body.params;
   } else {
-    var { vid, vendorName, bio, email, pickupInfo } = req.body;
+    var {
+      vid,
+      vendorName,
+      bio,
+      email,
+      pickupInfo,
+      facebook,
+      instagram
+    } = req.body;
   }
 
   // must include editing user and vid; bio and vendorName not always edited
@@ -126,6 +252,14 @@ router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
     return res.status(200).json({
       success: false,
       message: "Error: missing params for editVendorInfo."
+    });
+  }
+
+  //check if user sent a valid contact email
+  if (validator.isEmail(email) === false) {
+    return res.json({
+      success: false,
+      message: "Invalid Email"
     });
   }
 
@@ -170,12 +304,14 @@ router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
             lastUpdate: lastUpdate,
             lastUpdateUser: lastUpdateUser,
             email: email,
-            pickupInfo: pickupInfo
+            pickupInfo: pickupInfo,
+            facebook: facebook,
+            instagram: instagram
           });
 
-          console.log("Succesfully updated vendor info.");
-          console.log("Vendor:", vendorName);
-          console.log("User:", user);
+          // console.log("Succesfully updated vendor info.");
+          // console.log("Vendor:", vendorName);
+          // console.log("User:", user);
 
           return res.status(200).json({
             success: true,
@@ -261,85 +397,95 @@ router.patch("/emailSchedule", tokenMiddleware, (req, res) => {
           // when updating emailSchedule, must first kill previous job with old
           // schedule
           var oldJob = schedule.scheduledJobs[vdoc.id];
-          oldJob.cancel();
 
-          // now, create new job with new emailSchedule
-          var j = schedule.scheduleJob(vdoc.id, emailSchedule, function() {
-            db.collection("orders")
-              .where("vid", "==", vdoc.id)
-              .where("seenByVendor", "==", false)
-              .orderBy("date", "asc")
-              .get()
-              .then(ordersSnapshot => {
-                console.log("Email job for:", vdoc.id);
-                console.log("Ran at time:", Date.now());
-                // do not send emails if no new orders
-                if (!ordersSnapshot.empty) {
-                  let orderCount = 0;
-                  ordersSnapshot.forEach(odoc => {
-                    db.collection("orders")
-                      .doc(odoc.id)
-                      .update({ seenByVendor: true });
+          // cancel only if there was an old job
+          if (oldJob != undefined) {
+            oldJob.cancel();
+          }
 
-                    // NOTE: for our own sanity, we are just gonna send a count of
-                    // items and a link to order history page.
-                    orderCount += 1;
-                  });
+          // if none, do not schedule a new task
+          if (emailSchedule !== "none") {
+            // now, create new job with new emailSchedule
+            var j = schedule.scheduleJob(vdoc.id, emailSchedule, function() {
+              db.collection("orders")
+                .where("vid", "==", vdoc.id)
+                .where("seenByVendor", "==", false)
+                .orderBy("date", "asc")
+                .get()
+                .then(ordersSnapshot => {
+                  console.log("Email job for:", vdoc.id);
+                  console.log("Ran at time:", Date.now());
+                  // do not send emails if no new orders
+                  if (!ordersSnapshot.empty) {
+                    let orderCount = 0;
+                    ordersSnapshot.forEach(odoc => {
+                      db.collection("orders")
+                        .doc(odoc.id)
+                        .update({ seenByVendor: true });
 
-                  // once obtained the orders
-                  let emailSubject =
-                    "You've got new orders from ECS193 E-commerce";
+                      // NOTE: for our own sanity, we are just gonna send a count of
+                      // items and a link to order history page.
+                      orderCount += 1;
+                    });
 
-                  const vendorEmail = new Email({
-                    message: {
-                      from: process.env.EMAIL,
-                      // from: 'test@test.com',
-                      subject: emailSubject,
-                      to: vdoc.data().email
-                    },
-                    send: false, // set send to true when not testing
-                    // preview: false,  // TODO turn off preview before production
+                    // once obtained the orders
+                    let emailSubject =
+                      "You've got new orders from ECS193 E-commerce";
 
-                    // TODO
-                    transport: {
-                      // uncomment when actually sending emails
-                      service: "gmail",
-                      auth: {
-                        user: process.env.EMAIL,
-                        pass: process.env.EMAIL_PASS
+                    const vendorEmail = new Email({
+                      message: {
+                        from: process.env.EMAIL,
+                        // from: 'test@test.com',
+                        subject: emailSubject,
+                        to: vdoc.data().email
+                      },
+                      send: false, // set send to true when not testing
+                      // preview: false,  // TODO turn off preview before production
+
+                      // TODO
+                      transport: {
+                        // uncomment when actually sending emails
+                        service: "gmail",
+                        auth: {
+                          user: process.env.EMAIL,
+                          pass: process.env.EMAIL_PASS
+                        }
                       }
-                    }
+                    });
+
+                    let emailIntro =
+                      "Hello, you have " +
+                      orderCount +
+                      " new orders. Please go to your admin order history page to see more details.";
+
+                    vendorEmail
+                      .send({
+                        template: "ordersNotification",
+                        locals: {
+                          location: "Test club location here.",
+                          emailIntro: emailIntro
+                        }
+                      })
+                      .then(() => {
+                        console.log("Finished Sending Email to:", vdoc.id);
+                      })
+                      // TODO send error email to shared account
+                      .catch(console.log);
+                  }
+                })
+                .catch(err => {
+                  // catch for orders ref
+                  console.log(
+                    "Error in getting user orders for emailing:",
+                    err
+                  );
+                  return res.status(200).json({
+                    success: false,
+                    message: "Error in updating email schedule" + err
                   });
-
-                  let emailIntro =
-                    "Hello, you have " +
-                    orderCount +
-                    " new orders. Please go to your admin order history page to see more details.";
-
-                  vendorEmail
-                    .send({
-                      template: "ordersNotification",
-                      locals: {
-                        location: "Test club location here.",
-                        emailIntro: emailIntro
-                      }
-                    })
-                    .then(() => {
-                      console.log("Finished Sending Email to:", vdoc.id);
-                    })
-                    // TODO send error email to shared account
-                    .catch(console.log);
-                }
-              })
-              .catch(err => {
-                // catch for orders ref
-                console.log("Error in getting user orders for emailing:", err);
-                return res.status(200).json({
-                  success: false,
-                  message: "Error in updating email schedule" + err
                 });
-              });
-          }); // end function for job schedule
+            }); // end function for job schedule
+          }
 
           // once done scheduling new task, update DB
           db.collection("vendors")

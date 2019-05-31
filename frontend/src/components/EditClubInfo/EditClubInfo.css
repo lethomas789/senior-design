@@ -1,7 +1,6 @@
 #editClubForm{
   display: flex;
   flex-direction: column;
-  height: 100vh;
 }
 
 .inputWidth{
@@ -14,6 +13,7 @@
 #updateEmailsContainer{
   display: flex;
   flex-direction: column;
+  min-height: 20vh;
 }
 
 #emailSelect{
@@ -32,7 +32,6 @@
 
 .btn-update-info {
   display: block;
-  margin-top: 120px;
 }
 
 #goDown {
@@ -44,7 +43,104 @@
   flex-direction: column;
   align-items: center;
   padding-bottom: 20px;
-  height: 95vh;
+  min-height: 95vh;
+}
+
+.club-bio-picture-uploader {	
+  margin-top: 30px;		 
+  margin-bottom: 30px;		  
+  display: flex;		
+  flex-direction: column;
+}
+
+.file-uploader {	
+  margin-top: 10px;		
+  margin-bottom: 10px;	 
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.tooltip .tooltiptext {
+  /* top: 10px; */
+
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  position: absolute;
+  z-index: 1;
+  top: -10px;
+  left: -40%;
+  /* left: 20%; */
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+.file-uploader-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.file-uploader-tooltip .file-uploader-tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 5px;
+  border-radius: 6px;
+
+  position: absolute;
+  z-index: 1;
+  top: -20px;
+  left: -70%;
+  /* left: 20%; */
+}
+
+.file-uploader-tooltip:hover .file-uploader-tooltiptext {
+  visibility: visible;
+}
+
+
+
+.update-email-tooltip {
+  position: relative;
+  display: inline-block;
+}
+
+/* Tooltip text */
+.update-email-tooltip .update-email-tooltiptext {
+  /* top: 10px; */
+  left: 125%;
+  visibility: hidden;
+  width: 200px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  padding: 10px;
+  border-radius: 6px;
+
+  position: absolute;
+  z-index: 1;
+  top: -10px;
+  left: -100%;
+}
+
+/* Show the tooltip text when you mouse over the tooltip container */
+.update-email-tooltip:hover .update-email-tooltiptext {
+  visibility: visible;
 }
 
 @media (max-width: 40em) {
@@ -58,6 +154,17 @@
     display: block;
   }
 
-
-
+  .tooltip {
+    display: none;
+  }
+  
+  /* Tooltip text */
+  .tooltip .tooltiptext {
+    display: none;
+  }
+  
+  /* Show the tooltip text when you mouse over the tooltip container */
+  .tooltip:hover .tooltiptext {
+    display: none;
+  }
 }

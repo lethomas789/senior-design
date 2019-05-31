@@ -7,22 +7,25 @@ import Hidden from "@material-ui/core/Hidden";
 function DisplayClub(props) {
   const { bio, vendorName, bioPicture, vid } = props;
 
+  const aboutLink = `/aboutClub/${vid}`;
+  const shopLink = `/vendorProducts/${vid}`;
+
   return (
-    <Link to={`/aboutClub/${vid}`} className="moreColls">
+    <div className="moreColls">
       <figure>
         <div className="roww">
-          <div className="moreContainer">
-            <img src={bioPicture} alt="Display Club" width="100%" />
-            <div className="hero-textt">{vendorName}</div>
-          </div>
-        </div>
-        <figcaption>
-          <Link className="shopClub" to={`/vendorProducts/${vid}`}>
-            See club's items.
+          <Link to={shopLink}>
+            <div className="moreContainer">
+              <img src={bioPicture} alt="Display Club" width="100%" />
+              <div className="hero-textt">Shop {vendorName}</div>
+            </div>
           </Link>
+        </div>
+        <figcaption className="shopClub">
+          <Link to={aboutLink}>Learn More About {vendorName}</Link>
         </figcaption>
       </figure>
-    </Link>
+    </div>
   );
 }
 
@@ -67,7 +70,7 @@ export default class Clubs extends Component {
             <DisplayClub
               bio={vendor.bio}
               vendorName={vendor.vendorName}
-              bioPicture={vendor.bioPictures[0]}
+              bioPicture={vendor.bioPictures[1]}
               vid={vendor.vid}
             />
           ))}

@@ -6,9 +6,7 @@ const db = admin.firestore();
 const validator = require("validator");
 const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
-const jwtKey = require("../config/jwt.json");
 const cookieConfig = require("../config/config.json");
-
 
 router.post("/", (req, res) => {
   //extract email and password from request
@@ -59,14 +57,6 @@ router.post("/", (req, res) => {
         });
       }
 
-      //             jwt.sign(payload,process.env.JWT_SECRET, { expiresIn: 3600 }, (err, token) => {
-      //               return res.status(200).json({
-      //                 success: true,
-      //                 message: "Login Successful!",
-      //                 token: token,
-      //                 email,
-      //                 vendors
-
       bcrypt.compare(password, doc.data().password, (err, validPassword) => {
         if (err) {
           return res.status(200).json({
@@ -94,9 +84,7 @@ router.post("/", (req, res) => {
                   });
                 }
                 vendors = doc.data().vendors;
-                
-                // info that JWT stores; TODO include anything else for frontend
-                // TODO modify all backend routes to change email to user
+
                 const payload = {
                   user: email,
                   vendors,
@@ -221,7 +209,6 @@ router.post("/googleLogin", (req, res) => {
       }
 
       if (doc.data().isVerified === false) {
-        console.log("No such account for provided email:", email);
         return res.json({
           success: false,
           message:
@@ -271,14 +258,6 @@ router.post("/googleLogin", (req, res) => {
                 });
               }
             );
-
-            // OLD TODO DELETE once frontend is changed
-            // return res.status(200).json({
-            //   success: true,
-            //   message: "Login Successful!",
-            //   email,
-            //   vendors
-            // });
           })
           .catch(err => {
             console.log("Server error in getting admin info:", err);
@@ -327,71 +306,118 @@ router.post("/googleLogin", (req, res) => {
 });
 
 //extract email parameter from google oauth
-router.get("/gmail", (req, res) => {
-  //database parameters are passed through query
-  var query = req.query;
-  var email = "";
-  var firstName = "";
-  var lastName = "";
-  var vendors = [];
+router.post("/gmail", (req, res) => {
+  if (req.body.params) {
+    var { email, firstName, lastName } = req.body.params;
+  } else {
+    var { email, firstName, lastName } = req.body;
+  }
 
-  //trim for white spaces from parameter
-  email = query.email.trim();
-  firstName = query.firstName.trim();
-  lastName = query.lastName.trim();
+  if (firstName == undefined) {
+    firstName = "empty"
+  }
+  if (lastName == undefined) {
+    lastName = "empty"
+  }
 
   //find email, similar logic as regular login
   //main difference is extracting login credentials using gmail params
   const userRef = db.collection("users").doc(email);
-  userRef.get().then(doc => {
-    //if the gmail for the user does not exist, create a new user in firestore database with gmail as identifier
-    //combo of signup + login code
-    if (!doc.exists) {
-      // no matching results, create new user
-      // create object to store into database
-      const newUser = {
-        name: {
-          firstName,
-          lastName
-        },
-        email,
-        isAdmin: false
-      };
+  userRef
+    .get()
+    .then(doc => {
+      //if the gmail for the user does not exist, create a new user in firestore database with gmail as identifier
+      //combo of signup + login code
+      if (!doc.exists) {
+        // no matching results, create new user
+        // create object to store into database
+        const newUser = {
+          name: {
+            firstName,
+            lastName
+          },
+          email,
+          isAdmin: false,
+          isVerified: true,
+        };
 
-      //create new user in database with parameters passed from google login oauth
-      db.collection("users")
-        .doc(email)
-        .set(newUser);
-      return res.status(200).json({
-        success: true,
-        message: "Login Successful!",
-        email
-      });
-    }
+        //create new user in database with parameters passed from google login oauth
+        db.collection("users")
+          .doc(email)
+          .set(newUser);
 
-    //sign in user
-    else {
-      if (doc.data().isAdmin) {
-        // we assume they will exist in admin collection
+        const payload = {
+          user: email,
+          vendors: [],
+          isAdmin: false
+        };
+        jwt.sign(
+          payload,
+          process.env.JWT_SECRET,
+          { expiresIn: "1h" },
+          (err, token) => {
+            if (err) {
+              console.log(err);
+              return res.json({
+                success: false,
+                message: "Error in generating jwt."
+              });
+            }
+
+            res.cookie("token", token, cookieConfig);
+
+            return res.status(200).json({
+              success: true,
+              message: "Login Successful!",
+              isAdmin: false
+            });
+          }
+        );
+      }
+
+      // else log in user
+      else if (doc.data().isAdmin) {
         db.collection("admins")
           .doc(email)
           .get()
-          .then(doc => {
-            if (!doc.exists) {
+          .then(adoc => {
+            if (!adoc.exists) {
               console.log("Server error in getting admin info");
               return res.status(200).json({
                 success: false,
                 message: "Server error in getting admin info"
               });
             }
-            vendors = doc.data().vendors;
+            const vendors = adoc.data().vendors;
+            // info that JWT stores; TODO include anything else for frontend
+            const payload = {
+              user: email,
+              vendors: vendors,
+              isAdmin: true
+            };
 
-            return res.status(200).json({
-              success: true,
-              message: "Login Successful!",
-              email,
-              vendors
-            });
+            jwt.sign(
+              payload,
+              process.env.JWT_SECRET,
+              { expiresIn: "1h" },
+              (err, token) => {
+                if (err) {
+                  console.log(err);
+                  return res.json({
+                    success: false,
+                    message: "Error in generating jwt."
+                  });
+                }
+
+                res.cookie("token", token, cookieConfig);
+
+                return res.status(200).json({
+                  success: true,
+                  message: "Login Successful!",
+                  isAdmin: true
+                });
+              }
+            );
           })
           .catch(err => {
             console.log("Server error in getting admin info:", err);
@@ -401,18 +427,44 @@ router.get("/gmail", (req, res) => {
             });
           });
       }
-
-      // else not admin, send empty array
+      // else not admin, log in normal user
       else {
-        return res.status(200).json({
-          success: true,
-          message: "Login Successful!",
-          email,
-          vendors
-        });
+        const payload = {
+          user: email,
+          vendors: [],
+          isAdmin: false
+        };
+        jwt.sign(
+          payload,
+          process.env.JWT_SECRET,
+          { expiresIn: "1h" },
+          (err, token) => {
+            if (err) {
+              console.log(err);
+              return res.json({
+                success: false,
+                message: "Error in generating jwt."
+              });
+            }
+
+            res.cookie("token", token, cookieConfig);
+
+            return res.status(200).json({
+              success: true,
+              message: "Login Successful!",
+              isAdmin: false
+            });
+          }
+        );
       }
-    }
-  });
+    })
+    .catch(err => {
+      console.log("Server error in google signup route:", err);
+      return res.json({
+        success: false,
+        message: "Sorry there was a server error. Please try again later."
+      });
+    });
 });
 
 module.exports = router;

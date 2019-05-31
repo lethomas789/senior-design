@@ -24,7 +24,7 @@ async function getVendorNames(arrayOfRefs, retArray) {
  * @returns: vendors - array of vid(s) for the vendor(s) user is admin of
  */
 router.get('/', tokenMiddleware, (req, res) => {
-  var { user } = req.authorizedData;
+  var { user, isAdmin } = req.authorizedData;
 
   // if (req.query.params) {
   //   var user = req.query.params.user;
@@ -34,11 +34,19 @@ router.get('/', tokenMiddleware, (req, res) => {
   // }
 
   // check if given user
-  if (!user) {
+  if (!user || !isAdmin) {
     console.log('Error in getAdminVendor: missing required request paramters');
     return res.status(200).json({
       success: false,
       message: 'Error in getAdminVendor: missing required request paramters'
+    });
+  }
+
+  if (!isAdmin) {
+    console.log('User not an admin.');
+    return res.json({
+      success: false,
+      message: 'Unauthorized, not an admin.',
     });
   }
 
@@ -102,6 +110,24 @@ router.get('/', tokenMiddleware, (req, res) => {
     });
   });
 });   // END GET /
+
+// check if user is an admin
+router.get('/checkAdmin', tokenMiddleware, (req, res) => {
+  var { user, isAdmin } = req.authorizedData;
+
+  if (!isAdmin) {
+    console.log('User not an admin.');
+    return res.json({
+      success: false,
+      message: 'Unauthorized, not an admin.',
+    });
+  }
+
+  return res.json({
+    success: true,
+    message: "Success"
+  });
+});
 
 /**
  * Route adds a new admin user for given vendor

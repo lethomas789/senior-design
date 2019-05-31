@@ -201,7 +201,7 @@ class Login extends Component {
 
     //make api call to login with gmail
     axios
-      .post("/api/login/googleLogin", {
+      .post("/api/login/gmail", {
         params: {
           email: email,
           firstName: firstName,
@@ -293,14 +293,6 @@ class Login extends Component {
       return <Redirect to="/shop" />
     }
 
-    // // pass props from App js /logout route
-    // // TODO make it state
-    // if (this.props.logout === true) {
-    //   console.log('LOGGING OUT USER FROM EXPIRED TOKEN');
-    //   this.props.updateLogout();
-    //   return <Redirect to="/login" />
-    // }
-
     return (
       <div id="loginContainer">
         <div id="loginForms">
@@ -326,7 +318,7 @@ class Login extends Component {
                 onKeyDown={this.handleEnter}
               />
               <Link to="/recoverPassword">
-                <h6> Recover Password </h6>
+                <h6 className = "bringDown"> Recover Password </h6>
               </Link>
             </div>
 
@@ -334,7 +326,11 @@ class Login extends Component {
               <Button
                 variant="contained"
                 onClick={this.sendLogin}
-                style = {{backgroundColor:"#DAAA00", color: "white", fontFamily: "Proxima Nova", boxShadow: "none"}}
+                style = {{backgroundColor:"#DAAA00", 
+                color: "white", 
+                fontFamily: "Proxima Nova",
+                marginBottom: "15px", 
+                boxShadow: "none"}}
               >
                 Login
               </Button>

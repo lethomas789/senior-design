@@ -4,7 +4,7 @@ import "./AboutClub.css";
 import axios from "axios";
 import { Link } from "react-router-dom";
 // import Slider from "react-slick";
-import testPicture from "../../images/wics2.png";
+// import testPicture from "../../images/wics2.png";
 // import Hidden from "@material-ui/core/Hidden";
 
 class ClubInfo extends Component {
@@ -15,66 +15,102 @@ class ClubInfo extends Component {
   };
 
   render() {
-    const { vendorName, bio, bioPictures } = this.props;
+    let {
+      vendorName,
+      bio,
+      bioPictures,
+      pickupInfo,
+      email,
+      facebook,
+      instagram,
+      vid
+    } = this.props;
+
+    console.log("FACEBOOK IS:", facebook);
+
+    if (facebook == undefined) {
+      facebook = "none";
+    }
+    if (instagram == undefined) {
+      instagram = "none";
+    }
+
     return (
       <div>
-
         <div id="about-club-container">
           <h1 className="club-header">{vendorName}</h1>
           {/* <div className="club-bio">{bio}</div> */}
 
-          <div className="about-colls">
-              <Link to="https://www.facebook.com/DavisWICS/">
-                  <img src={require("../../images/facebook.svg")} alt="Facebook" width="100%" />
-              </Link>
-            </div>
-
-            <div className="about-colls">
-              <Link to="https://www.instagram.com/wicsdavis/">
-                  <img src={require("../../images/instagram.svg")} alt="Instagram" width="100%" />
-              </Link>
-            </div>
-
-            <div className="about-colls">
-              <Link to="/shop">
-                  <img src={require("../../images/creative-market.svg")} alt="Shop" width="100%" />
-              </Link>
-            </div>
-  
           <ClubImages bioPictures={bioPictures} />
-          <Link to="https://www.facebook.com/DavisWICS/"
-         style= {{textDecoration: "none", color: "#C26E60"}}>
-          <div className = "events-now">
-            <h2>Events Every Thursday!</h2>
-           </div>
-         </Link>
+          {/* <a
+            href={facebook}
+            style={{ textDecoration: "none", color: "#C26E60" }}
+          >
+            <div className="events-now">
+              <h2>Events Every Thursday!</h2>
+            </div>
+          </a> */}
 
-          <div className="club-bio">
-          Women in Computer Science (WiCS) is a community in Davis that motivates and prepares women for real life challenges in the field of computer science.
+          <div className="club-bio">{bio}</div>
 
-          Women in Computer Science(WiCS) supports, empowers and motivates the growing community of women in computer science. 
-          We aim to prepare women for tech industry, 
-          in addition to inspiring women to explore educational and professional opportunities in computing through creating a powerful community, 
-          providing mentorship and helping them to succeed.
+          <div className="small-width ">
+            {/* <div className="roww"> */}
+            <div className="club-media-links">
+              {facebook != "none" ? (
+                <div>
+                  {/* <div className="club-media-links"> */}
+                  {/* <div className="colls"> */}
+                  <a href={facebook}>
+                    <img
+                      src={require("../../images/facebook.svg")}
+                      alt="Facebook"
+                      width="70px"
+                      height="70px"
+                    />
+                  </a>
+                </div>
+              ) : (
+                ""
+              )}
 
-          We aim to grow, learn and spread the joy of computer science together! 
-          Our mission is to create a platform where we can share ideas about our personal projects, 
-          promote interest in programming and go to Hackathons. 
-          We want to create a community of girls helping each other learn to code and working together to solve problems.
+              {instagram != "none" ? (
+                <div>
+                  {/* <div className="club-media-links"> */}
+                  {/* <div className="colls"> */}
+                  <a href={instagram}>
+                    <img
+                      src={require("../../images/instagram.svg")}
+                      alt="Instagram"
+                      width="70px"
+                      height="70px"
+                    />
+                  </a>
+                </div>
+              ) : (
+                ""
+              )}
+
+              {/* <div className="colls"> */}
+              <div>
+                {/* <div className="club-media-links"> */}
+                <Link to={`/vendorProducts/${vid}`}>
+                  <img
+                    src={require("../../images/creative-market.svg")}
+                    alt="Shop"
+                    width="70px"
+                    height="70px"
+                  />
+                </Link>
+              </div>
+            </div>
           </div>
 
-          <p className = "club-pick-up">
-          Pick-up Locations: Kemper Hall Lobby
-          </p>
+          {/* <p className="club-pick-up">Pick-up Locations: Kemper Hall Lobby</p> */}
+          <p className="club-pick-up">{pickupInfo}</p>
 
-          <p className = "club-contacts">
-          Contact us: wicsdavis@gmail.com</p>
-
-          </div>
-          
-          </div>
-
-
+          <p className="club-contacts">Contact us: {email} </p>
+        </div>
+      </div>
     );
   }
 }
@@ -98,7 +134,7 @@ class ClubImages extends Component {
     };
     return (
       <div className="club-pictures-container">
-        <img src={testPicture} alt="About Club" />
+        <img src={bioPictures[0]} alt="About Club" />
         {/* <Slider {...settings } className="club-pictures-slider">
           {bioPictures.map(img => 
             <img src={img} alt="Img" key={img} className="club-picture"/>
@@ -119,9 +155,11 @@ export default class AboutClub extends Component {
   state = {
     vendorName: "",
     bio: "",
-    bioPictures: []
-    // TODO more stuff
-    // TODO also change backend
+    bioPictures: [],
+    pickupInfo: "",
+    email: "",
+    facebook: "",
+    instagram: ""
   };
 
   componentDidMount() {
@@ -140,11 +178,24 @@ export default class AboutClub extends Component {
       })
       .then(res => {
         if (res.data.success) {
-          const { vendorName, bio, bioPictures } = res.data;
+          const {
+            vendorName,
+            bio,
+            bioPictures,
+            pickupInfo,
+            email,
+            facebook,
+            instagram
+          } = res.data;
+
           this.setState({
             vendorName,
             bio,
-            bioPictures
+            bioPictures,
+            pickupInfo,
+            email,
+            facebook,
+            instagram
           });
         } else {
           this.props.notifier({
@@ -165,12 +216,30 @@ export default class AboutClub extends Component {
 
   // TODO style about us page
   render() {
-    const { vendorName, bio, bioPictures } = this.state;
+    const vid = this.props.match.params.vid;
+
+    const {
+      vendorName,
+      bio,
+      bioPictures,
+      pickupInfo,
+      email,
+      facebook,
+      instagram
+    } = this.state;
 
     return (
       // <div id="about-club-container">
-      <ClubInfo vendorName={vendorName} bio={bio} bioPictures={bioPictures} />
-      // </div>
+      <ClubInfo
+        vendorName={vendorName}
+        bio={bio}
+        bioPictures={bioPictures}
+        pickupInfo={pickupInfo}
+        email={email}
+        facebook={facebook}
+        instagram={instagram}
+        vid={vid}
+      />
     );
   }
 }

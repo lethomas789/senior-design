@@ -45,23 +45,6 @@ require("dotenv").config();
 
 const history = createBrowserHistory();
 
-// const LocationDisplay = withRouter(({location}) => (
-//   <div data-testid="location-display">{location.pathname}</div>
-// ))
-
-/*
-axios.interceptors.request.use(config => {
-  // const token 
-  if (token != null) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
-
-  return config;
-}, err => {
-  return Promise.reject(err);
-})
-*/
-
 // on every response received by axios, check for 403
 axios.interceptors.response.use(
   res => {
@@ -166,7 +149,9 @@ class App extends Component {
               <Route
                 exact
                 path="/signup"
-                render={() => <Signup notifier={this.addNotification} />}
+                render={props => (
+                  <Signup {...props} notifier={this.addNotification} />
+                )}
               />
 
               <Route
