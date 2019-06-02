@@ -4,7 +4,7 @@ const admin = require('firebase-admin');
 const db = admin.firestore();
 
 /**
- * @param user = user id
+ * @param user = user id i.e. their email
  * 
  * 1. Check existing user
  * 2. Get user cart ref in DB
@@ -14,14 +14,6 @@ router.get('/', tokenMiddleware, (req,res) => {
 
   //passing user/email param through payload of token
   var { user } = req.authorizedData;
-
-  //get user id
-  // if (req.query.params) {
-  //   var user = req.query.params.user;
-  // }
-  // else {
-  //   var user = req.query.user;
-  // }
 
   // return error if empty request
   if (!user) {
@@ -79,6 +71,8 @@ router.get('/', tokenMiddleware, (req,res) => {
 });
 
 /**
+ * Adds items to a user'c carts.
+ * 
  * @param user - user id
  * @param pid - product id
  * @param vendorID - vendor id
@@ -283,6 +277,7 @@ router.post('/addItems', tokenMiddleware, (req, res) => {
   });  // end userRef.get()
 });
 
+// delete items from cart
 router.post('/deleteItems', tokenMiddleware, (req,res) => {
   var { user } = req.authorizedData;
 

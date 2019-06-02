@@ -28,7 +28,6 @@ router.post("/", tokenMiddleware, async (req, res) => {
       items,
       totalPrice,
       vid,
-      // user,
       paymentID,
       payerID
     } = req.body.params;
@@ -37,7 +36,6 @@ router.post("/", tokenMiddleware, async (req, res) => {
       items,
       totalPrice,
       vid,
-      // user,
       paymentID,
       payerID
     } = req.body;
@@ -202,7 +200,7 @@ router.post("/", tokenMiddleware, async (req, res) => {
  * POST vendor's order history
  * Make it a POST for extra security
  *
- * @param vid - vendor vid
+ * @param vid - vendor id
  */
 router.post("/getVendorOrders", tokenMiddleware, (req, res) => {
   if (req.body.params) {
@@ -328,8 +326,6 @@ router.get("/getUserOrders", tokenMiddleware, (req, res) => {
 
       let ordersRef = db.collection("orders");
 
-      // TODO, do an array contains for multiple vendors?
-
       // get all orders with user, ordered by date
       ordersRef
         .where("email", "==", user)
@@ -384,7 +380,7 @@ router.get("/getUserOrders", tokenMiddleware, (req, res) => {
  *
  * @param vid - vendor id
  * @param user - vendor admin
- * @param oid - firestore document order ID
+ * @param oid - document order ID
  */
 router.patch("/updateOrder", tokenMiddleware, (req, res) => {
   if (req.body.params) {

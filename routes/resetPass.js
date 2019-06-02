@@ -9,11 +9,16 @@ const Email = require("email-templates");
 const passwordValidator = require("password-validator");
 require('dotenv').config();
 
-// if user forgets their password, then they wont be able to login and wont be
-// able to get a token so we dont check for tokens on these routes
 
+/**
+ * POST route sends reset password email to given email.
+ * 
+ * @param email - email 
+ * 
+ * NOTE: if user forgets their password, then they wont be able to login and
+ * wont be able to get a token so we dont check for tokens on these routes
+ */
 router.post("/", (req, res) => {
-  // var host = req.headers.host;
   // var host = 'http:/localhost:3000'
   var host = "https://193ecommerce.com"
   if (req.body.params) {
@@ -55,15 +60,14 @@ router.post("/", (req, res) => {
       const token = crypto.randomBytes(20).toString("hex");
       const now = Date.now();
       const time = new Date(now + 3600000);
-      // console.log('time is:', time.toString());
 
       console.log("Reset token is:", token);
       console.log("Time is:", time);
       userRef.update({
         resetPassToken: token,
         resetPassExpires: time
-        // testTimeNow: admin.firestore.Timestamp.now()
       });
+
       // once obtained the orders
       const emailSubject = "ECS 193 Ecommerce Reset Password";
       const title = "Password Reset";
@@ -86,8 +90,8 @@ router.post("/", (req, res) => {
           subject: emailSubject,
           to: email
         },
-        send: true, // set send to true when not testing
-        // preview: false, // TODO turn off preview before production
+        send: true,     // set send to true when not testing
+        preview: false, 
 
         transport: {
           tls: {
@@ -105,7 +109,6 @@ router.post("/", (req, res) => {
 
       resetPassEmail
         .send({
-          // TODO template, and hide email info
           template: "resetPass",
           locals: {
             title,
@@ -132,6 +135,13 @@ router.post("/", (req, res) => {
     });
 });
 
+/**
+ * GET route that find corresponding email in DB for given token. If token
+ * exists and has not yet expired, send back corresponding email to frontend to
+ * reset password.
+ * 
+ * @param resetPassToken - token obtained from password reset email link
+ */
 router.get("/checkToken", (req, res) => {
   if (req.query.params) {
     var { resetPassToken } = req.query.params;
@@ -188,6 +198,12 @@ router.get("/checkToken", (req, res) => {
     });
 });
 
+/**
+ * POST route that updates password for given email.
+ * 
+ * @param email - email for account resetting password
+ * @param newPassword - new password 
+ */
 router.post("/updatePass", (req, res) => {
   if (req.body.params) {
     var { email, newPassword } = req.body.params;

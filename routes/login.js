@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const firebase = require("firebase");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const validator = require("validator");
@@ -8,6 +7,12 @@ const bcrypt = require("bcrypt-nodejs");
 const jwt = require("jsonwebtoken");
 const cookieConfig = require("../config/config.json");
 
+/**
+ * POST route to log in a user.
+ * 
+ * @param email - user email
+ * @param password - user's password
+ */
 router.post("/", (req, res) => {
   //extract email and password from request
   if (req.body.params) {
@@ -91,7 +96,6 @@ router.post("/", (req, res) => {
                   isAdmin: true
                 };
 
-                // console.log("user signing is an admin");
                 jwt.sign(
                   payload,
                   process.env.JWT_SECRET,
@@ -110,7 +114,6 @@ router.post("/", (req, res) => {
                     return res.status(200).json({
                       success: true,
                       message: "Login Successful!",
-                      //EDIT, need to indicate user signing in is an admin to update redux on frontend
                       isAdmin: true
                     });
                   }
@@ -137,8 +140,6 @@ router.post("/", (req, res) => {
             jwt.sign(
               payload,
               process.env.JWT_SECRET,
-              //change expiresIn from hours to seconds to test token expiration timeout on frontend
-              // { expiresIn: 5 },
               { expiresIn: "1h" },
               (err, token) => {
                 if (err) {
@@ -339,6 +340,7 @@ router.post("/gmail", (req, res) => {
           email,
           isAdmin: false,
           isVerified: true,
+          isOauth: true,
         };
 
         //create new user in database with parameters passed from google login oauth

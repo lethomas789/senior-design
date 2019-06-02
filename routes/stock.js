@@ -5,7 +5,8 @@ const admin = require("firebase-admin");
 const db = admin.firestore();
 
 /**
- * GET route to check if existing stock
+ * GET route to check if item has existing stock
+ *
  * @param pid - product id
  * @param isApparel - bool flag
  * @param size - string indicatign stock size e.g "s_stock", "xs_stock" etc.
@@ -86,6 +87,7 @@ router.get("/", (req, res) => {
 
 /**
  * PATCH route to subtract stock on purchase
+ *
  * @param pid - product id
  * @param isApparel - bool flag
  * @param size - string indicatign stock size e.g "s_stock", "xs_stock" etc.
@@ -107,6 +109,9 @@ router.patch("/", tokenMiddleware, (req, res) => {
   }
 
   const productRef = db.collection("products").doc(pid);
+
+  // see firestore transactions; used for async attempts to access same data;
+  // used to protect against errors from race conditions
   const transaction = db
     .runTransaction(t => {
       return t.get(productRef).then(doc => {
@@ -120,13 +125,20 @@ router.patch("/", tokenMiddleware, (req, res) => {
         const pdata = doc.data();
         if (isApparel === true) {
           const newAmt = pdata[size] - amt;
-          t.update(productRef, { [size]: newAmt });
+          const newPurchased = pdata.purchasedStock + 1;
+          const newStock = pdata.stock - amt;
+          t.update(productRef, {
+            [size]: newAmt,
+            purchasedStock: newPurchased,
+            stock: newStock,
+          });
           // console.log("Successfully subtracted product stock.");
           return Promise.resolve("Product stock subtracted.");
         } else {
           const newAmt = pdata.stock - amt;
+          const newPurchased = pdata.purchasedStock + 1;
 
-          t.update(productRef, { stock: newAmt });
+          t.update(productRef, { stock: newAmt, purchasedStock: newPurchased });
           // console.log("Successfully subtracted product stock.");
           return Promise.resolve("Product stock subtracted.");
         }

@@ -5,8 +5,6 @@ const db = admin.firestore();
 const validator = require("validator");
 require("dotenv").config();
 
-// const schedule = require('node-schedule');
-
 /**
  * GET returns vendor about info for frontend.
  *
@@ -19,10 +17,8 @@ router.get("/", tokenMiddleware, (req, res) => {
   var { user } = req.authorizedData;
 
   if (req.query.params) {
-    // var user = req.query.params.user;
     var vid = req.query.params.vid;
   } else {
-    // var user = req.query.user;
     var vid = req.query.vid;
   }
 
@@ -120,9 +116,7 @@ router.patch("/editClubPictures0", tokenMiddleware, (req, res) => {
 
   console.log(vid);
 
-  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${
-    picture
-  }?alt=media`;
+  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${picture}?alt=media`;
 
   const vendorRef = db.collection("vendors").doc(vid);
   vendorRef
@@ -173,9 +167,7 @@ router.patch("/editClubPictures1", tokenMiddleware, (req, res) => {
     });
   }
 
-  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${
-    picture
-  }?alt=media`;
+  let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${picture}?alt=media`;
 
   const vendorRef = db.collection("vendors").doc(vid);
   vendorRef
@@ -219,8 +211,11 @@ router.patch("/editClubPictures1", tokenMiddleware, (req, res) => {
  * @param vid - vid must be sent from frontend to obtain vendor DB info
  * @param bio - vendor description
  * @param vendorName - if user wants to change vendorName
+ * @param email - main club contact email 
+ * @param pickupInfo - string containing club's product pickup information
+ * @param facebook - club's facebook link
+ * @param instagram - club-s instagram link
  *
- * @returns res success true or false
  */
 router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
   var { user } = req.authorizedData;
@@ -337,16 +332,26 @@ router.patch("/editVendorInfo", tokenMiddleware, (req, res) => {
     });
 }); // END PATCH /editVendorInfo
 
+/**
+ * PATCH route to update a club's email schedule. The email schedule is how
+ * often the club wants to be updated about new products. For example, an email
+ * schedule of every 3 hours means that every 3 hours, the server will check
+ * the DB to see if there have been any new orders for that club. The server
+ * will then sum up the number of orders and send an email to the main club
+ * contact email about new orders, and to check their club's order history.
+ * 
+ * @param vid - vendor/club id
+ * @param emailSchedule - string corresponding to node-schedule. Please see the library's documentation for more info
+ */
 router.patch("/emailSchedule", tokenMiddleware, (req, res) => {
   var { user } = req.authorizedData;
+
   if (req.body.params) {
     var vid = req.body.params.vid;
     var emailSchedule = req.body.params.emailSchedule;
-    // var user = req.body.params.user;
   } else {
     var vid = req.body.vid;
     var emailSchedule = req.body.emailSchedule;
-    // var user = req.body.user;
   }
 
   // example:
@@ -435,14 +440,11 @@ router.patch("/emailSchedule", tokenMiddleware, (req, res) => {
                     const vendorEmail = new Email({
                       message: {
                         from: process.env.EMAIL,
-                        // from: 'test@test.com',
                         subject: emailSubject,
                         to: vdoc.data().email
                       },
-                      send: false, // set send to true when not testing
-                      // preview: false,  // TODO turn off preview before production
+                      send: true, // set send to true when not testing
 
-                      // TODO
                       transport: {
                         // uncomment when actually sending emails
                         service: "gmail",
@@ -469,7 +471,6 @@ router.patch("/emailSchedule", tokenMiddleware, (req, res) => {
                       .then(() => {
                         console.log("Finished Sending Email to:", vdoc.id);
                       })
-                      // TODO send error email to shared account
                       .catch(console.log);
                   }
                 })

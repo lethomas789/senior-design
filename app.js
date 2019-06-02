@@ -8,17 +8,21 @@ const admin = require("firebase-admin");
 const cron = require("node-cron");
 const Email = require("email-templates");
 const jwt = require("jsonwebtoken");
-const jwtKey = require("./config/jwt.json");
 const cookieParser = require("cookie-parser");
 const cookieConfig = require("./config/config.json");
 
+// used to retrieve sensitive information placed within .env files
+// see calls to "process.env.<variable here>"
 require("dotenv").config();
 
+// node shcedule library made global so that other routes can access globally
+// scheduled jobs
 global.schedule = require("node-schedule");
 
 // firebase setup
 const serviceAccount = require("./config/ecs193-ecommerce-firebase-adminsdk-7iy3n-f581d24562.json");
 
+// firebase initialization
 admin.initializeApp({
   credential: admin.credential.cert(serviceAccount),
   databaseURL: process.env.DB_URL
@@ -35,6 +39,9 @@ app.use(bodyParser.urlencoded({ extended: false }));
 // use cors;
 app.use(cors());
 
+// the backend sends user information back to frontend using http-only cookies
+// for security purposes. The below line of code requries the server to encode
+// the cookies sent with as ecret
 app.use(cookieParser(process.env.COOKIE_SECRET));
 
 //serve react files
@@ -52,13 +59,14 @@ const checkToken = (req, res, next) => {
       message: "Please login to view."
     });
   } else {
-    // if
+    // else, token exists, so send it to next middleware
     next();
   }
 };
 
 // middleware to decode token and grab authorized data
 const decodeToken = (req, res, next) => {
+  // verify the jwt against secret
   jwt.verify(
     req.signedCookies.token,
     process.env.JWT_SECRET,
@@ -77,6 +85,10 @@ const decodeToken = (req, res, next) => {
   );
 };
 
+// middleware to refresh token 
+// tokens expire after a given amount of time. If user is still using the
+// website and making request calls, then we refresh their token so it doesn't
+// expire in the middle of them using the website
 const refreshToken = (req, res, next) => {
   const { user, vendors, isAdmin } = req.authorizedData;
   const newPayload = { user, vendors, isAdmin };
@@ -100,9 +112,12 @@ const refreshToken = (req, res, next) => {
   );
 };
 
+// make the token middleware global so it can be used in all of the server's
+// routes
 global.tokenMiddleware = [checkToken, decodeToken, refreshToken];
 
-//routes
+// routes; frontend can make API calls to different routes to do different
+// things
 const router = express.Router();
 const users = require("./routes/users");
 const signup = require("./routes/signup");
@@ -122,6 +137,7 @@ const resetPass = require("./routes/resetPass");
 const checkTokenRefresh = require("./routes/checkTokenRefresh");
 const logout = require("./routes/logout");
 
+// specific routes
 app.use("/api/users", users);
 app.use("/api/signup", signup);
 app.use("/api/login", login);
@@ -140,7 +156,7 @@ app.use("/api/resetPass", resetPass);
 app.use("/api/checkTokenRefresh", checkTokenRefresh);
 app.use("/api/logout", logout);
 
-//fix react app crashing on refresh
+// fix react app crashing on refresh
 app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname + "/frontend/build/index.html"));
 });
@@ -153,9 +169,6 @@ var initSchedules = db
   .get()
   .then(snapshot => {
     snapshot.forEach(vdoc => {
-      // job name === doc.vid
-      // job schedule === doc.emailSchedule
-
       // only schedule jobs if there exists an emailSchedule setting
       if (vdoc.data().emailSchedule !== "none") {
         let j = schedule.scheduleJob(
@@ -190,7 +203,6 @@ var initSchedules = db
                   const vendorEmail = new Email({
                     message: {
                       from: process.env.EMAIL,
-                      // from: 'test@test.com',
                       subject: emailSubject,
                       to: vdoc.data().email
                     },
@@ -216,7 +228,6 @@ var initSchedules = db
                     .send({
                       template: "ordersNotification",
                       locals: {
-                        location: "Test club location here.",
                         emailIntro: emailIntro
                       }
                     })
@@ -238,48 +249,10 @@ var initSchedules = db
   .catch(err => {
     // catch for initSchedule
     console.log(err);
-    // TODO, send email to self on this breaking
-    // once obtained the orders
-    let emailSubject = "193 E-commerce: Error in Email Schedules";
-
-    const errorEmail = new Email({
-      message: {
-        from: process.env.EMAIL,
-        // from: 'test@test.com',
-        subject: emailSubject,
-        to: process.env.ERROR_EMAIL
-      },
-      send: true, // set send to true when not testing
-      // preview: false,  // TODO turn off preview before production
-
-      transport: {
-        // uncomment when actually sending emails
-        // TODO, change password, and hide it in config file
-        service: "gmail",
-        auth: {
-          user: process.env.EMAIL,
-          pass: process.env.EMAIL_PASS
-        }
-      }
-    });
-
-    let emailIntro = "Error in email schedules for ECS193 Ecomerce.";
-
-    errorEmail
-      .send({
-        template: "ordersNotification",
-        locals: {
-          location: "Test club location here.",
-          emailIntro: emailIntro
-        }
-      })
-      .then(() => {
-        console.log("Finished Sending Error Email to self.");
-      })
-      .catch(console.log);
   });
 
-// clear from DB once every 60 min, accounts who is not verified, and their email toekens have expired
+// clear from DB once every 60 min, accounts who is not verified, and their
+// email toekens have expired
 var clearUnVerifiedAccounts = schedule.scheduleJob("*/60 * * * *", function() {
   let time = new Date();
   console.log("Clearing unverified accounts at:", time);
@@ -302,22 +275,6 @@ var clearUnVerifiedAccounts = schedule.scheduleJob("*/60 * * * *", function() {
       console.log("Error in clearing unverified accounts job", err);
     });
 });
-
-/*var defaultApp = admin.initializeApp(defaultAppConfig);
-var defaultAuth = defaultApp.auth();
-
-var provider = new firebase.auth.GoogleAuthProvider();
-firebase.auth().signinWithRedirect(provider);
-firebase.auth().getRedirectResult().then(function(result) {
-	if (result.credential){
-		var token = result.credential.accessToken;
-	}
-}).catch(function(error) {
-	var errorCode = error.code;
-	var errorMessage = error.message;
-	var email = error.email;
-	var credential = error.credential;
-});*/
 
 // listen to requests on port
 // choose port based on environment
