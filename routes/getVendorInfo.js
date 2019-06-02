@@ -38,6 +38,9 @@ router.get("/", (req, res) => {
     });
 });
 
+/**
+ * GET route used to get a club's about page information.
+ */
 router.get("/aboutClub", (req, res) => {
   if (req.query.params) {
     var { vid } = req.query.params;

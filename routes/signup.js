@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const firebase = require("firebase");
 const admin = require("firebase-admin");
 const db = admin.firestore();
 const validator = require("validator");
@@ -12,6 +11,7 @@ const Email = require("email-templates");
 const crypto = require("crypto");
 const passwordValidator = require("password-validator");
 
+// function used to send signup verification email
 function sendEmail(email, token) {
   // send email confirmation email
   const emailSubject = "ECS 193 Ecommerce Verification Email";
@@ -25,12 +25,11 @@ function sendEmail(email, token) {
   const confirmEmail = new Email({
     message: {
       from: process.env.EMAIL,
-      // from: 'test@test.com',
       subject: emailSubject,
       to: email
     },
     send: true, // set send to true when not testing
-    // preview: false, // TODO turn off preview before production
+    // preview: false, // preview email on localhost
 
     transport: {
       tls: {
@@ -57,17 +56,21 @@ function sendEmail(email, token) {
     })
     .then(() => {
       console.log("Finished signup email to:", email);
-      /*
-          return res.json({
-            success: true,
-            message: "Successfully sent reset password email."
-          });
-          */
     })
     .catch(console.log);
 }
 
-// sign up user
+/**
+ * POST route for regular user signup for the user. This route will create an
+ * account for the user in the database, assuming the email given doesn't
+ * already exist.
+ * The route will send a confirmation email to the user to confirm their email.
+ * 
+ * @param firstName - user's first name
+ * @param lastName - user's last name
+ * @param email - user's email
+ * @param password - user's password
+ */
 router.post("/", (req, res) => {
   if (req.body.params) {
     // extract user info from request
@@ -75,21 +78,6 @@ router.post("/", (req, res) => {
   } else {
     var { firstName, lastName, email, password } = req.body;
   }
-
-  // firstName = firstName.trim().escape();
-  // lastName = lastName.trim().escape();
-
-  // // emails case insensitive so lowercase them to save in DB
-  // email = email.isEmail().normalizeEmail();
-  // password = password.trim().escape();
-
-
-  // console.log(firstName);
-  // console.log(lastName);
-  // console.log(email);
-  // console.log(password);
-
-  // return res.sendStatus(200);
 
   var passwordSchema = new passwordValidator();
 
@@ -152,9 +140,11 @@ router.post("/", (req, res) => {
         });
       }
 
-      // user has one hour to activate their account
+      // token is a unique string to associate to this user's account. Token
+      // used for security purposes.
       const token = crypto.randomBytes(20).toString("hex");
       const now = Date.now();
+      // user has one hour to activate their account
       const time = new Date(now + 3600000);
 
       // no pre exisitng account so create new user
@@ -214,6 +204,12 @@ router.post("/", (req, res) => {
     });
 });
 
+/**
+ * Route used to confirm a user's account
+ * 
+ * @param token - unique string that was generated and associated to user's account
+ * 
+ */
 router.get("/confirmEmail", (req, res) => {
   if (req.query.params) {
     var { token } = req.query.params;
@@ -278,6 +274,11 @@ router.get("/confirmEmail", (req, res) => {
     });
 }); // END GET /confirmEmail
 
+/**
+ * Used to make an account from OAuth through google. This specific route is
+ * no longer used. Please see /login/gmail for signing up and logging in
+ * through OAuth gmail
+ */
 router.post("/googleSignup", (req, res) => {
   if (req.body.params) {
     var { email, firstName, lastName } = req.body.params;
