@@ -17,9 +17,9 @@ import firebaseConfig from "../../config/ecs193-ecommerce-firebase-adminsdk-7iy3
 //config file for firebase
 const config = {
   apiKey: firebaseConfig.private_key,
-  authDomain: "ecs193-ecommerce.firebaseapp.com",
-  databaseURL: "https://ecs193-ecommerce.firebaseio.com",
-  storageBucket: "ecs193-ecommerce.appspot.com"
+  authDomain: process.env.REACT_APP_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_DATABASE_URL,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
 };
 
 firebase.initializeApp(config);
