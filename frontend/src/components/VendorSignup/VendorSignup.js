@@ -1,16 +1,15 @@
-import React, { Component } from 'react';
-import './VendorSignup.css';
-import { connect } from 'react-redux';
-import actions from '../../store/actions';
-import axios from 'axios';
-import Grid from '@material-ui/core/Grid';
-import Paper from '@material-ui/core/Paper';
-import Button from '@material-ui/core/Button';
-import TextField from '@material-ui/core/TextField';
-import Select from '@material-ui/core/Select';
-import FormControl from '@material-ui/core/FormControl';
-import InputLabel from '@material-ui/core/InputLabel';
-import MenuItem from '@material-ui/core/MenuItem';
+import React, { Component } from "react";
+import "./VendorSignup.css";
+import { connect } from "react-redux";
+import actions from "../../store/actions";
+import axios from "axios";
+import Paper from "@material-ui/core/Paper";
+import Button from "@material-ui/core/Button";
+import TextField from "@material-ui/core/TextField";
+import Select from "@material-ui/core/Select";
+import FormControl from "@material-ui/core/FormControl";
+import InputLabel from "@material-ui/core/InputLabel";
+import MenuItem from "@material-ui/core/MenuItem";
 // import { createHashHistory, createBrowserHistory } from 'histor
 // const history = createBrowserHistory();
 
@@ -21,15 +20,15 @@ import MenuItem from '@material-ui/core/MenuItem';
 //insert access code
 
 class VendorSignup extends Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
-      email: '',
-      code: '',
-      vendor: 'Select Club Name',
+      email: "",
+      code: "",
+      vendor: "Select Club Name",
       open: false,
-      value: '',
-      vendorID: '',
+      value: "",
+      vendorID: "",
       vendors: []
     };
     this.sendSignup = this.sendSignup.bind(this);
@@ -39,13 +38,14 @@ class VendorSignup extends Component {
   }
 
   //store list of active vendors from database
-  componentDidMount(){
+  componentDidMount() {
     const apiURL = "/api/getVendorInfo";
-    axios.get(apiURL)
+    axios
+      .get(apiURL)
       .then(res => {
         this.setState({
           vendors: res.data.vendors
-        })
+        });
       })
       .catch(err => {
         this.props.notifier({
@@ -53,36 +53,36 @@ class VendorSignup extends Component {
           message: err.toString(),
           type: "danger"
         });
-      })
+      });
   }
 
   //close select
-  handleClose(){
+  handleClose() {
     this.setState({
       open: false
-    })
+    });
   }
 
   //open select
-  handleOpen(){
+  handleOpen() {
     this.setState({
       open: true
-    })
+    });
   }
 
   //update value selected
-  handleSelect(event){
+  handleSelect(event) {
     var currentVendorID = event.target.value;
-    var currentVendorName = '';
+    var currentVendorName = "";
     //search through list of available vendors
     //save state of selected vendor
     //save vendor id and name of selected vendor
-    for(let i = 0; i < this.state.vendors.length; i++){
-      if(this.state.vendors[i].vid === currentVendorID){
+    for (let i = 0; i < this.state.vendors.length; i++) {
+      if (this.state.vendors[i].vid === currentVendorID) {
         currentVendorName = this.state.vendors[i].vendorName;
         this.setState({
           vendorID: currentVendorID,
-          vendor: currentVendorName     
+          vendor: currentVendorName
         });
         break;
       }
@@ -90,22 +90,50 @@ class VendorSignup extends Component {
   }
 
   //send signup to verify admin process
-  sendSignup(){
+  sendSignup() {
     //add current user to be admin of selected vendor
     const apiURL = "/api/adminUser/addAdminUser";
 
-    axios.post(apiURL, {
-
-      params:{
-        user: this.state.email,
-        vid: this.state.vendorID,
-        adminCode: this.state.code
-      }
-    })
-    .then(res => {
-      //if successful, set isAdmin = true
-      //login in user
-      //redirect back to homepage with admin version of navbar
+    axios
+      .post(apiURL, {
+        params: {
+          // user: this.state.email,
+          vid: this.state.vendorID,
+          adminCode: this.state.code
+        }
+      })
+      .then(res => {
+        // if successful in making new user, need to reset a login
+        // a quick fix; can revamp later
+        if (res.data.success) {
+          this.props.notifier({
+            title: "Success",
+            message:
+              "Successfully upgraded account to admin status. Please log back in for admin privileges.",
+            type: "success",
+            duration: 10000
+          });
+          this.props.updateLogout();
+          // call route to clear token
+          axios
+            .post("/api/logout", { withCredentials: true })
+            .then(res => {
+              console.log(res.status);
+              this.props.history.push("/login");
+            })
+            .catch(err => {
+              console.log(err);
+              this.props.notifier({
+                title: "Error",
+                message: err.toString(),
+                type: "danger"
+              });
+            });
+        }
+        //if successful, set isAdmin = true
+        //login in user
+        //redirect back to homepage with admin version of navbar
+        /*
       if(res.data.success === true){
         //get list of vendors user is an admin of
         //get the vids of vendors in which user is an admin of
@@ -147,96 +175,125 @@ class VendorSignup extends Component {
           });
         })
       }
+      */
 
-      //print why verification didn't work
-      else{
+        //print why verification didn't work
+        else {
+          this.props.notifier({
+            title: "Error",
+            message: res.data.message,
+            type: "danger"
+          });
+        }
+      })
+      .catch(err => {
         this.props.notifier({
           title: "Error",
-          message: res.data.message,
+          message: err.toString(),
           type: "danger"
         });
-      }
-    })
-    .catch(err => {
-      this.props.notifier({
-        title: "Error",
-        message: err.toString(),
-        type: "danger"
       });
-    })
   }
 
   render() {
     if (this.state.vendors == null) {
-      return (<div></div>)
+      return <div />;
     }
 
     const vendorList = this.state.vendors.map(result => {
-      return <MenuItem key = {result.vid} value = {result.vid} name = {result.vendorName}> {result.vendorName} </MenuItem>
+      return (
+        <MenuItem key={result.vid} value={result.vid} name={result.vendorName}>
+          {result.vendorName}
+        </MenuItem>
+      );
     });
 
     return (
-      <div>
-        <Grid container direction = "column" justify = "center" alignItems = "center" id="vendor-signup-container">
-          <Paper id = "vendorSignupPaperContainer">
-            <h1> Admin Verification </h1>
-            <div className = "textForm" id="row">
+      <div id="vendor-signup-container">
+        <Paper id="vendorSignupPaperContainer">
+          <h1> Admin Verification </h1>
+          <p id="vendor-signup-explanation">
+            Upgrade logged in account into an admin account for selected vendor.
+          </p>
+          {/* <div className = "textForm" id="row">
               <TextField
                 label="Email"
                 required="true"
                 onChange={(event) => this.setState({ email: event.target.value })}
               />
-            </div>
+            </div> */}
 
-            <div className = "textForm" id="row">
-              <TextField
-                label="Access Code"
-                type="password"
-                required="true"
-                onChange={(event) => this.setState({ code: event.target.value })}
-                style={{marginBottom: "15px"}}
-              />
-            </div>
+          <div className="textForm" id="row">
+            <TextField
+              label="Access Code"
+              type="password"
+              required="true"
+              onChange={event => this.setState({ code: event.target.value })}
+              style={{ marginBottom: "35px" }}
+            />
+          </div>
 
-            <h5> Select Vendor </h5>
+          <h5> Select Vendor </h5>
 
-            <div className = "textForm" id = "row">
-              <FormControl id = "clubForm">
-                <InputLabel> {this.state.vendor} </InputLabel>
-                <Select value = {this.state.value} open = {this.state.open} onClose = {this.handleClose} onOpen = {this.handleOpen} onChange = {this.handleSelect}>
-                  {vendorList}
-                </Select>
-              </FormControl>
-            </div>
-            <Button type = "submit" variant = "contained" color = "primary" onClick = {this.sendSignup} style={{marginTop: "10px"}}> Verify  </Button>
-          </Paper>
-        </Grid>
+          <div className="textForm" id="row">
+            <FormControl id="clubForm">
+              <InputLabel> {this.state.vendor} </InputLabel>
+              <Select
+                value={this.state.value}
+                open={this.state.open}
+                onClose={this.handleClose}
+                onOpen={this.handleOpen}
+                onChange={this.handleSelect}
+              >
+                {vendorList}
+              </Select>
+            </FormControl>
+          </div>
+          <Button
+            type="submit"
+            variant="contained"
+            color="primary"
+            onClick={this.sendSignup}
+            style={{ marginTop: "10px" }}
+          >
+            Verify
+          </Button>
+        </Paper>
       </div>
-    )
+    );
   }
 }
 
 //obtain state from store as props for component
 //get cart items, login value, and user email
 const mapStateToProps = state => {
-  return{
+  return {
     items: state.cart.items,
     login: state.auth.login,
     vendors: state.vendor.vendors
-  }
-}
+  };
+};
 
 //redux
 //dispatch action to reducer, get user's cart from store
 const mapDispatchToProps = dispatch => {
-  return{
-    updateAdminLogin: (vendorID, adminsOf, vendor) => dispatch({
-      type: actions.ADMIN_LOGGED_IN,
-      vid: vendorID,
-      admins: adminsOf,
-      currentVendor: vendor
-    })
-  }
-}
+  return {
+    updateAdminLogin: (vendorID, adminsOf, vendor) =>
+      dispatch({
+        type: actions.ADMIN_LOGGED_IN,
+        vid: vendorID,
+        admins: adminsOf,
+        currentVendor: vendor
+      }),
 
-export default connect(mapStateToProps, mapDispatchToProps)(VendorSignup);
+    updateLogout: () =>
+      dispatch({
+        type: actions.LOGGED_OUT
+      }),
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(VendorSignup);

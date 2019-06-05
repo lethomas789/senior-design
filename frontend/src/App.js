@@ -92,41 +92,7 @@ class App extends Component {
     }
   };
 
-  //check token expiration if user was logged in
-  checkIfTokenNeedsRefresh = () => {
-    if (this.props.login === true) {
-      const apiURL = "/api/checkTokenRefresh";
-
-      axios
-        .get(apiURL, {
-          withCredentials: true
-        })
-        .then(res => {})
-        //err catches 403 forbidden error
-        .catch(err => {
-          //logout user and then display error message
-          this.addNotification({
-            title: "Error",
-            message: "Session Expired Please Login Again",
-            type: "danger"
-          });
-
-          this.props.updateLogout();
-
-          //goal is to show alert message and then redirect
-          //set timeout, after 4 seconds redirect to login
-          setTimeout(() => {
-            window.location = "/login";
-          }, 4000);
-        });
-    }
-  };
-
   componentDidMount() {
-    // alert("testing to see if token needs to be refreshed");
-    //need to write function to check if token is present, verify on backend, need to see if needs to be refreshed
-    //if token is expired, logout user and redirect to login
-    // this.checkIfTokenNeedsRefresh();
   }
 
   render() {

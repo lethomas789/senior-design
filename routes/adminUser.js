@@ -146,103 +146,124 @@ router.post("/addAdminUser", tokenMiddleware, (req, res) => {
 
   // let vendorRef = db.collection('vendors');
   let vendorRef = db.collection("vendors").doc(vid);
+  let userRef = db.collection("users").doc(user);
 
-  vendorRef
+  userRef
     .get()
-    .then(doc => {
-      if (!doc.exists) {
-        console.log("Error: no such vendor for given vid:", vid);
-        return res.status(200).json({
+    .then(udoc => {
+      if (!udoc.exists) {
+        console.log("No such user to make admin.");
+        return res.json({
           success: false,
-          message: "Error: no such vendor for given vid: " + vid
+          message: "Sorry, no such existing account."
         });
       }
 
       vendorRef
-        .collection("adminCode")
-        .doc("adminCode")
         .get()
         .then(doc => {
-          // check to see if their admin code matches submitted admin code
-          if (doc.data().adminCode !== adminCode) {
-            console.log(
-              "Error: submitted adminCode does not match vendor adminCode"
-            );
+          if (!doc.exists) {
+            console.log("Error: no such vendor for given vid:", vid);
             return res.status(200).json({
               success: false,
-              message:
-                "Error: submitted adminCode does not match vendor adminCode"
+              message: "Error: no such vendor for given vid: " + vid
             });
           }
 
-          // else matches, proceed to making user an admin under vendor
-          // NOTE: we store admins under a subcollection for security purposes,
-          // so the adminList doesnt get pulled anytime you want to pull vendor
-          // data
+          vendorRef
+            .collection("adminCode")
+            .doc("adminCode")
+            .get()
+            .then(doc => {
+              // check to see if their admin code matches submitted admin code
+              if (doc.data().adminCode !== adminCode) {
+                console.log(
+                  "Error: submitted adminCode does not match vendor adminCode"
+                );
+                return res.status(200).json({
+                  success: false,
+                  message:
+                    "Sorry, incorrect admin code for vendor."
+                });
+              }
 
-          let adminsRef = db
-            .collection("vendors")
-            .doc(vid)
-            .collection("admins");
+              // else matches, proceed to making user an admin under vendor
+              // NOTE: we store admins under a subcollection for security purposes,
+              // so the adminList doesnt get pulled anytime you want to pull vendor
+              // data
 
-          // create a new admin doc
-          adminsRef.doc(user).set({
-            email: user
-          });
+              let adminsRef = db
+                .collection("vendors")
+                .doc(vid)
+                .collection("admins");
 
-          // now set that user's isAdmin flag to be true
-          db.collection("users")
-            .doc(user)
-            .update({ isAdmin: true });
-
-          // now add them to admins root collection
-          // NOTE: we merge b/c a user can be admin of more than one club
-          db.collection("admins")
-            .doc(user)
-            .set(
-              {
+              // create a new admin doc
+              adminsRef.doc(user).set({
                 email: user
-              },
-              { merge: true }
-            )
-            .then(() => {
-              // b/c arrays work differently, update array of vendors here
+              });
+
+              // now set that user's isAdmin flag to be true
+              db.collection("users")
+                .doc(user)
+                .update({ isAdmin: true });
+
+              // now add them to admins root collection
+              // NOTE: we merge b/c a user can be admin of more than one club
               db.collection("admins")
                 .doc(user)
-                .update({
-                  vendors: admin.firestore.FieldValue.arrayUnion(vid)
-                });
+                .set(
+                  {
+                    email: user
+                  },
+                  { merge: true }
+                )
+                .then(() => {
+                  // b/c arrays work differently, update array of vendors here
+                  db.collection("admins")
+                    .doc(user)
+                    .update({
+                      vendors: admin.firestore.FieldValue.arrayUnion(vid)
+                    });
 
-              console.log("Made new admin:", user);
-              console.log("Added new vendor for vid:", vid);
-              return res.status(200).json({
-                success: true,
-                message: "Succesfully added new admin."
-              });
+                  console.log("Made new admin:", user);
+                  console.log("Added new vendor for vid:", vid);
+                  return res.status(200).json({
+                    success: true,
+                    message: "Succesfully added new admin."
+                  });
+                })
+                .catch(err => {
+                  console.log("Error occured in setting admin for user:", err);
+                  return res.status(200).json({
+                    success: false,
+                    message:
+                      "Server error occured in creating new admin. " + err
+                  });
+                });
             })
             .catch(err => {
-              console.log("Error occured in setting admin for user:", err);
+              // catch for getAdminCodeRef
+              console.log("Error in getting adminCodeRef:", err);
               return res.status(200).json({
                 success: false,
-                message: "Server error occured in creating new admin. " + err
+                message: "Error in getting adminCodeRef: " + err
               });
             });
         })
         .catch(err => {
-          // catch for getAdminCodeRef
-          console.log("Error in getting adminCodeRef:", err);
+          // catch for vendorRef
+          console.log("Error in getting vendorRef", err);
           return res.status(200).json({
             success: false,
-            message: "Error in getting adminCodeRef: " + err
+            message: "Error in getting vendorRef: " + err
           });
         });
     })
     .catch(err => {
-      // catch for vendorRef
-      console.log("Error in getting vendorRef", err);
+      console.log(err);
       return res.status(200).json({
         success: false,
-        message: "Error in getting vendorRef: " + err
+        message: "Error occured."
       });
     });
 }); // END POST /addAdminUser

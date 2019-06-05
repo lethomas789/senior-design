@@ -2,13 +2,11 @@ import React, { Component } from "react";
 import { Link } from "react-router-dom";
 import "./Home.css";
 import Grid from "@material-ui/core/Grid";
-import { Slide } from "react-slideshow-image";
 import AliceCarousel from "react-alice-carousel";
 import "react-alice-carousel/lib/alice-carousel.css";
 import image1 from "../../images/muclubs.jpg";
 import image2 from "../../images/foodtruck.jpg";
 import image3 from "../../images/horses.jpg";
-import Hidden from "@material-ui/core/Hidden";
 
 export default class Home extends Component {
   render() {
@@ -23,7 +21,7 @@ export default class Home extends Component {
         >
           {/* <div className="helv"> */}
           <header>
-            <h1 className = "helv"> Welcome to ECS193 E-Commerce! </h1>
+            <h1 className = "helv"> Welcome to 193 E-Commerce! </h1>
             </header>
           {/* </div> */}
 

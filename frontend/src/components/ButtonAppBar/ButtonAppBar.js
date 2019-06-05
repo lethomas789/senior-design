@@ -517,7 +517,7 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 className="grow"
               >
-                ECS193 E-Commerce
+                193 E-Commerce
               </Typography>
 
               {this.props.isAdmin ? (
