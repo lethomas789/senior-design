@@ -75,26 +75,29 @@ class ItemImageViewer extends Component {
     const { imageLink } = this.props;
     return (
       <section className="item-image-container">
-      <Hidden mdDown>
-        <div className="carousel-container">
-
-          {imageLink.map((src, index) => (
-            <CarouselImage
-              key={index}
-              index={index}
-              src={src}
-              isActive={this.state.currentImage === index}
-              onClick={this.changeImage}
-            />
-          ))}
-        </div>
+        <Hidden mdDown>
+          {imageLink.length !== 1 ? (
+            <div className="carousel-container">
+              {imageLink.map((src, index) => (
+                <CarouselImage
+                  key={index}
+                  index={index}
+                  src={src}
+                  isActive={this.state.currentImage === index}
+                  onClick={this.changeImage}
+                />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
         </Hidden>
 
         <div className="magnify-container">
           <ReactImageMagnify
             {...{
               smallImage: {
-                alt: "Test Image",
+                alt: "Shop Image",
                 isFluidWidth: true,
                 src: imageLink[this.state.currentImage]
               },
@@ -362,7 +365,6 @@ class ShopItemDetailed extends Component {
     } else if (totalStock === 0) {
       text = "Item out of stock.";
       return <span className="out-of-stock">{text}</span>;
-      
     } else {
       text = "Item out of stock.";
       return <span className="out-of-stock">{text}</span>;
@@ -473,7 +475,7 @@ class ShopItemDetailed extends Component {
 
     //check if user entered negative number or just left negative sign
     //must have 1 more items purchased
-    else if (this.state.amtPurchased <= 0 || this.state.amtPurchased == '-') {
+    else if (this.state.amtPurchased <= 0 || this.state.amtPurchased == "-") {
       // alert("Sorry, cannot add a quantity of 0.");
       //switch from alert to notifier
       this.props.notifier({
@@ -731,15 +733,11 @@ class ShopItemDetailed extends Component {
   //EDIT allow user to type in number values
   handleQuantityChange = event => {
     //if user types a non-number or not trying to delete, don't record input
-    if(isNaN(event.target.value) === true && event.target.value != ""){
+    if (isNaN(event.target.value) === true && event.target.value != "") {
       return;
-    }
-
-    else if (event.target.value < 0) {
+    } else if (event.target.value < 0) {
       this.setState({ amtPurchased: 1 });
-    }
-
-    else{
+    } else {
       this.setState({ amtPurchased: event.target.value });
     }
   };
