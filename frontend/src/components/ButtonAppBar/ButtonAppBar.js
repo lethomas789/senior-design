@@ -277,7 +277,7 @@ class ButtonAppBar extends Component {
         >
           <Toolbar>
             {/* MENU BUTTON */}
-            <Hidden mdUp>
+            <Hidden lgUp>
               <div id="menu-button">
                 <IconButton
                   aria-owns={anchorIconMenu ? "responsive-menu" : undefined}
@@ -508,7 +508,7 @@ class ButtonAppBar extends Component {
             {/******************* END RESPONSIVE MENU ICON **********/}
 
             {/* HOME LABEL */}
-            <Hidden smDown>
+            <Hidden mdDown>
               <Typography
                 style={{ textDecoration: "none", fontFamily: "Proxima Nova" }}
                 component={Link}
