@@ -508,7 +508,7 @@ class AddProduct extends Component {
           <div className="add-textForm" id="row">
             <TextField
               label="Product Name"
-              required="true"
+              required={true}
               onChange={event =>
                 this.setState({ productName: event.target.value })
               }
@@ -524,7 +524,7 @@ class AddProduct extends Component {
           <div className="add-textForm" id="row">
             <TextField
               label="Product Info"
-              required="true"
+              required={true}
               multiline={true}
               rows={2}
               onChange={event =>
