@@ -26,8 +26,6 @@
   padding-left: 15px;
 }
 
-
-
 .order-summary-row-title {
 
 }
@@ -36,3 +34,15 @@
   display: grid;
   grid-template-columns: 2.5fr 1fr 1fr 1fr;
 }
+
+@media (max-width: 40em) {
+
+  .order-summary-item{
+    grid-template-columns: 2.5fr 1fr 1fr 1fr;
+  }
+  
+
+
+
+}
+

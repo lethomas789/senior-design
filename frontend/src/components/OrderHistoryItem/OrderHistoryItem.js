@@ -8,6 +8,7 @@ import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Divider from "@material-ui/core/Divider";
 import Checkbox from "@material-ui/core/Checkbox";
+import Hidden from "@material-ui/core/Hidden";
 
 const styles = theme => ({
   root: {
@@ -82,8 +83,13 @@ class OrderHistoryItem extends Component {
     const { classes, items, oid, vid } = this.props;
 
     return (
+
+      
+      
       <div className="order-history-item-container">
-        <List className={classes.flexContainer}>
+      <Hidden mdDown>
+     
+        <ul className={classes.flexContainer}>
           <ListItem>
             <ListItemText primary="Date" secondary={this.props.orderDate} />
           </ListItem>
@@ -129,7 +135,60 @@ class OrderHistoryItem extends Component {
               secondary={"$" + this.props.totalPrice}
             />
           </ListItem>
-        </List>
+        </ul>
+        </Hidden>
+   
+
+
+        <Hidden lgUp>
+        <ul>
+          <ListItem>
+            <ListItemText primary="Date" secondary={this.props.orderDate} />
+          </ListItem>
+
+          {/* <ListItem>
+          <ListItemText primary= "Name" secondary= {this.props.firstName + ' ' + this.props.lastName} />
+        </ListItem> */}
+
+          <ListItem>
+            <ListItemText primary="Email" secondary={this.props.email} />
+          </ListItem>
+
+          <ListItem>
+            <ListItemText primary="Order ID" secondary={this.props.oid} />
+          </ListItem>
+
+          {/* <ListItem>
+          <ListItemText primary="Paid" secondary= {this.props.paid} />
+        </ListItem> */}
+
+          <ListItem>
+            <ListItemText
+              primary="Picked Up"
+              secondary={this.state.pickedUp ? "Yes" : "No"}
+              style={{ position: "relative" }}
+            />
+            {vid !== "null" ? (
+              <Checkbox
+                checked={this.state.pickedUp}
+                color="primary"
+                value="pickedUp"
+                style={{ position: "absolute", right: "100px" }}
+                onChange={() => this.handleUpdateOrder(oid, vid)}
+              />
+            ) : (
+              ""
+            )}
+          </ListItem>
+
+          <ListItem>
+            <ListItemText
+              primary="Total"
+              secondary={"$" + this.props.totalPrice}
+            />
+          </ListItem>
+        </ul>
+        </Hidden>
 
         <div className="order-summary-container">
           <div className="order-summary-row-title order-summary-row">
