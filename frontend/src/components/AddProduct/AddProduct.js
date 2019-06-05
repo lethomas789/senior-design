@@ -717,8 +717,8 @@ class AddProduct extends Component {
         </div>
 
         <div className="add-textForm" id="row">
-          <div class="upload-image-tooltip">
-            <span class="upload-image-tooltiptext">
+          <div className="upload-image-tooltip">
+            <span className="upload-image-tooltiptext">
               Upload the images for your product here, up to a maximum of four
               pictures. NOTE: The first image uploaded will be the default image
               displayed on shop. Remaining images used in the product's shop

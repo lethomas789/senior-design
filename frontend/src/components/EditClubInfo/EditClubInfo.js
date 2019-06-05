@@ -74,7 +74,6 @@ class EditClubInfo extends Component {
       target: { files }
     } = event;
 
-
     // 5 mb
     const maxImageSize = 3000000;
 
@@ -139,7 +138,7 @@ class EditClubInfo extends Component {
         params: {
           picture: this.state[`picture${num}`].name,
           vid: this.props.vendorID,
-          num: num,
+          num: num
         }
       })
       .then(res => {
@@ -161,11 +160,11 @@ class EditClubInfo extends Component {
       })
       .catch(err => {
         console.log(err);
-          this.props.notifier({
-            title: "Error",
-            message: "An error occurred. Please try again.",
-            type: "warning"
-          });
+        this.props.notifier({
+          title: "Error",
+          message: "An error occurred. Please try again.",
+          type: "warning"
+        });
       });
   };
 
@@ -472,33 +471,33 @@ class EditClubInfo extends Component {
           <h4>Upload club pictures to display on your club's about page.</h4>
 
           <div id="column" className="file-uploader">
-          <div className = "file-uploader-tooltip">
-
-            <span className="file-uploader-tooltiptext">
-              The first picture will be the main image displayed on your club's
-              about page.
-            </span>
-            <FileUploader
-              accept="image/*"
-              onChange={this.handlePictureChange0}
-              storageRef={firebase
-                .storage()
-                .ref("/images" + "/" + this.props.vendorID + "/")}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-            />
+            <div className="file-uploader-tooltip">
+              <span className="file-uploader-tooltiptext">
+                The first picture will be the main image displayed on your
+                club's about page.
+              </span>
+              <FileUploader
+                accept="image/*"
+                onChange={this.handlePictureChange0}
+                storageRef={firebase
+                  .storage()
+                  .ref("/images" + "/" + this.props.vendorID + "/")}
+                ref={instance => {
+                  this.fileUploader = instance;
+                }}
+                multiple
+                onUploadError={error => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}
+              />
+            </div>
           </div>
-          </div>
 
+          <div id="editClubForm">
 
           <div className="tooltip">
             {/* <span className="tooltiptext">In progress </span> */}
@@ -518,32 +517,32 @@ class EditClubInfo extends Component {
           </div>
 
           <div id="column" className="file-uploader">
-          <div className = "file-uploader-tooltip">
-            <span className="file-uploader-tooltiptext">
-              The second picture will be the image displayed alongside the list
-              of other clubs on our website. See https://193ecommerce.com/clubs
-            </span>
-            <FileUploader
-              accept="image/*"
-              onChange={this.handlePictureChange1}
-              storageRef={firebase
-                .storage()
-                .ref("/images" + "/" + this.props.vendorID + "/")}
-              ref={instance => {
-                this.fileUploader = instance;
-              }}
-              multiple
-              onUploadError={error => {
-                this.props.notifier({
-                  title: "Error",
-                  message: error.toString(),
-                  type: "danger"
-                });
-              }}
-            />
+            <div className="file-uploader-tooltip">
+              <span className="file-uploader-tooltiptext">
+                The second picture will be the image displayed alongside the
+                list of other clubs on our website. See
+                https://193ecommerce.com/clubs
+              </span>
+              <FileUploader
+                accept="image/*"
+                onChange={this.handlePictureChange1}
+                storageRef={firebase
+                  .storage()
+                  .ref("/images" + "/" + this.props.vendorID + "/")}
+                ref={instance => {
+                  this.fileUploader = instance;
+                }}
+                multiple
+                onUploadError={error => {
+                  this.props.notifier({
+                    title: "Error",
+                    message: error.toString(),
+                    type: "danger"
+                  });
+                }}
+              />
+            </div>
           </div>
-          </div>
-
 
           <div className="tooltip">
             {/* <span className="tooltiptext">In progress </span> */}
@@ -562,6 +561,7 @@ class EditClubInfo extends Component {
             </Button>
           </div>
         </div>
+          </div>
 
         <div id="updateEmailsContainer">
           <div className="update-email-tooltip">
