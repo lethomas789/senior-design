@@ -128,7 +128,6 @@ router.post("/addNewProduct", tokenMiddleware, (req, res) => {
                 productPicture[i].name
               }?alt=media`;
 
-              // TODO, figure out order of push, in terms of what order vendors want
               // to show their pics
               pictures.push(link);
             }
