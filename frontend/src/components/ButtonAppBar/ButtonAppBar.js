@@ -289,6 +289,8 @@ class ButtonAppBar extends Component {
                   <MenuIcon />
                 </IconButton>
 
+                {/* RESPONSIVE MENU FOR TABLET AND MOBILE */}
+
                 <Menu
                   id="responsive-menu"
                   anchorEl={anchorIconMenu}
