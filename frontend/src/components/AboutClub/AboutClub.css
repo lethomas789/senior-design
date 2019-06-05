@@ -231,7 +231,7 @@ and (max-device-width : 1024px)  {
 
   .small-width {
     width: 68vw;
-    margin: auto;
+    margin: 0;
     clear: both;
   }
 
