@@ -186,6 +186,7 @@ class ApparelItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
+            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -259,6 +260,7 @@ class ItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
+            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -472,7 +474,7 @@ class ShopItemDetailed extends Component {
       //switch from alert to notifier
       this.props.notifier({
         title: "Error",
-        message: "Please enter a value greater than 0",
+        message: "Please select a quantity greater than 0.",
         type: "warning"
       });
     }
@@ -727,6 +729,10 @@ class ShopItemDetailed extends Component {
     //if user types a non-number or not trying to delete, don't record input
     if(isNaN(event.target.value) === true && event.target.value != ""){
       return;
+    }
+
+    else if (event.target.value < 0) {
+      this.setState({ amtPurchased: 1 });
     }
 
     else{
