@@ -19,7 +19,7 @@ const config = {
   apiKey: firebaseConfig.private_key,
   authDomain: process.env.REACT_APP_AUTH_DOMAIN,
   databaseURL: process.env.REACT_APP_DATABASE_URL,
-  storageBucket: process.env.REACT_APP_STORAGE_BUCKET,
+  storageBucket: process.env.REACT_APP_STORAGE_BUCKET
 };
 
 firebase.initializeApp(config);
@@ -28,7 +28,8 @@ const style = {
   field: { width: "500px" }
 };
 
-const maxImageSize = 100000;
+// 1e6 bytes ie 1mb
+const maxImageSize = 1000000;
 
 //component to allow admin to add products for purchase
 class AddProduct extends Component {
@@ -50,7 +51,7 @@ class AddProduct extends Component {
       xsmall: "",
       xlarge: "",
       apparelCSS: "hideApparelSizes",
-      itemShowStock: "showItemStock",
+      itemShowStock: "hideItemStock",
       images: [],
       imageNames: []
     };
@@ -201,18 +202,18 @@ class AddProduct extends Component {
 
     //TO DO modify file size
     //check if image being uploaded exceeds max file size
-    // if (files[0].size > maxImageSize) {
-    //   this.props.notifier({
-    //     title: "Error",
-    //     message: "Please upload image less than 1MB",
-    //     type: "danger"
-    //   });
+    if (files[0].size > maxImageSize) {
+      this.props.notifier({
+        title: "Error",
+        message: "Please upload image less than 1MB",
+        type: "danger"
+      });
 
-    //   //if file exceeds file size, cancel upload and set file input to null
-    //   //this is as if no file was uploaded
-    //   event.target.value = null;
-    //   return;
-    // }
+      //if file exceeds file size, cancel upload and set file input to null
+      //this is as if no file was uploaded
+      event.target.value = null;
+      return;
+    }
 
     //if file size is acceptable, proceed saving file in array of images to upload to server
 
@@ -549,7 +550,9 @@ class AddProduct extends Component {
         </div> */}
 
         <div className="tooltip">
-          <span className="tooltiptext">The product's price in USD.</span>
+          <span className="tooltiptext">
+            The product's price in USD. ($X.XX)
+          </span>
           <div className="add-textForm" id="row">
             <TextField
               label="Product Price"
@@ -576,13 +579,12 @@ class AddProduct extends Component {
             calculate running total if item is an apparel */}
 
         <FormControl component="fieldset">
-        <div className="tooltip">
-        <span className="tooltiptext">
-        Please select whether your product is a regular item on an
-                apparel item. Apparel items may have different sizes.
-              </span>
-          <div className="add-textForm">
-                
+          <div className="tooltip">
+            <span className="tooltiptext">
+              Please select whether your product is a regular item on an apparel
+              item. Apparel items may have different sizes.
+            </span>
+            <div className="add-textForm">
               <FormLabel component="legend" style={style.field}>
                 Select Product Type
               </FormLabel>
@@ -640,7 +642,10 @@ class AddProduct extends Component {
             Your product's stock. The website will stop accepting orders for
             that product once its stock is out.
           </span>
-          <div className="add-textForm" id="row">
+          <div
+            className={`add-textForm ${this.state.itemShowStock}`}
+            id="row"
+          >
             <TextField
               label="Product Stock"
               required={true}
