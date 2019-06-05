@@ -154,15 +154,6 @@ and (max-device-width : 1024px)  {
    width: 50vw;
   }
   
-  .price {
-    color: rgba(14, 138, 240, 0.822);
-    font-size: 24px;
-    height: 50px;
-  }
-  
-  .stock {
-    color: rgba(14, 138, 240, 0.822);
-  }
     
   .select-container {
     display: flex;
@@ -245,16 +236,6 @@ and (max-device-width : 1024px)  {
    width: 50vw;
   }
   
-  .price {
-    color: rgba(14, 138, 240, 0.822);
-    font-size: 24px;
-    height: 50px;
-  }
-  
-  .stock {
-    color: rgba(14, 138, 240, 0.822);
-  }
-    
   .select-container {
     display: flex;
     width: 300px;
