@@ -74,14 +74,16 @@ class EditClubInfo extends Component {
       target: { files }
     } = event;
 
-    const maxImageSize = 100000000;
+
+    // 5 mb
+    const maxImageSize = 3000000;
 
     //TO DO modify file size
     //check if image being uploaded exceeds max file size
     if (files[0].size > maxImageSize) {
       this.props.notifier({
         title: "Error",
-        message: "Please upload image less than 1MB",
+        message: "Please upload image less than 3MB",
         type: "danger"
       });
 
@@ -128,15 +130,16 @@ class EditClubInfo extends Component {
   // num may be 0 or 1 for pic0 or pic 1
   editPictures = num => {
     const apiURL = `/api/adminVendor/editClubPictures${num}`;
-    console.log("NUM IS:", num);
-    console.log("PICTURE IS:", this.state[`picture${num}`].name);
+    // console.log("NUM IS:", num);
+    // console.log("PICTURE IS:", this.state[`picture${num}`].name);
 
     axios
       .patch(apiURL, {
         withCredentials: true,
         params: {
           picture: this.state[`picture${num}`].name,
-          vid: this.props.vendorID
+          vid: this.props.vendorID,
+          num: num,
         }
       })
       .then(res => {
@@ -518,7 +521,7 @@ class EditClubInfo extends Component {
           <div className = "file-uploader-tooltip">
             <span className="file-uploader-tooltiptext">
               The second picture will be the image displayed alongside the list
-              of other club's on our website. See https://193ecommerce.com/clubs
+              of other clubs on our website. See https://193ecommerce.com/clubs
             </span>
             <FileUploader
               accept="image/*"
