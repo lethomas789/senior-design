@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "react-router-dom";
+import Hidden from "@material-ui/core/Hidden";
 
 class CarouselImage extends Component {
   handleClick = () => {
@@ -74,7 +75,9 @@ class ItemImageViewer extends Component {
     const { imageLink } = this.props;
     return (
       <section className="item-image-container">
+      <Hidden mdDown>
         <div className="carousel-container">
+
           {imageLink.map((src, index) => (
             <CarouselImage
               key={index}
@@ -85,6 +88,7 @@ class ItemImageViewer extends Component {
             />
           ))}
         </div>
+        </Hidden>
 
         <div className="magnify-container">
           <ReactImageMagnify

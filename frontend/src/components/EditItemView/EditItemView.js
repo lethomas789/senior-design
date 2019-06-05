@@ -556,7 +556,7 @@ class EditItemView extends Component {
 
           <div className="tooltip">
             <span className="tooltiptext">Name of your product</span>
-            <div className="textForm" id="row">
+            <div className="textFormEdit" id="row">
               <TextField
                 label="Product Name"
                 required={true}

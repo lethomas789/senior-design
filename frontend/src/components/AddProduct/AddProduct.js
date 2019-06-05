@@ -588,7 +588,7 @@ class AddProduct extends Component {
               <FormLabel component="legend" style={style.field}>
                 Select Product Type
               </FormLabel>
-            </div>
+            
             <RadioGroup
               aria-label="gender"
               name="gender2"
@@ -633,6 +633,7 @@ class AddProduct extends Component {
                 }
               />
             </RadioGroup>
+          </div>
           </div>
         </FormControl>
 
