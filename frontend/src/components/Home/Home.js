@@ -23,7 +23,7 @@ export default class Home extends Component {
         >
           {/* <div className="helv"> */}
           <header>
-            <h1 className = "helv"> Welcome to ECS193 E-Commerce! </h1>
+            <h1 className = "helv"> Welcome to 193 E-Commerce! </h1>
             </header>
           {/* </div> */}
 
