@@ -300,7 +300,7 @@ class ButtonAppBar extends Component {
                     to={homeRoute}
                     color="inherit"
                     onClick={this.handleIconMenuClose}
-                    style={{ fontFamily: "Raleway" }}
+                    style={{ fontFamily: "Proxima Nova" }}
                   >
                     Home
                   </MenuItem>
@@ -311,7 +311,7 @@ class ButtonAppBar extends Component {
                       to={orderHistoryRoute}
                       color="inherit"
                       onClick={this.handleIconMenuClose}
-                      style={{ fontFamily: "Raleway" }}
+                      style={{ fontFamily: "Proxima Nova" }}
                     >
                       Order History
                     </MenuItem>
@@ -323,7 +323,7 @@ class ButtonAppBar extends Component {
                     <Typography
                       style={{
                         textDecoration: "none",
-                        fontFamily: "Raleway"
+                        fontFamily: "Proxima Nova"
                         // marginRight: "10px"
                       }}
                     >
@@ -361,7 +361,7 @@ class ButtonAppBar extends Component {
                       <MenuItem
                         aria-haspopup="true"
                         onClick={this.handleAdminClick}
-                        style={{ fontFamily: "Raleway" }}
+                        style={{ fontFamily: "Proxima Nova" }}
                       >
                         Admin Menu
                       </MenuItem>
@@ -406,7 +406,7 @@ class ButtonAppBar extends Component {
                     component={Link}
                     to={aboutRoute}
                     color="inherit"
-                    style={{ fontFamily: "Raleway" }}
+                    style={{ fontFamily: "Proxima Nova" }}
                     onClick={this.handleIconMenuClose}
                   >
                     About
@@ -416,7 +416,7 @@ class ButtonAppBar extends Component {
                   component={Link}
                   to="/clubs"
                   color="inherit"
-                  style={{ fontFamily: "Raleway" }}
+                  style={{ fontFamily: "Proxima Nova" }}
                 >
                   Clubs
                 </MenuItem>
@@ -427,7 +427,7 @@ class ButtonAppBar extends Component {
                       component={Link}
                       to={signupRoute}
                       color="inherit"
-                      style={{ fontFamily: "Raleway" }}
+                      style={{ fontFamily: "Proxima Nova" }}
                       onClick={this.handleIconMenuClose}
                     >
                       Sign Up
@@ -437,7 +437,7 @@ class ButtonAppBar extends Component {
                   )}
 
                   <MenuItem
-                    style={{ fontFamily: "Raleway" }}
+                    style={{ fontFamily: "Proxima Nova" }}
                     component={Link}
                     to={loginRoute}
                     color="inherit"
@@ -447,7 +447,7 @@ class ButtonAppBar extends Component {
                   </MenuItem>
                   <MenuItem
                     color="inherit"
-                    style={{ fontFamily: "Raleway" }}
+                    style={{ fontFamily: "Proxima Nova" }}
                     onClick={this.handleShopClick}
                   >
                     Shop
