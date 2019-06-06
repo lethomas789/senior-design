@@ -1,3 +1,11 @@
 .privacy-header {
     text-align: center;
+    padding-left: 10px;
+    padding-right: 10px;
+    padding-bottom: 10px;
+}
+
+.last-question {
+    padding-bottom: 30px;
+
 }

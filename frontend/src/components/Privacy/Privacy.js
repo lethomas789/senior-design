@@ -106,12 +106,14 @@ export default class Privacy extends Component {
         </div>
 
         <div className="each-question">
+        <div className = "last-question">
           <h2>CONTACT US</h2>
           <p>
             For more information about our privacy practices, if you have
             questions, or if you would like to make a complaint, please contact
             us by e‑mail at ecs193.ecommerce@gmail.com
           </p>
+        </div>
         </div>
       </div>
     );
