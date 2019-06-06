@@ -320,19 +320,6 @@ class ButtonAppBar extends Component {
                     Home
                   </MenuItem>
 
-                  {this.props.loginValue ? (
-                    <MenuItem
-                      component={Link}
-                      to={orderHistoryRoute}
-                      color="inherit"
-                      onClick={this.handleIconMenuClose}
-                      style={{ fontFamily: "Proxima Nova" }}
-                    >
-                      Order History
-                    </MenuItem>
-                  ) : (
-                    ""
-                  )}
 
                   {this.props.isAdmin ? (
                     <Typography
@@ -416,6 +403,22 @@ class ButtonAppBar extends Component {
                   ) : (
                     ""
                   )}
+                  <MenuItem
+                    color="inherit"
+                    style={{ fontFamily: "Proxima Nova" }}
+                    onClick={this.handleShopClick}
+                  >
+                    Shop
+                  </MenuItem>
+
+                  <MenuItem
+                    component={Link}
+                    to="/clubs"
+                    color="inherit"
+                    style={{ fontFamily: "Proxima Nova" }}
+                  >
+                    Clubs
+                  </MenuItem>
 
                   <MenuItem
                     component={Link}
@@ -427,14 +430,6 @@ class ButtonAppBar extends Component {
                     About
                   </MenuItem>
 
-                  <MenuItem
-                    component={Link}
-                    to="/clubs"
-                    color="inherit"
-                    style={{ fontFamily: "Proxima Nova" }}
-                  >
-                    Clubs
-                  </MenuItem>
 
                   {!this.props.loginValue ? (
                     <MenuItem
@@ -455,17 +450,28 @@ class ButtonAppBar extends Component {
                     component={Link}
                     to={loginRoute}
                     color="inherit"
-                    onClick={this.logoutUser}
+                    onClick={() => {
+                      this.logoutUser();
+                      this.handleIconMenuClose();
+                    }}
                   >
                     {this.props.loginText}
                   </MenuItem>
-                  <MenuItem
-                    color="inherit"
-                    style={{ fontFamily: "Proxima Nova" }}
-                    onClick={this.handleShopClick}
-                  >
-                    Shop
-                  </MenuItem>
+
+                  {this.props.loginValue ? (
+                    <MenuItem
+                      component={Link}
+                      to={orderHistoryRoute}
+                      color="inherit"
+                      onClick={this.handleIconMenuClose}
+                      style={{ fontFamily: "Proxima Nova" }}
+                    >
+                      Order History
+                    </MenuItem>
+                  ) : (
+                    ""
+                  )}
+
                   <Menu
                     // id="admin-menu"
                     anchorEl={this.state.anchorShop}
