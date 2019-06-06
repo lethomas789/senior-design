@@ -14,7 +14,7 @@ class VendorView extends Component {
       products: [],
       vendorName: "",
       bio: "",
-      vid: "",
+      vid: ""
     };
   }
 
@@ -54,7 +54,7 @@ class VendorView extends Component {
                     products: res.data.data,
                     vendorName: this.props.vendors[i].vendorName,
                     bio: this.props.vendors[i].bio,
-                    vid: this.props.vendors[i].vid,
+                    vid: this.props.vendors[i].vid
                   });
                   break;
                 }
@@ -73,19 +73,21 @@ class VendorView extends Component {
 
   render() {
     const items = this.state.products.map(result => {
-      return (
-        <ShopItem
-          key={result.pid}
-          imageSrc={result.productPicture[0]}
-          vendorID={result.vid}
-          pid={result.pid}
-          productName={result.productName}
-          productPrice={result.productPrice}
-          stock={result.stock}
-          productInfo={result.productInfo}
-          displayLink={false}
-        />
-      );
+      if (result.hideItem !== true) {
+        return (
+          <ShopItem
+            key={result.pid}
+            imageSrc={result.productPicture[0]}
+            vendorID={result.vid}
+            pid={result.pid}
+            productName={result.productName}
+            productPrice={result.productPrice}
+            stock={result.stock}
+            productInfo={result.productInfo}
+            displayLink={false}
+          />
+        );
+      }
     });
 
     return (

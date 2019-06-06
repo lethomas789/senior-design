@@ -52,20 +52,22 @@ class ShopView extends Component {
     const vendors = this.props.vendors;
     const items = this.props.products.map(result => {
       let vendorObject = vendors.find(vendor => vendor.vid === result.vid);
-      return (
-        <ShopItem
-          key={result.pid}
-          imageSrc={result.productPicture[0]}
-          vendorID={result.vid}
-          pid={result.pid}
-          productName={result.productName}
-          productPrice={result.productPrice}
-          stock={result.stock}
-          productInfo={result.productInfo}
-          displayLink={true}
-          vendorName={vendorObject.vendorName}
-        />
-      );
+      if (result.hideItem !== true) {
+        return (
+          <ShopItem
+            key={result.pid}
+            imageSrc={result.productPicture[0]}
+            vendorID={result.vid}
+            pid={result.pid}
+            productName={result.productName}
+            productPrice={result.productPrice}
+            stock={result.stock}
+            productInfo={result.productInfo}
+            displayLink={true}
+            vendorName={vendorObject.vendorName}
+          />
+        );
+      }
     });
 
     return (
