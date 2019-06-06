@@ -200,7 +200,7 @@ and (max-device-width : 1024px)  {
 
 }
 
-@media (max-width: 40em) {
+@media (max-width: 70em) {
   .centered {
     display: block;
     align-items: center;
@@ -212,8 +212,9 @@ and (max-device-width : 1024px)  {
     flex-direction: column;
     margin-top: 50px;
     width: 85vw;
-    height: 150vh;
-    margin-top: -100px;
+    min-height: 120vh;
+    margin-top: 0;
+    position: static;
   }
   
   .item-image-container {
