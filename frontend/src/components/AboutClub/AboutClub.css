@@ -100,6 +100,7 @@
 
 
 .club-bio {
+  display: flex;
   text-align: center;
   vertical-align: middle;
   /* width: 70vw; */
@@ -142,16 +143,23 @@
   margin-bottom: 20px;
 }
 
-@media (max-width: 767px) {
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px)  {
+
   #about-club-container {
+    width: 100vw;
     display: flex;
     flex-direction: column;
     flex-wrap: wrap;
     margin: 0 auto;
     justify-content: center;
+    height: 95vh;
+
   }
 
   .club-header {
+    display: flex;
     align-self: center;
     justify-self: center;
     margin: 0 auto;
@@ -159,18 +167,83 @@
   }
 
   .club-bio {
+    display: flex;
     padding: 20px;
     margin-top: 30px;
     margin-left: 0;
+    flex-direction: column;
+
+  }
+
+  .small-width {
+    width: 36vw;
+    margin: auto;
+    clear: both;
   }
 
   .club-links {
+    display: flex;
     height: 200px;
     margin-top: 30px;
     margin-left: 0;
   }
 
   .club-meetings {
+    display: flex;
+    height: 200px;
+    margin-top: 30px;
+    margin-bottom: 30px;
+    margin-left: 0;
+  }
+
+  .extra {
+    display: none;
+  }
+
+}
+
+@media (max-width: 40em) {
+
+  #about-club-container {
+    display: flex;
+    flex-direction: column;
+    margin: 0 auto;
+    justify-content: center;
+    height: 150vh;
+
+  }
+
+  .club-header {
+    display: flex;
+    align-self: center;
+    justify-self: center;
+    margin: 0 auto;
+    margin-top: 20px;
+  }
+
+  .club-bio {
+    display: flex;
+    padding: 20px;
+    margin-top: 30px;
+    margin-left: 0;
+    width: 26ch;
+  }
+
+  .small-width {
+    width: 68vw;
+    margin: 0;
+    clear: both;
+  }
+
+  .club-links {
+    display: flex;
+    height: 200px;
+    margin-top: 30px;
+    margin-left: 0;
+  }
+
+  .club-meetings {
+    display: flex;
     height: 200px;
     margin-top: 30px;
     margin-bottom: 30px;

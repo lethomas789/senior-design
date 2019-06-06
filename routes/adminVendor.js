@@ -98,12 +98,12 @@ router.get("/", tokenMiddleware, (req, res) => {
     });
 }); // END GET /
 
-router.patch("/editClubPictures0", tokenMiddleware, (req, res) => {
+router.patch("/editClubPictures", tokenMiddleware, (req, res) => {
   var { user } = req.authorizedData;
   if (req.body.params) {
-    var { picture, vid } = req.body.params;
+    var { picture, vid, num } = req.body.params;
   } else {
-    var { picture, vid } = req.body;
+    var { picture, vid, num } = req.body;
   }
 
   if (user == undefined || picture == undefined || vid == undefined) {
@@ -113,8 +113,6 @@ router.patch("/editClubPictures0", tokenMiddleware, (req, res) => {
       message: "Missing params for route."
     });
   }
-
-  console.log(vid);
 
   let link = `https://firebasestorage.googleapis.com/v0/b/ecs193-ecommerce.appspot.com/o/images%2F${vid}%2F${picture}?alt=media`;
 
@@ -131,8 +129,8 @@ router.patch("/editClubPictures0", tokenMiddleware, (req, res) => {
       }
 
       let oldPictures = doc.data().bioPictures;
-      if (oldPictures[0] !== link) {
-        oldPictures[0] = link;
+      if (oldPictures[num] !== link) {
+        oldPictures[num] = link;
       }
 
       vendorRef.update({ bioPictures: oldPictures });

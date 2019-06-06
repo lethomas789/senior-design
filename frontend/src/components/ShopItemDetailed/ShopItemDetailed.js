@@ -12,6 +12,7 @@ import MenuItem from "@material-ui/core/MenuItem";
 import FormControl from "@material-ui/core/FormControl";
 import TextField from "@material-ui/core/TextField";
 import { Link } from "react-router-dom";
+import Hidden from "@material-ui/core/Hidden";
 
 class CarouselImage extends Component {
   handleClick = () => {
@@ -74,23 +75,29 @@ class ItemImageViewer extends Component {
     const { imageLink } = this.props;
     return (
       <section className="item-image-container">
-        <div className="carousel-container">
-          {imageLink.map((src, index) => (
-            <CarouselImage
-              key={index}
-              index={index}
-              src={src}
-              isActive={this.state.currentImage === index}
-              onClick={this.changeImage}
-            />
-          ))}
-        </div>
+        <Hidden mdDown>
+          {imageLink.length !== 1 ? (
+            <div className="carousel-container">
+              {imageLink.map((src, index) => (
+                <CarouselImage
+                  key={index}
+                  index={index}
+                  src={src}
+                  isActive={this.state.currentImage === index}
+                  onClick={this.changeImage}
+                />
+              ))}
+            </div>
+          ) : (
+            ""
+          )}
+        </Hidden>
 
         <div className="magnify-container">
           <ReactImageMagnify
             {...{
               smallImage: {
-                alt: "Test Image",
+                alt: "Shop Image",
                 isFluidWidth: true,
                 src: imageLink[this.state.currentImage]
               },
@@ -186,6 +193,7 @@ class ApparelItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
+            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -259,6 +267,7 @@ class ItemInfo extends Component {
             label="Quantity"
             value={amtPurchased}
             onChange={handleQuantityChange}
+            type="number"
             InputLabelProps={{
               shrink: true
             }}
@@ -356,7 +365,6 @@ class ShopItemDetailed extends Component {
     } else if (totalStock === 0) {
       text = "Item out of stock.";
       return <span className="out-of-stock">{text}</span>;
-      
     } else {
       text = "Item out of stock.";
       return <span className="out-of-stock">{text}</span>;
@@ -467,12 +475,12 @@ class ShopItemDetailed extends Component {
 
     //check if user entered negative number or just left negative sign
     //must have 1 more items purchased
-    else if (this.state.amtPurchased <= 0 || this.state.amtPurchased == '-') {
+    else if (this.state.amtPurchased <= 0 || this.state.amtPurchased == "-") {
       // alert("Sorry, cannot add a quantity of 0.");
       //switch from alert to notifier
       this.props.notifier({
         title: "Error",
-        message: "Please enter a value greater than 0",
+        message: "Please select a quantity greater than 0.",
         type: "warning"
       });
     }
@@ -725,11 +733,11 @@ class ShopItemDetailed extends Component {
   //EDIT allow user to type in number values
   handleQuantityChange = event => {
     //if user types a non-number or not trying to delete, don't record input
-    if(isNaN(event.target.value) === true && event.target.value != ""){
+    if (isNaN(event.target.value) === true && event.target.value != "") {
       return;
-    }
-
-    else{
+    } else if (event.target.value < 0) {
+      this.setState({ amtPurchased: 1 });
+    } else {
       this.setState({ amtPurchased: event.target.value });
     }
   };

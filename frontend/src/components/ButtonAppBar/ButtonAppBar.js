@@ -70,7 +70,8 @@ class ButtonAppBar extends Component {
     anchorElAccount: null,
     anchorIconMenu: null,
     logout: false,
-    anchorShop: null 
+    anchorShop: null,
+    anchorAdminIcon: null
   };
 
   //when navbar loads, get list of all vendors in database
@@ -112,6 +113,14 @@ class ButtonAppBar extends Component {
 
   handleIconMenuClose = () => {
     this.setState({ anchorIconMenu: null });
+  };
+
+  handleIconAdminClick = event => {
+    this.setState({ anchorAdminIcon: event.currentTarget });
+  };
+
+  handleIconAdminClose = () => {
+    this.setState({ anchorAdminIcon: null, anchorIconMenu: null });
   };
 
   //handle account click, same logic as handle admin click
@@ -273,11 +282,15 @@ class ButtonAppBar extends Component {
       <nav className="root">
         <AppBar
           position="static"
-          style={{ backgroundImage: `url(${header})`, backgroundSize: "cover", boxShadow: "none"}}
+          style={{
+            backgroundImage: `url(${header})`,
+            backgroundSize: "cover",
+            boxShadow: "none"
+          }}
         >
           <Toolbar>
             {/* MENU BUTTON */}
-            <Hidden mdUp>
+            <Hidden lgUp>
               <div id="menu-button">
                 <IconButton
                   aria-owns={anchorIconMenu ? "responsive-menu" : undefined}
@@ -288,6 +301,8 @@ class ButtonAppBar extends Component {
                 >
                   <MenuIcon />
                 </IconButton>
+
+                {/* RESPONSIVE MENU FOR TABLET AND MOBILE */}
 
                 <Menu
                   id="responsive-menu"
@@ -300,30 +315,17 @@ class ButtonAppBar extends Component {
                     to={homeRoute}
                     color="inherit"
                     onClick={this.handleIconMenuClose}
-                    style={{ fontFamily: "Raleway" }}
+                    style={{ fontFamily: "Proxima Nova" }}
                   >
                     Home
                   </MenuItem>
 
-                  {this.props.loginValue ? (
-                    <MenuItem
-                      component={Link}
-                      to={orderHistoryRoute}
-                      color="inherit"
-                      onClick={this.handleIconMenuClose}
-                      style={{ fontFamily: "Raleway" }}
-                    >
-                      Order History
-                    </MenuItem>
-                  ) : (
-                    ""
-                  )}
 
                   {this.props.isAdmin ? (
                     <Typography
                       style={{
                         textDecoration: "none",
-                        fontFamily: "Raleway"
+                        fontFamily: "Proxima Nova"
                         // marginRight: "10px"
                       }}
                     >
@@ -360,22 +362,22 @@ class ButtonAppBar extends Component {
                     <span>
                       <MenuItem
                         aria-haspopup="true"
-                        onClick={this.handleAdminClick}
-                        style={{ fontFamily: "Raleway" }}
+                        onClick={this.handleIconAdminClick}
+                        style={{ fontFamily: "Proxima Nova" }}
                       >
                         Admin Menu
                       </MenuItem>
 
                       <Menu
-                        anchorEl={anchorEl}
-                        open={Boolean(anchorEl)}
-                        onClose={this.handleMenuClose}
+                        anchorEl={this.state.anchorAdminIcon}
+                        open={Boolean(this.state.anchorAdminIcon)}
+                        onClose={this.handleIconMenuClose}
                       >
                         <MenuItem
                           component={Link}
                           to={editClubRoute}
                           color="inherit"
-                          onClick={this.handleMenuClose}
+                          onClick={this.handleIconAdminClose}
                         >
                           Edit Club Info
                         </MenuItem>
@@ -384,7 +386,7 @@ class ButtonAppBar extends Component {
                           component={Link}
                           to={addProductRoute}
                           color="inherit"
-                          onClick={this.handleMenuClose}
+                          onClick={this.handleIconAdminClose}
                         >
                           Add Items
                         </MenuItem>
@@ -392,7 +394,7 @@ class ButtonAppBar extends Component {
                           component={Link}
                           to={editItemRoute}
                           color="inherit"
-                          onClick={this.handleMenuClose}
+                          onClick={this.handleIconAdminClose}
                         >
                           Edit Items
                         </MenuItem>
@@ -401,25 +403,32 @@ class ButtonAppBar extends Component {
                   ) : (
                     ""
                   )}
+                  <MenuItem
+                    color="inherit"
+                    style={{ fontFamily: "Proxima Nova" }}
+                    onClick={this.handleShopClick}
+                  >
+                    Shop
+                  </MenuItem>
+
+                  <MenuItem
+                    component={Link}
+                    to="/clubs"
+                    color="inherit"
+                    style={{ fontFamily: "Proxima Nova" }}
+                  >
+                    Clubs
+                  </MenuItem>
 
                   <MenuItem
                     component={Link}
                     to={aboutRoute}
                     color="inherit"
-                    style={{ fontFamily: "Raleway" }}
+                    style={{ fontFamily: "Proxima Nova" }}
                     onClick={this.handleIconMenuClose}
                   >
                     About
                   </MenuItem>
-
-                  <MenuItem
-                  component={Link}
-                  to="/clubs"
-                  color="inherit"
-                  style={{ fontFamily: "Raleway" }}
-                >
-                  Clubs
-                </MenuItem>
 
 
                   {!this.props.loginValue ? (
@@ -427,7 +436,7 @@ class ButtonAppBar extends Component {
                       component={Link}
                       to={signupRoute}
                       color="inherit"
-                      style={{ fontFamily: "Raleway" }}
+                      style={{ fontFamily: "Proxima Nova" }}
                       onClick={this.handleIconMenuClose}
                     >
                       Sign Up
@@ -437,32 +446,46 @@ class ButtonAppBar extends Component {
                   )}
 
                   <MenuItem
-                    style={{ fontFamily: "Raleway" }}
+                    style={{ fontFamily: "Proxima Nova" }}
                     component={Link}
                     to={loginRoute}
                     color="inherit"
-                    onClick={this.logoutUser}
+                    onClick={() => {
+                      this.logoutUser();
+                      this.handleIconMenuClose();
+                    }}
                   >
                     {this.props.loginText}
                   </MenuItem>
-                  <MenuItem
-                    color="inherit"
-                    style={{ fontFamily: "Raleway" }}
-                    onClick={this.handleShopClick}
-                  >
-                    Shop
-                  </MenuItem>
+
+                  {this.props.loginValue ? (
+                    <MenuItem
+                      component={Link}
+                      to={orderHistoryRoute}
+                      color="inherit"
+                      onClick={this.handleIconMenuClose}
+                      style={{ fontFamily: "Proxima Nova" }}
+                    >
+                      Order History
+                    </MenuItem>
+                  ) : (
+                    ""
+                  )}
+
                   <Menu
                     // id="admin-menu"
                     anchorEl={this.state.anchorShop}
                     open={Boolean(this.state.anchorShop)}
-                    onClose={this.handleShopMenuClose}
+                    onClose={this.handleIconMenuClose}
                   >
                     <MenuItem
                       component={Link}
                       to={"/clubs"}
                       color="inherit"
-                      onClick={this.handleShopMenuClose}
+                      onClick={() => {
+                        this.handleShopMenuClose();
+                        this.handleIconMenuClose();
+                      }}
                     >
                       By Club
                     </MenuItem>
@@ -471,7 +494,10 @@ class ButtonAppBar extends Component {
                       component={Link}
                       to={"/shop"}
                       color="inherit"
-                      onClick={this.handleShopMenuClose}
+                      onClick={() => {
+                        this.handleShopMenuClose();
+                        this.handleIconMenuClose();
+                      }}
                     >
                       All Items
                     </MenuItem>
@@ -506,7 +532,7 @@ class ButtonAppBar extends Component {
             {/******************* END RESPONSIVE MENU ICON **********/}
 
             {/* HOME LABEL */}
-            <Hidden smDown>
+            <Hidden mdDown>
               <Typography
                 style={{ textDecoration: "none", fontFamily: "Proxima Nova" }}
                 component={Link}
@@ -515,7 +541,7 @@ class ButtonAppBar extends Component {
                 color="inherit"
                 className="grow"
               >
-                ECS193 E-Commerce
+                193 E-Commerce
               </Typography>
 
               {this.props.isAdmin ? (
@@ -533,7 +559,6 @@ class ButtonAppBar extends Component {
               ) : (
                 ""
               )}
-
 
               {/* REGULAR NAV BAR */}
               {/* NAV BUTTONS */}
@@ -553,7 +578,11 @@ class ButtonAppBar extends Component {
                         onClose={this.handleCloseSelect}
                         onOpen={this.handleOpenSelect}
                         onChange={this.handleSelect}
-                        style={{ color: "white", fontFamily: "Proxima Nova", width: "150px" }}
+                        style={{
+                          color: "white",
+                          fontFamily: "Proxima Nova",
+                          width: "150px"
+                        }}
                       >
                         {vendorList}
                       </Select>
@@ -694,8 +723,6 @@ class ButtonAppBar extends Component {
                   ""
                 )}
 
-                
-
                 {/* CART BUTTON */}
                 {this.props.loginValue ? (
                   // if logged in, display amt items in cart
@@ -793,7 +820,7 @@ const mapStateToProps = state => {
     vendorID: state.auth.vendorID,
     vendors: state.vendor.vendors,
     currentVendor: state.auth.currentVendor,
-    amountPurchased: state.cart.itemsPurchased,
+    amountPurchased: state.cart.itemsPurchased
   };
 };
 

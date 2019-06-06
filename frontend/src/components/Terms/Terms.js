@@ -211,13 +211,16 @@ We reserve the right, at our sole discretion, to update, change or replace any p
 </div>
 
 <div className = "each-question">
+<div className = "last-question">
 <h2>SECTION 20 - CONTACT INFORMATION</h2>
 
 Questions about the Terms of Service should be sent to us at ecs193.ecommerce@gmail.com
 </div>
+</div>
 	</font>
   </div>
       </div>
+      
     )
   }
 }

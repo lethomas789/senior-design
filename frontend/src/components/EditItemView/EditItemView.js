@@ -556,7 +556,7 @@ class EditItemView extends Component {
 
           <div className="tooltip">
             <span className="tooltiptext">Name of your product</span>
-            <div className="textForm" id="row">
+            <div className="textFormEdit" id="row">
               <TextField
                 label="Product Name"
                 required={true}
@@ -632,7 +632,7 @@ class EditItemView extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="Small Stock"
-                required="false"
+                required={false}
                 value={this.state.small}
                 onChange={this.handleStockChangeApparel("small")}
               />
@@ -641,7 +641,7 @@ class EditItemView extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="Medium Stock"
-                required="false"
+                required={false}
                 value={this.state.medium}
                 onChange={this.handleStockChangeApparel("medium")}
               />
@@ -650,7 +650,7 @@ class EditItemView extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="Large Stock"
-                required="false"
+                required={false}
                 value={this.state.large}
                 onChange={this.handleStockChangeApparel("large")}
               />
@@ -659,7 +659,7 @@ class EditItemView extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="X-Small Stock"
-                required="false"
+                required={false}
                 value={this.state.xsmall}
                 onChange={this.handleStockChangeApparel("xsmall")}
               />
@@ -668,7 +668,7 @@ class EditItemView extends Component {
             <div className="textForm" id="row">
               <TextField
                 label="X-Large Stock"
-                required="false"
+                required={false}
                 value={this.state.xlarge}
                 onChange={this.handleStockChangeApparel("xlarge")}
               />

@@ -107,6 +107,19 @@
   font-family: 'Proxima Nova', sans-serif;
 }
 
+@media only screen 
+and (min-device-width : 768px) 
+and (max-device-width : 1024px)  {
+  .about-info-text {
+    margin: auto;
+    text-align: center;
+    display: block;
+    width: 80vw;
+  }
+
+
+}
+
 @media (max-width: 40em) {
   .about-info {
     text-align: center;
@@ -122,6 +135,7 @@
     margin: auto;
     text-align: center;
     display: block;
+    width: 65vw;
   }
 
 

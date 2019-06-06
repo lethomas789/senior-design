@@ -23,6 +23,19 @@ class InputRecoveryPassword extends Component {
     var queryParseParams = queryString.parse(this.props.location.search);
     var token = queryParseParams.token;
 
+    if (token === undefined) {
+      console.log("Invalid/expired link.");
+      this.props.notifier({
+        title: "Error",
+        message:
+          "Sorry, the link you clicked has expired or is invalid. Please try again with a new link.",
+        type: "warning",
+        duration: 7000
+      });
+      this.props.history.push("/recoverPassword");
+      return;
+    }
+
     const apiURL = "/api/resetPass/checkToken";
     axios
       .get(apiURL, {
@@ -179,8 +192,13 @@ class InputRecoveryPassword extends Component {
             <div>
               <Button
                 variant="contained"
-                color="primary"
                 onClick={this.updatePassword}
+                style={{
+                  backgroundColor: "#DAAA00",
+                  color: "white",
+                  fontFamily: "Proxima Nova",
+                  boxShadow: "none"
+                }}
               >
                 Change Password
               </Button>
