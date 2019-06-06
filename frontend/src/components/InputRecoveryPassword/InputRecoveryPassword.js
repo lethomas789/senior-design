@@ -192,8 +192,13 @@ class InputRecoveryPassword extends Component {
             <div>
               <Button
                 variant="contained"
-                color="primary"
                 onClick={this.updatePassword}
+                style={{
+                  backgroundColor: "#DAAA00",
+                  color: "white",
+                  fontFamily: "Proxima Nova",
+                  boxShadow: "none"
+                }}
               >
                 Change Password
               </Button>
