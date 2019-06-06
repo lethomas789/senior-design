@@ -115,6 +115,70 @@
   filter: opacity(.5);
 }
 
+@media (max-width: 40em) {
+  .centered {
+    display: block;
+    align-items: center;
+  }
+  
+  .item-detailed-container {
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    margin-top: 50px;
+    width: 85vw;
+    min-height: 1000px;
+    position: static;
+  }
+  
+  .item-image-container {
+    margin: 0 auto;
+    justify-self: center;
+    display: flex;
+    flex-direction: column;
+    max-height: 600px;
+    margin-top: 50px;
+    margin-bottom: 100px;
+  }
+
+  
+  .item-info h2 {
+    text-align: start;
+  }
+
+  .item-info {
+    width: 40vw;
+  }
+
+  .description {
+   width: 50vw;
+  }
+  
+  .select-container {
+    display: flex;
+    width: 300px;
+    justify-content: space-between;
+  }
+  
+  .select-size {
+    display: block;
+    width: 200px;
+  }
+  
+  .quantity {
+    width: 75px;
+  }
+  
+  .btn-cart {
+    margin-top: 30px;
+  }
+ 
+
+
+
+}
+
+
 @media only screen 
 and (min-device-width : 768px) 
 and (max-device-width : 1024px)  {
@@ -128,10 +192,10 @@ and (max-device-width : 1024px)  {
     justify-content: center;
     display: flex;
     flex-direction: column;
-    margin-top: 50px;
     width: 85vw;
-    height: 150vh;
-    margin-top: -300px;
+    min-height: 1200px;
+    /* height: 150vh; */
+    /* margin-top: -300px; */
   }
   
   .item-image-container {
@@ -139,7 +203,8 @@ and (max-device-width : 1024px)  {
     justify-self: center;
     display: flex;
     flex-direction: column;
-
+    max-height: 700px;
+    margin-bottom: 100px;
   }
   
   .item-info h2 {
@@ -200,64 +265,4 @@ and (max-device-width : 1024px)  {
 
 }
 
-@media (max-width: 70em) {
-  .centered {
-    display: block;
-    align-items: center;
-  }
-  
-  .item-detailed-container {
-    justify-content: center;
-    display: flex;
-    flex-direction: column;
-    margin-top: 50px;
-    width: 85vw;
-    min-height: 120vh;
-    margin-top: 0;
-    position: static;
-  }
-  
-  .item-image-container {
-    margin: 0 auto;
-    justify-self: center;
-    display: flex;
-    flex-direction: column;
-
-  }
-  
-  .item-info h2 {
-    text-align: start;
-  }
-
-  .item-info {
-    width: 40vw;
-  }
-
-  .description {
-   width: 50vw;
-  }
-  
-  .select-container {
-    display: flex;
-    width: 300px;
-    justify-content: space-between;
-  }
-  
-  .select-size {
-    display: block;
-    width: 200px;
-  }
-  
-  .quantity {
-    width: 75px;
-  }
-  
-  .btn-cart {
-    margin-top: 30px;
-  }
- 
-
-
-
-}
 
